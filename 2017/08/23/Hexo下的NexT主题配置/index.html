@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="苟富">
 <meta property="og:description" content="这两天在一直在倒腾个人网站/博客之类的东西，就目前来说，hexo博客部署在Github这个方案是我最满意的。但相关配置什么的都还不会，那就来折腾好了。 本文主要是自用，若有需要请自取。 以下是NexT主题的一些配置。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-23T18:29:31.070Z">
+<meta property="og:updated_time" content="2017-08-23T19:12:47.116Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo下的NexT主题配置">
 <meta name="twitter:description" content="这两天在一直在倒腾个人网站/博客之类的东西，就目前来说，hexo博客部署在Github这个方案是我最满意的。但相关配置什么的都还不会，那就来折腾好了。 本文主要是自用，若有需要请自取。 以下是NexT主题的一些配置。">
@@ -115,7 +115,7 @@
     root: '/',
     scheme: 'Mist',
     version: '5.1.2',
-    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":true},
     fancybox: true,
     tabs: true,
     motion: true,
@@ -160,7 +160,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail ">
+  <div class="container sidebar-position-right page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -351,7 +351,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,199 字
+                  1,427 字
                 </span>
               
 
@@ -367,7 +367,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  5 分钟
+                  6 分钟
                 </span>
               
             </div>
@@ -443,7 +443,21 @@
 <h3 id="个人头像"><a href="#个人头像" class="headerlink" title="个人头像"></a>个人头像</h3><p>图片命名<code>avatar.jpg</code>或<code>avatar.png</code>，<br>放置在目录<code>你的仓库\themes\next\source\images\</code>下，<br>并设置字段<code>avatar</code><br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">avatar:</span> <span class="string">/images/avatar.jpg</span></div></pre></td></tr></table></figure></p>
 <h3 id="侧栏目录"><a href="#侧栏目录" class="headerlink" title="侧栏目录"></a>侧栏目录</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">toc:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  number:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  wrap:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
 <p><code>enable</code>字段决定是否启动文章目录功能，<code>number</code>字段决定是否自动为目录添加数字标记，<code>wrap</code>字段决定目录标题过长时是否换行。</p>
-<h3 id="版权声明"><a href="#版权声明" class="headerlink" title="版权声明"></a>版权声明</h3><p> <em>未完待续</em></p>
+<h3 id="版权声明"><a href="#版权声明" class="headerlink" title="版权声明"></a>版权声明</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">creative_commons:</span> <span class="string">by-nc-nd</span></div></pre></td></tr></table></figure>
+<p>选择合适的版权声明，可选项：<code>by</code>, <code>by-nc</code>, <code>by-nc-nd</code>, <code>by-nc-sa</code>, <code>by-nd</code>, <code>by-sa</code>, <code>zero</code>，图标将显示在侧栏上。</p>
+<h3 id="侧栏样式"><a href="#侧栏样式" class="headerlink" title="侧栏样式"></a>侧栏样式</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="attr">sidebar:</span></div><div class="line"><span class="attr">  position:</span> <span class="string">left</span></div><div class="line">  <span class="comment">#position: right</span></div><div class="line"></div><div class="line"><span class="attr">  display:</span> <span class="string">post</span></div><div class="line">  <span class="comment">#display: always</span></div><div class="line">  <span class="comment">#display: hide</span></div><div class="line">  <span class="comment">#display: remove</span></div><div class="line"></div><div class="line"><span class="attr">  offset:</span> <span class="number">12</span></div><div class="line"><span class="attr">  offset_float:</span> <span class="number">12</span></div><div class="line"></div><div class="line"><span class="attr">  b2t:</span> <span class="literal">false</span></div><div class="line"></div><div class="line"><span class="attr">  scrollpercent:</span> <span class="literal">false</span></div><div class="line"></div><div class="line">  <span class="comment"># Enable sidebar on narrow view</span></div><div class="line"><span class="attr">  onmobile:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
+<h4 id="侧栏位置"><a href="#侧栏位置" class="headerlink" title="侧栏位置"></a>侧栏位置</h4><p>字段 <code>position</code> ，可选 左 <code>left</code> 、右 <code>right</code>，此项只在某些样式生效。</p>
+<h4 id="出现时机"><a href="#出现时机" class="headerlink" title="出现时机"></a>出现时机</h4><p>字段 <code>display</code>，可选项：</p>
+<ul>
+<li><code>post</code> : 默认项。自动展开。</li>
+<li><code>always</code> : 始终展开。</li>
+<li><code>hide</code> : 只在点击<code>展开按钮</code>时展开。</li>
+<li><code>remove</code> : 永不展开，且去除<code>展开按钮</code>。</li>
+</ul>
+<h4 id="间距"><a href="#间距" class="headerlink" title="间距"></a>间距</h4><p><code>offset</code> , <code>offset_float</code> ,设置与菜单栏的间距。</p>
+<h4 id="回到顶部"><a href="#回到顶部" class="headerlink" title="回到顶部"></a>回到顶部</h4><p><code>b2t</code> 字段设置顶部按钮，<code>false</code> 置于<code>展开按钮</code>旁，<code>true</code> 置于侧栏里。</p>
+<h4 id="页面百分比"><a href="#页面百分比" class="headerlink" title="页面百分比"></a>页面百分比</h4><p><code>scrollpercent</code> 设置<code>回到顶部</code>按钮旁是否显示网页所处位置占整页的百分比。</p>
+<h4 id="移动端可见"><a href="#移动端可见" class="headerlink" title="移动端可见"></a>移动端可见</h4><p><code>onmobile</code> 设置移动端是否显示侧栏。</p>
 
       
     </div>
@@ -530,6 +544,8 @@
   </div>
 
   <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
     
     <div class="sidebar-inner">
 
@@ -664,7 +680,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#网站信息"><span class="nav-number">1.</span> <span class="nav-text">网站信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网页小图标"><span class="nav-number">1.1.</span> <span class="nav-text">网页小图标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网站关键字"><span class="nav-number">1.2.</span> <span class="nav-text">网站关键字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RSS"><span class="nav-number">1.3.</span> <span class="nav-text">RSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网站建立时间"><span class="nav-number">1.4.</span> <span class="nav-text">网站建立时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#作者图标"><span class="nav-number">1.5.</span> <span class="nav-text">作者图标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#驱动与主题版权声明"><span class="nav-number">1.6.</span> <span class="nav-text">驱动与主题版权声明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SEO-设置"><span class="nav-number">2.</span> <span class="nav-text">SEO 设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#规范化"><span class="nav-number">2.1.</span> <span class="nav-text">规范化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SEO-站点链接优化"><span class="nav-number">2.2.</span> <span class="nav-text">SEO 站点链接优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主页副标题"><span class="nav-number">2.3.</span> <span class="nav-text">主页副标题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#菜单设置"><span class="nav-number">3.</span> <span class="nav-text">菜单设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#菜单项目"><span class="nav-number">3.1.</span> <span class="nav-text">菜单项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#菜单文本"><span class="nav-number">3.2.</span> <span class="nav-text">菜单文本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#菜单图标"><span class="nav-number">3.3.</span> <span class="nav-text">菜单图标</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主题方案"><span class="nav-number">4.</span> <span class="nav-text">主题方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#侧栏"><span class="nav-number">5.</span> <span class="nav-text">侧栏</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人社交链接"><span class="nav-number">5.1.</span> <span class="nav-text">个人社交链接</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#设置链接"><span class="nav-number">5.1.1.</span> <span class="nav-text">设置链接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置图标"><span class="nav-number">5.1.2.</span> <span class="nav-text">设置图标</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#友情链接"><span class="nav-number">5.2.</span> <span class="nav-text">友情链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#个人头像"><span class="nav-number">5.3.</span> <span class="nav-text">个人头像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#侧栏目录"><span class="nav-number">5.4.</span> <span class="nav-text">侧栏目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#版权声明"><span class="nav-number">5.5.</span> <span class="nav-text">版权声明</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#网站信息"><span class="nav-number">1.</span> <span class="nav-text">网站信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网页小图标"><span class="nav-number">1.1.</span> <span class="nav-text">网页小图标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网站关键字"><span class="nav-number">1.2.</span> <span class="nav-text">网站关键字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RSS"><span class="nav-number">1.3.</span> <span class="nav-text">RSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网站建立时间"><span class="nav-number">1.4.</span> <span class="nav-text">网站建立时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#作者图标"><span class="nav-number">1.5.</span> <span class="nav-text">作者图标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#驱动与主题版权声明"><span class="nav-number">1.6.</span> <span class="nav-text">驱动与主题版权声明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SEO-设置"><span class="nav-number">2.</span> <span class="nav-text">SEO 设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#规范化"><span class="nav-number">2.1.</span> <span class="nav-text">规范化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SEO-站点链接优化"><span class="nav-number">2.2.</span> <span class="nav-text">SEO 站点链接优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主页副标题"><span class="nav-number">2.3.</span> <span class="nav-text">主页副标题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#菜单设置"><span class="nav-number">3.</span> <span class="nav-text">菜单设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#菜单项目"><span class="nav-number">3.1.</span> <span class="nav-text">菜单项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#菜单文本"><span class="nav-number">3.2.</span> <span class="nav-text">菜单文本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#菜单图标"><span class="nav-number">3.3.</span> <span class="nav-text">菜单图标</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主题方案"><span class="nav-number">4.</span> <span class="nav-text">主题方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#侧栏"><span class="nav-number">5.</span> <span class="nav-text">侧栏</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人社交链接"><span class="nav-number">5.1.</span> <span class="nav-text">个人社交链接</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#设置链接"><span class="nav-number">5.1.1.</span> <span class="nav-text">设置链接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置图标"><span class="nav-number">5.1.2.</span> <span class="nav-text">设置图标</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#友情链接"><span class="nav-number">5.2.</span> <span class="nav-text">友情链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#个人头像"><span class="nav-number">5.3.</span> <span class="nav-text">个人头像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#侧栏目录"><span class="nav-number">5.4.</span> <span class="nav-text">侧栏目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#版权声明"><span class="nav-number">5.5.</span> <span class="nav-text">版权声明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#侧栏样式"><span class="nav-number">5.6.</span> <span class="nav-text">侧栏样式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#侧栏位置"><span class="nav-number">5.6.1.</span> <span class="nav-text">侧栏位置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#出现时机"><span class="nav-number">5.6.2.</span> <span class="nav-text">出现时机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#间距"><span class="nav-number">5.6.3.</span> <span class="nav-text">间距</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#回到顶部"><span class="nav-number">5.6.4.</span> <span class="nav-text">回到顶部</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#页面百分比"><span class="nav-number">5.6.5.</span> <span class="nav-text">页面百分比</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#移动端可见"><span class="nav-number">5.6.6.</span> <span class="nav-text">移动端可见</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
