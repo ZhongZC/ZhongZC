@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="苟富">
 <meta property="og:description" content="这两天在一直在倒腾个人网站/博客之类的东西，就目前来说，hexo博客部署在Github这个方案是我最满意的。但相关配置什么的都还不会，那就来折腾好了。 本文主要是自用，若有需要请自取。 以下是基于hexo的NexT主题的一些配置。  网站信息网页小图标1favicon: /favicon.ico 找到一张32*32大小的ico格式图片，命名为favicon.ico，放入目录你的仓库\themes\">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-23T16:08:30.115Z">
+<meta property="og:updated_time" content="2017-08-23T18:02:53.087Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo下的NexT主题配置">
 <meta name="twitter:description" content="这两天在一直在倒腾个人网站/博客之类的东西，就目前来说，hexo博客部署在Github这个方案是我最满意的。但相关配置什么的都还不会，那就来折腾好了。 本文主要是自用，若有需要请自取。 以下是基于hexo的NexT主题的一些配置。  网站信息网页小图标1favicon: /favicon.ico 找到一张32*32大小的ico格式图片，命名为favicon.ico，放入目录你的仓库\themes\">
@@ -221,7 +221,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
-            关于
+            我是谁
           </a>
         </li>
       
@@ -351,7 +351,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  592
+                  1,198
                 </span>
               
 
@@ -367,7 +367,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  5
                 </span>
               
             </div>
@@ -396,7 +396,9 @@
 <p>找到一张32*32大小的ico格式图片，命名为<code>favicon.ico</code>，放入目录<code>你的仓库\themes\next\source\</code>下。</p>
 <h3 id="网站关键字"><a href="#网站关键字" class="headerlink" title="网站关键字"></a>网站关键字</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">keywords:</span> <span class="string">"Hexo, NexT"</span></div></pre></td></tr></table></figure>
 <p>修改网站的默认关键字，中间需要用<code>英文逗号</code>隔开。</p>
-<h3 id="RSS"><a href="#RSS" class="headerlink" title="RSS"></a>RSS</h3><p>留坑</p>
+<h3 id="RSS"><a href="#RSS" class="headerlink" title="RSS"></a>RSS</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">rss:</span></div></pre></td></tr></table></figure>
+<p>默认留空，代表开启。如需禁用，在其后填写<code>false</code></p>
+<p>开启后，使用 Hexo 生成的 Feed 链接。 你需要先安装 <a href="https://github.com/hexojs/hexo-generator-feed" target="_blank" rel="external">hexo-generator-feed</a> 插件。</p>
 <h3 id="网站建立时间"><a href="#网站建立时间" class="headerlink" title="网站建立时间"></a>网站建立时间</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">since:</span> <span class="number">2015</span></div></pre></td></tr></table></figure>
 <p>修改footer的<code>年份表示</code>。</p>
 <h3 id="作者图标"><a href="#作者图标" class="headerlink" title="作者图标"></a>作者图标</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">authoricon:</span> <span class="string">heart</span></div></pre></td></tr></table></figure>
@@ -404,7 +406,7 @@
 <blockquote>
 <p>图标名称可以在<a href="http://fontawesome.io/icons/" target="_blank" rel="external">点击此处</a>获取。</p>
 </blockquote>
-<h3 id="版权声明"><a href="#版权声明" class="headerlink" title="版权声明"></a>版权声明</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">copyright:</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
+<h3 id="驱动与主题版权声明"><a href="#驱动与主题版权声明" class="headerlink" title="驱动与主题版权声明"></a>驱动与主题版权声明</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">copyright:</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
 <p>footer那行<code>由 Hexo 强力驱动 | 主题 — NexT.Mist v5.1.2</code>，强烈建议开启，给设计师和工程师最起码的尊重。</p>
 <hr>
 <h2 id="SEO-设置"><a href="#SEO-设置" class="headerlink" title="SEO 设置"></a>SEO 设置</h2><p>百度百科对”seo”的定义是：SEO（Search Engine Optimization），汉译为搜索引擎优化。搜索引擎优化是一种利用搜索引擎的搜索规则来提高目的网站在有关搜索引擎内的排名的方式。<br>讲人话就是你的博客将更容易被Google到。</p>
@@ -416,13 +418,31 @@
 <h3 id="主页副标题"><a href="#主页副标题" class="headerlink" title="主页副标题"></a>主页副标题</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">index_with_subtitle:</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
 <p>如果开启，将添加主页副标题。副标题设置格式如下：<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">subtitle:</span> <span class="string">Subtitle</span></div></pre></td></tr></table></figure></p>
 <hr>
-<h2 id="菜单设置"><a href="#菜单设置" class="headerlink" title="菜单设置"></a>菜单设置</h2><blockquote>
-<p>示例<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="attr">menu:</span></div><div class="line"><span class="attr">  home:</span> <span class="string">/</span></div><div class="line"><span class="attr">  archives:</span> <span class="string">/archives</span></div><div class="line">  <span class="comment">#about: /about</span></div><div class="line">  <span class="comment">#categories: /categories</span></div><div class="line"><span class="attr">  tags:</span> <span class="string">/tags</span></div><div class="line">  <span class="comment">#commonweal: /404.html</span></div></pre></td></tr></table></figure></p>
+<h2 id="菜单设置"><a href="#菜单设置" class="headerlink" title="菜单设置"></a>菜单设置</h2><h3 id="菜单项目"><a href="#菜单项目" class="headerlink" title="菜单项目"></a>菜单项目</h3><p>示例<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="attr">menu:</span></div><div class="line"><span class="attr">  home:</span> <span class="string">/</span></div><div class="line"><span class="attr">  archives:</span> <span class="string">/archives</span></div><div class="line">  <span class="comment">#about: /about</span></div><div class="line">  <span class="comment">#categories: /categories</span></div><div class="line"><span class="attr">  tags:</span> <span class="string">/tags</span></div><div class="line">  <span class="comment">#commonweal: /404.html</span></div></pre></td></tr></table></figure></p>
+<p>设定菜单项目，对应的字段是 menu。 菜单内容的设置格式是：<code>item name: link</code>。可以手动添加其他菜单项目。其中 item name 是一个名称，这个名称并不直接显示在页面上，它将用于匹配图标以及翻译。</p>
+<p> 默认的hexo里没有<code>about</code>、<code>categories</code>、<code>tags</code>、<code>commonweal</code>页面，需要手动创建。</p>
+<p> 在终端创建页面：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hexo new page <span class="string">"about"</span></div><div class="line">hexo new page <span class="string">"categories"</span></div></pre></td></tr></table></figure></p>
+<h3 id="菜单文本"><a href="#菜单文本" class="headerlink" title="菜单文本"></a>菜单文本</h3><p>设置菜单项的显示文本。Hexo 在生成项目名称的时候将使用这个名称查找对应的语言翻译，并提取显示文本。这些翻译文本放置在 NexT 主题目录下的 languages/{language}.yml （{language} 为你所使用的语言）。</p>
+<p>示例<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="attr">menu:</span></div><div class="line"><span class="attr">  home:</span> <span class="string">首页</span></div><div class="line"><span class="attr">  archives:</span> <span class="string">归档</span></div><div class="line"><span class="attr">  categories:</span> <span class="string">分类</span></div><div class="line"><span class="attr">  tags:</span> <span class="string">标签</span></div><div class="line"><span class="attr">  about:</span> <span class="string">关于</span></div><div class="line"><span class="attr">  search:</span> <span class="string">搜索</span></div><div class="line"><span class="attr">  commonweal:</span> <span class="string">公益404</span></div><div class="line"><span class="attr">  something:</span> <span class="string">有料</span></div></pre></td></tr></table></figure></p>
+<h3 id="菜单图标"><a href="#菜单图标" class="headerlink" title="菜单图标"></a>菜单图标</h3><p>设定菜单项的图标，对应的字段是 menu_icons。 此设定格式是 item name: icon name，其中 item name 与上一步所配置的菜单名字对应，icon name 是 Font Awesome 图标的 名字。而 enable 可用于控制是否显示图标，你可以设置成 false 来去掉图标。</p>
+<p>示例<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="attr">menu_icons:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  home:</span> <span class="string">home</span></div><div class="line"><span class="attr">  about:</span> <span class="string">user</span></div><div class="line"><span class="attr">  categories:</span> <span class="string">th</span></div><div class="line"><span class="attr">  schedule:</span> <span class="string">calendar</span></div><div class="line"><span class="attr">  tags:</span> <span class="string">tags</span></div><div class="line"><span class="attr">  archives:</span> <span class="string">archive</span></div><div class="line"><span class="attr">  sitemap:</span> <span class="string">sitemap</span></div><div class="line"><span class="attr">  commonweal:</span> <span class="string">heartbeat</span></div></pre></td></tr></table></figure></p>
+<p>图标名称可以在<a href="http://fontawesome.io/icons/" target="_blank" rel="external">点击此处</a>获取。</p>
+<hr>
+<h2 id="主题方案"><a href="#主题方案" class="headerlink" title="主题方案"></a>主题方案</h2><p>NexT有四种方案，选择其中一种，其他注释处理。</p>
+<p>示例：<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Schemes</span></div><div class="line"><span class="comment">#scheme: Muse</span></div><div class="line"><span class="attr">scheme:</span> <span class="string">Mist</span></div><div class="line"><span class="comment">#scheme: Pisces</span></div><div class="line"><span class="comment">#scheme: Gemini</span></div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="侧栏"><a href="#侧栏" class="headerlink" title="侧栏"></a>侧栏</h2><h3 id="个人社交链接"><a href="#个人社交链接" class="headerlink" title="个人社交链接"></a>个人社交链接</h3><h4 id="设置链接"><a href="#设置链接" class="headerlink" title="设置链接"></a>设置链接</h4><p>链接放置在 social 字段下，一行一个链接。其键值格式是 <code>显示文本: 链接地址</code>。<br>示例：<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Social links</span></div><div class="line"><span class="attr">social:</span></div><div class="line"><span class="attr">  GitHub:</span> <span class="attr">https://github.com/your-user-name</span></div><div class="line"><span class="attr">  Twitter:</span> <span class="attr">https://twitter.com/your-user-name</span></div><div class="line">  <span class="string">微博:</span> <span class="attr">http://weibo.com/your-user-name</span></div><div class="line">  <span class="string">豆瓣:</span> <span class="attr">http://douban.com/people/your-user-name</span></div><div class="line">  <span class="string">知乎:</span> <span class="attr">http://www.zhihu.com/people/your-user-name</span></div><div class="line">  <span class="comment"># 等等</span></div></pre></td></tr></table></figure></p>
+<h4 id="设置图标"><a href="#设置图标" class="headerlink" title="设置图标"></a>设置图标</h4><p>可以通过将<code>enable</code>设置成<code>false</code>来取消图标显示。</p>
+<blockquote>
+<p>图标名称可以在<a href="http://fontawesome.io/icons/" target="_blank" rel="external">点击此处</a>获取。</p>
 </blockquote>
-<p>设定菜单内容，对应的字段是 menu。 菜单内容的设置格式是：<code>item name: link</code>。其中 item name 是一个名称，这个名称并不直接显示在页面上，它将用于匹配图标以及翻译。</p>
-<p>默认的hexo里没有<code>about</code>、<code>categories</code>、<code>tags</code>、<code>commonweal</code>页面，需要手动创建。</p>
-<p>在终端创建页面：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hexo new page &quot;about&quot;</div><div class="line">hexo new page &quot;categories&quot;</div></pre></td></tr></table></figure>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Social Icons</span></div><div class="line"><span class="attr">social_icons:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">true</span></div><div class="line">  <span class="comment"># Icon Mappings</span></div><div class="line"><span class="attr">  GitHub:</span> <span class="string">github</span></div><div class="line"><span class="attr">  Twitter:</span> <span class="string">twitter</span></div><div class="line">  <span class="string">微博:</span> <span class="string">weibo</span></div></pre></td></tr></table></figure>
+<h3 id="友情链接"><a href="#友情链接" class="headerlink" title="友情链接"></a>友情链接</h3><p>默认：<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#links_title: Links</span></div><div class="line"><span class="comment">#links_layout: block</span></div><div class="line"><span class="comment">#links_layout: inline</span></div><div class="line"><span class="comment">#links:</span></div><div class="line">  <span class="comment">#Title: http://example.com/</span></div></pre></td></tr></table></figure></p>
+<p><code>Links</code>可以用来设置标题，<code>links</code>下摆放链接。<br>示例：<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="attr">links_title:</span> <span class="string">看看他们</span></div><div class="line"><span class="comment">#links_layout: block</span></div><div class="line"><span class="comment">#links_layout: inline</span></div><div class="line"><span class="attr">links:</span></div><div class="line">  <span class="string">小土刀:</span> <span class="attr">http://wdxtub.com/</span></div></pre></td></tr></table></figure></p>
+<h3 id="个人头像"><a href="#个人头像" class="headerlink" title="个人头像"></a>个人头像</h3><p>图片命名<code>avatar.jpg</code>或<code>avatar.png</code>，<br>放置在目录<code>你的仓库\themes\next\source\images\</code>下，<br>并设置字段<code>avatar</code><br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">avatar:</span> <span class="string">/images/avatar.jpg</span></div></pre></td></tr></table></figure></p>
+<h3 id="侧栏目录"><a href="#侧栏目录" class="headerlink" title="侧栏目录"></a>侧栏目录</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">toc:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  number:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  wrap:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
+<p><code>enable</code>字段决定是否启动文章目录功能，<code>number</code>字段决定是否自动为目录添加数字标记，<code>wrap</code>字段决定目录标题过长时是否换行。</p>
+<h3 id="版权声明"><a href="#版权声明" class="headerlink" title="版权声明"></a>版权声明</h3>
       
     </div>
     
@@ -603,8 +623,28 @@
 
         
         
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-nd.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
 
         
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              看看他们
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://39.108.133.170/" title="lyfoon" target="_blank">lyfoon</a>
+                </li>
+              
+            </ul>
+          </div>
         
 
         
@@ -622,7 +662,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#网站信息"><span class="nav-number">1.</span> <span class="nav-text">网站信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网页小图标"><span class="nav-number">1.1.</span> <span class="nav-text">网页小图标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网站关键字"><span class="nav-number">1.2.</span> <span class="nav-text">网站关键字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RSS"><span class="nav-number">1.3.</span> <span class="nav-text">RSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网站建立时间"><span class="nav-number">1.4.</span> <span class="nav-text">网站建立时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#作者图标"><span class="nav-number">1.5.</span> <span class="nav-text">作者图标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#版权声明"><span class="nav-number">1.6.</span> <span class="nav-text">版权声明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SEO-设置"><span class="nav-number">2.</span> <span class="nav-text">SEO 设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#规范化"><span class="nav-number">2.1.</span> <span class="nav-text">规范化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SEO-站点链接优化"><span class="nav-number">2.2.</span> <span class="nav-text">SEO 站点链接优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主页副标题"><span class="nav-number">2.3.</span> <span class="nav-text">主页副标题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#菜单设置"><span class="nav-number">3.</span> <span class="nav-text">菜单设置</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#网站信息"><span class="nav-number">1.</span> <span class="nav-text">网站信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网页小图标"><span class="nav-number">1.1.</span> <span class="nav-text">网页小图标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网站关键字"><span class="nav-number">1.2.</span> <span class="nav-text">网站关键字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RSS"><span class="nav-number">1.3.</span> <span class="nav-text">RSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网站建立时间"><span class="nav-number">1.4.</span> <span class="nav-text">网站建立时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#作者图标"><span class="nav-number">1.5.</span> <span class="nav-text">作者图标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#驱动与主题版权声明"><span class="nav-number">1.6.</span> <span class="nav-text">驱动与主题版权声明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SEO-设置"><span class="nav-number">2.</span> <span class="nav-text">SEO 设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#规范化"><span class="nav-number">2.1.</span> <span class="nav-text">规范化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SEO-站点链接优化"><span class="nav-number">2.2.</span> <span class="nav-text">SEO 站点链接优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主页副标题"><span class="nav-number">2.3.</span> <span class="nav-text">主页副标题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#菜单设置"><span class="nav-number">3.</span> <span class="nav-text">菜单设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#菜单项目"><span class="nav-number">3.1.</span> <span class="nav-text">菜单项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#菜单文本"><span class="nav-number">3.2.</span> <span class="nav-text">菜单文本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#菜单图标"><span class="nav-number">3.3.</span> <span class="nav-text">菜单图标</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主题方案"><span class="nav-number">4.</span> <span class="nav-text">主题方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#侧栏"><span class="nav-number">5.</span> <span class="nav-text">侧栏</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人社交链接"><span class="nav-number">5.1.</span> <span class="nav-text">个人社交链接</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#设置链接"><span class="nav-number">5.1.1.</span> <span class="nav-text">设置链接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置图标"><span class="nav-number">5.1.2.</span> <span class="nav-text">设置图标</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#友情链接"><span class="nav-number">5.2.</span> <span class="nav-text">友情链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#个人头像"><span class="nav-number">5.3.</span> <span class="nav-text">个人头像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#侧栏目录"><span class="nav-number">5.4.</span> <span class="nav-text">侧栏目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#版权声明"><span class="nav-number">5.5.</span> <span class="nav-text">版权声明</span></a></li></ol></li></ol></div>
             
 
           </div>
