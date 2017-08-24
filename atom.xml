@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-08-24T18:04:03.249Z</updated>
+  <updated>2017-08-24T19:05:28.999Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://gaufoo.com/2017/08/25/test%E6%8C%87%E4%BB%A4%E7%94%A8%E4%BA%8E%E6%AF%94%E8%BE%83%E6%95%B0%E5%80%BC%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%8F%AF%E8%83%BD%E6%80%A7%E5%8F%8A%E6%8E%A8%E5%AF%BC/"/>
     <id>http://gaufoo.com/2017/08/25/test指令用于比较数值大小的可能性及推导/</id>
     <published>2017-08-24T16:50:36.000Z</published>
-    <updated>2017-08-24T18:04:03.249Z</updated>
+    <updated>2017-08-24T19:05:28.999Z</updated>
     
     <content type="html"><![CDATA[<p>x86汇编语言中，cmp指令常用于两数值之间比较大小，test指令常用于位级判断。那么，test可不可以也用于比较数值大小呢？</p>
 <a id="more"></a>
@@ -30,11 +30,11 @@
 <p>CMP指令与SUB指令的行为是一样的。在ATT格式中，列出操作数的顺序是相反的，这使代码有点难读。如果两个操作数相等，这些指令会将零标志位设置为1，而其他的标志可以用来确定两个操作数之间的大小关系。</p>
 <p>TEST指令的行为和AND指令一样，除了它们只设置条件码而不改变目的寄存器的值。典型的用法是，两个操作数是一样的（例如，testq %rax, %rax用来检查%rax是负数，零，还是正数），或其中的一个操作数是一个掩码，用来指示哪些位应该被测试。</p>
 </blockquote>
-<p>唔，看来课本只是重复了我们的问题，并没有给出解答。</p>
+<p>唔，看来课本只是重复了我们的问题，并没有给出解答。<br><br></p>
 <blockquote>
 <p>典型的用法是，两个操作数是一样的（例如，testq %rax, %rax用来检查%rax是负数，零，还是正数）</p>
 </blockquote>
-<p>但从这可以看出，<code>test</code>确实有这个用法。</p>
+<p>但从这可以看出，<code>test</code>确实有这个用法。<br><br></p>
 <p><img src="/images/17-08-25-1.png" alt="p2"><br>这里找到线索，<code>set</code>指令是和条件码直接联系的。那么就从<code>test</code>如何影响和改变条件码入手吧。</p>
 <h2 id="推导"><a href="#推导" class="headerlink" title="推导"></a>推导</h2><blockquote>
 <p>机器是通过某些指令来改变条件码，然后通过判断条件码的组合来完成控制操作。个人理解是，这些控制指令是对条件码判断的一种封装。</p>
