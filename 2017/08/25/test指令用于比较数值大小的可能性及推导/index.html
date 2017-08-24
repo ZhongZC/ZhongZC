@@ -104,7 +104,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://gaufoo.com/images/17-08-25-0.jpg">
 <meta property="og:image" content="http://gaufoo.com/images/17-08-25-1.png">
-<meta property="og:updated_time" content="2017-08-24T17:08:18.541Z">
+<meta property="og:updated_time" content="2017-08-24T17:18:27.315Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="test指令用于比较数值大小的可能性及推导">
 <meta name="twitter:description" content="x86汇编语言中，cmp指令常用于两数值之间比较大小，test指令常用于位级判断。那么，test可不可以也用于比较数值大小呢？">
@@ -410,7 +410,7 @@
 <p>回到我们纠结的这个问题上面：为什么<code>test</code>可以用于判断大小，以及 如何形成判断。</p>
 <p><code>cmp</code>的行为相对容易理解，右操作数减去左操作数，然后修改<code>CF</code> <code>ZF</code> <code>SF</code> <code>OF</code>的值。而<code>test</code>则是两个操作数进行<code>与</code>，不会影响到<code>OF</code> <code>CF</code>，仅能改变<code>SF</code> <code>ZF</code>，确定真的可以用来比较大小吗？</p>
 <p>不过，<code>test</code>用于比较大小的范围极窄，仅仅是用于判断符号，也就是和数值<code>0</code>作比较。只有这种特殊情况的话，进行推理则方便多了，大不了枚举嘛。</p>
-<p>下面就来对比<code>test S, S</code>和<code>cmp 0，S</code>。</p>
+<p>下面就来对比<code>test S, S</code>和<code>cmp $0，S</code>。</p>
 <p>当<code>S</code>看作有符号数，且大于<code>0</code>时：</p>
 <ul>
 <li><code>test S, S</code>，<code>SF</code>置0，<code>ZF</code>置0，<code>OF</code>置0</li>
