@@ -104,7 +104,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://gaufoo.com/images/17-08-25-0.jpg">
 <meta property="og:image" content="http://gaufoo.com/images/17-08-25-1.png">
-<meta property="og:updated_time" content="2017-08-24T17:18:27.315Z">
+<meta property="og:updated_time" content="2017-08-24T17:21:29.137Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="test指令用于比较数值大小的可能性及推导">
 <meta name="twitter:description" content="x86汇编语言中，cmp指令常用于两数值之间比较大小，test指令常用于位级判断。那么，test可不可以也用于比较数值大小呢？">
@@ -365,7 +365,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,073 字
+                  1,074 字
                 </span>
               
 
@@ -414,29 +414,29 @@
 <p>当<code>S</code>看作有符号数，且大于<code>0</code>时：</p>
 <ul>
 <li><code>test S, S</code>，<code>SF</code>置0，<code>ZF</code>置0，<code>OF</code>置0</li>
-<li><code>cmp 0，S</code>，<code>SF</code>置0，<code>ZF</code>置0，<code>OF</code>置0</li>
+<li><code>cmp $0，S</code>，<code>SF</code>置0，<code>ZF</code>置0，<code>OF</code>置0</li>
 </ul>
 <p>当<code>S</code>看作有符号数，且等于<code>0</code>时：</p>
 <ul>
 <li><code>test S, S</code>，<code>SF</code>置0，<code>ZF</code>置1，<code>OF</code>置0</li>
-<li><code>cmp 0，S</code>，<code>SF</code>置0，<code>ZF</code>置1，<code>OF</code>置0</li>
+<li><code>cmp $0，S</code>，<code>SF</code>置0，<code>ZF</code>置1，<code>OF</code>置0</li>
 </ul>
 <p>当<code>S</code>看作有符号数，且小于<code>0</code>时：</p>
 <ul>
 <li><code>test S, S</code>，<code>SF</code>置1，<code>ZF</code>置0，<code>OF</code>置0</li>
-<li><code>cmp 0，S</code>，<code>SF</code>置1，<code>ZF</code>置0，<code>OF</code>置0</li>
+<li><code>cmp $0，S</code>，<code>SF</code>置1，<code>ZF</code>置0，<code>OF</code>置0</li>
 </ul>
 <p>当<code>S</code>看作无符号数，且等于<code>0</code>时：</p>
 <ul>
 <li><code>test S, S</code>，<code>ZF</code>置1，<code>CF</code>置0</li>
-<li><code>cmp 0，S</code>，<code>ZF</code>置1，<code>CF</code>置0</li>
+<li><code>cmp $0，S</code>，<code>ZF</code>置1，<code>CF</code>置0</li>
 </ul>
 <p>当<code>S</code>看作无符号数，且不等于<code>0</code>时：</p>
 <ul>
 <li><code>test S, S</code>，<code>ZF</code>置0，<code>CF</code>置0</li>
-<li><code>cmp 0，S</code>，<code>ZF</code>置0，<code>CF</code>置0</li>
+<li><code>cmp $0，S</code>，<code>ZF</code>置0，<code>CF</code>置0</li>
 </ul>
-<p>惊奇地发现这两句指令的行为是<strong>一模一样</strong>的。经过思考，原因在于<code>cmp</code>在与<code>0</code>作比较时，是不可能发生<code>溢出</code>和<code>进（借）位</code>，因而不可能影响<code>OF</code> <code>CF</code>位，这和<code>test</code>指令是一样的。剩下的<code>SF</code>和<code>ZF</code>很容易推理，这里不赘述。</p>
+<p>惊奇地发现这两句指令的行为是<strong>一模一样</strong>的。经过思考，原因在于<code>cmp</code>在与<code>0</code>作比较时，是不可能发生<em>溢出</em>和<em>进（借）位</em>的，因而不可能影响<code>OF</code> <code>CF</code>位，这和<code>test</code>指令是一样的。剩下的<code>SF</code>和<code>ZF</code>很容易推理，这里不赘述。</p>
 <h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>对这样一段C代码进行汇编处理。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">test</span><span class="params">(<span class="keyword">int</span> a)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="keyword">return</span> a &gt; <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h3 id="不进行优化"><a href="#不进行优化" class="headerlink" title="不进行优化"></a>不进行优化</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -S test.c</div></pre></td></tr></table></figure>
 <p>得到汇编代码（节选）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">movl	%edi, -4(%rbp)</div><div class="line">cmpl	$0, -4(%rbp)</div><div class="line">setg	%al</div></pre></td></tr></table></figure></p>
