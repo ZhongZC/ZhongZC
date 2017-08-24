@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-08-23T20:03:46.438Z</updated>
+  <updated>2017-08-24T05:09:13.254Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -20,10 +20,10 @@
     <link href="http://gaufoo.com/2017/08/23/Hexo%E4%B8%8B%E7%9A%84NexT%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE/"/>
     <id>http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置/</id>
     <published>2017-08-23T14:31:52.000Z</published>
-    <updated>2017-08-23T20:03:46.438Z</updated>
+    <updated>2017-08-24T05:09:13.254Z</updated>
     
-    <content type="html"><![CDATA[<p>这两天在一直在倒腾个人网站/博客之类的东西，就目前来说，hexo博客部署在Github这个方案是我最满意的。但相关配置什么的都还不会，那就来折腾好了。</p>
-<p>本文主要是自用，若有需要请自取。</p>
+    <content type="html"><![CDATA[<p>这两天在一直在倒腾个人网站/博客之类的东西，就目前来说，hexo博客部署在Github这个方案是我最满意的。但相关配置什么的都还不会，那就来折腾好了，一边试验一边记录。</p>
+<p>本文旨在方便作者以后的查阅。如有需要，高兴你来自取。</p>
 <p>以下是NexT主题的一些配置。</p>
 <a id="more"></a>
 <hr>
@@ -112,8 +112,8 @@
     
     <summary type="html">
     
-      &lt;p&gt;这两天在一直在倒腾个人网站/博客之类的东西，就目前来说，hexo博客部署在Github这个方案是我最满意的。但相关配置什么的都还不会，那就来折腾好了。&lt;/p&gt;
-&lt;p&gt;本文主要是自用，若有需要请自取。&lt;/p&gt;
+      &lt;p&gt;这两天在一直在倒腾个人网站/博客之类的东西，就目前来说，hexo博客部署在Github这个方案是我最满意的。但相关配置什么的都还不会，那就来折腾好了，一边试验一边记录。&lt;/p&gt;
+&lt;p&gt;本文旨在方便作者以后的查阅。如有需要，高兴你来自取。&lt;/p&gt;
 &lt;p&gt;以下是NexT主题的一些配置。&lt;/p&gt;
     
     </summary>
