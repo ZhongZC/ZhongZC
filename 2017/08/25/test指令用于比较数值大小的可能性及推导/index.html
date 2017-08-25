@@ -104,7 +104,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://gaufoo.com/images/17-08-25-0.jpg">
 <meta property="og:image" content="http://gaufoo.com/images/17-08-25-1.png">
-<meta property="og:updated_time" content="2017-08-25T05:23:49.797Z">
+<meta property="og:updated_time" content="2017-08-25T09:14:43.916Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="test指令用于比较数值大小的可能性及推导">
 <meta name="twitter:description" content="x86汇编语言中，cmp指令常用于两数值之间比较大小，test指令常用于位级判断。那么，test可不可以也用于比较数值大小呢？">
@@ -365,7 +365,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,067 字
+                  990 字
                 </span>
               
 
@@ -393,7 +393,7 @@
         <p>x86汇编语言中，cmp指令常用于两数值之间比较大小，test指令常用于位级判断。那么，test可不可以也用于比较数值大小呢？</p>
 <a id="more"></a>
 <hr>
-<h2 id="提出问题"><a href="#提出问题" class="headerlink" title="提出问题"></a>提出问题</h2><p>今天有朋友向我提出了这样的问题，<img src="/images/17-08-25-0.jpg" alt="p1"><br>相信他和曾经的我一样，不明白为什么<code>test</code>还有这种操作，<code>set</code>指令和<code>test</code>究竟是怎么凑到一起的。</p>
+<h2 id="提出问题"><a href="#提出问题" class="headerlink" title="提出问题"></a>提出问题</h2><p>今天有朋友向我提出了这样的问题，<img src="/images/17-08-25-0.jpg" alt="p1"><br>为什么<code>test</code>还有这种操作，<code>set</code>指令和<code>test</code>究竟是怎么凑到一起的。</p>
 <h2 id="查找信息"><a href="#查找信息" class="headerlink" title="查找信息"></a>查找信息</h2><blockquote>
 <p>CMP指令与SUB指令的行为是一样的。在ATT格式中，列出操作数的顺序是相反的，这使代码有点难读。如果两个操作数相等，这些指令会将零标志位设置为1，而其他的标志可以用来确定两个操作数之间的大小关系。</p>
 <p>TEST指令的行为和AND指令一样，除了它们只设置条件码而不改变目的寄存器的值。典型的用法是，两个操作数是一样的（例如，testq %rax, %rax用来检查%rax是负数，零，还是正数），或其中的一个操作数是一个掩码，用来指示哪些位应该被测试。</p>
@@ -403,12 +403,12 @@
 <p>典型的用法是，两个操作数是一样的（例如，testq %rax, %rax用来检查%rax是负数，零，还是正数）</p>
 </blockquote>
 <p>但从这可以看出，<code>test</code>确实有这个用法。<br><br></p>
-<p><img src="/images/17-08-25-1.png" alt="p2"><br>这里找到线索，<code>set</code>指令是和条件码直接联系的。那么就从<code>test</code>如何影响和改变条件码入手吧。</p>
+<p><img src="/images/17-08-25-1.png" alt="p2"><br>这里找到线索，<code>set</code>指令是和条件码直接关联的。那么就从<code>test</code>如何影响和改变条件码入手吧。</p>
 <h2 id="推导"><a href="#推导" class="headerlink" title="推导"></a>推导</h2><blockquote>
 <p>机器是通过某些指令来改变条件码，然后通过判断条件码的组合来完成控制操作。个人理解是，这些控制指令是对条件码判断的一种封装。</p>
 </blockquote>
 <p>回到我们纠结的这个问题上面：为什么<code>test</code>可以用于判断大小，以及 如何形成判断。</p>
-<p><code>cmp</code>的行为相对容易理解，右操作数减去左操作数，然后修改<code>CF</code> <code>ZF</code> <code>SF</code> <code>OF</code>的值。而<code>test</code>则是两个操作数进行<code>与</code>，不会影响到<code>OF</code> <code>CF</code>，仅能改变<code>SF</code> <code>ZF</code>，确定真的可以用来比较大小吗？</p>
+<p><code>cmp</code>的行为相对容易理解，右操作数减去左操作数，然后修改<code>CF</code> <code>ZF</code> <code>SF</code> <code>OF</code>的值。<br><br>而<code>test</code>则是两个操作数进行<code>与</code>，不会影响到<code>OF</code> <code>CF</code>，仅能改变<code>SF</code> <code>ZF</code>，确定真的可以用来比较大小吗？</p>
 <p>不过，<code>test</code>用于比较大小的范围极窄，仅仅是用于判断符号，也就是和数值<code>0</code>作比较。只有这种特殊情况的话，进行推理则方便多了，大不了穷举嘛。</p>
 <p>下面就来对比<code>test S, S</code>和<code>cmp $0，S</code>。</p>
 <p>当<code>S</code>看作有符号数，且大于<code>0</code>时：</p>
@@ -442,9 +442,8 @@
 <p>得到汇编代码（节选）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">movl	%edi, -4(%rbp)</div><div class="line">cmpl	$0, -4(%rbp)</div><div class="line">setg	%al</div></pre></td></tr></table></figure></p>
 <h3 id="进行-O1-优化"><a href="#进行-O1-优化" class="headerlink" title="进行 O1 优化"></a>进行 O1 优化</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -S -O1 test.c</div></pre></td></tr></table></figure>
 <p>得到汇编代码（节选）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">testl	%edi, %edi</div><div class="line">setg	%al</div></pre></td></tr></table></figure></p>
-<p>事实证明，<code>test</code>确实可以用于与<code>0</code>进行大小比较，而且编译器更愿意优化成这种形式。</p>
-<h2 id="结论与反思"><a href="#结论与反思" class="headerlink" title="结论与反思"></a>结论与反思</h2><p>我们当然可以利用直观的指令名称来使用指令，但不幸的是，我们时常会发现自己无法理解编译器的某些行为。这时，就需要更进一步地往底层探索。</p>
-<p>总之，当我们难以理解指令的逻辑时，则需要去探究它背后具体的操作过程，才能真正地理解操作的实际效果。</p>
+<p>事实证明，<code>test</code>确实可以用于与<code>0</code>进行大小比较，且编译器更愿意优化成这种形式。</p>
+<h2 id="结论与反思"><a href="#结论与反思" class="headerlink" title="结论与反思"></a>结论与反思</h2><p>当我们难以理解指令的逻辑时，则需要去探究它背后具体的操作过程，才能真正地理解操作的实际效果。</p>
 
       
     </div>
