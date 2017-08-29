@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-08-29T09:59:22.542Z</updated>
+  <updated>2017-08-29T10:04:34.860Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -17,10 +17,10 @@
   
   <entry>
     <title>Python获取豆瓣电影Top250</title>
-    <link href="http://gaufoo.com/2017/08/29/Python%E8%8E%B7%E5%8F%96%E8%B1%86%E7%93%A3%E7%94%B5%E5%BD%B1-Top-250/"/>
-    <id>http://gaufoo.com/2017/08/29/Python获取豆瓣电影-Top-250/</id>
+    <link href="http://gaufoo.com/2017/08/29/Python%E8%8E%B7%E5%8F%96%E8%B1%86%E7%93%A3%E7%94%B5%E5%BD%B1Top250/"/>
+    <id>http://gaufoo.com/2017/08/29/Python获取豆瓣电影Top250/</id>
     <published>2017-08-29T09:57:35.000Z</published>
-    <updated>2017-08-29T09:59:22.542Z</updated>
+    <updated>2017-08-29T10:04:34.860Z</updated>
     
     <content type="html"><![CDATA[<p>  练习html各元素的获取，熟悉BeautifulSoup的使用。<br>  实例：豆瓣top250电影名单获取。</p>
 <a id="more"></a>
@@ -38,6 +38,14 @@
     
     </summary>
     
+      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="Python" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/Python/"/>
+    
+    
+      <category term="Python" scheme="http://gaufoo.com/tags/Python/"/>
+    
+      <category term="web" scheme="http://gaufoo.com/tags/web/"/>
     
   </entry>
   
