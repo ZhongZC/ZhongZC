@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-08-30T16:47:16.373Z</updated>
+  <updated>2017-08-30T16:52:21.719Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://gaufoo.com/2017/08/30/Python%E4%B9%8BRequests%E5%BA%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     <id>http://gaufoo.com/2017/08/30/Python之Requests库学习笔记/</id>
     <published>2017-08-30T15:59:39.000Z</published>
-    <updated>2017-08-30T16:47:16.373Z</updated>
+    <updated>2017-08-30T16:52:21.719Z</updated>
     
     <content type="html"><![CDATA[<p>记录以备后用</p>
 <a id="more"></a>
@@ -90,8 +90,8 @@
 </ul>
 <h3 id="判断异常的方法"><a href="#判断异常的方法" class="headerlink" title="判断异常的方法"></a>判断异常的方法</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.get(url)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.raise_for_status()</div></pre></td></tr></table></figure>
 <p><code>r.raise_for_status()</code>: 如果不是200，产生异常 <code>requests.HTTPError</code></p>
-<p><code>r.raise_for_status()</code>在方法内部判断<code>r.status_code</code>是否等于200，不需要<br>增加额外的if语句，该语句便于利用try‐except进行异常处理</p>
-<h2 id="爬取网页的通用代码框架"><a href="#爬取网页的通用代码框架" class="headerlink" title="爬取网页的通用代码框架"></a>爬取网页的通用代码框架</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getHTMLText</span><span class="params">(rul)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        r = requests.get(url,timeout = <span class="number">30</span>)</div><div class="line">        r.raise_for_status()</div><div class="line">        r.encoding = r.apparent_encoding</div><div class="line">        <span class="keyword">return</span> r.text</div><div class="line">    <span class="keyword">except</span>:</div><div class="line">        <span class="keyword">return</span> <span class="string">"产生异常"</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    url = <span class="string">"https://www.baidu.com"</span></div><div class="line">    print(getHTMLText(url))</div></pre></td></tr></table></figure>]]></content>
+<p><code>r.raise_for_status()</code>在方法内部判断<code>r.status_code</code>是否等于200，不需要增加额外的if语句，该语句便于利用try‐except进行异常处理</p>
+<h2 id="爬取网页的通用代码框架"><a href="#爬取网页的通用代码框架" class="headerlink" title="爬取网页的通用代码框架"></a>爬取网页的通用代码框架</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getHTMLText</span><span class="params">(url)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        r = requests.get(url,timeout = <span class="number">30</span>)</div><div class="line">        r.raise_for_status()</div><div class="line">        r.encoding = r.apparent_encoding</div><div class="line">        <span class="keyword">return</span> r.text</div><div class="line">    <span class="keyword">except</span>:</div><div class="line">        <span class="keyword">return</span> <span class="string">"产生异常"</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    url = <span class="string">"https://www.baidu.com"</span></div><div class="line">    print(getHTMLText(url))</div></pre></td></tr></table></figure>]]></content>
     
     <summary type="html">
     
