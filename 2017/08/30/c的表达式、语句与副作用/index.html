@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT, Gaufoo" />
+  <meta name="keywords" content="C," />
 
 
 
@@ -94,17 +94,18 @@
 
 
 
-<meta name="description" content="知乎上有这样一个问题: C语言中 *p++ = *p 是如何工作的？我在测试一个运算符优先级的代码的时候，碰见了这个问题，我没法用自己的方式理解，很抱歉打扰各位，希望你们在闲暇之余，能解答一下我的困惑。示例代码：12345678910111213141516171819#include &amp;lt;stdio.h&amp;gt;#define LEN 5int main ()&amp;#123;  printf (&quot;">
+<meta name="description" content="C语言中，通常利用副作用来完成我们的目标。但由于副作用产生的时机，其结果有时会让人疑惑。">
+<meta name="keywords" content="C">
 <meta property="og:type" content="article">
 <meta property="og:title" content="c的表达式、语句与副作用">
 <meta property="og:url" content="http://gaufoo.com/2017/08/30/c的表达式、语句与副作用/index.html">
 <meta property="og:site_name" content="苟富">
-<meta property="og:description" content="知乎上有这样一个问题: C语言中 *p++ = *p 是如何工作的？我在测试一个运算符优先级的代码的时候，碰见了这个问题，我没法用自己的方式理解，很抱歉打扰各位，希望你们在闲暇之余，能解答一下我的困惑。示例代码：12345678910111213141516171819#include &amp;lt;stdio.h&amp;gt;#define LEN 5int main ()&amp;#123;  printf (&quot;">
+<meta property="og:description" content="C语言中，通常利用副作用来完成我们的目标。但由于副作用产生的时机，其结果有时会让人疑惑。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-30T11:21:14.288Z">
+<meta property="og:updated_time" content="2017-08-30T12:24:58.301Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="c的表达式、语句与副作用">
-<meta name="twitter:description" content="知乎上有这样一个问题: C语言中 *p++ = *p 是如何工作的？我在测试一个运算符优先级的代码的时候，碰见了这个问题，我没法用自己的方式理解，很抱歉打扰各位，希望你们在闲暇之余，能解答一下我的困惑。示例代码：12345678910111213141516171819#include &amp;lt;stdio.h&amp;gt;#define LEN 5int main ()&amp;#123;  printf (&quot;">
+<meta name="twitter:description" content="C语言中，通常利用副作用来完成我们的目标。但由于副作用产生的时机，其结果有时会让人疑惑。">
 
 
 
@@ -317,6 +318,39 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -338,7 +372,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  130 字
+                  744 字
                 </span>
               
 
@@ -363,8 +397,27 @@
       
 
       
-        <p>知乎上有这样一个<a href="https://www.zhihu.com/question/64370774/answer/219591438" target="_blank" rel="external">问题</a>:</p>
-<blockquote><br><strong>C语言中 *p++ = *p 是如何工作的？</strong><br>我在测试一个运算符优先级的代码的时候，碰见了这个问题，我没法用自己的方式理解，很抱歉打扰各位，希望你们在闲暇之余，能解答一下我的困惑。<br><br>示例代码：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> LEN 5</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="built_in">printf</span> (<span class="string">"Hello World"</span>);</div><div class="line">  <span class="keyword">int</span> a[LEN] = &#123; <span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>, <span class="number">400</span>, <span class="number">500</span> &#125;;</div><div class="line">  <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">  <span class="keyword">int</span> *p = a;</div><div class="line"></div><div class="line">  <span class="keyword">for</span> (; i &lt; LEN; ++i)</div><div class="line">    &#123;</div><div class="line">        *p++ = *p;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>;i&lt;LEN;++i)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>,a[i]);</div><div class="line">    &#125;</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure><br><br></blockquote>
+        <p>C语言中，通常利用副作用来完成我们的目标。但由于副作用产生的时机，其结果有时会让人疑惑。</p>
+<a id="more"></a>
+<hr>
+<p>知乎上有这样一个<a href="https://www.zhihu.com/question/64370774/answer/219591438" target="_blank" rel="external">问题</a>:</p>
+<blockquote><strong>C语言中 *p++ = *p 是如何工作的？</strong><br>我在测试一个运算符优先级的代码的时候，碰见了这个问题，我没法用自己的方式理解，很抱歉打扰各位，希望你们在闲暇之余，能解答一下我的困惑。<br><br>示例代码：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> LEN 5</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="built_in">printf</span> (<span class="string">"Hello World"</span>);</div><div class="line">  <span class="keyword">int</span> a[LEN] = &#123; <span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>, <span class="number">400</span>, <span class="number">500</span> &#125;;</div><div class="line">  <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">  <span class="keyword">int</span> *p = a;</div><div class="line"></div><div class="line">  <span class="keyword">for</span> (; i &lt; LEN; ++i)</div><div class="line">    &#123;</div><div class="line">        *p++ = *p;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>;i&lt;LEN;++i)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>,a[i]);</div><div class="line">    &#125;</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure><br><br></blockquote>
+
+
+
+<p>问题的解答需要了解这些概念：</p>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h3 id="顺序点"><a href="#顺序点" class="headerlink" title="顺序点"></a>顺序点</h3><blockquote>A sequence point is a point in program execution at which all side effects are evaluated before going on to<br>the next step. In C, the semicolon in a statement marks a sequence point. That means all changes made by<br>assignment operators, increment operators, and decrement operators in a statement must take place before a<br>program proceeds to the next statement. Some operators that we’ll discuss in later chapters have sequence<br>points. Also, the end of any full expression is a sequence point.<br></blockquote>
+
+
+<p>在顺序点处，所有的副作用都在进入下一步前被计算。<br>也就是说，一句语句中的赋值、自增、自减所作出的改变必须在程序进入下一个语句前发生。在C中，语句里的分号标志了一个顺序点。任何一个完整的表达式的结束也是一个顺序点。</p>
+<p>但是，并<strong>没有保证</strong>在哪个表达式执行后发生。其结果取决于编译器的处理。</p>
+<h3 id="完整的表达式"><a href="#完整的表达式" class="headerlink" title="完整的表达式"></a>完整的表达式</h3><blockquote>What’s a full expression? A full expression is one that’s not a subexpression of a larger expression. Examples<br>of full expressions include the expression in an expression statement and the expression serving as a test<br>condition for a while loop.<br></blockquote>
+
+
+<p>完整的表达式不应该是更大的表达式中的子表达式。而是那些在表达式语句里的、以及在一个while循环里作为判断条件的表达式。</p>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p>考虑：<br><code>y = (4 + x++) + (6 + x++);</code></p>
+<p>C只能保证下一条语句前<code>x</code>自增了两次，却没有保证<code>x</code>是某个子表达式被计算后增加还是整个表达式被求值后增加。</p>
+<h2 id="题目的解答"><a href="#题目的解答" class="headerlink" title="题目的解答"></a>题目的解答</h2><blockquote><code>*p++=*p;</code><br>这一句话一共包含了四个操作：<br>1. <code>*p</code> // 等号左边那个<br>2. <code>p++</code><br>3. <code>*p</code><br>4. <code>=</code><br>这些操作的所有依赖关系如下：<br><li> 1(<code>*p</code>)在2(<code>p++</code>)之前执行<br></li><li> 4(<code>=</code>)在1(<code>*p</code>)和3(<code>*p</code>)之后执行<br>有了这个约束，那么这四个操作的所有可能的顺序就有（人肉枚举有可能出错你自己检查）：<br></li><li> 1234<br></li><li> 1324<br></li><li> 1342<br></li><li> 3124<br></li><li> 3142<br><br>分别的意思就是<br></li><li> p[0]=p[1];p++;<br></li><li> p[0]=p[0];p++;<br></li><li> p[0]=p[0];p++;<br></li><li> p[0]=p[0];p++;<br></li><li> p[0]=p[0];p++;<br><br>作者：vczh<br>链接：<a href="https://www.zhihu.com/question/64370774/answer/219580436" target="_blank" rel="external">https://www.zhihu.com/question/64370774/answer/219580436</a><br>来源：知乎<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。<br></li></blockquote>
 
       
     </div>
@@ -379,6 +432,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"># C</a>
+          
+        </div>
       
 
       
@@ -451,8 +510,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/avatar.jpg"
@@ -480,7 +548,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -491,7 +559,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -564,6 +632,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#顺序点"><span class="nav-number">1.1.</span> <span class="nav-text">顺序点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#完整的表达式"><span class="nav-number">1.2.</span> <span class="nav-text">完整的表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#举例"><span class="nav-number">1.3.</span> <span class="nav-text">举例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#题目的解答"><span class="nav-number">2.</span> <span class="nav-text">题目的解答</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
