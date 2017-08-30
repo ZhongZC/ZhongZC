@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-08-29T11:34:05.958Z</updated>
+  <updated>2017-08-30T11:21:14.288Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -14,6 +14,27 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>c的表达式、语句与副作用</title>
+    <link href="http://gaufoo.com/2017/08/30/c%E7%9A%84%E8%A1%A8%E8%BE%BE%E5%BC%8F%E3%80%81%E8%AF%AD%E5%8F%A5%E4%B8%8E%E5%89%AF%E4%BD%9C%E7%94%A8/"/>
+    <id>http://gaufoo.com/2017/08/30/c的表达式、语句与副作用/</id>
+    <published>2017-08-30T11:17:05.000Z</published>
+    <updated>2017-08-30T11:21:14.288Z</updated>
+    
+    <content type="html"><![CDATA[<p>知乎上有这样一个<a href="https://www.zhihu.com/question/64370774/answer/219591438" target="_blank" rel="external">问题</a>:</p>
+<blockquote><br><strong>C语言中 *p++ = *p 是如何工作的？</strong><br>我在测试一个运算符优先级的代码的时候，碰见了这个问题，我没法用自己的方式理解，很抱歉打扰各位，希望你们在闲暇之余，能解答一下我的困惑。<br><br>示例代码：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> LEN 5</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="built_in">printf</span> (<span class="string">"Hello World"</span>);</div><div class="line">  <span class="keyword">int</span> a[LEN] = &#123; <span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>, <span class="number">400</span>, <span class="number">500</span> &#125;;</div><div class="line">  <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">  <span class="keyword">int</span> *p = a;</div><div class="line"></div><div class="line">  <span class="keyword">for</span> (; i &lt; LEN; ++i)</div><div class="line">    &#123;</div><div class="line">        *p++ = *p;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>;i&lt;LEN;++i)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>,a[i]);</div><div class="line">    &#125;</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure><br><br></blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;知乎上有这样一个&lt;a href=&quot;https://www.zhihu.com/question/64370774/answer/219591438&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;问题&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;&lt;br&gt;&lt;st
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Python获取豆瓣电影Top250</title>
