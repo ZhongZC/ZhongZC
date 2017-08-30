@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="苟富">
 <meta property="og:description" content="C语言中，通常利用副作用来完成我们的目标。但由于副作用产生的时机，其结果有时会让人疑惑。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-30T12:30:47.735Z">
+<meta property="og:updated_time" content="2017-08-30T12:34:47.392Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C的表达式、语句与副作用">
 <meta name="twitter:description" content="C语言中，通常利用副作用来完成我们的目标。但由于副作用产生的时机，其结果有时会让人疑惑。">
@@ -414,7 +414,7 @@
 <h3 id="完整的表达式"><a href="#完整的表达式" class="headerlink" title="完整的表达式"></a>完整的表达式</h3><blockquote>What’s a full expression? A full expression is one that’s not a subexpression of a larger expression. Examples<br>of full expressions include the expression in an expression statement and the expression serving as a test<br>condition for a while loop.<br></blockquote>
 
 
-<p>完整的表达式不应该是更大的表达式中的子表达式。而是那些在表达式语句里的、以及在一个<code>while</code>循环里作为<strong>判断条件</strong>的表达式。</p>
+<p>完整的表达式不应该是更大的表达式中的子表达式。而是那些在表达式<strong>语句</strong>里的、以及在一个<code>while</code>循环里作为<strong>判断条件</strong>的表达式。</p>
 <h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><p>考虑：<br><code>y = (4 + x++) + (6 + x++);</code></p>
 <p>C只能保证下一条语句前<code>x</code>自增了两次，却没有保证<code>x</code>是某个子表达式被计算后增加还是整个表达式被求值后增加。</p>
 <h2 id="题目的解答"><a href="#题目的解答" class="headerlink" title="题目的解答"></a>题目的解答</h2><blockquote><code>*p++=*p;</code><br>这一句话一共包含了四个操作：<br>1. <code>*p</code> // 等号左边那个<br>2. <code>p++</code><br>3. <code>*p</code><br>4. <code>=</code><br>这些操作的所有依赖关系如下：<br><li> 1(<code>*p</code>)在2(<code>p++</code>)之前执行<br></li><li> 4(<code>=</code>)在1(<code>*p</code>)和3(<code>*p</code>)之后执行<br>有了这个约束，那么这四个操作的所有可能的顺序就有（人肉枚举有可能出错你自己检查）：<br></li><li> 1234<br></li><li> 1324<br></li><li> 1342<br></li><li> 3124<br></li><li> 3142<br><br>分别的意思就是<br></li><li> p[0]=p[1];p++;<br></li><li> p[0]=p[0];p++;<br></li><li> p[0]=p[0];p++;<br></li><li> p[0]=p[0];p++;<br></li><li> p[0]=p[0];p++;<br><br>作者：vczh<br>链接：<a href="https://www.zhihu.com/question/64370774/answer/219580436" target="_blank" rel="external">https://www.zhihu.com/question/64370774/answer/219580436</a><br>来源：知乎<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。<br></li></blockquote>
