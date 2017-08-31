@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-08-30T16:52:21.719Z</updated>
+  <updated>2017-08-31T06:57:08.849Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -14,6 +14,35 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>JavaScript之快速理解同步、异步、回调</title>
+    <link href="http://gaufoo.com/2017/08/31/JavaScript%E4%B9%8B%E5%BF%AB%E9%80%9F%E7%90%86%E8%A7%A3%E5%90%8C%E6%AD%A5%E3%80%81%E5%BC%82%E6%AD%A5%E3%80%81%E5%9B%9E%E8%B0%83/"/>
+    <id>http://gaufoo.com/2017/08/31/JavaScript之快速理解同步、异步、回调/</id>
+    <published>2017-08-31T06:29:50.000Z</published>
+    <updated>2017-08-31T06:57:08.849Z</updated>
+    
+    <content type="html"><![CDATA[<p>今天终于对这几个概念有了更深入的理解，下面是讲解。</p>
+<a id="more"></a>
+<hr>
+<h2 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h2><p>想象一个场景：你约了女神去玩，结果睡过了头。女神在目的地等了很久，心情越发烦躁。你到达时，女神甩了你好几个耳光。</p>
+<p>如果不太了解JS这些机制的新手，可能会这样来写代码：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">dating</span>(<span class="params">hours</span>) </span>&#123;</div><div class="line">		<span class="keyword">var</span> SP = <span class="number">0</span>; <span class="comment">// SP,愤怒值 </span></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; hours; i++) &#123;</div><div class="line">			setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">				<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">				SP++</div><div class="line">			&#125;, <span class="number">1000</span>)</div><div class="line">		&#125;</div><div class="line">		onBack(SP)</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">onBack</span>(<span class="params">num</span>) </span>&#123;</div><div class="line">		alert(<span class="string">"我来迟了!"</span>)</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; num; i++) &#123;</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">"打了"</span> + i + <span class="string">"个耳光\n"</span>)</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	dating(<span class="number">5</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>却发现输出了这样的结果：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">弹窗：我来迟了！</div><div class="line">等了<span class="number">5</span>个小时</div><div class="line">等了<span class="number">5</span>个小时</div><div class="line">等了<span class="number">5</span>个小时</div><div class="line">等了<span class="number">5</span>个小时</div><div class="line">等了<span class="number">5</span>个小时</div></pre></td></tr></table></figure></p>
+<p>结果简直莫名其妙，瞬间弹窗，耳光也没有打，小时数也不对。</p>
+<h2 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h2><p>一行行看：<br><strong>首先</strong>调用<code>dating(5)</code><br>声明变量后，到达：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; hours; i++) &#123;</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">		SP++</div><div class="line">	&#125;, <span class="number">1000</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>setTimeout</code>是回调函数，JS会把它丢到一边。这个循环捕获的5个回调函数，都被抛弃了。但<code>i</code>已经变成了5。</p>
+<p><strong>然后</strong>到达：<code>onBack(SP)</code>。注意，由于上面没有执行回调函数，因此此时<code>SP</code>值为0<br>那么<code>onBack(0)</code>，得到的结果就是弹窗一次，不<code>log</code>。</p>
+<p><strong>最后</strong>同步代码都执行完了，这时该乖乖等异步和回调了。<br>一秒后，5个<code>setTimeout</code>全到了执行的时机，于是<code>&quot;等了5个小时&quot;</code>就齐刷刷地出来了。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;今天终于对这几个概念有了更深入的理解，下面是讲解。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Python之Requests库学习笔记</title>
