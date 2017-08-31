@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT, Gaufoo" />
+  <meta name="keywords" content="JavaScript," />
 
 
 
@@ -95,13 +95,14 @@
 
 
 <meta name="description" content="今天终于对这几个概念有了更深入的理解，下面是讲解。">
+<meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript之快速理解同步、异步、回调">
 <meta property="og:url" content="http://gaufoo.com/2017/08/31/JavaScript之快速理解同步、异步、回调/index.html">
 <meta property="og:site_name" content="苟富">
 <meta property="og:description" content="今天终于对这几个概念有了更深入的理解，下面是讲解。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-31T06:57:08.849Z">
+<meta property="og:updated_time" content="2017-08-31T07:34:21.388Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript之快速理解同步、异步、回调">
 <meta name="twitter:description" content="今天终于对这几个概念有了更深入的理解，下面是讲解。">
@@ -317,6 +318,39 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -338,7 +372,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  401 字
+                  793 字
                 </span>
               
 
@@ -366,14 +400,19 @@
         <p>今天终于对这几个概念有了更深入的理解，下面是讲解。</p>
 <a id="more"></a>
 <hr>
-<h2 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h2><p>想象一个场景：你约了女神去玩，结果睡过了头。女神在目的地等了很久，心情越发烦躁。你到达时，女神甩了你好几个耳光。</p>
-<p>如果不太了解JS这些机制的新手，可能会这样来写代码：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">dating</span>(<span class="params">hours</span>) </span>&#123;</div><div class="line">		<span class="keyword">var</span> SP = <span class="number">0</span>; <span class="comment">// SP,愤怒值 </span></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; hours; i++) &#123;</div><div class="line">			setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">				<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">				SP++</div><div class="line">			&#125;, <span class="number">1000</span>)</div><div class="line">		&#125;</div><div class="line">		onBack(SP)</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">onBack</span>(<span class="params">num</span>) </span>&#123;</div><div class="line">		alert(<span class="string">"我来迟了!"</span>)</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; num; i++) &#123;</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">"打了"</span> + i + <span class="string">"个耳光\n"</span>)</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	dating(<span class="number">5</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>却发现输出了这样的结果：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">弹窗：我来迟了！</div><div class="line">等了<span class="number">5</span>个小时</div><div class="line">等了<span class="number">5</span>个小时</div><div class="line">等了<span class="number">5</span>个小时</div><div class="line">等了<span class="number">5</span>个小时</div><div class="line">等了<span class="number">5</span>个小时</div></pre></td></tr></table></figure></p>
-<p>结果简直莫名其妙，瞬间弹窗，耳光也没有打，小时数也不对。</p>
+<h2 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h2><p>想象一个场景：你约了女神去玩，结果睡过了头。女神在目的地等了很久，心情越来越烦躁。你到达时，女神甩了你好几个耳光。</p>
+<p>不太了解JS同步、异步、回调机制的新手，可能会这样来写代码：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">dating</span>(<span class="params">hours</span>) </span>&#123;</div><div class="line">		<span class="keyword">var</span> SP = <span class="number">0</span>; <span class="comment">// SP,愤怒值 </span></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; hours; i++) &#123;</div><div class="line">			setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">				<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">				SP++</div><div class="line">			&#125;, <span class="number">1000</span>)</div><div class="line">		&#125;</div><div class="line">		onBack(SP)</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">onBack</span>(<span class="params">num</span>) </span>&#123;</div><div class="line">		alert(<span class="string">"我来迟了!"</span>)</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; num; i++) &#123;</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">"打了"</span> + i + <span class="string">"个耳光\n"</span>)</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	dating(<span class="number">5</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>却输出了这样的结果：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">弹窗：我来迟了！</div><div class="line">等了<span class="number">5</span>个小时</div><div class="line">等了<span class="number">5</span>个小时</div><div class="line">等了<span class="number">5</span>个小时</div><div class="line">等了<span class="number">5</span>个小时</div><div class="line">等了<span class="number">5</span>个小时</div></pre></td></tr></table></figure></p>
+<p>简直莫名其妙，瞬间弹窗，耳光也没有打，小时数也不对。</p>
 <h2 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h2><p>一行行看：<br><strong>首先</strong>调用<code>dating(5)</code><br>声明变量后，到达：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; hours; i++) &#123;</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">		SP++</div><div class="line">	&#125;, <span class="number">1000</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p><code>setTimeout</code>是回调函数，JS会把它丢到一边。这个循环捕获的5个回调函数，都被抛弃了。但<code>i</code>已经变成了5。</p>
 <p><strong>然后</strong>到达：<code>onBack(SP)</code>。注意，由于上面没有执行回调函数，因此此时<code>SP</code>值为0<br>那么<code>onBack(0)</code>，得到的结果就是弹窗一次，不<code>log</code>。</p>
 <p><strong>最后</strong>同步代码都执行完了，这时该乖乖等异步和回调了。<br>一秒后，5个<code>setTimeout</code>全到了执行的时机，于是<code>&quot;等了5个小时&quot;</code>就齐刷刷地出来了。</p>
+<h2 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">dating</span>(<span class="params">hours, callBack</span>) </span>&#123;</div><div class="line">		<span class="keyword">var</span> SP = <span class="number">0</span>; <span class="comment">// SP,愤怒值 </span></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; hours; i++) &#123;</div><div class="line">			(<span class="function"><span class="keyword">function</span> (<span class="params">i</span>) </span>&#123;</div><div class="line">				setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">					<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">					SP++</div><div class="line">					<span class="keyword">if</span> (i + <span class="number">1</span> === hours) &#123;</div><div class="line">						callBack(SP)</div><div class="line">					&#125;</div><div class="line">				&#125;, i * <span class="number">1000</span>)</div><div class="line">			&#125;)(i)</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">onBack</span>(<span class="params">num</span>) </span>&#123;</div><div class="line">		alert(<span class="string">"我来迟了!"</span>)</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; num; i++) &#123;</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">"打了"</span> + i + <span class="string">"个耳光\n"</span>)</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	dating(<span class="number">5</span>, onBack)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>修改了<code>dating</code>函数，代码难看了不少。执行过程会变成怎样呢？<br>当<code>dating</code>进入<code>for</code>循环，执行了5个函数：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> (<span class="params">i</span>) </span>&#123;</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">		SP++</div><div class="line">		<span class="keyword">if</span> (i + <span class="number">1</span> === hours) &#123;</div><div class="line">			callBack(SP)</div><div class="line">		&#125;</div><div class="line">	&#125;, i * <span class="number">1000</span>)</div><div class="line">&#125;)(<span class="number">0</span>)</div><div class="line"></div><div class="line">(<span class="function"><span class="keyword">function</span> (<span class="params">i</span>) </span>&#123;</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">		SP++</div><div class="line">		<span class="keyword">if</span> (i + <span class="number">1</span> === hours) &#123;</div><div class="line">			callBack(SP)</div><div class="line">		&#125;</div><div class="line">	&#125;, i * <span class="number">1000</span>)</div><div class="line">&#125;)(<span class="number">1</span>)</div><div class="line"></div><div class="line">(<span class="function"><span class="keyword">function</span> (<span class="params">i</span>) </span>&#123;</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">		SP++</div><div class="line">		<span class="keyword">if</span> (i + <span class="number">1</span> === hours) &#123;</div><div class="line">			callBack(SP)</div><div class="line">		&#125;</div><div class="line">	&#125;, i * <span class="number">1000</span>)</div><div class="line">&#125;)(<span class="number">2</span>)</div><div class="line"></div><div class="line">(<span class="function"><span class="keyword">function</span> (<span class="params">i</span>) </span>&#123;</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">		SP++</div><div class="line">		<span class="keyword">if</span> (i + <span class="number">1</span> === hours) &#123;</div><div class="line">			callBack(SP)</div><div class="line">		&#125;</div><div class="line">	&#125;, i * <span class="number">1000</span>)</div><div class="line">&#125;)(<span class="number">3</span>)</div><div class="line"></div><div class="line">(<span class="function"><span class="keyword">function</span> (<span class="params">i</span>) </span>&#123;</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">		SP++</div><div class="line">		<span class="keyword">if</span> (i + <span class="number">1</span> === hours) &#123;</div><div class="line">			callBack(SP)</div><div class="line">		&#125;</div><div class="line">	&#125;, i * <span class="number">1000</span>)</div><div class="line">&#125;)(<span class="number">4</span>)</div></pre></td></tr></table></figure></p>
+<p>因为<code>i</code>作为参数传入匿名函数内，因此会被保存下来。<br>此时获得了5个延时分别为0,1000,2000,3000,4000的<code>setTimeout</code>，而且已经没有任何同步代码了，开始等待或执行异步和回调。<br>等到花儿都谢了，终于轮到4000的<code>setTimeout</code>，<code>if</code>判断生效，执行<code>callBack(SP)</code>。果断地甩了0,1,2,3,4个耳光。</p>
+<h2 id="思维锻炼"><a href="#思维锻炼" class="headerlink" title="思维锻炼"></a>思维锻炼</h2><p>求下面代码的输出：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="keyword">let</span> a = <span class="keyword">new</span> <span class="built_in">Promise</span>(</div><div class="line">        <span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</div><div class="line">            <span class="built_in">console</span>.log(<span class="number">1</span>)</div><div class="line">            setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="number">2</span>), <span class="number">0</span>)</div><div class="line">            <span class="built_in">console</span>.log(<span class="number">3</span>)</div><div class="line">            <span class="built_in">console</span>.log(<span class="number">4</span>)</div><div class="line">            resolve(<span class="literal">true</span>)</div><div class="line">        &#125;</div><div class="line">    )</div><div class="line">    a.then(<span class="function"><span class="params">v</span> =&gt;</span> &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="number">8</span>)</div><div class="line">    &#125;)</div><div class="line"></div><div class="line">    <span class="keyword">let</span> b = <span class="keyword">new</span> <span class="built_in">Promise</span>(</div><div class="line">        <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="built_in">console</span>.log(<span class="number">5</span>)</div><div class="line">            setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="number">6</span>), <span class="number">0</span>)</div><div class="line">        &#125;</div><div class="line">    )</div><div class="line"></div><div class="line">    <span class="built_in">console</span>.log(<span class="number">7</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>答案：右键-&gt;检查-&gt;console-&gt;复制粘贴-&gt;回车</p>
 
       
     </div>
@@ -388,6 +427,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+        </div>
       
 
       
@@ -498,7 +543,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -509,7 +554,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -592,7 +637,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一个例子"><span class="nav-number">1.</span> <span class="nav-text">一个例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解释"><span class="nav-number">2.</span> <span class="nav-text">解释</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一个例子"><span class="nav-number">1.</span> <span class="nav-text">一个例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解释"><span class="nav-number">2.</span> <span class="nav-text">解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改"><span class="nav-number">3.</span> <span class="nav-text">修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思维锻炼"><span class="nav-number">4.</span> <span class="nav-text">思维锻炼</span></a></li></ol></div>
             
 
           </div>
