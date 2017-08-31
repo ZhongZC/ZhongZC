@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-08-31T16:15:20.105Z</updated>
+  <updated>2017-08-31T16:44:46.430Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -14,6 +14,59 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Python之BeautifulSoup库学习笔记</title>
+    <link href="http://gaufoo.com/2017/09/01/Python%E4%B9%8BBeautifulSoup%E5%BA%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <id>http://gaufoo.com/2017/09/01/Python之BeautifulSoup库学习笔记/</id>
+    <published>2017-08-31T16:44:09.000Z</published>
+    <updated>2017-08-31T16:44:46.430Z</updated>
+    
+    <content type="html"><![CDATA[<p>记录以备后用</p>
+<a id="more"></a>
+<hr>
+<h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup = BeautifulSoup(<span class="string">'&lt;p&gt;data&lt;/p&gt;'</span>, <span class="string">'html.parser'</span>)</div></pre></td></tr></table></figure>
+<h2 id="基本元素"><a href="#基本元素" class="headerlink" title="基本元素"></a>基本元素</h2><ul>
+<li><code>Tag</code>：标签，最基本的信息组织单元，分别用&lt;&gt;和&lt;/&gt;标明开头和结尾</li>
+<li><code>Name</code>：标签的名字，<code>&lt;p&gt;…&lt;/p&gt;</code>的名字是’p’，格式：<code>&lt;tag&gt;.name</code></li>
+<li><code>Attributes</code>：标签的属性，字典形式组织，格式：<code>&lt;tag&gt;.attrs</code></li>
+<li><code>NavigableString</code>：标签内非属性字符串，&lt;&gt;…&lt;/&gt;中字符串，格式：<code>&lt;tag&gt;.string</code></li>
+<li><code>Comment</code>：标签内字符串的注释部分，一种特殊的Comment类型</li>
+</ul>
+<h2 id="标签树的下行遍历"><a href="#标签树的下行遍历" class="headerlink" title="标签树的下行遍历"></a>标签树的下行遍历</h2><ul>
+<li><code>.contents</code>：子节点的列表，将<tag>所有儿子节点存入列表</tag></li>
+<li><code>.children</code>： 子节点的迭代类型，与<code>.contents</code>类似，用于循环遍历儿子节点</li>
+<li><code>.descendants</code>： 子孙节点的迭代类型，包含所有子孙节点，用于循环遍历</li>
+</ul>
+<h2 id="标签树的上行遍历"><a href="#标签树的上行遍历" class="headerlink" title="标签树的上行遍历"></a>标签树的上行遍历</h2><ul>
+<li><code>.parent</code>： 节点的父亲标签</li>
+<li><code>.parents</code>： 节点先辈标签的迭代类型，用于循环遍历先辈节点</li>
+</ul>
+<h2 id="标签树的平行遍历"><a href="#标签树的平行遍历" class="headerlink" title="标签树的平行遍历"></a>标签树的平行遍历</h2><ul>
+<li><code>.next_sibling</code>： 返回按照HTML文本顺序的下一个平行节点标签</li>
+<li><code>.previous_sibling</code>： 返回按照HTML文本顺序的上一个平行节点标签</li>
+<li><code>.next_siblings</code>： 迭代类型，返回按照HTML文本顺序的后续所有平行节点标签</li>
+<li><code>.previous_siblings</code>： 迭代类型，返回按照HTML文本顺序的前续所有平行节点标签</li>
+</ul>
+<h2 id="格式化输出"><a href="#格式化输出" class="headerlink" title="格式化输出"></a>格式化输出</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(soup.prettify())</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;记录以备后用&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="Python" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/Python/"/>
+    
+    
+      <category term="Python" scheme="http://gaufoo.com/tags/Python/"/>
+    
+      <category term="web" scheme="http://gaufoo.com/tags/web/"/>
+    
+  </entry>
   
   <entry>
     <title>生活中的不愉快</title>

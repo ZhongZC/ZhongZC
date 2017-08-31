@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT, Gaufoo" />
+  <meta name="keywords" content="Python,web," />
 
 
 
@@ -94,17 +94,18 @@
 
 
 
-<meta name="description" content="2017-08-31Python - 获取图片12345678910111213141516171819import requestsimport osurl = &quot;http://image.nationalgeographic.com.cn/2017/0830/20170830031247622.jpg&quot;root = &quot;F://pics//&quot;path = root + url.split(&apos;/&apos;">
-<meta property="og:type" content="website">
-<meta property="og:title" content="便签">
-<meta property="og:url" content="http://gaufoo.com/notes/index.html">
+<meta name="description" content="记录以备后用">
+<meta name="keywords" content="Python,web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python之BeautifulSoup库学习笔记">
+<meta property="og:url" content="http://gaufoo.com/2017/09/01/Python之BeautifulSoup库学习笔记/index.html">
 <meta property="og:site_name" content="苟富">
-<meta property="og:description" content="2017-08-31Python - 获取图片12345678910111213141516171819import requestsimport osurl = &quot;http://image.nationalgeographic.com.cn/2017/0830/20170830031247622.jpg&quot;root = &quot;F://pics//&quot;path = root + url.split(&apos;/&apos;">
+<meta property="og:description" content="记录以备后用">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-31T07:59:50.881Z">
+<meta property="og:updated_time" content="2017-08-31T16:44:46.430Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="便签">
-<meta name="twitter:description" content="2017-08-31Python - 获取图片12345678910111213141516171819import requestsimport osurl = &quot;http://image.nationalgeographic.com.cn/2017/0830/20170830031247622.jpg&quot;root = &quot;F://pics//&quot;path = root + url.split(&apos;/&apos;">
+<meta name="twitter:title" content="Python之BeautifulSoup库学习笔记">
+<meta name="twitter:description" content="记录以备后用">
 
 
 
@@ -134,13 +135,13 @@
 
 
 
-  <link rel="canonical" href="http://gaufoo.com/notes/"/>
+  <link rel="canonical" href="http://gaufoo.com/2017/09/01/Python之BeautifulSoup库学习笔记/"/>
 
 
 
 
 
-  <title>便签 | 苟富</title>
+  <title>Python之BeautifulSoup库学习笔记 | 苟富</title>
   
 
 
@@ -265,33 +266,224 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://gaufoo.com/2017/09/01/Python之BeautifulSoup库学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gaufoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="苟富">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h2 class="post-title" itemprop="name headline">便签</h2>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <ul><br><br><hr><br><li>2017-08-31<br><ul><br><li>Python<br> - 获取图片<br><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line">url = <span class="string">"http://image.nationalgeographic.com.cn/2017/0830/20170830031247622.jpg"</span></div><div class="line">root = <span class="string">"F://pics//"</span></div><div class="line">path = root + url.split(<span class="string">'/'</span>)[<span class="number">-1</span>]</div><div class="line"><span class="keyword">try</span>:</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(root):</div><div class="line">        os.mkdir(root)</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(path):</div><div class="line">        r = requests.get(url)</div><div class="line">        <span class="keyword">with</span> open(path, <span class="string">'wb'</span>) <span class="keyword">as</span> f:</div><div class="line">            f.write(r.content)</div><div class="line">            f.close()</div><div class="line">            print(<span class="string">"文件保存成功"</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        print(<span class="string">"文件已存在"</span>)</div><div class="line"><span class="keyword">except</span>:</div><div class="line">    print(<span class="string">"爬取失败"</span>)</div></pre></td></tr></table></figure><br><br></li><br><li>JavaScript<br> - 屏蔽<code>alert()</code>方法<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.alert = <span class="function"><span class="keyword">function</span> (<span class="params">a</span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(a)</div><div class="line">	<span class="keyword">return</span> <span class="number">1</span></div><div class="line">&#125;</div></pre></td></tr></table></figure><br><br> - 函数别名<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> log = <span class="built_in">console</span>.log.bind(<span class="built_in">console</span>)</div></pre></td></tr></table></figure><br><br> - 监听键盘按键<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'keydown'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> k = event.key</div><div class="line">	</div><div class="line">	<span class="keyword">if</span> (k === <span class="string">'...'</span>) &#123;...&#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure><br><br></li><br></ul><br></li><br><br><hr><br><li>2017-08-30<br><ul><br><li>C<br> - 如果在格式字符串中%c之前有一个空格, 那么scanf()会跳到第一个非空白字符处. 即: <code>scanf(&quot;% c&quot;, &amp;ch)</code>会读取遇到的第一个非空白字符.<br> - 本人保证输入数据的可靠性的方法，以读取<code>long</code>数据为例<br>    <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"> <span class="function"><span class="keyword">void</span> <span class="title">getlong</span><span class="params">(<span class="keyword">long</span> *num)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">	<span class="keyword">while</span> (<span class="built_in">scanf</span>(<span class="string">"%ld"</span>, num) != <span class="number">1</span>)</div><div class="line">		getchar();</div><div class="line">	<span class="keyword">while</span> (getchar() != <span class="string">'\n'</span>)</div><div class="line">		;</div><div class="line">&#125;  <span class="comment">// 事后再回显一下</span></div></pre></td></tr></table></figure><br><br><br></li><br><br></ul><br></li><br><br><hr><br><li>2017-08-28<br><ul><br><li>JavaScript<br> - 已绑定到函数参数的值不变<br> - JSON.stringify(something)，将something这个对象序列化成JSON格式，stringify哈哈哈哈哈哈好好笑</li><br></ul><br></li><br><br></ul>
+          <h2 class="post-title" itemprop="name headline">Python之BeautifulSoup库学习笔记</h2>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-01T00:44:09+08:00">
+                2017-09-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  339 字
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <p>记录以备后用</p>
+<a id="more"></a>
+<hr>
+<h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup = BeautifulSoup(<span class="string">'&lt;p&gt;data&lt;/p&gt;'</span>, <span class="string">'html.parser'</span>)</div></pre></td></tr></table></figure>
+<h2 id="基本元素"><a href="#基本元素" class="headerlink" title="基本元素"></a>基本元素</h2><ul>
+<li><code>Tag</code>：标签，最基本的信息组织单元，分别用&lt;&gt;和&lt;/&gt;标明开头和结尾</li>
+<li><code>Name</code>：标签的名字，<code>&lt;p&gt;…&lt;/p&gt;</code>的名字是’p’，格式：<code>&lt;tag&gt;.name</code></li>
+<li><code>Attributes</code>：标签的属性，字典形式组织，格式：<code>&lt;tag&gt;.attrs</code></li>
+<li><code>NavigableString</code>：标签内非属性字符串，&lt;&gt;…&lt;/&gt;中字符串，格式：<code>&lt;tag&gt;.string</code></li>
+<li><code>Comment</code>：标签内字符串的注释部分，一种特殊的Comment类型</li>
+</ul>
+<h2 id="标签树的下行遍历"><a href="#标签树的下行遍历" class="headerlink" title="标签树的下行遍历"></a>标签树的下行遍历</h2><ul>
+<li><code>.contents</code>：子节点的列表，将<tag>所有儿子节点存入列表</tag></li>
+<li><code>.children</code>： 子节点的迭代类型，与<code>.contents</code>类似，用于循环遍历儿子节点</li>
+<li><code>.descendants</code>： 子孙节点的迭代类型，包含所有子孙节点，用于循环遍历</li>
+</ul>
+<h2 id="标签树的上行遍历"><a href="#标签树的上行遍历" class="headerlink" title="标签树的上行遍历"></a>标签树的上行遍历</h2><ul>
+<li><code>.parent</code>： 节点的父亲标签</li>
+<li><code>.parents</code>： 节点先辈标签的迭代类型，用于循环遍历先辈节点</li>
+</ul>
+<h2 id="标签树的平行遍历"><a href="#标签树的平行遍历" class="headerlink" title="标签树的平行遍历"></a>标签树的平行遍历</h2><ul>
+<li><code>.next_sibling</code>： 返回按照HTML文本顺序的下一个平行节点标签</li>
+<li><code>.previous_sibling</code>： 返回按照HTML文本顺序的上一个平行节点标签</li>
+<li><code>.next_siblings</code>： 迭代类型，返回按照HTML文本顺序的后续所有平行节点标签</li>
+<li><code>.previous_siblings</code>： 迭代类型，返回按照HTML文本顺序的前续所有平行节点标签</li>
+</ul>
+<h2 id="格式化输出"><a href="#格式化输出" class="headerlink" title="格式化输出"></a>格式化输出</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(soup.prettify())</div></pre></td></tr></table></figure>
+
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/web/" rel="tag"># web</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/01/生活中的不愉快/" rel="next" title="生活中的不愉快">
+                <i class="fa fa-chevron-left"></i> 生活中的不愉快
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -326,8 +518,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/avatar.jpg"
@@ -439,6 +640,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本使用"><span class="nav-number">1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本元素"><span class="nav-number">2.</span> <span class="nav-text">基本元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签树的下行遍历"><span class="nav-number">3.</span> <span class="nav-text">标签树的下行遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签树的上行遍历"><span class="nav-number">4.</span> <span class="nav-text">标签树的上行遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签树的平行遍历"><span class="nav-number">5.</span> <span class="nav-text">标签树的平行遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#格式化输出"><span class="nav-number">6.</span> <span class="nav-text">格式化输出</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -555,10 +772,10 @@
   
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
 
-  
+
 
   
 
