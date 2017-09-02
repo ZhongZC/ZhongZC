@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-09-02T18:49:14.364Z</updated>
+  <updated>2017-09-02T18:53:27.266Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://gaufoo.com/2017/09/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://gaufoo.com/2017/09/03/计算机网络学习笔记（一）/</id>
     <published>2017-09-02T17:57:00.000Z</published>
-    <updated>2017-09-02T18:49:14.364Z</updated>
+    <updated>2017-09-02T18:53:27.266Z</updated>
     
     <content type="html"><![CDATA[<p>记录以备后用</p>
 <a id="more"></a>
@@ -189,20 +189,17 @@
 </li>
 </ul>
 </li>
-<li><p>报文交换</p>
-<ul>
+<li>报文交换<ul>
 <li>报文：源（应用）发送信息整体</li>
 </ul>
 </li>
-<li><p>分组交换</p>
-<ul>
+<li>分组交换<ul>
 <li>分组：报文分拆出来的一系列相对较小的数据包</li>
 <li>分组交换需要报文的拆分与重组</li>
 <li>产生额外开销</li>
 </ul>
 </li>
-<li><p>报文 vs 分组</p>
-<ul>
+<li>报文 vs 分组<ul>
 <li>两者都是存储转发方式，区别：报文 - 完整报文，分组 - 较小的分组</li>
 <li>报文：M bits 链路带宽：R bps 分组长度：L bits 路由器数：n<ul>
 <li>分组交换：T = M/R + nL/R</li>
