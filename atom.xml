@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-08-31T16:44:46.430Z</updated>
+  <updated>2017-09-02T17:57:54.943Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -14,6 +14,165 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>计算机网络学习笔记（一）</title>
+    <link href="http://gaufoo.com/2017/09/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+    <id>http://gaufoo.com/2017/09/03/计算机网络学习笔记（一）/</id>
+    <published>2017-09-02T17:57:00.000Z</published>
+    <updated>2017-09-02T17:57:54.943Z</updated>
+    
+    <content type="html"><![CDATA[<p>记录以备后用</p>
+<a id="more"></a>
+<hr>
+<h2 id="计算机网络定义"><a href="#计算机网络定义" class="headerlink" title="计算机网络定义"></a>计算机网络定义</h2><ul><br>    <li>计算机网络就是<strong>互连</strong>的、<strong>自治</strong>的计算机集合。<br>        <ul><br>            <li>自治：无主从关系</li><br>            <li>互连：通过通信链路互联互通</li><br>        </ul><br>    </li><br>    <li>距离远、数量大时，通过<strong>交换网络</strong>互联主机。<br>    </li><br></ul>
+
+<h2 id="Internet定义"><a href="#Internet定义" class="headerlink" title="Internet定义"></a>Internet定义</h2><h3 id="组成细节角度"><a href="#组成细节角度" class="headerlink" title="组成细节角度"></a>组成细节角度</h3><ul><br>    <li>全球最大的<strong>互联网络</strong><br>        <ul><br>            <li>由ISP(Internet Service Provider)网络互连的“网络之网络”</li><br>        </ul><br>    </li><br>    <li>数以百万计的互连的<strong>计算设备</strong>集合<br>        <ul><br>            <li>主机(hosts) == 端系统(end systems)</li><br>            <li>运行各种网络应用</li><br>        </ul><br>    </li><br>    <li>通信链路<br>        <ul><br>            <li>光纤、铜缆、无线电、卫星……<br>            </li><br>        </ul><br>    </li><br>    <li>分组交换：转发分组(数据包)<br>        <ul><br>            <li>路由器(routers)</li><br>            <li>交换机(switches)</li><br>        </ul><br>    </li><br></ul>
+
+<h3 id="服务提供角度"><a href="#服务提供角度" class="headerlink" title="服务提供角度"></a>服务提供角度</h3><ul><br>    <li>为网络应用提供通信服务<br>        <ul><br>            <li>Web, VolP, email, 电子商务, 社交网络<br>            </li><br>        </ul><br>    </li><br>    <li>为网络应用提供编程接口(API)<br>        <ul><br>            <li>支持应用程序“连接”Internet, 发送/接收数据</li><br>            <li>提供类似于邮政系统的数据传输服务</li><br>        </ul><br>    </li><br></ul>
+
+<h2 id="网络协议"><a href="#网络协议" class="headerlink" title="网络协议"></a>网络协议</h2><h3 id="类比"><a href="#类比" class="headerlink" title="类比"></a>类比</h3><ul><br>    <li>交通系统中的交通规则</li><br>    <li>人类交谈作为信息交换的过程，同样包括交流时间、问题请教、人员引荐等</li><br>    <li>网络通信<br>        <ul><br>            <li>通信<strong>主体</strong>：机器，而非人</li><br>            <li>交换“<strong>数字化</strong>”或“<strong>电子化</strong>”信息</li><br>            <li>所有通信过程必须遵循某些规则：<strong>协议</strong></li><br>        </ul><br>    </li><br></ul>
+
+<h3 id="要素"><a href="#要素" class="headerlink" title="要素"></a>要素</h3><ul><br>    <li><strong>语法(Syntax)</strong><br>        <ul><br>            <li>数据与控制信息的结构或格式</li><br>            <li>信号电平</li><br>        </ul><br>    </li><br>    <li><strong>语义(Semantics)</strong><br>        <ul><br>            <li>需要发出何种控制信息</li><br>            <li>完成何种动作以及做出何种响应</li><br>            <li>差错控制</li><br>        </ul><br>    </li><br>    <li><strong>时序(Timing)</strong><br>        <ul><br>            <li>事件顺序</li><br>            <li>速度匹配</li><br>        </ul><br>    </li><br></ul>
+
+<h3 id="Internet-协议标准"><a href="#Internet-协议标准" class="headerlink" title="Internet 协议标准"></a>Internet 协议标准</h3><ul><br>    <li>RFC：Request for Comments</li><br>    <li>IETF：互联网工程任务组(Internet Engineering Task Force)</li><br></ul>
+
+<h3 id="计算机网络结构"><a href="#计算机网络结构" class="headerlink" title="计算机网络结构"></a>计算机网络结构</h3><ul>
+<li>网络边缘<ul>
+<li>主机（端系统）</li>
+<li>网络应用，如：Web，email</li>
+<li>模型：<ul>
+<li>客户/服务器（client/server）应用模型</li>
+<li>对等（peer-peer，P2P）应用模型</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>接入网络、物理介质<ul>
+<li>有线或无线通信链路<ul>
+<li>住宅（家庭）接入网络</li>
+<li>机构接入网络（学校、企业等）</li>
+<li>移动接入网络<ul>
+<li>用户关心</li>
+</ul>
+</li>
+<li>带宽（bps）</li>
+<li>共享/独占<ul>
+<li>类型</li>
+</ul>
+</li>
+<li>电缆网络 - 频分多路复用</li>
+<li>数字用户线路（DSL） - 电话线</li>
+<li>Ethernet，端系统通常直接连接以太网交换机（switch）</li>
+<li>无线接入网络 - 通过基站或“接入点”<ul>
+<li>无线局域网（LANs）</li>
+<li>广域无线接入 - 电信运营商（蜂窝网）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>网络核心（核心网络）<ul>
+<li>互连的路由器（或分组转发设备）</li>
+<li>关键功能：<ul>
+<li>路由（routing）</li>
+<li>转发（forwarding）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Internet-结构"><a href="#Internet-结构" class="headerlink" title="Internet 结构"></a>Internet 结构</h3><ul>
+<li>端系统通过<strong>接入ISP</strong>（access ISPs）连接到 Internet<ul>
+<li>家庭、公司、大学 ISPs</li>
+</ul>
+</li>
+<li>区域网络（regional networks）连接到<strong>接入ISP</strong>和运营商ISP</li>
+<li>每一个<strong>接入ISP</strong>连接到大型ISP</li>
+<li>大型ISP网络必须互连</li>
+<li>网络中心：少数互连的大型网络<ul>
+<li><strong>“一级”（tier-1）商业ISPs</strong>（如：网通、电信、Sprint、AT&amp;T），提供国家或国际范围的覆盖</li>
+<li><strong>内容提供商网络</strong>（content provider network，如：Google），私有网络，连接其数据中心与Internet</li>
+</ul>
+</li>
+</ul>
+<h3 id="数据交换"><a href="#数据交换" class="headerlink" title="数据交换"></a>数据交换</h3><ul>
+<li>电路交换<ul>
+<li>典型：电话网络</li>
+<li>阶段<ul>
+<li>建立连接</li>
+<li>通信</li>
+<li>释放资源</li>
+</ul>
+</li>
+<li>特点：独占资源 </li>
+<li>解决：多路复用<ul>
+<li>特点<ul>
+<li>将资源片分配给各路“呼叫”</li>
+<li>每路呼叫独占所分配资源</li>
+<li>资源片可能闲置（idle）</li>
+</ul>
+</li>
+<li>方法<ul>
+<li>频分多路复用（“frequency” FDM）</li>
+<li>时分多路复用（“time” TDM）</li>
+<li>波分多路复用（“wavelength” WDM）</li>
+<li>码分多路复用（“code” CDM）<ul>
+<li>每个用户分配一个<strong>码片序列</strong></li>
+<li>编码信号 = （原始数据）×（码片序列）</li>
+<li>各用户码片序列互相<strong>正交</strong>（orthogonal）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>报文交换</p>
+<ul>
+<li>报文：源（应用）发送信息整体</li>
+</ul>
+</li>
+<li><p>分组交换</p>
+<ul>
+<li>分组：报文分拆出来的一系列相对较小的数据包</li>
+<li>分组交换需要报文的拆分与重组</li>
+<li>产生额外开销</li>
+</ul>
+</li>
+<li><p>报文 vs 分组</p>
+<ul>
+<li>两者都是存储转发方式，区别：报文 - 完整报文，分组 - 较小的分组</li>
+<li>报文：M bits 链路带宽：R bps 分组长度：L bits 路由器数：n<ul>
+<li>分组交换：T = M/R + nL/R</li>
+<li>报文交换：T = (n + 1)M/R</li>
+</ul>
+</li>
+<li>分组交换允许更多用户同时使用网络，网络资源充分共享</li>
+<li>分组交换适用于突发数据传输网络，可能发生拥塞（congestion）：分组延迟和丢失，无电路级性能保障。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;记录以备后用&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="计算机网络" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="网络" scheme="http://gaufoo.com/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+  </entry>
   
   <entry>
     <title>Python之BeautifulSoup库学习笔记</title>
