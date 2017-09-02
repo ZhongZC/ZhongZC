@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-09-02T23:23:32.830Z</updated>
+  <updated>2017-09-02T23:28:27.065Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://gaufoo.com/2017/09/03/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9Fboot%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/"/>
     <id>http://gaufoo.com/2017/09/03/操作系统boot实验报告/</id>
     <published>2017-09-03T07:14:00.000Z</published>
-    <updated>2017-09-02T23:23:32.830Z</updated>
+    <updated>2017-09-02T23:28:27.065Z</updated>
     
     <content type="html"><![CDATA[<p>HIT操作系统课程第一个实验。</p>
 <a id="more"></a>
@@ -31,6 +31,7 @@
 <li>掌握操作系统的基本开发过程；</li>
 <li>能对操作系统代码进行简单的控制，揭开操作系统的神秘面纱。</li>
 </ul>
+<hr>
 <h2 id="实验内容"><a href="#实验内容" class="headerlink" title="实验内容"></a>实验内容</h2><p>此次实验的基本内容是：</p>
 <ol>
 <li>阅读《Linux内核完全注释》的第6章，对计算机和Linux 0.11的引导过程进行初步的了解；</li>
@@ -47,23 +48,26 @@
 <li>setup.s能获取至少一个基本的硬件参数（如内存参数、显卡参数、硬盘参数等），将其存放在内存的特定地址，并输出到屏幕上。</li>
 <li>setup.s不再加载Linux内核，保持上述信息显示在屏幕上即可。</li>
 </ol>
+<hr>
 <h2 id="实验报告要求"><a href="#实验报告要求" class="headerlink" title="实验报告要求"></a>实验报告要求</h2><p>在实验报告中回答如下问题：</p>
 <ol>
 <li>有时，继承传统意味着别手蹩脚。x86计算机为了向下兼容，导致启动过程比较复杂。请找出x86计算机启动过程中，被硬件强制，软件必须遵守的两个“多此一举”的步骤（多找几个也无妨），说说它们为什么多此一举，并设计更简洁的替代方案。</li>
 </ol>
+<hr>
 <h2 id="实验记录"><a href="#实验记录" class="headerlink" title="实验记录"></a>实验记录</h2><h3 id="改写bootsect-s："><a href="#改写bootsect-s：" class="headerlink" title="改写bootsect.s："></a>改写<code>bootsect.s</code>：</h3><ol>
 <li><p>进入目录<code>~/oslab/linux-0.11/boot/</code>，执行<code>$ vi bootsect.s</code>，将<code>bootsect.s</code>修改如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">...</div><div class="line">! Print some inane message</div><div class="line"></div><div class="line">	mov	ah,#0x03		! read cursor pos</div><div class="line">	xor	bh,bh</div><div class="line">	int	0x10</div><div class="line">	</div><div class="line">	mov	cx,#29          ! 修改字符数</div><div class="line">	mov	bx,#0x0007		! page 0, attribute 7 (normal)</div><div class="line">	mov	bp,#msg1</div><div class="line">	mov	ax,#0x1301		! write string, move cursor</div><div class="line">	int	0x10</div><div class="line"></div><div class="line">! ok, we&apos;ve written the message, now</div><div class="line">...</div><div class="line">...</div><div class="line">msg1:</div><div class="line">	.byte 13,10</div><div class="line">	.ascii &quot;Fooooooos is loading...&quot;     ! 修改成自己的字符串</div><div class="line">	.byte 13,10,13,10</div><div class="line">...</div><div class="line">...</div></pre></td></tr></table></figure>
 </li>
 <li><p>进入目录<code>~/oslab/linux-0.11/boot/</code>，执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> as86 -0 -a -o bootsect.o bootsect.s</div><div class="line"><span class="meta">$</span> ld86 -0 -s -o bootsect bootsect.o</div><div class="line"><span class="meta">$</span> dd bs=1 if=bootsect of=Image skip=32</div><div class="line"><span class="meta">$</span> cp Image ../</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> as86 -0 -a -o bootsect.o bootsect.s</span></div><div class="line"><span class="meta">$</span><span class="bash"> ld86 -0 -s -o bootsect bootsect.o</span></div><div class="line"><span class="meta">$</span><span class="bash"> dd bs=1 <span class="keyword">if</span>=bootsect of=Image skip=32</span></div><div class="line"><span class="meta">$</span><span class="bash"> cp Image ../</span></div></pre></td></tr></table></figure>
 </li>
 <li><p>进入目录<code>~/oslab/</code>，执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> ./run</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ./run</span></div></pre></td></tr></table></figure>
 </li>
 <li><p>实验结果：<br><img src="https://dn-simplecloud.shiyanlou.com/5193451504415525106-wm" alt="实验楼"></p>
 </li>
 </ol>
+<hr>
 <h3 id="读入setup-s并输出字符串："><a href="#读入setup-s并输出字符串：" class="headerlink" title="读入setup.s并输出字符串："></a>读入<code>setup.s</code>并输出字符串：</h3><ol>
 <li><p>进入目录<code>~/oslab/linux-0.11/boot/</code>，执行<code>$ vi setup.s</code>，删除加载内核的88-223行代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">! Check that there IS a hd1 :-)</div><div class="line"></div><div class="line">	mov	ax,#0x01500</div><div class="line">	mov	dl,#0x81</div><div class="line">	int	0x13</div><div class="line">	jc	no_disk1</div><div class="line">	cmp	ah,#3</div><div class="line">	je	is_disk1</div><div class="line">...</div><div class="line">...</div><div class="line">gdt_48:</div><div class="line">	.word	0x800		! gdt limit=2048, 256 GDT entries</div><div class="line">	.word	512+gdt,0x9	! gdt base = 0X9xxxx</div></pre></td></tr></table></figure>
@@ -75,14 +79,15 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">...</div><div class="line">    <span class="keyword">while</span> (i&lt;SETUP_SECTS*<span class="number">512</span>) &#123;</div><div class="line">    	c = SETUP_SECTS*<span class="number">512</span>-i;</div><div class="line">    	<span class="keyword">if</span> (c &gt; <span class="keyword">sizeof</span>(buf))</div><div class="line">    		c = <span class="keyword">sizeof</span>(buf);</div><div class="line">    	<span class="keyword">if</span> (write(<span class="number">1</span>,buf,c) != c)</div><div class="line">    		die(<span class="string">"Write call failed"</span>);</div><div class="line">    	i += c;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (<span class="built_in">strcmp</span>(argv[<span class="number">3</span>], <span class="string">"none"</span>) == <span class="number">0</span>)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Ignore system written.\n"</span>);</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> ((id=open(argv[<span class="number">3</span>],O_RDONLY,<span class="number">0</span>))&lt;<span class="number">0</span>)</div><div class="line">    	die(<span class="string">"Unable to open 'system'"</span>);</div><div class="line">...</div><div class="line">...</div></pre></td></tr></table></figure>
 </li>
 <li><p>进入目录<code>~/oslab/linux-0.11/</code>，执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> make BootImage</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> make BootImage</span></div></pre></td></tr></table></figure>
 </li>
 <li><p>进入目录<code>~/oslab/</code>，执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> ./run</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ./run</span></div></pre></td></tr></table></figure>
 </li>
 <li><p>实验结果：<br><img src="https://dn-simplecloud.shiyanlou.com/5193451504417795652-wm" alt="实验楼"></p>
 </li>
 </ol>
+<hr>
 <h3 id="setup-s获取硬件参数，并显示："><a href="#setup-s获取硬件参数，并显示：" class="headerlink" title="setup.s获取硬件参数，并显示："></a><code>setup.s</code>获取硬件参数，并显示：</h3><ol>
 <li><p>进入目录<code>~/oslab/linux-0.11/boot/</code>，执行<code>$ vi setup.s</code>，在末尾添加函数如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">...</div><div class="line">print_hex:</div><div class="line">	mov bp,sp</div><div class="line">	add bp,#2</div><div class="line">	mov cx,#4</div><div class="line">	mov dx,(bp)</div><div class="line">print_digit:</div><div class="line">	rol dx,#4</div><div class="line">	mov ax,#0xe0f</div><div class="line">	and al,dl</div><div class="line">	add al,#0x30</div><div class="line">	cmp al,#0x3a</div><div class="line">	jl outp</div><div class="line">	add al,#0x07</div><div class="line">outp:</div><div class="line">	int 0x10</div><div class="line">	loop print_digit</div><div class="line">	ret</div><div class="line">print_nl:</div><div class="line">	mov ax,#0xe0d</div><div class="line">	int 0x10</div><div class="line">	mov al,#0xa</div><div class="line">	int 0x10</div><div class="line">	</div><div class="line">.text</div><div class="line">endtext:</div><div class="line">.data</div><div class="line">enddata:</div><div class="line">.bss</div><div class="line">endbss:</div></pre></td></tr></table></figure>
@@ -91,18 +96,20 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">...</div><div class="line">! Get memory size (extended mem, kB)</div><div class="line"></div><div class="line">    	mov	ah,#0x88</div><div class="line">    	int	0x15</div><div class="line">    	mov	[2],ax</div><div class="line"></div><div class="line">        mov     ah,#0x03                ! read cursor pos</div><div class="line">        xor     bh,bh</div><div class="line">        int     0x10</div><div class="line"></div><div class="line">        mov     cx,#14</div><div class="line">        mov     bx,#0x0007              ! page 0, attribute 7 (normal)</div><div class="line">        mov     bp,#memory</div><div class="line">        mov     ax,#0x1301              ! write string, move cursor</div><div class="line">        int     0x10</div><div class="line"></div><div class="line">        push [2]</div><div class="line">        call print_hex</div><div class="line">    	mov ax,#0xe4b</div><div class="line">    	int 0x10			! output &apos;K&apos;</div><div class="line">    	mov al,#0x42</div><div class="line">    	int 0x10			! output &apos;B&apos;</div><div class="line">        call print_nl</div><div class="line">        pop [2]</div><div class="line">...</div><div class="line">...</div></pre></td></tr></table></figure>
 </li>
 <li><p>进入目录<code>~/oslab/linux-0.11/</code>，执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> make BootImage</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> make BootImage</span></div></pre></td></tr></table></figure>
 </li>
 <li><p>进入目录<code>~/oslab/</code>，执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> ./run</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ./run</span></div></pre></td></tr></table></figure>
 </li>
 <li><p>实验结果<br><img src="https://dn-simplecloud.shiyanlou.com/5193451504420514329-wm" alt="实验楼"></p>
 </li>
 </ol>
+<hr>
 <h2 id="实验报告"><a href="#实验报告" class="headerlink" title="实验报告"></a>实验报告</h2><ol>
 <li>计算机启动时，BIOS把中断表置于内存位置为0的地方，导致引导时必须把system代码先置于其他地方（0x10000），拷贝中断表后，再挪回地址0处。替代方案：BIOS可把中断表放置在其余不影响引导、且方便获取的地方。</li>
 <li>由于实模式的地址计算方式保守，导致内存可寻址范围只有1MB，使得需要进入保护模式，才能采用32位地址寻址。替代方案：改变硬件的地址计算方式，使之直接采用32位地址寻址。 </li>
 </ol>
+<hr>
 <h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><ul>
 <li><a href="http://gaufoo.com/code/lab1/bootsect.s">bootsect.s</a></li>
 <li><a href="http://gaufoo.com/code/lab1/setup.s">setup.s</a></li>
