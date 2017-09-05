@@ -94,17 +94,17 @@
 
 
 
-<meta name="description" content="2017-09-05 汇编x86-64中，以为操作对w位长的数据值进行操作，移位量是由%cl寄存器的低m位决定的，这里2^m=w。高位会被忽略。所以，例如当寄存器%cl的十六进制值为0xFF时，指令salb会移7位，salw会移15位，sall会移31位，而salq会移63位。      2017-09-02 Python帮Karen爬植物志12345678910111213141516171">
+<meta name="description" content="2017-09-05 汇编x86-64中，移位操作对w位长的数据值进行操作，移位量是由%cl寄存器的低m位决定的，这里2^m=w。高位会被忽略。所以，例如当寄存器%cl的十六进制值为0xFF时，指令salb会移7位，salw会移15位，sall会移31位，而salq会移63位。      2017-09-02 Python帮Karen爬植物志12345678910111213141516171">
 <meta property="og:type" content="website">
 <meta property="og:title" content="便签">
 <meta property="og:url" content="http://gaufoo.com/notes/index.html">
 <meta property="og:site_name" content="苟富">
-<meta property="og:description" content="2017-09-05 汇编x86-64中，以为操作对w位长的数据值进行操作，移位量是由%cl寄存器的低m位决定的，这里2^m=w。高位会被忽略。所以，例如当寄存器%cl的十六进制值为0xFF时，指令salb会移7位，salw会移15位，sall会移31位，而salq会移63位。      2017-09-02 Python帮Karen爬植物志12345678910111213141516171">
+<meta property="og:description" content="2017-09-05 汇编x86-64中，移位操作对w位长的数据值进行操作，移位量是由%cl寄存器的低m位决定的，这里2^m=w。高位会被忽略。所以，例如当寄存器%cl的十六进制值为0xFF时，指令salb会移7位，salw会移15位，sall会移31位，而salq会移63位。      2017-09-02 Python帮Karen爬植物志12345678910111213141516171">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-05T07:02:25.986Z">
+<meta property="og:updated_time" content="2017-09-05T13:49:48.941Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="便签">
-<meta name="twitter:description" content="2017-09-05 汇编x86-64中，以为操作对w位长的数据值进行操作，移位量是由%cl寄存器的低m位决定的，这里2^m=w。高位会被忽略。所以，例如当寄存器%cl的十六进制值为0xFF时，指令salb会移7位，salw会移15位，sall会移31位，而salq会移63位。      2017-09-02 Python帮Karen爬植物志12345678910111213141516171">
+<meta name="twitter:description" content="2017-09-05 汇编x86-64中，移位操作对w位长的数据值进行操作，移位量是由%cl寄存器的低m位决定的，这里2^m=w。高位会被忽略。所以，例如当寄存器%cl的十六进制值为0xFF时，指令salb会移7位，salw会移15位，sall会移31位，而salq会移63位。      2017-09-02 Python帮Karen爬植物志12345678910111213141516171">
 
 
 
@@ -285,7 +285,7 @@
           <hr>
 <ul>
 <li>2017-09-05<ul>
-<li>汇编<br>x86-64中，以为操作对<strong>w</strong>位长的数据值进行操作，移位量是由<code>%cl</code>寄存器的低<strong>m</strong>位决定的，这里<strong>2^m=w</strong>。高位会被忽略。所以，例如当寄存器<code>%cl</code>的十六进制值为<strong>0xFF</strong>时，指令<code>salb</code>会移<strong>7</strong>位，<code>salw</code>会移<strong>15</strong>位，<code>sall</code>会移<strong>31</strong>位，而<code>salq</code>会移<strong>63</strong>位。</li>
+<li>汇编<br>x86-64中，移位操作对<strong>w</strong>位长的数据值进行操作，移位量是由<code>%cl</code>寄存器的低<strong>m</strong>位决定的，这里<strong>2^m=w</strong>。高位会被忽略。所以，例如当寄存器<code>%cl</code>的十六进制值为<strong>0xFF</strong>时，指令<code>salb</code>会移<strong>7</strong>位，<code>salw</code>会移<strong>15</strong>位，<code>sall</code>会移<strong>31</strong>位，而<code>salq</code>会移<strong>63</strong>位。</li>
 </ul>
 </li>
 </ul>
@@ -374,7 +374,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
