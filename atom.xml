@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-09-02T23:51:31.711Z</updated>
+  <updated>2017-09-05T09:12:43.963Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -14,6 +14,383 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Python之Re库学习笔记</title>
+    <link href="http://gaufoo.com/2017/09/05/Python%E4%B9%8BRe%E5%BA%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <id>http://gaufoo.com/2017/09/05/Python之Re库学习笔记/</id>
+    <published>2017-09-05T09:05:00.000Z</published>
+    <updated>2017-09-05T09:12:43.963Z</updated>
+    
+    <content type="html"><![CDATA[<p>记录以备后用</p>
+<a id="more"></a>
+<hr>
+<h2 id="正则表达式的使用"><a href="#正则表达式的使用" class="headerlink" title="正则表达式的使用"></a>正则表达式的使用</h2><h3 id="常用操作符"><a href="#常用操作符" class="headerlink" title="常用操作符"></a>常用操作符</h3><table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>说明</th>
+<th>实例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>.</td>
+<td>表示任何单个字符</td>
+<td>-</td>
+</tr>
+<tr>
+<td>[ ]</td>
+<td>字符集，对单个字符给出取值范围</td>
+<td>[abc]表示a、b、c，[a‐z]表示a到z单个字符</td>
+</tr>
+<tr>
+<td>[^ ]</td>
+<td>非字符集，对单个字符给出排除范围</td>
+<td>[^abc]表示非a或b或c的单个字符</td>
+</tr>
+<tr>
+<td>*</td>
+<td>前一个字符0次或无限次扩展</td>
+<td>abc* 表示 ab、abc、abcc、abccc等</td>
+</tr>
+<tr>
+<td>+</td>
+<td>前一个字符1次或无限次扩展</td>
+<td>abc+ 表示 abc、abcc、abccc等</td>
+</tr>
+<tr>
+<td>?</td>
+<td>前一个字符0次或1次扩展</td>
+<td>abc? 表示 ab、abc</td>
+</tr>
+<tr>
+<td>&#124;</td>
+<td>左右表达式任意一个</td>
+<td>abc&#124;def 表示 abc、def</td>
+</tr>
+<tr>
+<td>{m}</td>
+<td>扩展前一个字符m次</td>
+<td>ab{2}c表示abbc</td>
+</tr>
+<tr>
+<td>{m,n}</td>
+<td>扩展前一个字符m至n次（含n）</td>
+<td>ab{1,2}c表示abc、abbc</td>
+</tr>
+<tr>
+<td>^</td>
+<td>匹配字符串开头</td>
+<td>^abc表示abc且在一个字符串的开头</td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配字符串结尾</td>
+<td>abc$表示abc且在一个字符串的结尾</td>
+</tr>
+<tr>
+<td>( )</td>
+<td>分组标记，内部只能使用 &#124; 操作符</td>
+<td>(abc)表示abc，(abc&#124;def)表示abc、def</td>
+</tr>
+<tr>
+<td>\d</td>
+<td>数字，等价于[0-9]</td>
+<td>-</td>
+</tr>
+<tr>
+<td>\w</td>
+<td>单词字符，等价于[A-Za-z0-9_]</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="经典正则表达式实例"><a href="#经典正则表达式实例" class="headerlink" title="经典正则表达式实例"></a>经典正则表达式实例</h3><ul>
+<li><code>^[A‐Za‐z]+$</code>：由26个字母组成的字符串</li>
+<li><code>^[A‐Za‐z0‐9]+$</code>：由26个字母和数字组成的字符串</li>
+<li><code>^‐?\d+$</code>：整数形式的字符串</li>
+<li><code>[1‐9]\d{5}</code>：中国境内邮政编码，6位</li>
+<li><code>[\u4e00‐\u9fa5]</code>：匹配中文字符、</li>
+<li><code>\d{3}‐\d{8}|\d{4}‐\d{7}</code>：国内电话号码，010‐68913536</li>
+<li>IP地址<ul>
+<li>0-99：<code>[1‐9]?\d</code></li>
+<li>100-199：<code>1\d{2}</code></li>
+<li>200-249：<code>2[0‐4]\d</code></li>
+<li>250-255：<code>25[0‐5]</code></li>
+<li>总：<code>(([1‐9]?\d|1\d{2}|2[0‐4]\d|25[0‐5]).){3}([1‐9]?\d|1\d{2}|2[0‐4]\d|25[0‐5])</code></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="Re库主要功能函数"><a href="#Re库主要功能函数" class="headerlink" title="Re库主要功能函数"></a>Re库主要功能函数</h2><h3 id="re-search-pattern-string-flags-0"><a href="#re-search-pattern-string-flags-0" class="headerlink" title="re.search(pattern, string, flags=0)"></a>re.search(pattern, string, flags=0)</h3><p>在一个字符串中搜索匹配正则表达式的第一个位置，返回match对象</p>
+<ul>
+<li><code>pattern</code>：正则表达式的字符串或原生字符串表示</li>
+<li><code>string</code>：待匹配字符串</li>
+<li><code>flags</code>：正则表达式使用时的控制标记<ul>
+<li><code>re.I</code> - re.IGNORECASE：忽略正则表达式的大小写，[A‐Z]能够匹配小写字符</li>
+<li><code>re.M</code> - re.MULTILINE：正则表达式中的^操作符能够将给定字符串的每行当作匹配开始</li>
+<li><code>re.S</code> - re.DOTALL：正则表达式中的.操作符能够匹配所有字符，默认匹配除换行外的所有字符</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="re-match-pattern-string-flags-0"><a href="#re-match-pattern-string-flags-0" class="headerlink" title="re.match(pattern, string, flags=0)"></a>re.match(pattern, string, flags=0)</h3><p>从一个字符串的开始位置起匹配正则表达式，返回match对象</p>
+<ul>
+<li><code>pattern</code>：正则表达式的字符串或原生字符串表示</li>
+<li><code>string</code>：待匹配字符串</li>
+<li><code>flags</code>：正则表达式使用时的控制标记<ul>
+<li><code>re.I</code> - re.IGNORECASE：忽略正则表达式的大小写，[A‐Z]能够匹配小写字符</li>
+<li><code>re.M</code> - re.MULTILINE：正则表达式中的^操作符能够将给定字符串的每行当作匹配开始</li>
+<li><code>re.S</code> - re.DOTALL：正则表达式中的.操作符能够匹配所有字符，默认匹配除换行外的所有字符</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="re-findall-pattern-string-flags-0"><a href="#re-findall-pattern-string-flags-0" class="headerlink" title="re.findall(pattern, string, flags=0)"></a>re.findall(pattern, string, flags=0)</h3><p>搜索字符串，以列表类型返回全部能匹配的子串</p>
+<ul>
+<li><code>pattern</code>：正则表达式的字符串或原生字符串表示</li>
+<li><code>string</code>：待匹配字符串</li>
+<li><code>flags</code>：正则表达式使用时的控制标记<ul>
+<li><code>re.I</code> - re.IGNORECASE：忽略正则表达式的大小写，[A‐Z]能够匹配小写字符</li>
+<li><code>re.M</code> - re.MULTILINE：正则表达式中的^操作符能够将给定字符串的每行当作匹配开始</li>
+<li><code>re.S</code> - re.DOTALL：正则表达式中的.操作符能够匹配所有字符，默认匹配除换行外的所有字符</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="re-split-pattern-string-maxsplit-0-flags-0"><a href="#re-split-pattern-string-maxsplit-0-flags-0" class="headerlink" title="re.split(pattern, string, maxsplit=0, flags=0)"></a>re.split(pattern, string, maxsplit=0, flags=0)</h3><p>将一个字符串按照正则表达式匹配结果进行分割，返回列表类型<br>搜索字符串，以列表类型返回全部能匹配的子串</p>
+<ul>
+<li><code>pattern</code>：正则表达式的字符串或原生字符串表示</li>
+<li><code>string</code>：待匹配字符串</li>
+<li><code>maxsplit</code>：最大分割数，剩余部分作为最后一个元素输出</li>
+<li><code>flags</code>：正则表达式使用时的控制标记<ul>
+<li><code>re.I</code> - re.IGNORECASE：忽略正则表达式的大小写，[A‐Z]能够匹配小写字符</li>
+<li><code>re.M</code> - re.MULTILINE：正则表达式中的^操作符能够将给定字符串的每行当作匹配开始</li>
+<li><code>re.S</code> - re.DOTALL：正则表达式中的.操作符能够匹配所有字符，默认匹配除换行外的所有字符</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="re-finditer-pattern-string-flags-0"><a href="#re-finditer-pattern-string-flags-0" class="headerlink" title="re.finditer(pattern, string, flags=0)"></a>re.finditer(pattern, string, flags=0)</h3><p>搜索字符串，返回一个匹配结果的迭代类型，每个迭代元素是match对象</p>
+<ul>
+<li><code>pattern</code>：正则表达式的字符串或原生字符串表示</li>
+<li><code>string</code>：待匹配字符串</li>
+<li><code>flags</code>：正则表达式使用时的控制标记<ul>
+<li><code>re.I</code> - re.IGNORECASE：忽略正则表达式的大小写，[A‐Z]能够匹配小写字符</li>
+<li><code>re.M</code> - re.MULTILINE：正则表达式中的^操作符能够将给定字符串的每行当作匹配开始</li>
+<li><code>re.S</code> - re.DOTALL：正则表达式中的.操作符能够匹配所有字符，默认匹配除换行外的所有字符</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="re-sub-pattern-repl-string-count-0-flags-0"><a href="#re-sub-pattern-repl-string-count-0-flags-0" class="headerlink" title="re.sub(pattern, repl, string, count=0, flags=0)"></a>re.sub(pattern, repl, string, count=0, flags=0)</h3><p>在一个字符串中替换所有匹配正则表达式的子串，返回替换后的字符串</p>
+<ul>
+<li><code>pattern</code>：正则表达式的字符串或原生字符串表示</li>
+<li><code>repl</code>：替换匹配字符串的字符串</li>
+<li><code>string</code>：待匹配字符串</li>
+<li><code>count</code>：匹配的最大替换次数</li>
+<li><code>flags</code>：正则表达式使用时的控制标记<ul>
+<li><code>re.I</code> - re.IGNORECASE：忽略正则表达式的大小写，[A‐Z]能够匹配小写字符</li>
+<li><code>re.M</code> - re.MULTILINE：正则表达式中的^操作符能够将给定字符串的每行当作匹配开始</li>
+<li><code>re.S</code> - re.DOTALL：正则表达式中的.操作符能够匹配所有字符，默认匹配除换行外的所有字符</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="Re库另一种等价用法"><a href="#Re库另一种等价用法" class="headerlink" title="Re库另一种等价用法"></a>Re库另一种等价用法</h3><p><strong>regex = re.compile(pattern, flags=0)</strong><br>将正则表达式的字符串形式编译成正则表达式对象</p>
+<ul>
+<li><code>pattern</code>：正则表达式的字符串或原生字符串表示</li>
+<li><code>flags</code>：正则表达式使用时的控制标记<ul>
+<li><code>re.I</code> - re.IGNORECASE：忽略正则表达式的大小写，[A‐Z]能够匹配小写字符</li>
+<li><code>re.M</code> - re.MULTILINE：正则表达式中的^操作符能够将给定字符串的每行当作匹配开始</li>
+<li><code>re.S</code> - re.DOTALL：正则表达式中的.操作符能够匹配所有字符，默认匹配除换行外的所有字符</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>regex.search()</td>
+<td>在一个字符串中搜索匹配正则表达式的第一个位置，返回match对象</td>
+</tr>
+<tr>
+<td>regex.match()</td>
+<td>从一个字符串的开始位置起匹配正则表达式，返回match对象</td>
+</tr>
+<tr>
+<td>regex.findall()</td>
+<td>搜索字符串，以列表类型返回全部能匹配的子串</td>
+</tr>
+<tr>
+<td>regex.split()</td>
+<td>将一个字符串按照正则表达式匹配结果进行分割，返回列表类型</td>
+</tr>
+<tr>
+<td>regex.finditer()</td>
+<td>搜索字符串，返回一个匹配结果的迭代类型，每个迭代元素是match对象</td>
+</tr>
+<tr>
+<td>regex.sub()</td>
+<td>在一个字符串中替换所有匹配正则表达式的子串，返回替换后的字符串</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Re库的Match对象"><a href="#Re库的Match对象" class="headerlink" title="Re库的Match对象"></a>Re库的Match对象</h2><h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><ul>
+<li><code>.string</code>：待匹配的文本</li>
+<li><code>.re</code>：匹配时使用的patter对象（正则表达式）</li>
+<li><code>.pos</code>：正则表达式搜索文本的开始位置</li>
+<li><code>.endpos</code>：正则表达式搜索文本的结束位置<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3></li>
+<li><code>.group(0)</code>：获得匹配后的字符串</li>
+<li><code>.start()</code>：匹配字符串在原始字符串的开始位置</li>
+<li><code>.end()</code>：匹配字符串在原始字符串的结束位置</li>
+<li><code>.span()</code>：返回(.start(), .end())</li>
+</ul>
+<h2 id="Re库的贪婪匹配和最小匹配"><a href="#Re库的贪婪匹配和最小匹配" class="headerlink" title="Re库的贪婪匹配和最小匹配"></a>Re库的贪婪匹配和最小匹配</h2><p>Re库默认采用贪婪匹配，即输出匹配最长的子串<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>match = re.search(<span class="string">r'PY.*N'</span>, <span class="string">'PYANBNCNDN'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>match.group(<span class="number">0</span>)</div><div class="line"><span class="string">'PYANBNCNDN'</span></div></pre></td></tr></table></figure></p>
+<p>输出最短的子串<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>match = re.search(<span class="string">r'PY.*?N'</span>, <span class="string">'PYANBNCNDN'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>match.group(<span class="number">0</span>)</div><div class="line"><span class="string">'PYAN'</span></div></pre></td></tr></table></figure></p>
+<h3 id="最小匹配操作符"><a href="#最小匹配操作符" class="headerlink" title="最小匹配操作符"></a>最小匹配操作符</h3><p>只要长度输出可能不同的，都可以通过在操作符后增加?变成最小匹配</p>
+<ul>
+<li><code>*?</code>：前一个字符0次或无限次扩展，最小匹配</li>
+<li><code>+?</code>：前一个字符1次或无限次扩展，最小匹配</li>
+<li><code>??</code>：前一个字符0次或1次扩展，最小匹配</li>
+<li><code>{m,n}?</code>：扩展前一个字符m至n次（含n），最小匹配</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;记录以备后用&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="Python" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/Python/"/>
+    
+    
+      <category term="Python" scheme="http://gaufoo.com/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux常用命令，持续更新</title>
+    <link href="http://gaufoo.com/2017/09/05/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%EF%BC%8C%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/"/>
+    <id>http://gaufoo.com/2017/09/05/Linux常用命令，持续更新/</id>
+    <published>2017-09-05T07:14:00.000Z</published>
+    <updated>2017-09-05T07:20:54.159Z</updated>
+    
+    <content type="html"><![CDATA[<p>记录<br><a id="more"></a></p>
+<hr>
+<h2 id="常用快捷键"><a href="#常用快捷键" class="headerlink" title="常用快捷键"></a>常用快捷键</h2><table>
+<thead>
+<tr>
+<th>按键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl+d</code></td>
+<td>键盘输入结束或退出终端</td>
+</tr>
+<tr>
+<td><code>Ctrl+s</code></td>
+<td>暂停当前程序，暂停后按下任意键恢复运行</td>
+</tr>
+<tr>
+<td><code>Ctrl+z</code></td>
+<td>将当前程序放到后台运行，恢复到前台为命令<code>fg</code></td>
+</tr>
+<tr>
+<td><code>Ctrl+a</code></td>
+<td>将光标移至输入行头，相当于<code>Home</code></td>
+</tr>
+<tr>
+<td><code>Ctrl+e</code></td>
+<td>将光标移至输入行末，相当于<code>End</code></td>
+</tr>
+<tr>
+<td><code>Ctrl+k</code></td>
+<td>删除从光标所在位置到行末</td>
+</tr>
+<tr>
+<td><code>Alt+Backspave</code></td>
+<td>向前删除一个单词</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="常用通配符"><a href="#常用通配符" class="headerlink" title="常用通配符"></a>常用通配符</h2><table>
+<thead>
+<tr>
+<th>字符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*</code></td>
+<td>匹配0或多个字符</td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>匹配任意一个字符</td>
+</tr>
+<tr>
+<td><code>[list]</code></td>
+<td>匹配list中的任意单一字符</td>
+</tr>
+<tr>
+<td><code>[!list]</code></td>
+<td>匹配除list中的任意单一字符</td>
+</tr>
+<tr>
+<td><code>[c1-c2]</code></td>
+<td>匹配c1-c2中的任意单一字符 如：<code>[0-9]</code> <code>[a-z]</code></td>
+</tr>
+<tr>
+<td><code>{string1,string2,...}</code></td>
+<td>匹配string1或string2（或更多）其一字符串</td>
+</tr>
+<tr>
+<td><code>{c1..c2}</code></td>
+<td>匹配c1-c2中全部字符 如{1..10}</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="文件权限"><a href="#文件权限" class="headerlink" title="文件权限"></a>文件权限</h2><h3 id="查看文件权限"><a href="#查看文件权限" class="headerlink" title="查看文件权限"></a>查看文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> ls -l</div><div class="line">drwxr-xr-x 2 gaufoo gaufoo 4096 11月 6 15:30 Document</div></pre></td></tr></table></figure>
+<ul>
+<li>文件类型<br> <code>d</code>：目录<br> <code>l</code>：软链接<br> <code>b</code>：块设备<br> <code>c</code>：字符设备<br> <code>s</code>：socket<br> <code>p</code>：管道<br> <code>-</code>：普通文件</li>
+<li>文件权限<br> <code>r</code>：读<br> <code>w</code>：写<br> <code>x</code>：执行 </li>
+</ul>
+<h3 id="变更文件所有者"><a href="#变更文件所有者" class="headerlink" title="变更文件所有者"></a>变更文件所有者</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> sudo chown ??? ???</div></pre></td></tr></table></figure>
+<h3 id="修改文件权限"><a href="#修改文件权限" class="headerlink" title="修改文件权限"></a>修改文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> chmod 700 ???</div></pre></td></tr></table></figure>
+<h2 id="文件基本操作"><a href="#文件基本操作" class="headerlink" title="文件基本操作"></a>文件基本操作</h2><h3 id="复制目录"><a href="#复制目录" class="headerlink" title="复制目录"></a>复制目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> cp -r ??? ???</div></pre></td></tr></table></figure>
+<h3 id="删除目录"><a href="#删除目录" class="headerlink" title="删除目录"></a>删除目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> rm -r ???</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;记录&lt;br&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://gaufoo.com/categories/Linux/"/>
+    
+      <category term="命令" scheme="http://gaufoo.com/categories/Linux/%E5%91%BD%E4%BB%A4/"/>
+    
+    
+      <category term="Linux" scheme="http://gaufoo.com/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>操作系统boot实验报告</title>
