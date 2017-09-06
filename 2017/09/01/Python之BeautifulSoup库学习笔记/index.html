@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="苟富">
 <meta property="og:description" content="记录以备后用">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-06T03:17:14.884Z">
+<meta property="og:updated_time" content="2017-09-06T07:21:26.069Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python之BeautifulSoup库学习笔记">
 <meta name="twitter:description" content="记录以备后用">
@@ -372,7 +372,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  570 字
+                  959 字
                 </span>
               
 
@@ -401,6 +401,7 @@
 <a id="more"></a>
 <hr>
 <h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup = BeautifulSoup(<span class="string">'&lt;p&gt;data&lt;/p&gt;'</span>, <span class="string">'html.parser'</span>)</div></pre></td></tr></table></figure>
+<hr>
 <h2 id="基本元素"><a href="#基本元素" class="headerlink" title="基本元素"></a>基本元素</h2><ul>
 <li><p><code>Tag</code>：标签，最基本的信息组织单元，分别用&lt;&gt;和&lt;/&gt;标明开头和结尾</p>
   <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup = BeautifulSoup(<span class="string">'&lt;b class="boldest"&gt;Extremely bold&lt;/b&gt;'</span>, <span class="string">'html.parser'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag = soup.b</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>type(tag)</div><div class="line"><span class="comment"># &lt;class 'bs4.element.Tag'&gt;</span></div></pre></td></tr></table></figure>
@@ -422,6 +423,7 @@
   <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>markup = <span class="string">"&lt;b&gt;&lt;!--Hey, buddy. Want to buy a used parser?--&gt;&lt;/b&gt;"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup = BeautifulSoup(markup, <span class="string">'html.parser'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>comment = soup.b.string</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>type(comment)</div><div class="line"><span class="comment"># &lt;class 'bs4.element.Comment'&gt;</span></div></pre></td></tr></table></figure>
 </li>
 </ul>
+<hr>
 <h2 id="简单遍历"><a href="#简单遍历" class="headerlink" title="简单遍历"></a>简单遍历</h2><ul>
 <li><p>只获得第一个tag</p>
   <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.head</div><div class="line"><span class="comment"># &lt;head&gt;&lt;title&gt;The Dormouse's story&lt;/title&gt;&lt;/head&gt;</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.title</div><div class="line"><span class="comment"># &lt;title&gt;The Dormouse's story&lt;/title&gt;</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.body.b</div><div class="line"><span class="comment"># &lt;b&gt;The Dormouse's story&lt;/b&gt;</span></div></pre></td></tr></table></figure>
@@ -430,22 +432,61 @@
   <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(<span class="string">'a'</span>)</div><div class="line"><span class="comment"># [&lt;a class="sister" href="http://example.com/elsie" id="link1"&gt;Elsie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/lacie" id="link2"&gt;Lacie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/tillie" id="link3"&gt;Tillie&lt;/a&gt;]</span></div></pre></td></tr></table></figure>
 </li>
 </ul>
-<h2 id="复杂遍历"><a href="#复杂遍历" class="headerlink" title="复杂遍历"></a>复杂遍历</h2><p><code>find_all(name , attrs , recursive , text , **kwargs)</code><br><strong><em>TODO</em></strong></p>
+<hr>
+<h2 id="精确遍历"><a href="#精确遍历" class="headerlink" title="精确遍历"></a>精确遍历</h2><p><code>find_all(name, attrs, recursive, text, **kwargs)</code></p>
+<ul>
+<li><p><code>name</code>：name 参数可以查找所有名字为 name 的 tag</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(<span class="string">"title"</span>)</div><div class="line"><span class="comment"># [&lt;title&gt;The Dormouse's story&lt;/title&gt;]</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>keywork</code>：搜索时会把该参数当作指定名字 tag 的<strong>属性</strong>来搜索</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(id=<span class="string">'link2'</span>)</div><div class="line"><span class="comment"># [&lt;a class="sister" href="http://example.com/lacie" id="link2"&gt;Lacie&lt;/a&gt;]</span></div></pre></td></tr></table></figure>
+<p>  参数值为<code>True</code>，查找所有包含 id 属性的 tag</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(id=<span class="keyword">True</span>)</div><div class="line"><span class="comment"># [&lt;a class="sister" href="http://example.com/elsie" id="link1"&gt;Elsie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/lacie" id="link2"&gt;Lacie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/tillie" id="link3"&gt;Tillie&lt;/a&gt;]</span></div></pre></td></tr></table></figure>
+<p>  <code>class_</code>：搜索有指定CSS类名的 tag。因为 class 是 python 的关键字，需要加下横线以区分</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(<span class="string">"a"</span>, class_=<span class="string">"sister"</span>)</div><div class="line"><span class="comment"># [&lt;a class="sister" href="http://example.com/elsie" id="link1"&gt;Elsie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/lacie" id="link2"&gt;Lacie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/tillie" id="link3"&gt;Tillie&lt;/a&gt;]</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>attrs</code>：定义一个字典参数来搜索包含特殊属性的 tag</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>data_soup.find_all(attrs=&#123;<span class="string">"data-foo"</span>: <span class="string">"value"</span>&#125;)</div><div class="line"><span class="comment"># [&lt;div data-foo="value"&gt;foo!&lt;/div&gt;]</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>text</code>：搜索文档中的字符串内容</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(<span class="string">"a"</span>, text=<span class="string">"Elsie"</span>)</div><div class="line"><span class="comment"># [&lt;a href="http://example.com/elsie" class="sister" id="link1"&gt;Elsie&lt;/a&gt;]</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>limit</code>：限制返回结果的<strong>数量</strong></p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(<span class="string">"a"</span>, limit=<span class="number">2</span>)</div><div class="line"><span class="comment"># [&lt;a class="sister" href="http://example.com/elsie" id="link1"&gt;Elsie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/lacie" id="link2"&gt;Lacie&lt;/a&gt;]</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>recursive</code>：value为False时，搜索tag的直接子节点</p>
+</li>
+</ul>
+<hr>
+<p><code>find(name, attrs, recursive, text, **kwargs)</code></p>
+<p>与<code>find_all()</code>的区别：</p>
+<ul>
+<li><p><code>find()</code>只得到一个结果，<code>find_all()</code>得到结果的列表</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(<span class="string">'title'</span>, limit=<span class="number">1</span>)</div><div class="line"><span class="comment"># [&lt;title&gt;The Dormouse's story&lt;/title&gt;]</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find(<span class="string">'title'</span>)</div><div class="line"><span class="comment"># &lt;title&gt;The Dormouse's story&lt;/title&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>find_all()</code>方法没有找到目标是返回空列表，<code>find()</code> 方法找不到目标时,返回 None</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(soup.find(<span class="string">"nosuchtag"</span>))</div><div class="line"><span class="comment"># None</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
 <h2 id="标签树的下行遍历"><a href="#标签树的下行遍历" class="headerlink" title="标签树的下行遍历"></a>标签树的下行遍历</h2><ul>
 <li><code>.contents</code>：子节点的<strong>列表</strong>，将<tag>所有儿子节点存入列表</tag></li>
 <li><code>.children</code>： 子节点的<strong>迭代类型</strong>，与<code>.contents</code>类似，用于循环遍历儿子节点</li>
 <li><code>.descendants</code>： 子孙节点的<strong>迭代类型</strong>，包含所有子孙节点，用于循环遍历</li>
 </ul>
+<hr>
 <h2 id="标签树的上行遍历"><a href="#标签树的上行遍历" class="headerlink" title="标签树的上行遍历"></a>标签树的上行遍历</h2><ul>
 <li><code>.parent</code>： 节点的父亲标签</li>
 <li><code>.parents</code>： 节点先辈标签的<strong>迭代类型</strong>，用于循环遍历先辈节点</li>
 </ul>
+<hr>
 <h2 id="标签树的平行遍历"><a href="#标签树的平行遍历" class="headerlink" title="标签树的平行遍历"></a>标签树的平行遍历</h2><ul>
 <li><code>.next_sibling</code>： 返回按照HTML文本顺序的下一个平行节点标签</li>
 <li><code>.previous_sibling</code>： 返回按照HTML文本顺序的上一个平行节点标签</li>
 <li><code>.next_siblings</code>： <strong>迭代类型</strong>，返回按照HTML文本顺序的后续所有平行节点标签</li>
 <li><code>.previous_siblings</code>： <strong>迭代类型</strong>，返回按照HTML文本顺序的前续所有平行节点标签</li>
 </ul>
+<hr>
 <h2 id="格式化输出"><a href="#格式化输出" class="headerlink" title="格式化输出"></a>格式化输出</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(soup.prettify())</div></pre></td></tr></table></figure>
 
       
@@ -458,6 +499,24 @@
 
     
 
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Gaufoo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://gaufoo.com/2017/09/01/Python之BeautifulSoup库学习笔记/" title="Python之BeautifulSoup库学习笔记">http://gaufoo.com/2017/09/01/Python之BeautifulSoup库学习笔记/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/" rel="external nofollow" target="_blank">CC BY-NC-ND 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
     
 
     <footer class="post-footer">
@@ -677,7 +736,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本使用"><span class="nav-number">1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本元素"><span class="nav-number">2.</span> <span class="nav-text">基本元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单遍历"><span class="nav-number">3.</span> <span class="nav-text">简单遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复杂遍历"><span class="nav-number">4.</span> <span class="nav-text">复杂遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签树的下行遍历"><span class="nav-number">5.</span> <span class="nav-text">标签树的下行遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签树的上行遍历"><span class="nav-number">6.</span> <span class="nav-text">标签树的上行遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签树的平行遍历"><span class="nav-number">7.</span> <span class="nav-text">标签树的平行遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#格式化输出"><span class="nav-number">8.</span> <span class="nav-text">格式化输出</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本使用"><span class="nav-number">1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本元素"><span class="nav-number">2.</span> <span class="nav-text">基本元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单遍历"><span class="nav-number">3.</span> <span class="nav-text">简单遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#精确遍历"><span class="nav-number">4.</span> <span class="nav-text">精确遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签树的下行遍历"><span class="nav-number">5.</span> <span class="nav-text">标签树的下行遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签树的上行遍历"><span class="nav-number">6.</span> <span class="nav-text">标签树的上行遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签树的平行遍历"><span class="nav-number">7.</span> <span class="nav-text">标签树的平行遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#格式化输出"><span class="nav-number">8.</span> <span class="nav-text">格式化输出</span></a></li></ol></div>
             
 
           </div>
@@ -849,6 +908,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
 

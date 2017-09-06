@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="苟富">
 <meta property="og:description" content="《CSAPP》上的题目，略有难度。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-05T15:52:39.901Z">
+<meta property="og:updated_time" content="2017-09-06T07:26:53.028Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C之32位二进制数内1的个数求法">
 <meta name="twitter:description" content="《CSAPP》上的题目，略有难度。">
@@ -406,6 +406,7 @@
 <li>最大操作步数：40</li>
 <li>最大操作数：255</li>
 </ol>
+<hr>
 <h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><h3 id="获取2位二进制数内”1”个数"><a href="#获取2位二进制数内”1”个数" class="headerlink" title="获取2位二进制数内”1”个数"></a>获取2位二进制数内”1”个数</h3><p>设该数为<code>x</code>，则答案易得为<code>(x &amp; 01) + ((x &gt;&gt; 1) &amp; 01)</code></p>
 <h3 id="获取4位二进制数内”1”个数"><a href="#获取4位二进制数内”1”个数" class="headerlink" title="获取4位二进制数内”1”个数"></a>获取4位二进制数内”1”个数</h3><p>设该数为<code>x</code><br>可以先把每两位的”1”个数求出，再加起来。</p>
 <ol>
@@ -418,7 +419,7 @@
 <li><code>z = (y &amp; 00110011) + ((y &gt;&gt; 10) &amp; 00110011)</code></li>
 <li><code>count = (z &amp; 00001111) + ((z &gt;&gt; 1000) &amp; 00001111)</code></li>
 </ol>
-<p>···<br>···<br>···<br>···</p>
+<p>···<br>···<br>···</p>
 <h3 id="获取32位二进制数内”1”个数"><a href="#获取32位二进制数内”1”个数" class="headerlink" title="获取32位二进制数内”1”个数"></a>获取32位二进制数内”1”个数</h3><ol>
 <li>每两位数存”1”的个数：<br><code>storePer2 = (0x???????? &amp; 0x55555555) + ((0x???????? &gt;&gt; 1) &amp; 0x55555555)</code></li>
 <li>每四位数存”1”的个数：<br><code>storePer4 = (storePer2 &amp; 0x33333333) + ((storePer2 &gt;&gt; 2) &amp; 0x33333333)</code></li>
@@ -426,6 +427,7 @@
 <li>每十六位数存”1”的个数：<br><code>storePer16 = (storePer8 &amp; 0x00ff00ff) + ((storePer8 &gt;&gt; 8) &amp; 0x00ff00ff)</code></li>
 <li>用32位数来存储结果：<br><code>count = (storePer16 &amp; 0x0000ffff) + ((storePer16 &gt;&gt; 16) &amp; 0x0000ffff)</code></li>
 </ol>
+<hr>
 <h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment"> * bitCount - returns count of number of 1's in word</span></div><div class="line"><span class="comment"> *   Examples: bitCount(5) = 2, bitCount(7) = 3</span></div><div class="line"><span class="comment"> *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</span></div><div class="line"><span class="comment"> *   Max ops: 40</span></div><div class="line"><span class="comment"> *   Rating: 4</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">bitCount</span><span class="params">(<span class="keyword">int</span> x)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">	<span class="keyword">int</span> tmpMask1 = (<span class="number">0x55</span>) | (<span class="number">0x55</span> &lt;&lt; <span class="number">8</span>);</div><div class="line">	<span class="keyword">int</span> mask1 = (tmpMask1) | (tmpMask1 &lt;&lt; <span class="number">16</span>);</div><div class="line">	<span class="keyword">int</span> tmpMask2 = (<span class="number">0x33</span>) | (<span class="number">0x33</span> &lt;&lt; <span class="number">8</span>);</div><div class="line">	<span class="keyword">int</span> mask2 = (tmpMask2) | (tmpMask2 &lt;&lt; <span class="number">16</span>);</div><div class="line">	<span class="keyword">int</span> tmpMask3 = (<span class="number">0x0f</span>) | (<span class="number">0x0f</span> &lt;&lt; <span class="number">8</span>);</div><div class="line">	<span class="keyword">int</span> mask3 = (tmpMask3) | (tmpMask3 &lt;&lt; <span class="number">16</span>);</div><div class="line">	<span class="keyword">int</span> mask4 = (<span class="number">0xff</span>) | (<span class="number">0xff</span> &lt;&lt; <span class="number">16</span>);</div><div class="line">	<span class="keyword">int</span> mask5 = (<span class="number">0xff</span>) | (<span class="number">0xff</span> &lt;&lt; <span class="number">8</span>);</div><div class="line">	<span class="keyword">int</span> count = x;</div><div class="line">	count = (count &amp; mask1) + ((count &gt;&gt; <span class="number">1</span>) &amp; mask1);</div><div class="line">	count = (count &amp; mask2) + ((count &gt;&gt; <span class="number">2</span>) &amp; mask2);</div><div class="line">	count = (count &amp; mask3) + ((count &gt;&gt; <span class="number">4</span>) &amp; mask3);</div><div class="line">	count = (count &amp; mask4) + ((count &gt;&gt; <span class="number">8</span>) &amp; mask4);</div><div class="line">	count = (count &amp; mask5) + ((count &gt;&gt; <span class="number">16</span>) &amp; mask5);</div><div class="line">	<span class="keyword">return</span> count;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"bitCount(5) = %d\nbitCount(7) = %d\n"</span>, bitCount(<span class="number">5</span>), bitCount(<span class="number">7</span>));</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
@@ -438,6 +440,24 @@
 
     
 
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Gaufoo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://gaufoo.com/2017/09/05/C之32位二进制数内1的个数求法/" title="C之32位二进制数内1的个数求法">http://gaufoo.com/2017/09/05/C之32位二进制数内1的个数求法/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/" rel="external nofollow" target="_blank">CC BY-NC-ND 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
     
 
     <footer class="post-footer">
@@ -823,6 +843,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
 

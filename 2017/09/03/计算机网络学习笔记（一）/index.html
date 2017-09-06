@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="苟富">
 <meta property="og:description" content="记录以备后用">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-02T18:56:19.844Z">
+<meta property="og:updated_time" content="2017-09-06T07:36:33.862Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计算机网络学习笔记（一）">
 <meta name="twitter:description" content="记录以备后用">
@@ -372,7 +372,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,062 字
+                  1,067 字
                 </span>
               
 
@@ -408,6 +408,7 @@
 </li>
 <li>距离远、数量大时，通过<strong>交换网络</strong>互联主机。</li>
 </ul>
+<hr>
 <h2 id="Internet-定义"><a href="#Internet-定义" class="headerlink" title="Internet 定义"></a>Internet 定义</h2><h3 id="组成细节角度"><a href="#组成细节角度" class="headerlink" title="组成细节角度"></a>组成细节角度</h3><ul>
 <li>全球最大的<strong>互联网络</strong><ul>
 <li>由ISP(Internet Service Provider)网络互连的“网络之网络”</li>
@@ -439,6 +440,7 @@
 </ul>
 </li>
 </ul>
+<hr>
 <h2 id="网络协议"><a href="#网络协议" class="headerlink" title="网络协议"></a>网络协议</h2><h3 id="类比"><a href="#类比" class="headerlink" title="类比"></a>类比</h3><ul>
 <li>交通系统中的交通规则</li>
 <li>人类交谈作为信息交换的过程，同样包括交流时间、问题请教、人员引荐等</li>
@@ -471,8 +473,8 @@
 <li>RFC：Request for Comments</li>
 <li>IETF：互联网工程任务组(Internet Engineering Task Force)</li>
 </ul>
-<h2 id="计算机网络结构"><a href="#计算机网络结构" class="headerlink" title="计算机网络结构"></a>计算机网络结构</h2><ul>
-<li>网络边缘<ul>
+<hr>
+<h2 id="计算机网络结构"><a href="#计算机网络结构" class="headerlink" title="计算机网络结构"></a>计算机网络结构</h2><h3 id="网络边缘"><a href="#网络边缘" class="headerlink" title="网络边缘"></a>网络边缘</h3><ul>
 <li>主机（端系统）</li>
 <li>网络应用，如：Web，email</li>
 <li>模型：<ul>
@@ -481,8 +483,7 @@
 </ul>
 </li>
 </ul>
-</li>
-<li>接入网络、物理介质<ul>
+<h3 id="接入网络、物理介质"><a href="#接入网络、物理介质" class="headerlink" title="接入网络、物理介质"></a>接入网络、物理介质</h3><ul>
 <li>有线或无线通信链路<ul>
 <li>住宅（家庭）接入网络</li>
 <li>机构接入网络（学校、企业等）</li>
@@ -506,8 +507,7 @@
 </ul>
 </li>
 </ul>
-</li>
-<li>网络核心（核心网络）<ul>
+<h3 id="网络核心（核心网络）"><a href="#网络核心（核心网络）" class="headerlink" title="网络核心（核心网络）"></a>网络核心（核心网络）</h3><ul>
 <li>互连的路由器（或分组转发设备）</li>
 <li>关键功能：<ul>
 <li>路由（routing）</li>
@@ -515,8 +515,7 @@
 </ul>
 </li>
 </ul>
-</li>
-</ul>
+<hr>
 <h2 id="Internet-结构"><a href="#Internet-结构" class="headerlink" title="Internet 结构"></a>Internet 结构</h2><ul>
 <li>端系统通过<strong>接入ISP</strong>（access ISPs）连接到 Internet<ul>
 <li>家庭、公司、大学 ISPs</li>
@@ -531,8 +530,8 @@
 </ul>
 </li>
 </ul>
-<h2 id="数据交换"><a href="#数据交换" class="headerlink" title="数据交换"></a>数据交换</h2><ul>
-<li>电路交换<ul>
+<hr>
+<h2 id="数据交换"><a href="#数据交换" class="headerlink" title="数据交换"></a>数据交换</h2><h3 id="电路交换"><a href="#电路交换" class="headerlink" title="电路交换"></a>电路交换</h3><ul>
 <li>典型：电话网络</li>
 <li>阶段<ul>
 <li>建立连接</li>
@@ -563,18 +562,15 @@
 </ul>
 </li>
 </ul>
-</li>
-<li>报文交换<ul>
+<h3 id="报文交换"><a href="#报文交换" class="headerlink" title="报文交换"></a>报文交换</h3><ul>
 <li>报文：源（应用）发送信息整体</li>
 </ul>
-</li>
-<li>分组交换<ul>
+<h3 id="分组交换"><a href="#分组交换" class="headerlink" title="分组交换"></a>分组交换</h3><ul>
 <li>分组：报文分拆出来的一系列相对较小的数据包</li>
 <li>分组交换需要报文的拆分与重组</li>
 <li>产生额外开销</li>
 </ul>
-</li>
-<li>报文 vs 分组<ul>
+<h3 id="报文-vs-分组"><a href="#报文-vs-分组" class="headerlink" title="报文 vs 分组"></a>报文 vs 分组</h3><ul>
 <li>两者都是存储转发方式，区别：报文 - 完整报文，分组 - 较小的分组</li>
 <li>报文：M bits 链路带宽：R bps 分组长度：L bits 路由器数：n<ul>
 <li>分组交换：T = M/R + nL/R</li>
@@ -582,8 +578,11 @@
 </ul>
 </li>
 <li>分组交换允许更多用户同时使用网络，网络资源充分共享</li>
-<li>分组交换适用于突发数据传输网络，可能发生拥塞（congestion）：分组延迟和丢失，无电路级性能保障。</li>
-</ul>
+<li>分组交换缺陷<ol>
+<li>适用于突发数据传输网络 </li>
+<li>可能发生拥塞（congestion）：分组延迟和丢失 </li>
+<li>无电路级性能保障。</li>
+</ol>
 </li>
 </ul>
 
@@ -597,6 +596,24 @@
 
     
 
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Gaufoo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://gaufoo.com/2017/09/03/计算机网络学习笔记（一）/" title="计算机网络学习笔记（一）">http://gaufoo.com/2017/09/03/计算机网络学习笔记（一）/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/" rel="external nofollow" target="_blank">CC BY-NC-ND 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
     
 
     <footer class="post-footer">
@@ -816,7 +833,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#计算机网络定义"><span class="nav-number">1.</span> <span class="nav-text">计算机网络定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Internet-定义"><span class="nav-number">2.</span> <span class="nav-text">Internet 定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#组成细节角度"><span class="nav-number">2.1.</span> <span class="nav-text">组成细节角度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务提供角度"><span class="nav-number">2.2.</span> <span class="nav-text">服务提供角度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络协议"><span class="nav-number">3.</span> <span class="nav-text">网络协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#类比"><span class="nav-number">3.1.</span> <span class="nav-text">类比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#要素"><span class="nav-number">3.2.</span> <span class="nav-text">要素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Internet-协议标准"><span class="nav-number">3.3.</span> <span class="nav-text">Internet 协议标准</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算机网络结构"><span class="nav-number">4.</span> <span class="nav-text">计算机网络结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Internet-结构"><span class="nav-number">5.</span> <span class="nav-text">Internet 结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据交换"><span class="nav-number">6.</span> <span class="nav-text">数据交换</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#计算机网络定义"><span class="nav-number">1.</span> <span class="nav-text">计算机网络定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Internet-定义"><span class="nav-number">2.</span> <span class="nav-text">Internet 定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#组成细节角度"><span class="nav-number">2.1.</span> <span class="nav-text">组成细节角度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务提供角度"><span class="nav-number">2.2.</span> <span class="nav-text">服务提供角度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络协议"><span class="nav-number">3.</span> <span class="nav-text">网络协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#类比"><span class="nav-number">3.1.</span> <span class="nav-text">类比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#要素"><span class="nav-number">3.2.</span> <span class="nav-text">要素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Internet-协议标准"><span class="nav-number">3.3.</span> <span class="nav-text">Internet 协议标准</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算机网络结构"><span class="nav-number">4.</span> <span class="nav-text">计算机网络结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网络边缘"><span class="nav-number">4.1.</span> <span class="nav-text">网络边缘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接入网络、物理介质"><span class="nav-number">4.2.</span> <span class="nav-text">接入网络、物理介质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络核心（核心网络）"><span class="nav-number">4.3.</span> <span class="nav-text">网络核心（核心网络）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Internet-结构"><span class="nav-number">5.</span> <span class="nav-text">Internet 结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据交换"><span class="nav-number">6.</span> <span class="nav-text">数据交换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#电路交换"><span class="nav-number">6.1.</span> <span class="nav-text">电路交换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#报文交换"><span class="nav-number">6.2.</span> <span class="nav-text">报文交换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分组交换"><span class="nav-number">6.3.</span> <span class="nav-text">分组交换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#报文-vs-分组"><span class="nav-number">6.4.</span> <span class="nav-text">报文 vs 分组</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -988,6 +1005,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
 

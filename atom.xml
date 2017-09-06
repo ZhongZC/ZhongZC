@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-09-05T15:52:39.901Z</updated>
+  <updated>2017-09-06T07:26:53.028Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://gaufoo.com/2017/09/05/C%E4%B9%8B32%E4%BD%8D%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%95%B0%E5%86%851%E7%9A%84%E4%B8%AA%E6%95%B0%E6%B1%82%E6%B3%95/"/>
     <id>http://gaufoo.com/2017/09/05/C之32位二进制数内1的个数求法/</id>
     <published>2017-09-05T13:43:00.000Z</published>
-    <updated>2017-09-05T15:52:39.901Z</updated>
+    <updated>2017-09-06T07:26:53.028Z</updated>
     
     <content type="html"><![CDATA[<p>《CSAPP》上的题目，略有难度。</p>
 <a id="more"></a>
@@ -31,6 +31,7 @@
 <li>最大操作步数：40</li>
 <li>最大操作数：255</li>
 </ol>
+<hr>
 <h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><h3 id="获取2位二进制数内”1”个数"><a href="#获取2位二进制数内”1”个数" class="headerlink" title="获取2位二进制数内”1”个数"></a>获取2位二进制数内”1”个数</h3><p>设该数为<code>x</code>，则答案易得为<code>(x &amp; 01) + ((x &gt;&gt; 1) &amp; 01)</code></p>
 <h3 id="获取4位二进制数内”1”个数"><a href="#获取4位二进制数内”1”个数" class="headerlink" title="获取4位二进制数内”1”个数"></a>获取4位二进制数内”1”个数</h3><p>设该数为<code>x</code><br>可以先把每两位的”1”个数求出，再加起来。</p>
 <ol>
@@ -43,7 +44,7 @@
 <li><code>z = (y &amp; 00110011) + ((y &gt;&gt; 10) &amp; 00110011)</code></li>
 <li><code>count = (z &amp; 00001111) + ((z &gt;&gt; 1000) &amp; 00001111)</code></li>
 </ol>
-<p>···<br>···<br>···<br>···</p>
+<p>···<br>···<br>···</p>
 <h3 id="获取32位二进制数内”1”个数"><a href="#获取32位二进制数内”1”个数" class="headerlink" title="获取32位二进制数内”1”个数"></a>获取32位二进制数内”1”个数</h3><ol>
 <li>每两位数存”1”的个数：<br><code>storePer2 = (0x???????? &amp; 0x55555555) + ((0x???????? &gt;&gt; 1) &amp; 0x55555555)</code></li>
 <li>每四位数存”1”的个数：<br><code>storePer4 = (storePer2 &amp; 0x33333333) + ((storePer2 &gt;&gt; 2) &amp; 0x33333333)</code></li>
@@ -51,6 +52,7 @@
 <li>每十六位数存”1”的个数：<br><code>storePer16 = (storePer8 &amp; 0x00ff00ff) + ((storePer8 &gt;&gt; 8) &amp; 0x00ff00ff)</code></li>
 <li>用32位数来存储结果：<br><code>count = (storePer16 &amp; 0x0000ffff) + ((storePer16 &gt;&gt; 16) &amp; 0x0000ffff)</code></li>
 </ol>
+<hr>
 <h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment"> * bitCount - returns count of number of 1's in word</span></div><div class="line"><span class="comment"> *   Examples: bitCount(5) = 2, bitCount(7) = 3</span></div><div class="line"><span class="comment"> *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</span></div><div class="line"><span class="comment"> *   Max ops: 40</span></div><div class="line"><span class="comment"> *   Rating: 4</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">bitCount</span><span class="params">(<span class="keyword">int</span> x)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">	<span class="keyword">int</span> tmpMask1 = (<span class="number">0x55</span>) | (<span class="number">0x55</span> &lt;&lt; <span class="number">8</span>);</div><div class="line">	<span class="keyword">int</span> mask1 = (tmpMask1) | (tmpMask1 &lt;&lt; <span class="number">16</span>);</div><div class="line">	<span class="keyword">int</span> tmpMask2 = (<span class="number">0x33</span>) | (<span class="number">0x33</span> &lt;&lt; <span class="number">8</span>);</div><div class="line">	<span class="keyword">int</span> mask2 = (tmpMask2) | (tmpMask2 &lt;&lt; <span class="number">16</span>);</div><div class="line">	<span class="keyword">int</span> tmpMask3 = (<span class="number">0x0f</span>) | (<span class="number">0x0f</span> &lt;&lt; <span class="number">8</span>);</div><div class="line">	<span class="keyword">int</span> mask3 = (tmpMask3) | (tmpMask3 &lt;&lt; <span class="number">16</span>);</div><div class="line">	<span class="keyword">int</span> mask4 = (<span class="number">0xff</span>) | (<span class="number">0xff</span> &lt;&lt; <span class="number">16</span>);</div><div class="line">	<span class="keyword">int</span> mask5 = (<span class="number">0xff</span>) | (<span class="number">0xff</span> &lt;&lt; <span class="number">8</span>);</div><div class="line">	<span class="keyword">int</span> count = x;</div><div class="line">	count = (count &amp; mask1) + ((count &gt;&gt; <span class="number">1</span>) &amp; mask1);</div><div class="line">	count = (count &amp; mask2) + ((count &gt;&gt; <span class="number">2</span>) &amp; mask2);</div><div class="line">	count = (count &amp; mask3) + ((count &gt;&gt; <span class="number">4</span>) &amp; mask3);</div><div class="line">	count = (count &amp; mask4) + ((count &gt;&gt; <span class="number">8</span>) &amp; mask4);</div><div class="line">	count = (count &amp; mask5) + ((count &gt;&gt; <span class="number">16</span>) &amp; mask5);</div><div class="line">	<span class="keyword">return</span> count;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"bitCount(5) = %d\nbitCount(7) = %d\n"</span>, bitCount(<span class="number">5</span>), bitCount(<span class="number">7</span>));</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 ]]></content>
     
@@ -74,7 +76,7 @@
     <link href="http://gaufoo.com/2017/09/05/Python%E4%B9%8BRe%E5%BA%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     <id>http://gaufoo.com/2017/09/05/Python之Re库学习笔记/</id>
     <published>2017-09-05T09:05:00.000Z</published>
-    <updated>2017-09-05T09:12:43.963Z</updated>
+    <updated>2017-09-06T07:29:35.450Z</updated>
     
     <content type="html"><![CDATA[<p>记录以备后用</p>
 <a id="more"></a>
@@ -214,7 +216,7 @@
 </li>
 </ul>
 <hr>
-<h3 id="re-split-pattern-string-maxsplit-0-flags-0"><a href="#re-split-pattern-string-maxsplit-0-flags-0" class="headerlink" title="re.split(pattern, string, maxsplit=0, flags=0)"></a>re.split(pattern, string, maxsplit=0, flags=0)</h3><p>将一个字符串按照正则表达式匹配结果进行分割，返回列表类型<br>搜索字符串，以列表类型返回全部能匹配的子串</p>
+<h3 id="re-split-pattern-string-maxsplit-0-flags-0"><a href="#re-split-pattern-string-maxsplit-0-flags-0" class="headerlink" title="re.split(pattern, string, maxsplit=0, flags=0)"></a>re.split(pattern, string, maxsplit=0, flags=0)</h3><p>将一个字符串按照正则表达式匹配结果进行分割，返回列表类型</p>
 <ul>
 <li><code>pattern</code>：正则表达式的字符串或原生字符串表示</li>
 <li><code>string</code>：待匹配字符串</li>
@@ -297,18 +299,21 @@
 </tr>
 </tbody>
 </table>
+<hr>
 <h2 id="Re库的Match对象"><a href="#Re库的Match对象" class="headerlink" title="Re库的Match对象"></a>Re库的Match对象</h2><h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><ul>
 <li><code>.string</code>：待匹配的文本</li>
 <li><code>.re</code>：匹配时使用的patter对象（正则表达式）</li>
 <li><code>.pos</code>：正则表达式搜索文本的开始位置</li>
-<li><code>.endpos</code>：正则表达式搜索文本的结束位置<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3></li>
+<li><code>.endpos</code>：正则表达式搜索文本的结束位置</li>
+</ul>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><ul>
 <li><code>.group(0)</code>：获得匹配后的字符串</li>
 <li><code>.start()</code>：匹配字符串在原始字符串的开始位置</li>
 <li><code>.end()</code>：匹配字符串在原始字符串的结束位置</li>
 <li><code>.span()</code>：返回(.start(), .end())</li>
 </ul>
+<hr>
 <h2 id="Re库的贪婪匹配和最小匹配"><a href="#Re库的贪婪匹配和最小匹配" class="headerlink" title="Re库的贪婪匹配和最小匹配"></a>Re库的贪婪匹配和最小匹配</h2><p>Re库默认采用贪婪匹配，即输出匹配最长的子串<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>match = re.search(<span class="string">r'PY.*N'</span>, <span class="string">'PYANBNCNDN'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>match.group(<span class="number">0</span>)</div><div class="line"><span class="string">'PYANBNCNDN'</span></div></pre></td></tr></table></figure></p>
-<p>输出最短的子串<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>match = re.search(<span class="string">r'PY.*?N'</span>, <span class="string">'PYANBNCNDN'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>match.group(<span class="number">0</span>)</div><div class="line"><span class="string">'PYAN'</span></div></pre></td></tr></table></figure></p>
 <h3 id="最小匹配操作符"><a href="#最小匹配操作符" class="headerlink" title="最小匹配操作符"></a>最小匹配操作符</h3><p>只要长度输出可能不同的，都可以通过在操作符后增加?变成最小匹配</p>
 <ul>
 <li><code>*?</code>：前一个字符0次或无限次扩展，最小匹配</li>
@@ -316,6 +321,7 @@
 <li><code>??</code>：前一个字符0次或1次扩展，最小匹配</li>
 <li><code>{m,n}?</code>：扩展前一个字符m至n次（含n），最小匹配</li>
 </ul>
+<p>输出最短的子串<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>match = re.search(<span class="string">r'PY.*?N'</span>, <span class="string">'PYANBNCNDN'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>match.group(<span class="number">0</span>)</div><div class="line"><span class="string">'PYAN'</span></div></pre></td></tr></table></figure></p>
 ]]></content>
     
     <summary type="html">
@@ -420,15 +426,15 @@
 </tbody>
 </table>
 <hr>
-<h2 id="文件权限"><a href="#文件权限" class="headerlink" title="文件权限"></a>文件权限</h2><h3 id="查看文件权限"><a href="#查看文件权限" class="headerlink" title="查看文件权限"></a>查看文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> ls -l</div><div class="line">drwxr-xr-x 2 gaufoo gaufoo 4096 11月 6 15:30 Document</div></pre></td></tr></table></figure>
+<h2 id="文件权限"><a href="#文件权限" class="headerlink" title="文件权限"></a>文件权限</h2><h3 id="查看文件权限"><a href="#查看文件权限" class="headerlink" title="查看文件权限"></a>查看文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ls -l</span></div><div class="line">drwxr-xr-x 2 gaufoo gaufoo 4096 11月 6 15:30 Document</div></pre></td></tr></table></figure>
 <ul>
 <li>文件类型<br> <code>d</code>：目录<br> <code>l</code>：软链接<br> <code>b</code>：块设备<br> <code>c</code>：字符设备<br> <code>s</code>：socket<br> <code>p</code>：管道<br> <code>-</code>：普通文件</li>
 <li>文件权限<br> <code>r</code>：读<br> <code>w</code>：写<br> <code>x</code>：执行 </li>
 </ul>
-<h3 id="变更文件所有者"><a href="#变更文件所有者" class="headerlink" title="变更文件所有者"></a>变更文件所有者</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> sudo chown ??? ???</div></pre></td></tr></table></figure>
-<h3 id="修改文件权限"><a href="#修改文件权限" class="headerlink" title="修改文件权限"></a>修改文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> chmod 700 ???</div></pre></td></tr></table></figure>
-<h2 id="文件基本操作"><a href="#文件基本操作" class="headerlink" title="文件基本操作"></a>文件基本操作</h2><h3 id="复制目录"><a href="#复制目录" class="headerlink" title="复制目录"></a>复制目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> cp -r ??? ???</div></pre></td></tr></table></figure>
-<h3 id="删除目录"><a href="#删除目录" class="headerlink" title="删除目录"></a>删除目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> rm -r ???</div></pre></td></tr></table></figure>
+<h3 id="变更文件所有者"><a href="#变更文件所有者" class="headerlink" title="变更文件所有者"></a>变更文件所有者</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> sudo chown ??? ???</span></div></pre></td></tr></table></figure>
+<h3 id="修改文件权限"><a href="#修改文件权限" class="headerlink" title="修改文件权限"></a>修改文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> chmod 700 ???</span></div></pre></td></tr></table></figure>
+<h2 id="文件基本操作"><a href="#文件基本操作" class="headerlink" title="文件基本操作"></a>文件基本操作</h2><h3 id="复制目录"><a href="#复制目录" class="headerlink" title="复制目录"></a>复制目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> cp -r ??? ???</span></div></pre></td></tr></table></figure>
+<h3 id="删除目录"><a href="#删除目录" class="headerlink" title="删除目录"></a>删除目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> rm -r ???</span></div></pre></td></tr></table></figure>
 ]]></content>
     
     <summary type="html">
@@ -451,7 +457,7 @@
     <link href="http://gaufoo.com/2017/09/03/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9Fboot%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/"/>
     <id>http://gaufoo.com/2017/09/03/操作系统boot实验报告/</id>
     <published>2017-09-03T07:14:00.000Z</published>
-    <updated>2017-09-06T03:20:28.224Z</updated>
+    <updated>2017-09-06T08:29:43.978Z</updated>
     
     <content type="html"><![CDATA[<p>HIT操作系统课程第一个实验。</p>
 <a id="more"></a>
@@ -495,7 +501,7 @@
 <li><p>进入目录<code>~/oslab/</code>，执行：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> ./run</div></pre></td></tr></table></figure>
 </li>
-<li><p>实验结果：<br><img src="http://gaufoo.com/images/5193451504415525106-wm.png" alt="实验楼"></p>
+<li><p>实验结果：<br><img src="/images/5193451504415525106-wm.png" alt="实验楼"></p>
 </li>
 </ol>
 <hr>
@@ -515,7 +521,7 @@
 <li><p>进入目录<code>~/oslab/</code>，执行：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> ./run</div></pre></td></tr></table></figure>
 </li>
-<li><p>实验结果：<br><img src="http://gaufoo.com/images/5193451504417795652-wm.png" alt="实验楼"></p>
+<li><p>实验结果：<br><img src="/images/5193451504417795652-wm.png" alt="实验楼"></p>
 </li>
 </ol>
 <hr>
@@ -532,7 +538,7 @@
 <li><p>进入目录<code>~/oslab/</code>，执行：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> ./run</div></pre></td></tr></table></figure>
 </li>
-<li><p>实验结果<br><img src="http://gaufoo.com/images/5193451504420514329-wm.png" alt="实验楼"></p>
+<li><p>实验结果<br><img src="/images/5193451504420514329-wm.png" alt="实验楼"></p>
 </li>
 </ol>
 <hr>
@@ -570,7 +576,7 @@
     <link href="http://gaufoo.com/2017/09/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://gaufoo.com/2017/09/03/计算机网络学习笔记（一）/</id>
     <published>2017-09-02T17:57:00.000Z</published>
-    <updated>2017-09-02T18:56:19.844Z</updated>
+    <updated>2017-09-06T07:36:33.862Z</updated>
     
     <content type="html"><![CDATA[<p>记录以备后用</p>
 <a id="more"></a>
@@ -583,6 +589,7 @@
 </li>
 <li>距离远、数量大时，通过<strong>交换网络</strong>互联主机。</li>
 </ul>
+<hr>
 <h2 id="Internet-定义"><a href="#Internet-定义" class="headerlink" title="Internet 定义"></a>Internet 定义</h2><h3 id="组成细节角度"><a href="#组成细节角度" class="headerlink" title="组成细节角度"></a>组成细节角度</h3><ul>
 <li>全球最大的<strong>互联网络</strong><ul>
 <li>由ISP(Internet Service Provider)网络互连的“网络之网络”</li>
@@ -614,6 +621,7 @@
 </ul>
 </li>
 </ul>
+<hr>
 <h2 id="网络协议"><a href="#网络协议" class="headerlink" title="网络协议"></a>网络协议</h2><h3 id="类比"><a href="#类比" class="headerlink" title="类比"></a>类比</h3><ul>
 <li>交通系统中的交通规则</li>
 <li>人类交谈作为信息交换的过程，同样包括交流时间、问题请教、人员引荐等</li>
@@ -646,8 +654,8 @@
 <li>RFC：Request for Comments</li>
 <li>IETF：互联网工程任务组(Internet Engineering Task Force)</li>
 </ul>
-<h2 id="计算机网络结构"><a href="#计算机网络结构" class="headerlink" title="计算机网络结构"></a>计算机网络结构</h2><ul>
-<li>网络边缘<ul>
+<hr>
+<h2 id="计算机网络结构"><a href="#计算机网络结构" class="headerlink" title="计算机网络结构"></a>计算机网络结构</h2><h3 id="网络边缘"><a href="#网络边缘" class="headerlink" title="网络边缘"></a>网络边缘</h3><ul>
 <li>主机（端系统）</li>
 <li>网络应用，如：Web，email</li>
 <li>模型：<ul>
@@ -656,8 +664,7 @@
 </ul>
 </li>
 </ul>
-</li>
-<li>接入网络、物理介质<ul>
+<h3 id="接入网络、物理介质"><a href="#接入网络、物理介质" class="headerlink" title="接入网络、物理介质"></a>接入网络、物理介质</h3><ul>
 <li>有线或无线通信链路<ul>
 <li>住宅（家庭）接入网络</li>
 <li>机构接入网络（学校、企业等）</li>
@@ -681,8 +688,7 @@
 </ul>
 </li>
 </ul>
-</li>
-<li>网络核心（核心网络）<ul>
+<h3 id="网络核心（核心网络）"><a href="#网络核心（核心网络）" class="headerlink" title="网络核心（核心网络）"></a>网络核心（核心网络）</h3><ul>
 <li>互连的路由器（或分组转发设备）</li>
 <li>关键功能：<ul>
 <li>路由（routing）</li>
@@ -690,8 +696,7 @@
 </ul>
 </li>
 </ul>
-</li>
-</ul>
+<hr>
 <h2 id="Internet-结构"><a href="#Internet-结构" class="headerlink" title="Internet 结构"></a>Internet 结构</h2><ul>
 <li>端系统通过<strong>接入ISP</strong>（access ISPs）连接到 Internet<ul>
 <li>家庭、公司、大学 ISPs</li>
@@ -706,8 +711,8 @@
 </ul>
 </li>
 </ul>
-<h2 id="数据交换"><a href="#数据交换" class="headerlink" title="数据交换"></a>数据交换</h2><ul>
-<li>电路交换<ul>
+<hr>
+<h2 id="数据交换"><a href="#数据交换" class="headerlink" title="数据交换"></a>数据交换</h2><h3 id="电路交换"><a href="#电路交换" class="headerlink" title="电路交换"></a>电路交换</h3><ul>
 <li>典型：电话网络</li>
 <li>阶段<ul>
 <li>建立连接</li>
@@ -738,18 +743,15 @@
 </ul>
 </li>
 </ul>
-</li>
-<li>报文交换<ul>
+<h3 id="报文交换"><a href="#报文交换" class="headerlink" title="报文交换"></a>报文交换</h3><ul>
 <li>报文：源（应用）发送信息整体</li>
 </ul>
-</li>
-<li>分组交换<ul>
+<h3 id="分组交换"><a href="#分组交换" class="headerlink" title="分组交换"></a>分组交换</h3><ul>
 <li>分组：报文分拆出来的一系列相对较小的数据包</li>
 <li>分组交换需要报文的拆分与重组</li>
 <li>产生额外开销</li>
 </ul>
-</li>
-<li>报文 vs 分组<ul>
+<h3 id="报文-vs-分组"><a href="#报文-vs-分组" class="headerlink" title="报文 vs 分组"></a>报文 vs 分组</h3><ul>
 <li>两者都是存储转发方式，区别：报文 - 完整报文，分组 - 较小的分组</li>
 <li>报文：M bits 链路带宽：R bps 分组长度：L bits 路由器数：n<ul>
 <li>分组交换：T = M/R + nL/R</li>
@@ -757,8 +759,11 @@
 </ul>
 </li>
 <li>分组交换允许更多用户同时使用网络，网络资源充分共享</li>
-<li>分组交换适用于突发数据传输网络，可能发生拥塞（congestion）：分组延迟和丢失，无电路级性能保障。</li>
-</ul>
+<li>分组交换缺陷<ol>
+<li>适用于突发数据传输网络 </li>
+<li>可能发生拥塞（congestion）：分组延迟和丢失 </li>
+<li>无电路级性能保障。</li>
+</ol>
 </li>
 </ul>
 ]]></content>
@@ -785,12 +790,13 @@
     <link href="http://gaufoo.com/2017/09/01/Python%E4%B9%8BBeautifulSoup%E5%BA%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     <id>http://gaufoo.com/2017/09/01/Python之BeautifulSoup库学习笔记/</id>
     <published>2017-08-31T16:44:09.000Z</published>
-    <updated>2017-09-06T03:17:14.884Z</updated>
+    <updated>2017-09-06T07:21:26.069Z</updated>
     
     <content type="html"><![CDATA[<p>记录以备后用</p>
 <a id="more"></a>
 <hr>
 <h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup = BeautifulSoup(<span class="string">'&lt;p&gt;data&lt;/p&gt;'</span>, <span class="string">'html.parser'</span>)</div></pre></td></tr></table></figure>
+<hr>
 <h2 id="基本元素"><a href="#基本元素" class="headerlink" title="基本元素"></a>基本元素</h2><ul>
 <li><p><code>Tag</code>：标签，最基本的信息组织单元，分别用&lt;&gt;和&lt;/&gt;标明开头和结尾</p>
   <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup = BeautifulSoup(<span class="string">'&lt;b class="boldest"&gt;Extremely bold&lt;/b&gt;'</span>, <span class="string">'html.parser'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag = soup.b</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>type(tag)</div><div class="line"><span class="comment"># &lt;class 'bs4.element.Tag'&gt;</span></div></pre></td></tr></table></figure>
@@ -812,6 +818,7 @@
   <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>markup = <span class="string">"&lt;b&gt;&lt;!--Hey, buddy. Want to buy a used parser?--&gt;&lt;/b&gt;"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup = BeautifulSoup(markup, <span class="string">'html.parser'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>comment = soup.b.string</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>type(comment)</div><div class="line"><span class="comment"># &lt;class 'bs4.element.Comment'&gt;</span></div></pre></td></tr></table></figure>
 </li>
 </ul>
+<hr>
 <h2 id="简单遍历"><a href="#简单遍历" class="headerlink" title="简单遍历"></a>简单遍历</h2><ul>
 <li><p>只获得第一个tag</p>
   <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.head</div><div class="line"><span class="comment"># &lt;head&gt;&lt;title&gt;The Dormouse's story&lt;/title&gt;&lt;/head&gt;</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.title</div><div class="line"><span class="comment"># &lt;title&gt;The Dormouse's story&lt;/title&gt;</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.body.b</div><div class="line"><span class="comment"># &lt;b&gt;The Dormouse's story&lt;/b&gt;</span></div></pre></td></tr></table></figure>
@@ -820,22 +827,61 @@
   <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(<span class="string">'a'</span>)</div><div class="line"><span class="comment"># [&lt;a class="sister" href="http://example.com/elsie" id="link1"&gt;Elsie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/lacie" id="link2"&gt;Lacie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/tillie" id="link3"&gt;Tillie&lt;/a&gt;]</span></div></pre></td></tr></table></figure>
 </li>
 </ul>
-<h2 id="复杂遍历"><a href="#复杂遍历" class="headerlink" title="复杂遍历"></a>复杂遍历</h2><p><code>find_all(name , attrs , recursive , text , **kwargs)</code><br><strong><em>TODO</em></strong></p>
+<hr>
+<h2 id="精确遍历"><a href="#精确遍历" class="headerlink" title="精确遍历"></a>精确遍历</h2><p><code>find_all(name, attrs, recursive, text, **kwargs)</code></p>
+<ul>
+<li><p><code>name</code>：name 参数可以查找所有名字为 name 的 tag</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(<span class="string">"title"</span>)</div><div class="line"><span class="comment"># [&lt;title&gt;The Dormouse's story&lt;/title&gt;]</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>keywork</code>：搜索时会把该参数当作指定名字 tag 的<strong>属性</strong>来搜索</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(id=<span class="string">'link2'</span>)</div><div class="line"><span class="comment"># [&lt;a class="sister" href="http://example.com/lacie" id="link2"&gt;Lacie&lt;/a&gt;]</span></div></pre></td></tr></table></figure>
+<p>  参数值为<code>True</code>，查找所有包含 id 属性的 tag</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(id=<span class="keyword">True</span>)</div><div class="line"><span class="comment"># [&lt;a class="sister" href="http://example.com/elsie" id="link1"&gt;Elsie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/lacie" id="link2"&gt;Lacie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/tillie" id="link3"&gt;Tillie&lt;/a&gt;]</span></div></pre></td></tr></table></figure>
+<p>  <code>class_</code>：搜索有指定CSS类名的 tag。因为 class 是 python 的关键字，需要加下横线以区分</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(<span class="string">"a"</span>, class_=<span class="string">"sister"</span>)</div><div class="line"><span class="comment"># [&lt;a class="sister" href="http://example.com/elsie" id="link1"&gt;Elsie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/lacie" id="link2"&gt;Lacie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/tillie" id="link3"&gt;Tillie&lt;/a&gt;]</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>attrs</code>：定义一个字典参数来搜索包含特殊属性的 tag</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>data_soup.find_all(attrs=&#123;<span class="string">"data-foo"</span>: <span class="string">"value"</span>&#125;)</div><div class="line"><span class="comment"># [&lt;div data-foo="value"&gt;foo!&lt;/div&gt;]</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>text</code>：搜索文档中的字符串内容</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(<span class="string">"a"</span>, text=<span class="string">"Elsie"</span>)</div><div class="line"><span class="comment"># [&lt;a href="http://example.com/elsie" class="sister" id="link1"&gt;Elsie&lt;/a&gt;]</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>limit</code>：限制返回结果的<strong>数量</strong></p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(<span class="string">"a"</span>, limit=<span class="number">2</span>)</div><div class="line"><span class="comment"># [&lt;a class="sister" href="http://example.com/elsie" id="link1"&gt;Elsie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/lacie" id="link2"&gt;Lacie&lt;/a&gt;]</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>recursive</code>：value为False时，搜索tag的直接子节点</p>
+</li>
+</ul>
+<hr>
+<p><code>find(name, attrs, recursive, text, **kwargs)</code></p>
+<p>与<code>find_all()</code>的区别：</p>
+<ul>
+<li><p><code>find()</code>只得到一个结果，<code>find_all()</code>得到结果的列表</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(<span class="string">'title'</span>, limit=<span class="number">1</span>)</div><div class="line"><span class="comment"># [&lt;title&gt;The Dormouse's story&lt;/title&gt;]</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find(<span class="string">'title'</span>)</div><div class="line"><span class="comment"># &lt;title&gt;The Dormouse's story&lt;/title&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>find_all()</code>方法没有找到目标是返回空列表，<code>find()</code> 方法找不到目标时,返回 None</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(soup.find(<span class="string">"nosuchtag"</span>))</div><div class="line"><span class="comment"># None</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
 <h2 id="标签树的下行遍历"><a href="#标签树的下行遍历" class="headerlink" title="标签树的下行遍历"></a>标签树的下行遍历</h2><ul>
 <li><code>.contents</code>：子节点的<strong>列表</strong>，将<tag>所有儿子节点存入列表</tag></li>
 <li><code>.children</code>： 子节点的<strong>迭代类型</strong>，与<code>.contents</code>类似，用于循环遍历儿子节点</li>
 <li><code>.descendants</code>： 子孙节点的<strong>迭代类型</strong>，包含所有子孙节点，用于循环遍历</li>
 </ul>
+<hr>
 <h2 id="标签树的上行遍历"><a href="#标签树的上行遍历" class="headerlink" title="标签树的上行遍历"></a>标签树的上行遍历</h2><ul>
 <li><code>.parent</code>： 节点的父亲标签</li>
 <li><code>.parents</code>： 节点先辈标签的<strong>迭代类型</strong>，用于循环遍历先辈节点</li>
 </ul>
+<hr>
 <h2 id="标签树的平行遍历"><a href="#标签树的平行遍历" class="headerlink" title="标签树的平行遍历"></a>标签树的平行遍历</h2><ul>
 <li><code>.next_sibling</code>： 返回按照HTML文本顺序的下一个平行节点标签</li>
 <li><code>.previous_sibling</code>： 返回按照HTML文本顺序的上一个平行节点标签</li>
 <li><code>.next_siblings</code>： <strong>迭代类型</strong>，返回按照HTML文本顺序的后续所有平行节点标签</li>
 <li><code>.previous_siblings</code>： <strong>迭代类型</strong>，返回按照HTML文本顺序的前续所有平行节点标签</li>
 </ul>
+<hr>
 <h2 id="格式化输出"><a href="#格式化输出" class="headerlink" title="格式化输出"></a>格式化输出</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(soup.prettify())</div></pre></td></tr></table></figure>
 ]]></content>
     
@@ -917,7 +963,7 @@
     <link href="http://gaufoo.com/2017/08/31/JavaScript%E4%B9%8B%E5%BF%AB%E9%80%9F%E7%90%86%E8%A7%A3%E5%90%8C%E6%AD%A5%E3%80%81%E5%BC%82%E6%AD%A5%E3%80%81%E5%9B%9E%E8%B0%83/"/>
     <id>http://gaufoo.com/2017/08/31/JavaScript之快速理解同步、异步、回调/</id>
     <published>2017-08-31T06:29:50.000Z</published>
-    <updated>2017-08-31T07:34:21.388Z</updated>
+    <updated>2017-09-06T07:38:36.264Z</updated>
     
     <content type="html"><![CDATA[<p>今天终于对这几个概念有了更深入的理解，下面是讲解。</p>
 <a id="more"></a>
@@ -926,13 +972,16 @@
 <p>不太了解JS同步、异步、回调机制的新手，可能会这样来写代码：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">dating</span>(<span class="params">hours</span>) </span>&#123;</div><div class="line">		<span class="keyword">var</span> SP = <span class="number">0</span>; <span class="comment">// SP,愤怒值 </span></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; hours; i++) &#123;</div><div class="line">			setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">				<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">				SP++</div><div class="line">			&#125;, <span class="number">1000</span>)</div><div class="line">		&#125;</div><div class="line">		onBack(SP)</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">onBack</span>(<span class="params">num</span>) </span>&#123;</div><div class="line">		alert(<span class="string">"我来迟了!"</span>)</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; num; i++) &#123;</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">"打了"</span> + i + <span class="string">"个耳光\n"</span>)</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	dating(<span class="number">5</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>却输出了这样的结果：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">弹窗：我来迟了！</div><div class="line">等了<span class="number">5</span>个小时</div><div class="line">等了<span class="number">5</span>个小时</div><div class="line">等了<span class="number">5</span>个小时</div><div class="line">等了<span class="number">5</span>个小时</div><div class="line">等了<span class="number">5</span>个小时</div></pre></td></tr></table></figure></p>
 <p>简直莫名其妙，瞬间弹窗，耳光也没有打，小时数也不对。</p>
+<hr>
 <h2 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h2><p>一行行看：<br><strong>首先</strong>调用<code>dating(5)</code><br>声明变量后，到达：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; hours; i++) &#123;</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">		SP++</div><div class="line">	&#125;, <span class="number">1000</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p><code>setTimeout</code>是回调函数，JS会把它丢到一边。这个循环捕获的5个回调函数，都被抛弃了。但<code>i</code>已经变成了5。</p>
 <p><strong>然后</strong>到达：<code>onBack(SP)</code>。注意，由于上面没有执行回调函数，因此此时<code>SP</code>值为0<br>那么<code>onBack(0)</code>，得到的结果就是弹窗一次，不<code>log</code>。</p>
 <p><strong>最后</strong>同步代码都执行完了，这时该乖乖等异步和回调了。<br>一秒后，5个<code>setTimeout</code>全到了执行的时机，于是<code>&quot;等了5个小时&quot;</code>就齐刷刷地出来了。</p>
+<hr>
 <h2 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">dating</span>(<span class="params">hours, callBack</span>) </span>&#123;</div><div class="line">		<span class="keyword">var</span> SP = <span class="number">0</span>; <span class="comment">// SP,愤怒值 </span></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; hours; i++) &#123;</div><div class="line">			(<span class="function"><span class="keyword">function</span> (<span class="params">i</span>) </span>&#123;</div><div class="line">				setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">					<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">					SP++</div><div class="line">					<span class="keyword">if</span> (i + <span class="number">1</span> === hours) &#123;</div><div class="line">						callBack(SP)</div><div class="line">					&#125;</div><div class="line">				&#125;, i * <span class="number">1000</span>)</div><div class="line">			&#125;)(i)</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">onBack</span>(<span class="params">num</span>) </span>&#123;</div><div class="line">		alert(<span class="string">"我来迟了!"</span>)</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; num; i++) &#123;</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">"打了"</span> + i + <span class="string">"个耳光\n"</span>)</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	dating(<span class="number">5</span>, onBack)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>修改了<code>dating</code>函数，代码难看了不少。执行过程会变成怎样呢？<br>当<code>dating</code>进入<code>for</code>循环，执行了5个函数：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> (<span class="params">i</span>) </span>&#123;</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">		SP++</div><div class="line">		<span class="keyword">if</span> (i + <span class="number">1</span> === hours) &#123;</div><div class="line">			callBack(SP)</div><div class="line">		&#125;</div><div class="line">	&#125;, i * <span class="number">1000</span>)</div><div class="line">&#125;)(<span class="number">0</span>)</div><div class="line"></div><div class="line">(<span class="function"><span class="keyword">function</span> (<span class="params">i</span>) </span>&#123;</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">		SP++</div><div class="line">		<span class="keyword">if</span> (i + <span class="number">1</span> === hours) &#123;</div><div class="line">			callBack(SP)</div><div class="line">		&#125;</div><div class="line">	&#125;, i * <span class="number">1000</span>)</div><div class="line">&#125;)(<span class="number">1</span>)</div><div class="line"></div><div class="line">(<span class="function"><span class="keyword">function</span> (<span class="params">i</span>) </span>&#123;</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">		SP++</div><div class="line">		<span class="keyword">if</span> (i + <span class="number">1</span> === hours) &#123;</div><div class="line">			callBack(SP)</div><div class="line">		&#125;</div><div class="line">	&#125;, i * <span class="number">1000</span>)</div><div class="line">&#125;)(<span class="number">2</span>)</div><div class="line"></div><div class="line">(<span class="function"><span class="keyword">function</span> (<span class="params">i</span>) </span>&#123;</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">		SP++</div><div class="line">		<span class="keyword">if</span> (i + <span class="number">1</span> === hours) &#123;</div><div class="line">			callBack(SP)</div><div class="line">		&#125;</div><div class="line">	&#125;, i * <span class="number">1000</span>)</div><div class="line">&#125;)(<span class="number">3</span>)</div><div class="line"></div><div class="line">(<span class="function"><span class="keyword">function</span> (<span class="params">i</span>) </span>&#123;</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"等了"</span> + i + <span class="string">"个小时"</span>)</div><div class="line">		SP++</div><div class="line">		<span class="keyword">if</span> (i + <span class="number">1</span> === hours) &#123;</div><div class="line">			callBack(SP)</div><div class="line">		&#125;</div><div class="line">	&#125;, i * <span class="number">1000</span>)</div><div class="line">&#125;)(<span class="number">4</span>)</div></pre></td></tr></table></figure></p>
 <p>因为<code>i</code>作为参数传入匿名函数内，因此会被保存下来。<br>此时获得了5个延时分别为0,1000,2000,3000,4000的<code>setTimeout</code>，而且已经没有任何同步代码了，开始等待或执行异步和回调。<br>等到花儿都谢了，终于轮到4000的<code>setTimeout</code>，<code>if</code>判断生效，执行<code>callBack(SP)</code>。果断地甩了0,1,2,3,4个耳光。</p>
+<hr>
 <h2 id="思维锻炼"><a href="#思维锻炼" class="headerlink" title="思维锻炼"></a>思维锻炼</h2><p>求下面代码的输出：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="keyword">let</span> a = <span class="keyword">new</span> <span class="built_in">Promise</span>(</div><div class="line">        <span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</div><div class="line">            <span class="built_in">console</span>.log(<span class="number">1</span>)</div><div class="line">            setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="number">2</span>), <span class="number">0</span>)</div><div class="line">            <span class="built_in">console</span>.log(<span class="number">3</span>)</div><div class="line">            <span class="built_in">console</span>.log(<span class="number">4</span>)</div><div class="line">            resolve(<span class="literal">true</span>)</div><div class="line">        &#125;</div><div class="line">    )</div><div class="line">    a.then(<span class="function"><span class="params">v</span> =&gt;</span> &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="number">8</span>)</div><div class="line">    &#125;)</div><div class="line"></div><div class="line">    <span class="keyword">let</span> b = <span class="keyword">new</span> <span class="built_in">Promise</span>(</div><div class="line">        <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="built_in">console</span>.log(<span class="number">5</span>)</div><div class="line">            setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="number">6</span>), <span class="number">0</span>)</div><div class="line">        &#125;</div><div class="line">    )</div><div class="line"></div><div class="line">    <span class="built_in">console</span>.log(<span class="number">7</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>答案：右键-&gt;检查-&gt;console-&gt;复制粘贴-&gt;回车</p>
 ]]></content>
@@ -957,7 +1006,7 @@
     <link href="http://gaufoo.com/2017/08/30/Python%E4%B9%8BRequests%E5%BA%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     <id>http://gaufoo.com/2017/08/30/Python之Requests库学习笔记/</id>
     <published>2017-08-30T15:59:39.000Z</published>
-    <updated>2017-08-30T16:52:21.719Z</updated>
+    <updated>2017-09-06T07:41:19.146Z</updated>
     
     <content type="html"><![CDATA[<p>记录以备后用</p>
 <a id="more"></a>
@@ -971,6 +1020,7 @@
 <li><code>requests.patch(url, data=None, **kwargs)</code></li>
 <li><code>requests.delete(url, **kwargs)</code></li>
 </ul>
+<hr>
 <h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><ul>
 <li><p><code>params</code> : 字典或字节序列，作为参数增加到url中</p>
   <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>kv = &#123;<span class="string">'key1'</span>: <span class="string">'value1'</span>, <span class="string">'key2'</span>: <span class="string">'value2'</span>&#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.request(<span class="string">'GET'</span>, <span class="string">'http://python123.io/ws'</span>, params=kv)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(r.url)</div><div class="line">http://python123.io/ws?key1=value1&amp;key2=value2</div></pre></td></tr></table></figure>
@@ -1010,6 +1060,7 @@
 <li><code>verify</code> : True/False，默认为True，认证SSL证书开关</li>
 <li><code>cert</code> : 本地SSL证书路径</li>
 </ul>
+<hr>
 <h2 id="Response对象的属性"><a href="#Response对象的属性" class="headerlink" title="Response对象的属性"></a>Response对象的属性</h2><ul>
 <li><code>r.status_code</code>: HTTP请求的返回状态，200表示连接成功，其余表示失败</li>
 <li><code>r.text</code>: HTTP响应内容的字符串形式，即url对应的页面内容</li>
@@ -1017,6 +1068,7 @@
 <li><code>r.apparent_encoding</code>: 从内容中分析出的响应内容编码方式（备选编码方式）</li>
 <li><code>r.content</code>: HTTP响应内容的二进制形式</li>
 </ul>
+<hr>
 <h2 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h2><ul>
 <li><code>requests.ConnectionError</code>: 网络连接错误异常，如DNS查询失败、拒绝连接等</li>
 <li><code>requests.HTTPError</code>: HTTP错误异常</li>
@@ -1028,6 +1080,7 @@
 <h3 id="判断异常的方法"><a href="#判断异常的方法" class="headerlink" title="判断异常的方法"></a>判断异常的方法</h3><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.get(url)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.raise_for_status()</div></pre></td></tr></table></figure>
 <p><code>r.raise_for_status()</code>: 如果不是200，产生异常 <code>requests.HTTPError</code></p>
 <p><code>r.raise_for_status()</code>在方法内部判断<code>r.status_code</code>是否等于200，不需要增加额外的if语句，该语句便于利用try‐except进行异常处理</p>
+<hr>
 <h2 id="爬取网页的通用代码框架"><a href="#爬取网页的通用代码框架" class="headerlink" title="爬取网页的通用代码框架"></a>爬取网页的通用代码框架</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getHTMLText</span><span class="params">(url)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        r = requests.get(url,timeout = <span class="number">30</span>)</div><div class="line">        r.raise_for_status()</div><div class="line">        r.encoding = r.apparent_encoding</div><div class="line">        <span class="keyword">return</span> r.text</div><div class="line">    <span class="keyword">except</span>:</div><div class="line">        <span class="keyword">return</span> <span class="string">"产生异常"</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    url = <span class="string">"https://www.baidu.com"</span></div><div class="line">    print(getHTMLText(url))</div></pre></td></tr></table></figure>]]></content>
     
     <summary type="html">
@@ -1052,28 +1105,35 @@
     <link href="http://gaufoo.com/2017/08/30/C%E7%9A%84%E8%A1%A8%E8%BE%BE%E5%BC%8F%E3%80%81%E8%AF%AD%E5%8F%A5%E4%B8%8E%E5%89%AF%E4%BD%9C%E7%94%A8/"/>
     <id>http://gaufoo.com/2017/08/30/C的表达式、语句与副作用/</id>
     <published>2017-08-30T11:17:05.000Z</published>
-    <updated>2017-08-30T12:34:47.392Z</updated>
+    <updated>2017-09-06T07:58:01.907Z</updated>
     
     <content type="html"><![CDATA[<p>C语言中，通常利用副作用来完成我们的目标。但由于副作用产生的时机，其结果有时会让人疑惑。</p>
 <a id="more"></a>
 <hr>
-<p>知乎上有这样一个<a href="https://www.zhihu.com/question/64370774/answer/219591438" target="_blank" rel="external">问题</a>:</p>
+<p>知乎上有这样一个<a href="https://www.zhihu.com/question/64370774/answer/219591438&quot;" target="_blank" rel="external">问题</a>:</p>
 <blockquote><strong>C语言中 *p++ = *p 是如何工作的？</strong><br>我在测试一个运算符优先级的代码的时候，碰见了这个问题，我没法用自己的方式理解，很抱歉打扰各位，希望你们在闲暇之余，能解答一下我的困惑。<br><br>示例代码：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> LEN 5</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="built_in">printf</span> (<span class="string">"Hello World"</span>);</div><div class="line">  <span class="keyword">int</span> a[LEN] = &#123; <span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>, <span class="number">400</span>, <span class="number">500</span> &#125;;</div><div class="line">  <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">  <span class="keyword">int</span> *p = a;</div><div class="line"></div><div class="line">  <span class="keyword">for</span> (; i &lt; LEN; ++i)</div><div class="line">    &#123;</div><div class="line">        *p++ = *p;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>;i&lt;LEN;++i)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>,a[i]);</div><div class="line">    &#125;</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure><br><br></blockquote>
 
 
 
 <p>问题的解答需要了解这些概念：</p>
+<hr>
 <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h3 id="顺序点"><a href="#顺序点" class="headerlink" title="顺序点"></a>顺序点</h3><blockquote>A sequence point is a point in program execution at which all side effects are evaluated before going on to<br>the next step. In C, the semicolon in a statement marks a sequence point. That means all changes made by<br>assignment operators, increment operators, and decrement operators in a statement must take place before a<br>program proceeds to the next statement. Some operators that we’ll discuss in later chapters have sequence<br>points. Also, the end of any full expression is a sequence point.<br></blockquote>
 
 
-<p>在顺序点处，所有的副作用都在进入下一步前被计算。<br>也就是说，一句语句中的赋值、自增、自减所作出的改变必须在程序进入下一个语句前发生。在C中，语句里的<strong>分号</strong>标志了一个顺序点。任何一个<strong>完整的表达式</strong>的结束也是一个顺序点。</p>
-<p>但是，并<strong>没有保证</strong>在哪个表达式执行后发生。其结果取决于编译器的处理。</p>
+<p>在顺序点处，所有的副作用都在进入下一步前被计算。也就是说，一句语句中的赋值、自增、自减所作出的改变必须在程序进入下一个语句前发生。在C中，语句里的<strong>分号</strong>标志了一个顺序点。任何一个<strong>完整的表达式</strong>的结束也是一个顺序点。<br>但是，并<strong>没有保证</strong>在哪个表达式执行后发生。其结果取决于编译器的处理。</p>
 <h3 id="完整的表达式"><a href="#完整的表达式" class="headerlink" title="完整的表达式"></a>完整的表达式</h3><blockquote>What’s a full expression? A full expression is one that’s not a subexpression of a larger expression. Examples<br>of full expressions include the expression in an expression statement and the expression serving as a test<br>condition for a while loop.<br></blockquote>
 
 
 <p>完整的表达式不应该是更大的表达式中的子表达式。而是那些在表达式<strong>语句</strong>里的、以及在一个<code>while</code>循环里作为<strong>判断条件</strong>的表达式。</p>
-<h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><p>考虑：<br><code>y = (4 + x++) + (6 + x++);</code></p>
+<hr>
+<h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><p>考虑：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">x = <span class="number">0</span>;</div><div class="line">y = (<span class="number">4</span> + x++) + (<span class="number">6</span> + x++);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"x = %d y = %d\n"</span>, x, y);</div></pre></td></tr></table></figure></p>
 <p>C只能保证下一条语句前<code>x</code>自增了两次，却没有保证<code>x</code>是某个子表达式被计算后增加还是整个表达式被求值后增加。</p>
+<ul>
+<li>第一种情况，x在整个表达式被求值后才自增：x = 2 y = 10</li>
+<li>第二种情况，(4 + x++)先求值，且x在被求值后自增，再求值(6 + x++)：x = 2 y = 11</li>
+<li>第三种情况，(6 + x++)先求值，且x在被求值后自增，再求值(4 + x++)：x = 2 y = 11</li>
+</ul>
+<hr>
 <h2 id="题目的解答"><a href="#题目的解答" class="headerlink" title="题目的解答"></a>题目的解答</h2><blockquote><code>*p++=*p;</code><br>这一句话一共包含了四个操作：<br>1. <code>*p</code> // 等号左边那个<br>2. <code>p++</code><br>3. <code>*p</code><br>4. <code>=</code><br>这些操作的所有依赖关系如下：<br><li> 1(<code>*p</code>)在2(<code>p++</code>)之前执行<br></li><li> 4(<code>=</code>)在1(<code>*p</code>)和3(<code>*p</code>)之后执行<br>有了这个约束，那么这四个操作的所有可能的顺序就有（人肉枚举有可能出错你自己检查）：<br></li><li> 1234<br></li><li> 1324<br></li><li> 1342<br></li><li> 3124<br></li><li> 3142<br><br>分别的意思就是<br></li><li> p[0]=p[1];p++;<br></li><li> p[0]=p[0];p++;<br></li><li> p[0]=p[0];p++;<br></li><li> p[0]=p[0];p++;<br></li><li> p[0]=p[0];p++;<br><br>作者：vczh<br>链接：<a href="https://www.zhihu.com/question/64370774/answer/219580436" target="_blank" rel="external">https://www.zhihu.com/question/64370774/answer/219580436</a><br>来源：知乎<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。<br></li></blockquote>
 ]]></content>
     
@@ -1097,16 +1157,38 @@
     <link href="http://gaufoo.com/2017/08/29/Python%E4%B9%8B%E8%8E%B7%E5%8F%96%E8%B1%86%E7%93%A3%E7%94%B5%E5%BD%B1Top250/"/>
     <id>http://gaufoo.com/2017/08/29/Python之获取豆瓣电影Top250/</id>
     <published>2017-08-29T09:57:35.000Z</published>
-    <updated>2017-08-30T16:48:14.736Z</updated>
+    <updated>2017-09-06T08:00:38.896Z</updated>
     
     <content type="html"><![CDATA[<p>  练习html各元素的获取，熟悉BeautifulSoup的使用。<br>  实例：豆瓣top250电影名单获取。</p>
 <a id="more"></a>
 <hr>
 <h2 id="获取html页面"><a href="#获取html页面" class="headerlink" title="获取html页面"></a>获取html页面</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">download_page</span><span class="params">(url)</span>:</span></div><div class="line">    data = requests.get(url).content</div><div class="line">    <span class="string">'''</span></div><div class="line"><span class="string">    这里有效,但据说有时要伪装成浏览器,代码修改如下:</span></div><div class="line"><span class="string">    data = requests.get(url, headers=&#123;</span></div><div class="line"><span class="string">        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'</span></div><div class="line"><span class="string">    &#125;).content</span></div><div class="line"><span class="string">    '''</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> data</div></pre></td></tr></table></figure>
 <p><code>User-Agent</code>的获取方法：console敲入命令：<code>navigator.userAgent</code></p>
-<h2 id="解析页面"><a href="#解析页面" class="headerlink" title="解析页面"></a>解析页面</h2><ul><br><li><strong>将html交给BeautifulSoup解析一下</strong><br><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line">soup = BeautifulSoup(html, <span class="string">"html.parser"</span>)</div></pre></td></tr></table></figure><br><br></li><br><li><strong>找到数据element</strong><br>1. ol.grid_view<br><img src="/images/17-08-29-0.jpg" alt="t0"><br>2. div.hd<br><img src="/images/17-08-29-1.jpg" alt="t1"><br>3. span.title<br><img src="/images/17-08-29-2.jpg" alt="t2"><br></li><br><li><strong>出动选择器</strong><br><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">movie_list_soup = soup.find(<span class="string">'ol'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'grid_view'</span>&#125;)</div><div class="line">detail = movie_li.find(<span class="string">'div'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'hd'</span>&#125;)</div><div class="line">movie_name = detail.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'title'</span>&#125;).getText()</div></pre></td></tr></table></figure><br><br></li><br><li><strong>循环把一页结果存下来</strong><br><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">movie_name_list = []</div><div class="line"></div><div class="line"><span class="keyword">for</span> movie_li <span class="keyword">in</span> movie_list_soup.find_all(<span class="string">'li'</span>):</div><div class="line">    detail = movie_li.find(<span class="string">'div'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'hd'</span>&#125;)</div><div class="line">    movie_name = detail.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'title'</span>&#125;).getText()</div><div class="line">    movie_name_list.append(movie_name)</div></pre></td></tr></table></figure><br><br></li><br><li><strong>拿到下一页的element</strong><br><img src="/images/17-08-29-3.jpg" alt="t3"><br><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">next_page = soup.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'next'</span>&#125;).find(<span class="string">'a'</span>)</div></pre></td></tr></table></figure><br><br></li><br></ul>
-
+<h2 id="解析页面"><a href="#解析页面" class="headerlink" title="解析页面"></a>解析页面</h2><ul>
+<li><p><strong>将html交给BeautifulSoup解析一下</strong></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line">soup = BeautifulSoup(html, <span class="string">"html.parser"</span>)</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>找到数据element</strong></p>
+</li>
+</ul>
+<ol>
+<li>ol.grid_view<br><img src="/images/17-08-29-0.jpg" alt="t0"></li>
+<li>div.hd<br><img src="/images/17-08-29-1.jpg" alt="t1"></li>
+<li>span.title<br><img src="/images/17-08-29-2.jpg" alt="t2"></li>
+</ol>
+<ul>
+<li><p><strong>出动选择器</strong></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">movie_list_soup = soup.find(<span class="string">'ol'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'grid_view'</span>&#125;)</div><div class="line">detail = movie_li.find(<span class="string">'div'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'hd'</span>&#125;)</div><div class="line">movie_name = detail.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'title'</span>&#125;).getText()</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>循环把一页结果存下来</strong></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">movie_name_list = []</div><div class="line"></div><div class="line"><span class="keyword">for</span> movie_li <span class="keyword">in</span> movie_list_soup.find_all(<span class="string">'li'</span>):</div><div class="line">    detail = movie_li.find(<span class="string">'div'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'hd'</span>&#125;)</div><div class="line">    movie_name = detail.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'title'</span>&#125;).getText()</div><div class="line">    movie_name_list.append(movie_name)</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>拿到下一页的element</strong><br><img src="/images/17-08-29-3.jpg" alt="t3"></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">next_page = soup.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'next'</span>&#125;).find(<span class="string">'a'</span>)</div></pre></td></tr></table></figure>
+</li>
+</ul>
 <h2 id="写入文件"><a href="#写入文件" class="headerlink" title="写入文件"></a>写入文件</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> open(<span class="string">'movies.txt'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> fp:</div><div class="line">    <span class="keyword">while</span> url:</div><div class="line">        html = download_page(url)</div><div class="line">        movies, url = parse_html(html)</div><div class="line">        fp.write(<span class="string">u'&#123;movies&#125;\n'</span>.format(movies=<span class="string">'\n'</span>.join(movies)))</div></pre></td></tr></table></figure>
+<hr>
 <h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line"></div><div class="line">DOWNLOAD_URL = <span class="string">"https://movie.douban.com/top250"</span></div><div class="line"></div><div class="line"><span class="comment"># 获取html页面</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">download_page</span><span class="params">(url)</span>:</span></div><div class="line"></div><div class="line">    data = requests.get(url).content</div><div class="line">    <span class="string">'''</span></div><div class="line"><span class="string">    这里有效,但据说有时要伪装成浏览器,代码修改如下:</span></div><div class="line"><span class="string">    data = requests.get(url, headers=&#123;</span></div><div class="line"><span class="string">        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'</span></div><div class="line"><span class="string">    &#125;).content</span></div><div class="line"><span class="string">    '''</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> data</div><div class="line"></div><div class="line"><span class="comment"># 解析页面并返回 list_movie 与 下一页的url</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_html</span><span class="params">(html)</span>:</span></div><div class="line"></div><div class="line">    soup = BeautifulSoup(html, <span class="string">"html.parser"</span>)</div><div class="line">    movie_list_soup = soup.find(<span class="string">'ol'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'grid_view'</span>&#125;)</div><div class="line"></div><div class="line">    movie_name_list = []</div><div class="line"></div><div class="line">    <span class="keyword">for</span> movie_li <span class="keyword">in</span> movie_list_soup.find_all(<span class="string">'li'</span>):</div><div class="line">        detail = movie_li.find(<span class="string">'div'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'hd'</span>&#125;)</div><div class="line">        movie_name = detail.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'title'</span>&#125;).getText()</div><div class="line">        movie_name_list.append(movie_name)</div><div class="line"></div><div class="line">    next_page = soup.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'next'</span>&#125;).find(<span class="string">'a'</span>)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> next_page:</div><div class="line">        <span class="keyword">return</span> movie_name_list, DOWNLOAD_URL + next_page[<span class="string">'href'</span>]</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> movie_name_list, <span class="keyword">None</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    url = DOWNLOAD_URL</div><div class="line"></div><div class="line">    <span class="keyword">with</span> open(<span class="string">'movies.txt'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> fp:</div><div class="line">        <span class="keyword">while</span> url:</div><div class="line">            html = download_page(url)</div><div class="line">            movies, url = parse_html(html)</div><div class="line">            fp.write(<span class="string">u'&#123;movies&#125;\n'</span>.format(movies=<span class="string">'\n'</span>.join(movies)))    </div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    main()</div></pre></td></tr></table></figure>
 ]]></content>
     
@@ -1208,11 +1290,11 @@
   </entry>
   
   <entry>
-    <title>Hexo下的NexT主题配置</title>
-    <link href="http://gaufoo.com/2017/08/23/Hexo%E4%B8%8B%E7%9A%84NexT%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE/"/>
-    <id>http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置/</id>
+    <title>Hexo下的NexT主题配置（一）</title>
+    <link href="http://gaufoo.com/2017/08/23/Hexo%E4%B8%8B%E7%9A%84NexT%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+    <id>http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（一）/</id>
     <published>2017-08-23T14:31:52.000Z</published>
-    <updated>2017-08-24T05:09:13.254Z</updated>
+    <updated>2017-09-06T08:13:30.640Z</updated>
     
     <content type="html"><![CDATA[<p>这两天在一直在倒腾个人网站/博客之类的东西，就目前来说，hexo博客部署在Github这个方案是我最满意的。但相关配置什么的都还不会，那就来折腾好了，一边试验一边记录。</p>
 <p>本文旨在方便作者以后的查阅。如有需要，高兴你来自取。</p>

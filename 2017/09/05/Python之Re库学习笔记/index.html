@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="苟富">
 <meta property="og:description" content="记录以备后用">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-05T09:12:43.963Z">
+<meta property="og:updated_time" content="2017-09-06T07:29:35.450Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python之Re库学习笔记">
 <meta name="twitter:description" content="记录以备后用">
@@ -372,7 +372,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,072 字
+                  2,052 字
                 </span>
               
 
@@ -535,7 +535,7 @@
 </li>
 </ul>
 <hr>
-<h3 id="re-split-pattern-string-maxsplit-0-flags-0"><a href="#re-split-pattern-string-maxsplit-0-flags-0" class="headerlink" title="re.split(pattern, string, maxsplit=0, flags=0)"></a>re.split(pattern, string, maxsplit=0, flags=0)</h3><p>将一个字符串按照正则表达式匹配结果进行分割，返回列表类型<br>搜索字符串，以列表类型返回全部能匹配的子串</p>
+<h3 id="re-split-pattern-string-maxsplit-0-flags-0"><a href="#re-split-pattern-string-maxsplit-0-flags-0" class="headerlink" title="re.split(pattern, string, maxsplit=0, flags=0)"></a>re.split(pattern, string, maxsplit=0, flags=0)</h3><p>将一个字符串按照正则表达式匹配结果进行分割，返回列表类型</p>
 <ul>
 <li><code>pattern</code>：正则表达式的字符串或原生字符串表示</li>
 <li><code>string</code>：待匹配字符串</li>
@@ -618,18 +618,21 @@
 </tr>
 </tbody>
 </table>
+<hr>
 <h2 id="Re库的Match对象"><a href="#Re库的Match对象" class="headerlink" title="Re库的Match对象"></a>Re库的Match对象</h2><h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><ul>
 <li><code>.string</code>：待匹配的文本</li>
 <li><code>.re</code>：匹配时使用的patter对象（正则表达式）</li>
 <li><code>.pos</code>：正则表达式搜索文本的开始位置</li>
-<li><code>.endpos</code>：正则表达式搜索文本的结束位置<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3></li>
+<li><code>.endpos</code>：正则表达式搜索文本的结束位置</li>
+</ul>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><ul>
 <li><code>.group(0)</code>：获得匹配后的字符串</li>
 <li><code>.start()</code>：匹配字符串在原始字符串的开始位置</li>
 <li><code>.end()</code>：匹配字符串在原始字符串的结束位置</li>
 <li><code>.span()</code>：返回(.start(), .end())</li>
 </ul>
+<hr>
 <h2 id="Re库的贪婪匹配和最小匹配"><a href="#Re库的贪婪匹配和最小匹配" class="headerlink" title="Re库的贪婪匹配和最小匹配"></a>Re库的贪婪匹配和最小匹配</h2><p>Re库默认采用贪婪匹配，即输出匹配最长的子串<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>match = re.search(<span class="string">r'PY.*N'</span>, <span class="string">'PYANBNCNDN'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>match.group(<span class="number">0</span>)</div><div class="line"><span class="string">'PYANBNCNDN'</span></div></pre></td></tr></table></figure></p>
-<p>输出最短的子串<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>match = re.search(<span class="string">r'PY.*?N'</span>, <span class="string">'PYANBNCNDN'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>match.group(<span class="number">0</span>)</div><div class="line"><span class="string">'PYAN'</span></div></pre></td></tr></table></figure></p>
 <h3 id="最小匹配操作符"><a href="#最小匹配操作符" class="headerlink" title="最小匹配操作符"></a>最小匹配操作符</h3><p>只要长度输出可能不同的，都可以通过在操作符后增加?变成最小匹配</p>
 <ul>
 <li><code>*?</code>：前一个字符0次或无限次扩展，最小匹配</li>
@@ -637,6 +640,7 @@
 <li><code>??</code>：前一个字符0次或1次扩展，最小匹配</li>
 <li><code>{m,n}?</code>：扩展前一个字符m至n次（含n），最小匹配</li>
 </ul>
+<p>输出最短的子串<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>match = re.search(<span class="string">r'PY.*?N'</span>, <span class="string">'PYANBNCNDN'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>match.group(<span class="number">0</span>)</div><div class="line"><span class="string">'PYAN'</span></div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -648,6 +652,24 @@
 
     
 
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Gaufoo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://gaufoo.com/2017/09/05/Python之Re库学习笔记/" title="Python之Re库学习笔记">http://gaufoo.com/2017/09/05/Python之Re库学习笔记/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/" rel="external nofollow" target="_blank">CC BY-NC-ND 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
     
 
     <footer class="post-footer">
@@ -1037,6 +1059,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
 

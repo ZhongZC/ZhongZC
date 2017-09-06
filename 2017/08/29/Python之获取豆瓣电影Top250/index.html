@@ -106,7 +106,7 @@
 <meta property="og:image" content="http://gaufoo.com/images/17-08-29-1.jpg">
 <meta property="og:image" content="http://gaufoo.com/images/17-08-29-2.jpg">
 <meta property="og:image" content="http://gaufoo.com/images/17-08-29-3.jpg">
-<meta property="og:updated_time" content="2017-08-30T16:48:14.736Z">
+<meta property="og:updated_time" content="2017-09-06T08:00:38.896Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python之获取豆瓣电影Top250">
 <meta name="twitter:description" content="练习html各元素的获取，熟悉BeautifulSoup的使用。  实例：豆瓣top250电影名单获取。">
@@ -407,9 +407,31 @@
 <hr>
 <h2 id="获取html页面"><a href="#获取html页面" class="headerlink" title="获取html页面"></a>获取html页面</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">download_page</span><span class="params">(url)</span>:</span></div><div class="line">    data = requests.get(url).content</div><div class="line">    <span class="string">'''</span></div><div class="line"><span class="string">    这里有效,但据说有时要伪装成浏览器,代码修改如下:</span></div><div class="line"><span class="string">    data = requests.get(url, headers=&#123;</span></div><div class="line"><span class="string">        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'</span></div><div class="line"><span class="string">    &#125;).content</span></div><div class="line"><span class="string">    '''</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> data</div></pre></td></tr></table></figure>
 <p><code>User-Agent</code>的获取方法：console敲入命令：<code>navigator.userAgent</code></p>
-<h2 id="解析页面"><a href="#解析页面" class="headerlink" title="解析页面"></a>解析页面</h2><ul><br><li><strong>将html交给BeautifulSoup解析一下</strong><br><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line">soup = BeautifulSoup(html, <span class="string">"html.parser"</span>)</div></pre></td></tr></table></figure><br><br></li><br><li><strong>找到数据element</strong><br>1. ol.grid_view<br><img src="/images/17-08-29-0.jpg" alt="t0"><br>2. div.hd<br><img src="/images/17-08-29-1.jpg" alt="t1"><br>3. span.title<br><img src="/images/17-08-29-2.jpg" alt="t2"><br></li><br><li><strong>出动选择器</strong><br><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">movie_list_soup = soup.find(<span class="string">'ol'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'grid_view'</span>&#125;)</div><div class="line">detail = movie_li.find(<span class="string">'div'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'hd'</span>&#125;)</div><div class="line">movie_name = detail.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'title'</span>&#125;).getText()</div></pre></td></tr></table></figure><br><br></li><br><li><strong>循环把一页结果存下来</strong><br><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">movie_name_list = []</div><div class="line"></div><div class="line"><span class="keyword">for</span> movie_li <span class="keyword">in</span> movie_list_soup.find_all(<span class="string">'li'</span>):</div><div class="line">    detail = movie_li.find(<span class="string">'div'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'hd'</span>&#125;)</div><div class="line">    movie_name = detail.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'title'</span>&#125;).getText()</div><div class="line">    movie_name_list.append(movie_name)</div></pre></td></tr></table></figure><br><br></li><br><li><strong>拿到下一页的element</strong><br><img src="/images/17-08-29-3.jpg" alt="t3"><br><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">next_page = soup.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'next'</span>&#125;).find(<span class="string">'a'</span>)</div></pre></td></tr></table></figure><br><br></li><br></ul>
-
+<h2 id="解析页面"><a href="#解析页面" class="headerlink" title="解析页面"></a>解析页面</h2><ul>
+<li><p><strong>将html交给BeautifulSoup解析一下</strong></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line">soup = BeautifulSoup(html, <span class="string">"html.parser"</span>)</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>找到数据element</strong></p>
+</li>
+</ul>
+<ol>
+<li>ol.grid_view<br><img src="/images/17-08-29-0.jpg" alt="t0"></li>
+<li>div.hd<br><img src="/images/17-08-29-1.jpg" alt="t1"></li>
+<li>span.title<br><img src="/images/17-08-29-2.jpg" alt="t2"></li>
+</ol>
+<ul>
+<li><p><strong>出动选择器</strong></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">movie_list_soup = soup.find(<span class="string">'ol'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'grid_view'</span>&#125;)</div><div class="line">detail = movie_li.find(<span class="string">'div'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'hd'</span>&#125;)</div><div class="line">movie_name = detail.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'title'</span>&#125;).getText()</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>循环把一页结果存下来</strong></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">movie_name_list = []</div><div class="line"></div><div class="line"><span class="keyword">for</span> movie_li <span class="keyword">in</span> movie_list_soup.find_all(<span class="string">'li'</span>):</div><div class="line">    detail = movie_li.find(<span class="string">'div'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'hd'</span>&#125;)</div><div class="line">    movie_name = detail.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'title'</span>&#125;).getText()</div><div class="line">    movie_name_list.append(movie_name)</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>拿到下一页的element</strong><br><img src="/images/17-08-29-3.jpg" alt="t3"></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">next_page = soup.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'next'</span>&#125;).find(<span class="string">'a'</span>)</div></pre></td></tr></table></figure>
+</li>
+</ul>
 <h2 id="写入文件"><a href="#写入文件" class="headerlink" title="写入文件"></a>写入文件</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> open(<span class="string">'movies.txt'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> fp:</div><div class="line">    <span class="keyword">while</span> url:</div><div class="line">        html = download_page(url)</div><div class="line">        movies, url = parse_html(html)</div><div class="line">        fp.write(<span class="string">u'&#123;movies&#125;\n'</span>.format(movies=<span class="string">'\n'</span>.join(movies)))</div></pre></td></tr></table></figure>
+<hr>
 <h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line"></div><div class="line">DOWNLOAD_URL = <span class="string">"https://movie.douban.com/top250"</span></div><div class="line"></div><div class="line"><span class="comment"># 获取html页面</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">download_page</span><span class="params">(url)</span>:</span></div><div class="line"></div><div class="line">    data = requests.get(url).content</div><div class="line">    <span class="string">'''</span></div><div class="line"><span class="string">    这里有效,但据说有时要伪装成浏览器,代码修改如下:</span></div><div class="line"><span class="string">    data = requests.get(url, headers=&#123;</span></div><div class="line"><span class="string">        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'</span></div><div class="line"><span class="string">    &#125;).content</span></div><div class="line"><span class="string">    '''</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> data</div><div class="line"></div><div class="line"><span class="comment"># 解析页面并返回 list_movie 与 下一页的url</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_html</span><span class="params">(html)</span>:</span></div><div class="line"></div><div class="line">    soup = BeautifulSoup(html, <span class="string">"html.parser"</span>)</div><div class="line">    movie_list_soup = soup.find(<span class="string">'ol'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'grid_view'</span>&#125;)</div><div class="line"></div><div class="line">    movie_name_list = []</div><div class="line"></div><div class="line">    <span class="keyword">for</span> movie_li <span class="keyword">in</span> movie_list_soup.find_all(<span class="string">'li'</span>):</div><div class="line">        detail = movie_li.find(<span class="string">'div'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'hd'</span>&#125;)</div><div class="line">        movie_name = detail.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'title'</span>&#125;).getText()</div><div class="line">        movie_name_list.append(movie_name)</div><div class="line"></div><div class="line">    next_page = soup.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'next'</span>&#125;).find(<span class="string">'a'</span>)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> next_page:</div><div class="line">        <span class="keyword">return</span> movie_name_list, DOWNLOAD_URL + next_page[<span class="string">'href'</span>]</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> movie_name_list, <span class="keyword">None</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    url = DOWNLOAD_URL</div><div class="line"></div><div class="line">    <span class="keyword">with</span> open(<span class="string">'movies.txt'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> fp:</div><div class="line">        <span class="keyword">while</span> url:</div><div class="line">            html = download_page(url)</div><div class="line">            movies, url = parse_html(html)</div><div class="line">            fp.write(<span class="string">u'&#123;movies&#125;\n'</span>.format(movies=<span class="string">'\n'</span>.join(movies)))    </div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    main()</div></pre></td></tr></table></figure>
 
       
@@ -422,6 +444,24 @@
 
     
 
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Gaufoo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://gaufoo.com/2017/08/29/Python之获取豆瓣电影Top250/" title="Python之获取豆瓣电影Top250">http://gaufoo.com/2017/08/29/Python之获取豆瓣电影Top250/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/" rel="external nofollow" target="_blank">CC BY-NC-ND 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
     
 
     <footer class="post-footer">
@@ -813,6 +853,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
 
