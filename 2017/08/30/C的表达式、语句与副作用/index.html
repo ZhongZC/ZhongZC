@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="苟富">
 <meta property="og:description" content="C语言中，通常利用副作用来完成我们的目标。但由于副作用产生的时机，其结果有时会让人疑惑。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-06T07:58:01.907Z">
+<meta property="og:updated_time" content="2017-09-06T09:16:42.537Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C的表达式、语句与副作用">
 <meta name="twitter:description" content="C语言中，通常利用副作用来完成我们的目标。但由于副作用产生的时机，其结果有时会让人疑惑。">
@@ -425,6 +425,8 @@
 </ul>
 <hr>
 <h2 id="题目的解答"><a href="#题目的解答" class="headerlink" title="题目的解答"></a>题目的解答</h2><blockquote><code>*p++=*p;</code><br>这一句话一共包含了四个操作：<br>1. <code>*p</code> // 等号左边那个<br>2. <code>p++</code><br>3. <code>*p</code><br>4. <code>=</code><br>这些操作的所有依赖关系如下：<br><li> 1(<code>*p</code>)在2(<code>p++</code>)之前执行<br></li><li> 4(<code>=</code>)在1(<code>*p</code>)和3(<code>*p</code>)之后执行<br>有了这个约束，那么这四个操作的所有可能的顺序就有（人肉枚举有可能出错你自己检查）：<br></li><li> 1234<br></li><li> 1324<br></li><li> 1342<br></li><li> 3124<br></li><li> 3142<br><br>分别的意思就是<br></li><li> p[0]=p[1];p++;<br></li><li> p[0]=p[0];p++;<br></li><li> p[0]=p[0];p++;<br></li><li> p[0]=p[0];p++;<br></li><li> p[0]=p[0];p++;<br><br>作者：vczh<br>链接：<a href="https://www.zhihu.com/question/64370774/answer/219580436" target="_blank" rel="external">https://www.zhihu.com/question/64370774/answer/219580436</a><br>来源：知乎<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。<br></li></blockquote>
+
+<hr>
 
       
     </div>
