@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="苟富">
 <meta property="og:description" content="记录以备后用">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-31T16:44:46.430Z">
+<meta property="og:updated_time" content="2017-09-06T03:17:14.884Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python之BeautifulSoup库学习笔记">
 <meta name="twitter:description" content="记录以备后用">
@@ -372,7 +372,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  339 字
+                  570 字
                 </span>
               
 
@@ -402,26 +402,49 @@
 <hr>
 <h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup = BeautifulSoup(<span class="string">'&lt;p&gt;data&lt;/p&gt;'</span>, <span class="string">'html.parser'</span>)</div></pre></td></tr></table></figure>
 <h2 id="基本元素"><a href="#基本元素" class="headerlink" title="基本元素"></a>基本元素</h2><ul>
-<li><code>Tag</code>：标签，最基本的信息组织单元，分别用&lt;&gt;和&lt;/&gt;标明开头和结尾</li>
-<li><code>Name</code>：标签的名字，<code>&lt;p&gt;…&lt;/p&gt;</code>的名字是’p’，格式：<code>&lt;tag&gt;.name</code></li>
-<li><code>Attributes</code>：标签的属性，字典形式组织，格式：<code>&lt;tag&gt;.attrs</code></li>
-<li><code>NavigableString</code>：标签内非属性字符串，&lt;&gt;…&lt;/&gt;中字符串，格式：<code>&lt;tag&gt;.string</code></li>
-<li><code>Comment</code>：标签内字符串的注释部分，一种特殊的Comment类型</li>
+<li><p><code>Tag</code>：标签，最基本的信息组织单元，分别用&lt;&gt;和&lt;/&gt;标明开头和结尾</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup = BeautifulSoup(<span class="string">'&lt;b class="boldest"&gt;Extremely bold&lt;/b&gt;'</span>, <span class="string">'html.parser'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag = soup.b</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>type(tag)</div><div class="line"><span class="comment"># &lt;class 'bs4.element.Tag'&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>Name</code>：标签的名字，<code>&lt;p&gt;…&lt;/p&gt;</code>的名字是’p’，格式：<code>&lt;tag&gt;.name</code></p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag.name</div><div class="line"><span class="comment"># u'b'</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag.name = <span class="string">"blockquote"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag</div><div class="line"><span class="comment"># &lt;blockquote class="boldest"&gt;Extremely bold&lt;/blockquote&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>Attributes</code>：标签的属性，字典形式组织，格式：<code>&lt;tag&gt;.attrs</code></p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag[<span class="string">'class'</span>]</div><div class="line"><span class="comment"># u'boldest'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag.attrs</div><div class="line"><span class="comment"># &#123;u'class': u'boldest'&#125;</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>tag的属性可以被添加,删除或修改</p>
+</blockquote>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag[<span class="string">'class'</span>] = <span class="string">'verybold'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag[<span class="string">'id'</span>] = <span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag</div><div class="line"><span class="comment"># &lt;blockquote class="verybold" id="1"&gt;Extremely bold&lt;/blockquote&gt;</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">del</span> tag[<span class="string">'class'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">del</span> tag[<span class="string">'id'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag</div><div class="line"><span class="comment"># &lt;blockquote&gt;Extremely bold&lt;/blockquote&gt;</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag[<span class="string">'class'</span>]</div><div class="line"><span class="comment"># KeyError: 'class'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(tag.get(<span class="string">'class'</span>))</div><div class="line"><span class="comment"># None</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>NavigableString</code>：标签内非属性字符串，&lt;&gt;…&lt;/&gt;中字符串，格式：<code>&lt;tag&gt;.string</code></p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag.string</div><div class="line"><span class="comment"># u'Extremely bold'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>type(tag.string)</div><div class="line"><span class="comment"># &lt;class 'bs4.element.NavigableString'&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>Comment</code>：标签内字符串的注释部分，一种特殊的NavigableString类型</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>markup = <span class="string">"&lt;b&gt;&lt;!--Hey, buddy. Want to buy a used parser?--&gt;&lt;/b&gt;"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup = BeautifulSoup(markup, <span class="string">'html.parser'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>comment = soup.b.string</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>type(comment)</div><div class="line"><span class="comment"># &lt;class 'bs4.element.Comment'&gt;</span></div></pre></td></tr></table></figure>
+</li>
 </ul>
+<h2 id="简单遍历"><a href="#简单遍历" class="headerlink" title="简单遍历"></a>简单遍历</h2><ul>
+<li><p>只获得第一个tag</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.head</div><div class="line"><span class="comment"># &lt;head&gt;&lt;title&gt;The Dormouse's story&lt;/title&gt;&lt;/head&gt;</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.title</div><div class="line"><span class="comment"># &lt;title&gt;The Dormouse's story&lt;/title&gt;</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.body.b</div><div class="line"><span class="comment"># &lt;b&gt;The Dormouse's story&lt;/b&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>获得所有tag</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(<span class="string">'a'</span>)</div><div class="line"><span class="comment"># [&lt;a class="sister" href="http://example.com/elsie" id="link1"&gt;Elsie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/lacie" id="link2"&gt;Lacie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/tillie" id="link3"&gt;Tillie&lt;/a&gt;]</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="复杂遍历"><a href="#复杂遍历" class="headerlink" title="复杂遍历"></a>复杂遍历</h2><p><code>find_all(name , attrs , recursive , text , **kwargs)</code><br><strong><em>TODO</em></strong></p>
 <h2 id="标签树的下行遍历"><a href="#标签树的下行遍历" class="headerlink" title="标签树的下行遍历"></a>标签树的下行遍历</h2><ul>
-<li><code>.contents</code>：子节点的列表，将<tag>所有儿子节点存入列表</tag></li>
-<li><code>.children</code>： 子节点的迭代类型，与<code>.contents</code>类似，用于循环遍历儿子节点</li>
-<li><code>.descendants</code>： 子孙节点的迭代类型，包含所有子孙节点，用于循环遍历</li>
+<li><code>.contents</code>：子节点的<strong>列表</strong>，将<tag>所有儿子节点存入列表</tag></li>
+<li><code>.children</code>： 子节点的<strong>迭代类型</strong>，与<code>.contents</code>类似，用于循环遍历儿子节点</li>
+<li><code>.descendants</code>： 子孙节点的<strong>迭代类型</strong>，包含所有子孙节点，用于循环遍历</li>
 </ul>
 <h2 id="标签树的上行遍历"><a href="#标签树的上行遍历" class="headerlink" title="标签树的上行遍历"></a>标签树的上行遍历</h2><ul>
 <li><code>.parent</code>： 节点的父亲标签</li>
-<li><code>.parents</code>： 节点先辈标签的迭代类型，用于循环遍历先辈节点</li>
+<li><code>.parents</code>： 节点先辈标签的<strong>迭代类型</strong>，用于循环遍历先辈节点</li>
 </ul>
 <h2 id="标签树的平行遍历"><a href="#标签树的平行遍历" class="headerlink" title="标签树的平行遍历"></a>标签树的平行遍历</h2><ul>
 <li><code>.next_sibling</code>： 返回按照HTML文本顺序的下一个平行节点标签</li>
 <li><code>.previous_sibling</code>： 返回按照HTML文本顺序的上一个平行节点标签</li>
-<li><code>.next_siblings</code>： 迭代类型，返回按照HTML文本顺序的后续所有平行节点标签</li>
-<li><code>.previous_siblings</code>： 迭代类型，返回按照HTML文本顺序的前续所有平行节点标签</li>
+<li><code>.next_siblings</code>： <strong>迭代类型</strong>，返回按照HTML文本顺序的后续所有平行节点标签</li>
+<li><code>.previous_siblings</code>： <strong>迭代类型</strong>，返回按照HTML文本顺序的前续所有平行节点标签</li>
 </ul>
 <h2 id="格式化输出"><a href="#格式化输出" class="headerlink" title="格式化输出"></a>格式化输出</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(soup.prettify())</div></pre></td></tr></table></figure>
 
@@ -654,7 +677,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本使用"><span class="nav-number">1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本元素"><span class="nav-number">2.</span> <span class="nav-text">基本元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签树的下行遍历"><span class="nav-number">3.</span> <span class="nav-text">标签树的下行遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签树的上行遍历"><span class="nav-number">4.</span> <span class="nav-text">标签树的上行遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签树的平行遍历"><span class="nav-number">5.</span> <span class="nav-text">标签树的平行遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#格式化输出"><span class="nav-number">6.</span> <span class="nav-text">格式化输出</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本使用"><span class="nav-number">1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本元素"><span class="nav-number">2.</span> <span class="nav-text">基本元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单遍历"><span class="nav-number">3.</span> <span class="nav-text">简单遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复杂遍历"><span class="nav-number">4.</span> <span class="nav-text">复杂遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签树的下行遍历"><span class="nav-number">5.</span> <span class="nav-text">标签树的下行遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签树的上行遍历"><span class="nav-number">6.</span> <span class="nav-text">标签树的上行遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签树的平行遍历"><span class="nav-number">7.</span> <span class="nav-text">标签树的平行遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#格式化输出"><span class="nav-number">8.</span> <span class="nav-text">格式化输出</span></a></li></ol></div>
             
 
           </div>

@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="苟富">
 <meta property="og:description" content="《CSAPP》上的题目，略有难度。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-05T13:44:22.420Z">
+<meta property="og:updated_time" content="2017-09-05T15:52:39.901Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C之32位二进制数内1的个数求法">
 <meta name="twitter:description" content="《CSAPP》上的题目，略有难度。">
@@ -406,7 +406,7 @@
 <li>最大操作步数：40</li>
 <li>最大操作数：255</li>
 </ol>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><h3 id="获取2位二进制数内”1”个数"><a href="#获取2位二进制数内”1”个数" class="headerlink" title="获取2位二进制数内”1”个数"></a>获取2位二进制数内”1”个数</h3><p>设该数为<code>x</code>，则答案易得为<code>(x &amp; 01) + ((x &gt;&gt; 01) &amp; 1)</code></p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><h3 id="获取2位二进制数内”1”个数"><a href="#获取2位二进制数内”1”个数" class="headerlink" title="获取2位二进制数内”1”个数"></a>获取2位二进制数内”1”个数</h3><p>设该数为<code>x</code>，则答案易得为<code>(x &amp; 01) + ((x &gt;&gt; 1) &amp; 01)</code></p>
 <h3 id="获取4位二进制数内”1”个数"><a href="#获取4位二进制数内”1”个数" class="headerlink" title="获取4位二进制数内”1”个数"></a>获取4位二进制数内”1”个数</h3><p>设该数为<code>x</code><br>可以先把每两位的”1”个数求出，再加起来。</p>
 <ol>
 <li><code>y = (x &amp; 0101) + ((x &gt;&gt; 1) &amp; 0101)</code></li>

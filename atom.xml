@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-09-05T13:44:22.420Z</updated>
+  <updated>2017-09-05T15:52:39.901Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://gaufoo.com/2017/09/05/C%E4%B9%8B32%E4%BD%8D%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%95%B0%E5%86%851%E7%9A%84%E4%B8%AA%E6%95%B0%E6%B1%82%E6%B3%95/"/>
     <id>http://gaufoo.com/2017/09/05/C之32位二进制数内1的个数求法/</id>
     <published>2017-09-05T13:43:00.000Z</published>
-    <updated>2017-09-05T13:44:22.420Z</updated>
+    <updated>2017-09-05T15:52:39.901Z</updated>
     
     <content type="html"><![CDATA[<p>《CSAPP》上的题目，略有难度。</p>
 <a id="more"></a>
@@ -31,7 +31,7 @@
 <li>最大操作步数：40</li>
 <li>最大操作数：255</li>
 </ol>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><h3 id="获取2位二进制数内”1”个数"><a href="#获取2位二进制数内”1”个数" class="headerlink" title="获取2位二进制数内”1”个数"></a>获取2位二进制数内”1”个数</h3><p>设该数为<code>x</code>，则答案易得为<code>(x &amp; 01) + ((x &gt;&gt; 01) &amp; 1)</code></p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><h3 id="获取2位二进制数内”1”个数"><a href="#获取2位二进制数内”1”个数" class="headerlink" title="获取2位二进制数内”1”个数"></a>获取2位二进制数内”1”个数</h3><p>设该数为<code>x</code>，则答案易得为<code>(x &amp; 01) + ((x &gt;&gt; 1) &amp; 01)</code></p>
 <h3 id="获取4位二进制数内”1”个数"><a href="#获取4位二进制数内”1”个数" class="headerlink" title="获取4位二进制数内”1”个数"></a>获取4位二进制数内”1”个数</h3><p>设该数为<code>x</code><br>可以先把每两位的”1”个数求出，再加起来。</p>
 <ol>
 <li><code>y = (x &amp; 0101) + ((x &gt;&gt; 1) &amp; 0101)</code></li>
@@ -451,7 +451,7 @@
     <link href="http://gaufoo.com/2017/09/03/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9Fboot%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/"/>
     <id>http://gaufoo.com/2017/09/03/操作系统boot实验报告/</id>
     <published>2017-09-03T07:14:00.000Z</published>
-    <updated>2017-09-02T23:51:31.711Z</updated>
+    <updated>2017-09-06T03:20:28.224Z</updated>
     
     <content type="html"><![CDATA[<p>HIT操作系统课程第一个实验。</p>
 <a id="more"></a>
@@ -504,7 +504,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">! Check that there IS a hd1 :-)</div><div class="line"></div><div class="line">	mov	ax,#0x01500</div><div class="line">	mov	dl,#0x81</div><div class="line">	int	0x13</div><div class="line">	jc	no_disk1</div><div class="line">	cmp	ah,#3</div><div class="line">	je	is_disk1</div><div class="line">...</div><div class="line">...</div><div class="line">gdt_48:</div><div class="line">	.word	0x800		! gdt limit=2048, 256 GDT entries</div><div class="line">	.word	512+gdt,0x9	! gdt base = 0X9xxxx</div></pre></td></tr></table></figure>
 </li>
 <li><p>进入目录<code>~/oslab/linux-0.11/boot/</code>，执行<code>$ vi setup.s</code>，添加代码至<code>start:</code>后，以及末尾：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">...</div><div class="line">start:</div><div class="line"></div><div class="line">! Print some inane message</div><div class="line">    mov ax,cs</div><div class="line">    mov ds,ax</div><div class="line">    mov es,ax</div><div class="line">	mov	ah,#0x03		! read cursor pos</div><div class="line">	xor	bh,bh</div><div class="line">	int	0x10</div><div class="line">	</div><div class="line">	mov	cx,#24</div><div class="line">	mov	bx,#0x0007		! page 0, attribute 7 (normal)</div><div class="line">	mov	bp,#msg1</div><div class="line">	mov	ax,#0x1301		! write string, move cursor</div><div class="line">	int	0x10</div><div class="line">...</div><div class="line">...</div><div class="line">msg1:</div><div class="line">	.byte 13,10</div><div class="line">	.ascii &quot;Now we are in SETUP&quot;</div><div class="line">	.byte 13,10,13,10</div><div class="line">...</div><div class="line">...</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">...</div><div class="line">start:</div><div class="line"></div><div class="line">! Print some inane message</div><div class="line">	mov ax,cs</div><div class="line">	mov ds,ax</div><div class="line">	mov es,ax</div><div class="line">	mov	ah,#0x03		! read cursor pos</div><div class="line">	xor	bh,bh</div><div class="line">	int	0x10</div><div class="line">	</div><div class="line">	mov	cx,#24</div><div class="line">	mov	bx,#0x0007		! page 0, attribute 7 (normal)</div><div class="line">	mov	bp,#msg1</div><div class="line">	mov	ax,#0x1301		! write string, move cursor</div><div class="line">	int	0x10</div><div class="line">...</div><div class="line">...</div><div class="line">msg1:</div><div class="line">	.byte 13,10</div><div class="line">	.ascii &quot;Now we are in SETUP&quot;</div><div class="line">	.byte 13,10,13,10</div><div class="line">...</div><div class="line">...</div></pre></td></tr></table></figure>
 </li>
 <li><p>进入目录<code>~/oslab/linux-0.11/tools/</code>，执行<code>$ vi build.c</code>，添加如下代码：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">...</div><div class="line">    <span class="keyword">while</span> (i&lt;SETUP_SECTS*<span class="number">512</span>) &#123;</div><div class="line">    	c = SETUP_SECTS*<span class="number">512</span>-i;</div><div class="line">    	<span class="keyword">if</span> (c &gt; <span class="keyword">sizeof</span>(buf))</div><div class="line">    		c = <span class="keyword">sizeof</span>(buf);</div><div class="line">    	<span class="keyword">if</span> (write(<span class="number">1</span>,buf,c) != c)</div><div class="line">    		die(<span class="string">"Write call failed"</span>);</div><div class="line">    	i += c;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (<span class="built_in">strcmp</span>(argv[<span class="number">3</span>], <span class="string">"none"</span>) == <span class="number">0</span>)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Ignore system written.\n"</span>);</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> ((id=open(argv[<span class="number">3</span>],O_RDONLY,<span class="number">0</span>))&lt;<span class="number">0</span>)</div><div class="line">    	die(<span class="string">"Unable to open 'system'"</span>);</div><div class="line">...</div><div class="line">...</div></pre></td></tr></table></figure>
@@ -542,9 +542,9 @@
 </ol>
 <hr>
 <h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><ul>
-<li><a href="http://gaufoo.com/code/lab1/bootsect.s">bootsect.s</a></li>
-<li><a href="http://gaufoo.com/code/lab1/setup.s">setup.s</a></li>
-<li><a href="http://gaufoo.com/code/lab1/build.c">build.c</a></li>
+<li><a href="http://gaufoo.com/code/lab1/bootsect.s" download="bootsect.s">bootsect.s</a></li>
+<li><a href="http://gaufoo.com/code/lab1/setup.s" download="setup.s">setup.s</a></li>
+<li><a href="http://gaufoo.com/code/lab1/build.c" download="build.c">build.c</a></li>
 </ul>
 ]]></content>
     
@@ -785,33 +785,56 @@
     <link href="http://gaufoo.com/2017/09/01/Python%E4%B9%8BBeautifulSoup%E5%BA%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     <id>http://gaufoo.com/2017/09/01/Python之BeautifulSoup库学习笔记/</id>
     <published>2017-08-31T16:44:09.000Z</published>
-    <updated>2017-08-31T16:44:46.430Z</updated>
+    <updated>2017-09-06T03:17:14.884Z</updated>
     
     <content type="html"><![CDATA[<p>记录以备后用</p>
 <a id="more"></a>
 <hr>
 <h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup = BeautifulSoup(<span class="string">'&lt;p&gt;data&lt;/p&gt;'</span>, <span class="string">'html.parser'</span>)</div></pre></td></tr></table></figure>
 <h2 id="基本元素"><a href="#基本元素" class="headerlink" title="基本元素"></a>基本元素</h2><ul>
-<li><code>Tag</code>：标签，最基本的信息组织单元，分别用&lt;&gt;和&lt;/&gt;标明开头和结尾</li>
-<li><code>Name</code>：标签的名字，<code>&lt;p&gt;…&lt;/p&gt;</code>的名字是’p’，格式：<code>&lt;tag&gt;.name</code></li>
-<li><code>Attributes</code>：标签的属性，字典形式组织，格式：<code>&lt;tag&gt;.attrs</code></li>
-<li><code>NavigableString</code>：标签内非属性字符串，&lt;&gt;…&lt;/&gt;中字符串，格式：<code>&lt;tag&gt;.string</code></li>
-<li><code>Comment</code>：标签内字符串的注释部分，一种特殊的Comment类型</li>
+<li><p><code>Tag</code>：标签，最基本的信息组织单元，分别用&lt;&gt;和&lt;/&gt;标明开头和结尾</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup = BeautifulSoup(<span class="string">'&lt;b class="boldest"&gt;Extremely bold&lt;/b&gt;'</span>, <span class="string">'html.parser'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag = soup.b</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>type(tag)</div><div class="line"><span class="comment"># &lt;class 'bs4.element.Tag'&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>Name</code>：标签的名字，<code>&lt;p&gt;…&lt;/p&gt;</code>的名字是’p’，格式：<code>&lt;tag&gt;.name</code></p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag.name</div><div class="line"><span class="comment"># u'b'</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag.name = <span class="string">"blockquote"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag</div><div class="line"><span class="comment"># &lt;blockquote class="boldest"&gt;Extremely bold&lt;/blockquote&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>Attributes</code>：标签的属性，字典形式组织，格式：<code>&lt;tag&gt;.attrs</code></p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag[<span class="string">'class'</span>]</div><div class="line"><span class="comment"># u'boldest'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag.attrs</div><div class="line"><span class="comment"># &#123;u'class': u'boldest'&#125;</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>tag的属性可以被添加,删除或修改</p>
+</blockquote>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag[<span class="string">'class'</span>] = <span class="string">'verybold'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag[<span class="string">'id'</span>] = <span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag</div><div class="line"><span class="comment"># &lt;blockquote class="verybold" id="1"&gt;Extremely bold&lt;/blockquote&gt;</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">del</span> tag[<span class="string">'class'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">del</span> tag[<span class="string">'id'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag</div><div class="line"><span class="comment"># &lt;blockquote&gt;Extremely bold&lt;/blockquote&gt;</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag[<span class="string">'class'</span>]</div><div class="line"><span class="comment"># KeyError: 'class'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(tag.get(<span class="string">'class'</span>))</div><div class="line"><span class="comment"># None</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>NavigableString</code>：标签内非属性字符串，&lt;&gt;…&lt;/&gt;中字符串，格式：<code>&lt;tag&gt;.string</code></p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>tag.string</div><div class="line"><span class="comment"># u'Extremely bold'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>type(tag.string)</div><div class="line"><span class="comment"># &lt;class 'bs4.element.NavigableString'&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>Comment</code>：标签内字符串的注释部分，一种特殊的NavigableString类型</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>markup = <span class="string">"&lt;b&gt;&lt;!--Hey, buddy. Want to buy a used parser?--&gt;&lt;/b&gt;"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup = BeautifulSoup(markup, <span class="string">'html.parser'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>comment = soup.b.string</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>type(comment)</div><div class="line"><span class="comment"># &lt;class 'bs4.element.Comment'&gt;</span></div></pre></td></tr></table></figure>
+</li>
 </ul>
+<h2 id="简单遍历"><a href="#简单遍历" class="headerlink" title="简单遍历"></a>简单遍历</h2><ul>
+<li><p>只获得第一个tag</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.head</div><div class="line"><span class="comment"># &lt;head&gt;&lt;title&gt;The Dormouse's story&lt;/title&gt;&lt;/head&gt;</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.title</div><div class="line"><span class="comment"># &lt;title&gt;The Dormouse's story&lt;/title&gt;</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.body.b</div><div class="line"><span class="comment"># &lt;b&gt;The Dormouse's story&lt;/b&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>获得所有tag</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>soup.find_all(<span class="string">'a'</span>)</div><div class="line"><span class="comment"># [&lt;a class="sister" href="http://example.com/elsie" id="link1"&gt;Elsie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/lacie" id="link2"&gt;Lacie&lt;/a&gt;,</span></div><div class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/tillie" id="link3"&gt;Tillie&lt;/a&gt;]</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="复杂遍历"><a href="#复杂遍历" class="headerlink" title="复杂遍历"></a>复杂遍历</h2><p><code>find_all(name , attrs , recursive , text , **kwargs)</code><br><strong><em>TODO</em></strong></p>
 <h2 id="标签树的下行遍历"><a href="#标签树的下行遍历" class="headerlink" title="标签树的下行遍历"></a>标签树的下行遍历</h2><ul>
-<li><code>.contents</code>：子节点的列表，将<tag>所有儿子节点存入列表</tag></li>
-<li><code>.children</code>： 子节点的迭代类型，与<code>.contents</code>类似，用于循环遍历儿子节点</li>
-<li><code>.descendants</code>： 子孙节点的迭代类型，包含所有子孙节点，用于循环遍历</li>
+<li><code>.contents</code>：子节点的<strong>列表</strong>，将<tag>所有儿子节点存入列表</tag></li>
+<li><code>.children</code>： 子节点的<strong>迭代类型</strong>，与<code>.contents</code>类似，用于循环遍历儿子节点</li>
+<li><code>.descendants</code>： 子孙节点的<strong>迭代类型</strong>，包含所有子孙节点，用于循环遍历</li>
 </ul>
 <h2 id="标签树的上行遍历"><a href="#标签树的上行遍历" class="headerlink" title="标签树的上行遍历"></a>标签树的上行遍历</h2><ul>
 <li><code>.parent</code>： 节点的父亲标签</li>
-<li><code>.parents</code>： 节点先辈标签的迭代类型，用于循环遍历先辈节点</li>
+<li><code>.parents</code>： 节点先辈标签的<strong>迭代类型</strong>，用于循环遍历先辈节点</li>
 </ul>
 <h2 id="标签树的平行遍历"><a href="#标签树的平行遍历" class="headerlink" title="标签树的平行遍历"></a>标签树的平行遍历</h2><ul>
 <li><code>.next_sibling</code>： 返回按照HTML文本顺序的下一个平行节点标签</li>
 <li><code>.previous_sibling</code>： 返回按照HTML文本顺序的上一个平行节点标签</li>
-<li><code>.next_siblings</code>： 迭代类型，返回按照HTML文本顺序的后续所有平行节点标签</li>
-<li><code>.previous_siblings</code>： 迭代类型，返回按照HTML文本顺序的前续所有平行节点标签</li>
+<li><code>.next_siblings</code>： <strong>迭代类型</strong>，返回按照HTML文本顺序的后续所有平行节点标签</li>
+<li><code>.previous_siblings</code>： <strong>迭代类型</strong>，返回按照HTML文本顺序的前续所有平行节点标签</li>
 </ul>
 <h2 id="格式化输出"><a href="#格式化输出" class="headerlink" title="格式化输出"></a>格式化输出</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(soup.prettify())</div></pre></td></tr></table></figure>
 ]]></content>
