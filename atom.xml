@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-09-06T09:16:51.288Z</updated>
+  <updated>2017-09-06T09:41:50.088Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -14,6 +14,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hexo下的NexT主题配置（二）</title>
+    <link href="http://gaufoo.com/2017/09/06/Hexo%E4%B8%8B%E7%9A%84NexT%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
+    <id>http://gaufoo.com/2017/09/06/Hexo下的NexT主题配置（二）/</id>
+    <published>2017-09-06T09:40:00.000Z</published>
+    <updated>2017-09-06T09:41:50.088Z</updated>
+    
+    <content type="html"><![CDATA[<p>上期链接：<a href="http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（一）/">http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（一）/</a></p>
+<a id="more"></a>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;上期链接：&lt;a href=&quot;http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（一）/&quot;&gt;http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（一）/&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Hexo教程" scheme="http://gaufoo.com/categories/Hexo%E6%95%99%E7%A8%8B/"/>
+    
+    
+      <category term="Hexo" scheme="http://gaufoo.com/tags/Hexo/"/>
+    
+      <category term="配置" scheme="http://gaufoo.com/tags/%E9%85%8D%E7%BD%AE/"/>
+    
+  </entry>
   
   <entry>
     <title>C之32位二进制数内1的个数求法</title>
@@ -1310,7 +1337,7 @@
     <link href="http://gaufoo.com/2017/08/23/Hexo%E4%B8%8B%E7%9A%84NexT%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（一）/</id>
     <published>2017-08-23T14:31:52.000Z</published>
-    <updated>2017-09-06T09:16:59.898Z</updated>
+    <updated>2017-09-06T09:40:09.560Z</updated>
     
     <content type="html"><![CDATA[<p>这两天在一直在倒腾个人网站/博客之类的东西，就目前来说，hexo博客部署在Github这个方案是我最满意的。但相关配置什么的都还不会，那就来折腾好了，一边试验一边记录。</p>
 <p>本文旨在方便作者以后的查阅。如有需要，高兴你来自取。</p>
@@ -1383,7 +1410,7 @@
 <h4 id="页面百分比"><a href="#页面百分比" class="headerlink" title="页面百分比"></a>页面百分比</h4><p><code>scrollpercent</code> 设置 <code>回到顶部</code> 按钮旁是否显示网页所处位置占整页的百分比。</p>
 <h4 id="移动端可见"><a href="#移动端可见" class="headerlink" title="移动端可见"></a>移动端可见</h4><p><code>onmobile</code> 设置移动端是否显示侧栏。</p>
 <hr>
-<h2 id="Po文设置"><a href="#Po文设置" class="headerlink" title="Po文设置"></a>Po文设置</h2><h3 id="直达余下全文"><a href="#直达余下全文" class="headerlink" title="直达余下全文"></a>直达余下全文</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">scroll_to_more:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
+<h2 id="文章设置"><a href="#文章设置" class="headerlink" title="文章设置"></a>文章设置</h2><h3 id="直达余下全文"><a href="#直达余下全文" class="headerlink" title="直达余下全文"></a>直达余下全文</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">scroll_to_more:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
 <p>点击阅读全文后，是否直达 <code>&lt;!--more--&gt;</code> 后的余下全文位置。</p>
 <h3 id="保存页面位置"><a href="#保存页面位置" class="headerlink" title="保存页面位置"></a>保存页面位置</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">save_scroll:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
 <p>是否在cookies里为每个页面保存阅读位置。</p>
@@ -1397,7 +1424,10 @@
 <p><code>wordcount</code>：开启字数统计，<code>min2read</code>：开启大致阅读时间，<code>totalcount</code>：开启所有文章总字体显示，<code>separated_meta</code>：开启独占一行。</p>
 <h3 id="微信二维码"><a href="#微信二维码" class="headerlink" title="微信二维码"></a>微信二维码</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">wechat_subscriber:</span></div><div class="line"><span class="attr">  enabled:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  qcode:</span> <span class="string">/path/to/your/wechatqcode</span> <span class="string">ex.</span> <span class="string">/uploads/wechat-qcode.jpg</span></div><div class="line"><span class="attr">  description:</span> <span class="string">ex.</span> <span class="string">subscribe</span> <span class="string">to</span> <span class="string">my</span> <span class="string">blog</span> <span class="string">by</span> <span class="string">scanning</span> <span class="string">my</span> <span class="string">public</span> <span class="string">wechat</span> <span class="string">account</span></div></pre></td></tr></table></figure>
 <p><code>enabled</code>：文末是否开启微信二维码显示，<code>qcode</code>：二维码图片所在路径，示例: <code>/uploads/wechat-qcode.jpg</code>，<code>description</code>：二维码底下的简要描述文字。</p>
-<p><strong>未完待续</strong></p>
+<h3 id="打赏"><a href="#打赏" class="headerlink" title="打赏"></a>打赏</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">reward_comment:</span> <span class="string">您的支持将鼓励我继续创作！</span></div><div class="line"><span class="attr">wechatpay:</span> <span class="string">/images/wechatpay.jpg</span></div><div class="line"><span class="attr">alipay:</span> <span class="string">/images/alipay.jpg</span></div><div class="line"><span class="attr">bitcoin:</span> <span class="string">/images/bitcoin.png</span></div></pre></td></tr></table></figure>
+<p><code>reward_comment</code>：打赏提示性语句，<code>wechatpay</code>：微信支付二维码图片存储路径，<code>alipay</code>：支付宝二维码图片存储路径，<code>bitcoin</code>：比特币支付二维码图片存储路径。</p>
+<h3 id="文章版权声明"><a href="#文章版权声明" class="headerlink" title="文章版权声明"></a>文章版权声明</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">post_copyright:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  license:</span> <span class="string">CC</span> <span class="string">BY-NC-ND</span> <span class="number">3.0</span></div><div class="line"><span class="attr">  license_url:</span> <span class="attr">https://creativecommons.org/licenses/by-nc-nd/3.0/</span></div></pre></td></tr></table></figure>
+<p><code>enable</code>：开启版权声明提醒，<code>license</code>：版权声明类型，<code>license_url</code>：全球版权页</p>
 <hr>
 ]]></content>
     
