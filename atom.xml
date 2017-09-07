@@ -142,10 +142,12 @@
     <link href="http://gaufoo.com/2017/09/05/C%E4%B9%8B32%E4%BD%8D%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%95%B0%E5%86%851%E7%9A%84%E4%B8%AA%E6%95%B0%E6%B1%82%E6%B3%95/"/>
     <id>http://gaufoo.com/2017/09/05/C之32位二进制数内1的个数求法/</id>
     <published>2017-09-05T13:43:00.000Z</published>
-    <updated>2017-09-07T02:12:52.744Z</updated>
+    <updated>2017-09-07T09:54:13.757Z</updated>
     
     <content type="html"><![CDATA[<p>《CSAPP》上的题目，略有难度。</p>
 <a id="more"></a>
+<hr>
+<h2 id="问题来源"><a href="#问题来源" class="headerlink" title="问题来源"></a>问题来源</h2><p><img src="/images/606816650151851360.jpg" width="360" alt="图片名称"></p>
 <hr>
 <h2 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h2><ol>
 <li>编程语言：C</li>
