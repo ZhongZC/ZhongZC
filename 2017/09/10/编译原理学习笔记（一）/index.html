@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Linux," />
+  <meta name="keywords" content="原理,编译原理," />
 
 
 
@@ -95,16 +95,16 @@
 
 
 <meta name="description" content="记录">
-<meta name="keywords" content="Linux">
+<meta name="keywords" content="原理,编译原理">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux常用命令，持续更新">
-<meta property="og:url" content="http://gaufoo.com/2017/09/05/Linux常用命令，持续更新/index.html">
+<meta property="og:title" content="编译原理学习笔记（一）">
+<meta property="og:url" content="http://gaufoo.com/2017/09/10/编译原理学习笔记（一）/index.html">
 <meta property="og:site_name" content="苟富">
 <meta property="og:description" content="记录">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-06T09:17:26.979Z">
+<meta property="og:updated_time" content="2017-09-09T18:03:21.843Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Linux常用命令，持续更新">
+<meta name="twitter:title" content="编译原理学习笔记（一）">
 <meta name="twitter:description" content="记录">
 
 
@@ -135,13 +135,13 @@
 
 
 
-  <link rel="canonical" href="http://gaufoo.com/2017/09/05/Linux常用命令，持续更新/"/>
+  <link rel="canonical" href="http://gaufoo.com/2017/09/10/编译原理学习笔记（一）/"/>
 
 
 
 
 
-  <title>Linux常用命令，持续更新 | 苟富</title>
+  <title>编译原理学习笔记（一） | 苟富</title>
   
 
 
@@ -278,7 +278,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://gaufoo.com/2017/09/05/Linux常用命令，持续更新/">
+    <link itemprop="mainEntityOfPage" href="http://gaufoo.com/2017/09/10/编译原理学习笔记（一）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Gaufoo">
@@ -295,7 +295,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">Linux常用命令，持续更新</h2>
+          <h2 class="post-title" itemprop="name headline">编译原理学习笔记（一）</h2>
         
 
         <div class="post-meta">
@@ -307,8 +307,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-05T15:14:00+08:00">
-                2017-09-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-10T01:52:49+08:00">
+                2017-09-10
               </time>
             
 
@@ -330,8 +330,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
+                  <a href="/categories/原理/" itemprop="url" rel="index">
+                    <span itemprop="name">原理</span>
                   </a>
                 </span>
 
@@ -341,8 +341,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/命令/" itemprop="url" rel="index">
-                    <span itemprop="name">命令</span>
+                  <a href="/categories/原理/编译原理/" itemprop="url" rel="index">
+                    <span itemprop="name">编译原理</span>
                   </a>
                 </span>
 
@@ -372,7 +372,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  316 字
+                  1,009 字
                 </span>
               
 
@@ -397,96 +397,146 @@
       
 
       
-        <p>记录<br><a id="more"></a></p>
+        <p>记录</p>
+<a id="more"></a>
 <hr>
-<h2 id="常用快捷键"><a href="#常用快捷键" class="headerlink" title="常用快捷键"></a>常用快捷键</h2><table>
-<thead>
-<tr>
-<th>按键</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Ctrl+d</code></td>
-<td>键盘输入结束或退出终端</td>
-</tr>
-<tr>
-<td><code>Ctrl+s</code></td>
-<td>暂停当前程序，暂停后按下任意键恢复运行</td>
-</tr>
-<tr>
-<td><code>Ctrl+z</code></td>
-<td>将当前程序放到后台运行，恢复到前台为命令<code>fg</code></td>
-</tr>
-<tr>
-<td><code>Ctrl+a</code></td>
-<td>将光标移至输入行头，相当于<code>Home</code></td>
-</tr>
-<tr>
-<td><code>Ctrl+e</code></td>
-<td>将光标移至输入行末，相当于<code>End</code></td>
-</tr>
-<tr>
-<td><code>Ctrl+k</code></td>
-<td>删除从光标所在位置到行末</td>
-</tr>
-<tr>
-<td><code>Alt+Backspave</code></td>
-<td>向前删除一个单词</td>
-</tr>
-</tbody>
-</table>
-<hr>
-<h2 id="常用通配符"><a href="#常用通配符" class="headerlink" title="常用通配符"></a>常用通配符</h2><table>
-<thead>
-<tr>
-<th>字符</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>*</code></td>
-<td>匹配0或多个字符</td>
-</tr>
-<tr>
-<td><code>?</code></td>
-<td>匹配任意一个字符</td>
-</tr>
-<tr>
-<td><code>[list]</code></td>
-<td>匹配list中的任意单一字符</td>
-</tr>
-<tr>
-<td><code>[!list]</code></td>
-<td>匹配除list中的任意单一字符</td>
-</tr>
-<tr>
-<td><code>[c1-c2]</code></td>
-<td>匹配c1-c2中的任意单一字符 如：<code>[0-9]</code> <code>[a-z]</code></td>
-</tr>
-<tr>
-<td><code>{string1,string2,...}</code></td>
-<td>匹配string1或string2（或更多）其一字符串</td>
-</tr>
-<tr>
-<td><code>{c1..c2}</code></td>
-<td>匹配c1-c2中全部字符 如{1..10}</td>
-</tr>
-</tbody>
-</table>
-<hr>
-<h2 id="文件权限"><a href="#文件权限" class="headerlink" title="文件权限"></a>文件权限</h2><h3 id="查看文件权限"><a href="#查看文件权限" class="headerlink" title="查看文件权限"></a>查看文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ls -l</span></div><div class="line">drwxr-xr-x 2 gaufoo gaufoo 4096 11月 6 15:30 Document</div></pre></td></tr></table></figure>
-<ul>
-<li>文件类型<br> <code>d</code>：目录<br> <code>l</code>：软链接<br> <code>b</code>：块设备<br> <code>c</code>：字符设备<br> <code>s</code>：socket<br> <code>p</code>：管道<br> <code>-</code>：普通文件</li>
-<li>文件权限<br> <code>r</code>：读<br> <code>w</code>：写<br> <code>x</code>：执行 </li>
+<h2 id="文法的形式化定义"><a href="#文法的形式化定义" class="headerlink" title="文法的形式化定义"></a>文法的形式化定义</h2><p><strong>G = (V<sub>T</sub>, V<sub>N</sub>, P , S )</strong></p>
+<h3 id="各成分含义"><a href="#各成分含义" class="headerlink" title="各成分含义"></a>各成分含义</h3><ul>
+<li>V<sub>T</sub>：终结符集合<ul>
+<li>终结符（terminal symbol）是文法所定义的语言的<strong>基本符号</strong>，有时也称为token</li>
+<li>例：V<sub>T</sub> = { apple, boy, eat, little }</li>
 </ul>
-<h3 id="变更文件所有者"><a href="#变更文件所有者" class="headerlink" title="变更文件所有者"></a>变更文件所有者</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> sudo chown ??? ???</span></div></pre></td></tr></table></figure>
-<h3 id="修改文件权限"><a href="#修改文件权限" class="headerlink" title="修改文件权限"></a>修改文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> chmod 700 ???</span></div></pre></td></tr></table></figure>
-<h2 id="文件基本操作"><a href="#文件基本操作" class="headerlink" title="文件基本操作"></a>文件基本操作</h2><h3 id="复制目录"><a href="#复制目录" class="headerlink" title="复制目录"></a>复制目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> cp -r ??? ???</span></div></pre></td></tr></table></figure>
-<h3 id="删除目录"><a href="#删除目录" class="headerlink" title="删除目录"></a>删除目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> rm -r ???</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>V<sub>N</sub>：非终结符集合</p>
+<ul>
+<li>非终结符 ( nonterminal ) 是用来表示<strong>语法成分</strong>的符号，有时也称为“语法变量”</li>
+<li><p>例: V<sub>N</sub> = { &lt;句子&gt;, &lt;名词短语&gt;, &lt;动词短语&gt;, &lt;名词&gt;, … }</p>
+<blockquote>
+<p>V<sub>T</sub> ∩ V<sub>N</sub> = Φ<br>V<sub>T</sub> ∪ V<sub>N</sub> = 文法符号集</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>P：产生式集合</p>
+<ul>
+<li>产生式 ( production ) 描述了将终结符和非终结符组合成串的方法</li>
+<li>产生式的一般形式： <strong>α→β</strong> ，读作：α定义为β<ul>
+<li>α∈(V<sub>T</sub> ∪ V<sub>N</sub> )<sup>+</sup>，且α中至少包含V<sub>N</sub>中的一个元素：称为产生式的头 ( head ) 或左部 ( left side )</li>
+<li>β∈(V<sub>T</sub> ∪ V<sub>N</sub> )<sup>*</sup>：称为产生式的体(body)或右部(right side)</li>
+</ul>
+</li>
+<li>例：{&lt;句子&gt;→&lt;名词短语&gt;&lt;动词短语&gt;,&lt;名词短语&gt;→&lt;形容词&gt;&lt;名词短语&gt;,……}</li>
+</ul>
+</li>
+<li>S：开始符号<ul>
+<li>S∈V<sub>N</sub> 。开始符号 ( start symbol ) 表示的是该文法中<strong>最大</strong>的语法成分</li>
+<li>例：S = &lt;句子&gt;</li>
+</ul>
+</li>
+</ul>
 <hr>
+<ul>
+<li><p>例子：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">G = (&#123;id, +, *, (, )&#125;, &#123;E&#125;, P, E)</div><div class="line">P = &#123;	E → E + E,</div><div class="line">	E → E * E,</div><div class="line">	E → ( E ),</div><div class="line">	E → id&#125;</div></pre></td></tr></table></figure>
+<p>  约定：不引起歧义的前提下，可以只写产生式</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">G : 	E → E + E</div><div class="line">	E → E * E</div><div class="line">	E → ( E )</div><div class="line">	E → id</div></pre></td></tr></table></figure>
+<p>  简写：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">G : E → E + E | E * E | ( E ) | id</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h3 id="符号约定"><a href="#符号约定" class="headerlink" title="符号约定"></a>符号约定</h3><ul>
+<li>终结符<ul>
+<li>字母表中排在前面的小写字母，如 a、b、c</li>
+<li>运算符，如 +、*等</li>
+<li>标点符号，如括号、逗号等</li>
+<li>数字 0、1、… 、9</li>
+<li>粗体字符串，如<strong>id</strong>、<strong>if</strong>等</li>
+</ul>
+</li>
+<li>非终结符<ul>
+<li>字母表中排在前面的大写字母，如A、B、C</li>
+<li>字母S。通常表示开始符号</li>
+<li>小写、斜体的名字，如 <em>expr</em>、<em>stmt</em>等</li>
+<li>代表程序构造的大写字母。如E(表达式)、T(项)和F(因子)</li>
+</ul>
+</li>
+<li>文法符号（即终结符或非终结符）<ul>
+<li>字母表中排在后面的大写字母（如X、Y、Z）</li>
+</ul>
+</li>
+<li>终结符号串<ul>
+<li>字母表中排在后面的小写字母（主要是u、v、… 、z）</li>
+</ul>
+</li>
+<li>文法符号串<ul>
+<li>小写希腊字母，如α、β、γ</li>
+</ul>
+</li>
+<li>除非特别说明，第一个产生式的左部就是开始符号</li>
+</ul>
+<hr>
+<h2 id="语言的定义"><a href="#语言的定义" class="headerlink" title="语言的定义"></a>语言的定义</h2><h3 id="推导和归约"><a href="#推导和归约" class="headerlink" title="推导和归约"></a>推导和归约</h3><p>用产生式的右部替换产生式的左部，称为推导 (Derivations) </p>
+<blockquote>
+<p>如果α0=&gt;α1，α1=&gt;α2，α2=&gt;α3，…，α n-1=&gt;αn，则可以记作α0=&gt;α1=&gt;α2=&gt;α3=&gt; …=&gt; α n-1=&gt;αn，称符号串 α0经过n步推导出αn，可简记为α0=&gt;<sup>n</sup>αn</p>
+</blockquote>
+<p>用产生式的左部替换产生式的右部，称为归约 (Reductions)<br>例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;句子&gt; =&gt; &lt;名词短语&gt;&lt;动词短语&gt;</div><div class="line">       =&gt; &lt;形容词&gt;&lt;名词短语&gt;&lt;动词短语&gt;</div><div class="line">       =&gt; little &lt;名词短语&gt;&lt;动词短语&gt;</div><div class="line">       =&gt; little &lt;名词&gt;&lt;动词短语&gt;</div><div class="line">       =&gt; little boy &lt;动词短语&gt;</div><div class="line">       =&gt; little boy &lt;动词&gt;&lt;名词短语&gt;</div><div class="line">       =&gt; little boy eats &lt;名词短语&gt;</div><div class="line">       =&gt; little boy eats &lt;名词&gt;</div><div class="line">       =&gt; little boy eats apple</div></pre></td></tr></table></figure></p>
+<p>由上往下是推导，由下往上是归约</p>
+<hr>
+<h3 id="句型和句子"><a href="#句型和句子" class="headerlink" title="句型和句子"></a>句型和句子</h3><ul>
+<li>如果 S=&gt;*α, α∈(V<sub>T</sub>∪V<sub>N</sub>)*，则称α是G的一个句型(sentential form)</li>
+<li>如果 S=&gt;*w，w∈V<sub>T</sub>*，则称w是G的一个句子(sentence)</li>
+</ul>
+<blockquote>
+<p>句子是不包含<strong>非终结符</strong>的句型</p>
+</blockquote>
+<ul>
+<li>由文法G的开始符号S推导出的所有<strong>句子</strong>构成的集合称为文法G生成的<strong>语言</strong>，记为L(G)。</li>
+</ul>
+<hr>
+<h2 id="Chomsky-文法分类体系"><a href="#Chomsky-文法分类体系" class="headerlink" title="Chomsky 文法分类体系"></a>Chomsky 文法分类体系</h2><h3 id="0型文法-Type-0-Grammar"><a href="#0型文法-Type-0-Grammar" class="headerlink" title="0型文法 (Type-0 Grammar)"></a>0型文法 (Type-0 Grammar)</h3><ul>
+<li>无限制文法(Unrestricted Grammar) / 短语结构文法(Phrase Structure Grammar, PSG )<ul>
+<li>∀α → β∈P， α中至少包含1个非终结符</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="1型文法-Type-1-Grammar"><a href="#1型文法-Type-1-Grammar" class="headerlink" title="1型文法 (Type-1 Grammar)"></a>1型文法 (Type-1 Grammar)</h3><ul>
+<li>上下文有关文法(Context-Sensitive Grammar , CSG )<ul>
+<li>∀α → β∈P，｜α｜≤｜β｜</li>
+<li>产生式的一般形式： α1Aα2 → α1βα2 ( β≠ε )</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>CSG中不包含ε-产生式</p>
+</blockquote>
+<hr>
+<h3 id="2型文法-Type-2-Grammar"><a href="#2型文法-Type-2-Grammar" class="headerlink" title="2型文法 (Type-2 Grammar)"></a>2型文法 (Type-2 Grammar)</h3><ul>
+<li>上下文无关文法 (Context-Free Grammar, CFG )<ul>
+<li>∀α → β∈P，α ∈ V<sub>N</sub></li>
+<li>产生式的一般形式：A→β</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="3型文法-Type-3-Grammar"><a href="#3型文法-Type-3-Grammar" class="headerlink" title="3型文法 (Type-3 Grammar)"></a>3型文法 (Type-3 Grammar)</h3><ul>
+<li>正则文法 (Regular Grammar, RG )<ul>
+<li>右线性(Right Linear)文法： A→wB 或 A→w</li>
+<li>左线性(Left Linear) 文法： A→Bw 或 A→w</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="四种文法之间的关系"><a href="#四种文法之间的关系" class="headerlink" title="四种文法之间的关系"></a>四种文法之间的关系</h3><p>逐级限制：</p>
+<ul>
+<li>0型文法：α中至少包含1个非终结符</li>
+<li>1型文法（CSG） ：｜α｜≤｜β｜</li>
+<li>2型文法（CFG） ：α ∈ V<sub>N</sub></li>
+<li>3型文法（RG）：A→wB 或 A→w (A→Bw 或A→w)</li>
+</ul>
+<hr>
+<h2 id="CFG的分析树"><a href="#CFG的分析树" class="headerlink" title="CFG的分析树"></a>CFG的分析树</h2><hr>
 
       
     </div>
@@ -507,7 +557,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://gaufoo.com/2017/09/05/Linux常用命令，持续更新/" title="Linux常用命令，持续更新">http://gaufoo.com/2017/09/05/Linux常用命令，持续更新/</a>
+    <a href="http://gaufoo.com/2017/09/10/编译原理学习笔记（一）/" title="编译原理学习笔记（一）">http://gaufoo.com/2017/09/10/编译原理学习笔记（一）/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -522,7 +572,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Linux/" rel="tag"># Linux</a>
+            <a href="/tags/原理/" rel="tag"># 原理</a>
+          
+            <a href="/tags/编译原理/" rel="tag"># 编译原理</a>
           
         </div>
       
@@ -535,8 +587,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/03/操作系统boot实验报告/" rel="next" title="操作系统boot实验报告">
-                <i class="fa fa-chevron-left"></i> 操作系统boot实验报告
+              <a href="/2017/09/06/Hexo下的NexT主题配置（下）/" rel="next" title="Hexo下的NexT主题配置（下）">
+                <i class="fa fa-chevron-left"></i> Hexo下的NexT主题配置（下）
               </a>
             
           </div>
@@ -544,10 +596,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/09/05/Python之Re库学习笔记/" rel="prev" title="Python之Re库学习笔记">
-                Python之Re库学习笔记 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -733,7 +781,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#常用快捷键"><span class="nav-number">1.</span> <span class="nav-text">常用快捷键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用通配符"><span class="nav-number">2.</span> <span class="nav-text">常用通配符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件权限"><span class="nav-number">3.</span> <span class="nav-text">文件权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看文件权限"><span class="nav-number">3.1.</span> <span class="nav-text">查看文件权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#变更文件所有者"><span class="nav-number">3.2.</span> <span class="nav-text">变更文件所有者</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改文件权限"><span class="nav-number">3.3.</span> <span class="nav-text">修改文件权限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件基本操作"><span class="nav-number">4.</span> <span class="nav-text">文件基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#复制目录"><span class="nav-number">4.1.</span> <span class="nav-text">复制目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除目录"><span class="nav-number">4.2.</span> <span class="nav-text">删除目录</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#文法的形式化定义"><span class="nav-number">1.</span> <span class="nav-text">文法的形式化定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#各成分含义"><span class="nav-number">1.1.</span> <span class="nav-text">各成分含义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#符号约定"><span class="nav-number">1.2.</span> <span class="nav-text">符号约定</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语言的定义"><span class="nav-number">2.</span> <span class="nav-text">语言的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#推导和归约"><span class="nav-number">2.1.</span> <span class="nav-text">推导和归约</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#句型和句子"><span class="nav-number">2.2.</span> <span class="nav-text">句型和句子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chomsky-文法分类体系"><span class="nav-number">3.</span> <span class="nav-text">Chomsky 文法分类体系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0型文法-Type-0-Grammar"><span class="nav-number">3.1.</span> <span class="nav-text">0型文法 (Type-0 Grammar)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1型文法-Type-1-Grammar"><span class="nav-number">3.2.</span> <span class="nav-text">1型文法 (Type-1 Grammar)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2型文法-Type-2-Grammar"><span class="nav-number">3.3.</span> <span class="nav-text">2型文法 (Type-2 Grammar)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3型文法-Type-3-Grammar"><span class="nav-number">3.4.</span> <span class="nav-text">3型文法 (Type-3 Grammar)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四种文法之间的关系"><span class="nav-number">3.5.</span> <span class="nav-text">四种文法之间的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CFG的分析树"><span class="nav-number">4.</span> <span class="nav-text">CFG的分析树</span></a></li></ol></div>
             
 
           </div>
