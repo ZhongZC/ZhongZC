@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-09-16T08:43:01.416Z</updated>
+  <updated>2017-09-16T12:07:46.852Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -16,11 +16,147 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>编译原理学习笔记（二）</title>
+    <link href="http://gaufoo.com/2017/09/16/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
+    <id>http://gaufoo.com/2017/09/16/编译原理学习笔记（二）/</id>
+    <published>2017-09-16T09:46:00.000Z</published>
+    <updated>2017-09-16T12:07:46.852Z</updated>
+    
+    <content type="html"><![CDATA[<p>记录</p>
+<a id="more"></a>
+<hr>
+<h2 id="正则表达式-Regular-Expression，RE"><a href="#正则表达式-Regular-Expression，RE" class="headerlink" title="正则表达式 ( Regular Expression，RE )"></a>正则表达式 ( Regular Expression，RE )</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ul>
+<li>是一种用来描述正则语言的更紧凑的表示方法。</li>
+<li>正则表达式可以由较小的正则表达式按照特定规则<strong>递归</strong>地构建。</li>
+<li>每个正则表达式 <strong>r</strong> 定义(表示)一个语言，记为 <strong>L(r)</strong> 。</li>
+</ul>
+<hr>
+<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><ul>
+<li>ε是一个RE，L(ε) = {ε}</li>
+<li>如果 a∈∑，则a是一个RE，L(a) = {a}</li>
+<li>假设 <strong>r</strong> 和 <strong>s</strong> 都是RE，表示的语言分别是 <strong>L(r)</strong> 和 <strong>L(s)</strong> ，则<ul>
+<li>r|s 是一个RE，L( r|s ) = L(r)∪L(s)</li>
+<li>rs 是一个RE，L( rs ) = L(r) L(s)</li>
+<li>r* 是一个RE，L( r* )= (L(r))*</li>
+<li>(r) 是一个RE，L( (r) ) = L(r)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p>C语言无符号整数的RE</p>
+<ul>
+<li>十进制整数的RE - (1|…|9)(0|…|9)*|0</li>
+<li>八进制整数的RE - 0(0|1|2|3|4|5|6|7)(0|1|2|3|4|5|6|7)*</li>
+<li>十六进制整数的RE - 0x(0|1|…|9|a|…| f |A|…|F)(0|…|9|a|…| f |A|…|F )*</li>
+</ul>
+<hr>
+<h3 id="代数定律"><a href="#代数定律" class="headerlink" title="代数定律"></a>代数定律</h3><table>
+<thead>
+<tr>
+<th>定律</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>r｜s = s｜r</td>
+<td>｜是可以交换的</td>
+</tr>
+<tr>
+<td>r｜( s｜t )=( r｜s )｜t</td>
+<td>｜是可结合的</td>
+</tr>
+<tr>
+<td>r(s t)=( r s)t</td>
+<td>连接是可结合的</td>
+</tr>
+<tr>
+<td>r ( s｜t )= r s｜r t ; &nbsp;&nbsp;&nbsp; ( s｜t ) r = sr｜t r</td>
+<td>连接对｜是可分配的</td>
+</tr>
+<tr>
+<td>εr = rε = r</td>
+<td>ε 是连接的单位元</td>
+</tr>
+<tr>
+<td>r* = ( r｜ε )*</td>
+<td>闭包中一定包含 ε</td>
+</tr>
+<tr>
+<td>r* * = r*</td>
+<td>* 具有幂等性</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="单词的识别"><a href="#单词的识别" class="headerlink" title="单词的识别"></a>单词的识别</h2><h3 id="有穷自动机-Finite-Automata，FA"><a href="#有穷自动机-Finite-Automata，FA" class="headerlink" title="有穷自动机 ( Finite Automata，FA )"></a>有穷自动机 ( Finite Automata，FA )</h3><ul>
+<li>具有一系列<strong>离散的输入输出信息</strong>和<strong>有穷数目的内部状态</strong>。</li>
+<li>系统只需要根据<strong>当前所处的状态</strong>和<strong>当前面临的输入信息</strong>就可以决定系统的<strong>后继行为</strong>。</li>
+<li>每当系统处理了当前的输入后，系统的内部状态也将<strong>发生改变</strong>。</li>
+</ul>
+<h4 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h4><p><img src="/images/20170916182343.jpg" width="500"></p>
+<ul>
+<li>输入带(input tape)：用来存放输入符号串。</li>
+<li>读头(head )：从左向右逐个读取输入符号，不能修改（只读）、不能往返移动。</li>
+<li>有穷控制器( finite control )：具有有穷个状态数，根据<strong>当前的状态</strong>和<strong>当前输入符号</strong>控制转入<strong>下一状态</strong>。</li>
+</ul>
+<h4 id="表示：转换图-Transition-Graph"><a href="#表示：转换图-Transition-Graph" class="headerlink" title="表示：转换图 ( Transition Graph )"></a>表示：转换图 ( Transition Graph )</h4><p><img src="/images/20170916183203.jpg" width="500"></p>
+<ul>
+<li>结点：FA的状态<ul>
+<li>初始状态（开始状态）：<strong>只有一个</strong>，由start箭头指向。</li>
+<li>终止状态（接收状态）：可以有多个，用<strong>双圈</strong>表示。</li>
+</ul>
+</li>
+<li>带标记的有向边：如果对于输入 <strong>a</strong> ，存在一个从状态 <strong>p</strong> 到状态 <strong>q</strong> 的转换，就在 <strong>p</strong> 、 <strong>q</strong> 之间画一条有向边，并标记上 <strong>a</strong> 。</li>
+</ul>
+<h4 id="接收的语言"><a href="#接收的语言" class="headerlink" title="接收的语言"></a>接收的语言</h4><ul>
+<li>给定输入串 <strong>x</strong> ，如果存在一个对应于串 <strong>x</strong> 的从初始状态到某个终止状态的转换序列，则称串 <strong>x</strong> 被该FA接收。</li>
+<li>由一个有穷自动机M接收的所有串构成的集合称为是该<strong>FA定义（或接收）的语言</strong>，记为 <strong>L( M )</strong>。</li>
+</ul>
+<p><img src="/images/20170916183203.jpg" width="500"></p>
+<blockquote>
+<p>L(M) = 所有以abb结尾的字母表{a, b}上的串的集合</p>
+</blockquote>
+<h4 id="最长子串匹配原则"><a href="#最长子串匹配原则" class="headerlink" title="最长子串匹配原则"></a>最长子串匹配原则</h4><p>当输入串的多个前缀与一个或多个模式匹配时，总是选择最长的前缀进行匹配。</p>
+<hr>
+<h3 id="有穷自动机的分类"><a href="#有穷自动机的分类" class="headerlink" title="有穷自动机的分类"></a>有穷自动机的分类</h3><ul>
+<li>确定的FA (Deterministic finite automata, DFA)</li>
+<li>非确定的FA (Nondeterministic finite automata, NFA)</li>
+</ul>
+<h4 id="DFA"><a href="#DFA" class="headerlink" title="DFA"></a>DFA</h4><p><strong>M = ( S，Σ ，δ，s0，F )</strong></p>
+<ul>
+<li>S：有穷状态集。</li>
+<li>Σ：输入字母表，即输入符号集合。假设 <strong>ε</strong> 不是 Σ 中的元素。</li>
+<li>δ：将S×Σ映射到S的<strong>转换函数</strong>。∀s∈S, a∈Σ, <strong>δ(s,a)</strong> 表示从状态s出发，沿着标记为a的边所能到达的状态。</li>
+<li>s0：开始状态 (或初始状态)，s0∈ S。</li>
+<li>F：接收状态（或终止状态）集合，F⊆ S。</li>
+</ul>
+<h4 id="NFA"><a href="#NFA" class="headerlink" title="NFA"></a>NFA</h4><hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;记录&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+    
+      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
     <title>编译原理学习笔记（一）</title>
     <link href="http://gaufoo.com/2017/09/10/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://gaufoo.com/2017/09/10/编译原理学习笔记（一）/</id>
     <published>2017-09-09T17:52:49.000Z</published>
-    <updated>2017-09-16T08:43:01.416Z</updated>
+    <updated>2017-09-16T10:05:05.373Z</updated>
     
     <content type="html"><![CDATA[<p>记录</p>
 <a id="more"></a>
@@ -125,6 +261,9 @@
 </ul>
 </li>
 </ul>
+<blockquote>
+<p>PSG中可包含ε-产生式</p>
+</blockquote>
 <hr>
 <h3 id="1型文法-Type-1-Grammar"><a href="#1型文法-Type-1-Grammar" class="headerlink" title="1型文法 (Type-1 Grammar)"></a>1型文法 (Type-1 Grammar)</h3><ul>
 <li>上下文有关文法(Context-Sensitive Grammar , CSG )<ul>
@@ -171,6 +310,7 @@
 </ul>
 </li>
 </ul>
+<hr>
 <h3 id="二义性文法"><a href="#二义性文法" class="headerlink" title="二义性文法"></a>二义性文法</h3><p>如果一个文法可以为某个句子生成多棵分析树，则称这个文法是二义性的</p>
 <p>例：<br>文法：S → <strong>if</strong> E <strong>then</strong> S | <strong>if</strong> E <strong>then</strong> S <strong>else</strong> S | <strong>other</strong><br>句型：<strong>if</strong> E1 <strong>then</strong> <strong>if</strong> E2 <strong>then</strong> S1 <strong>else</strong> S2<br>    可生成的分析树有：<br><img src="/images/728669562437023693.jpg" width="500"></p>
 <hr>
