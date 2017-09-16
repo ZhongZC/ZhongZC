@@ -1418,7 +1418,7 @@
     <link href="http://gaufoo.com/2017/08/30/C%E7%9A%84%E8%A1%A8%E8%BE%BE%E5%BC%8F%E3%80%81%E8%AF%AD%E5%8F%A5%E4%B8%8E%E5%89%AF%E4%BD%9C%E7%94%A8/"/>
     <id>http://gaufoo.com/2017/08/30/C的表达式、语句与副作用/</id>
     <published>2017-08-30T11:17:05.000Z</published>
-    <updated>2017-09-07T08:58:46.745Z</updated>
+    <updated>2017-09-16T07:48:48.363Z</updated>
     
     <content type="html"><![CDATA[<p>C语言中，通常利用副作用来完成我们的目标。但由于副作用产生的时机，其结果有时会让人疑惑。</p>
 <a id="more"></a>
@@ -1433,7 +1433,7 @@
 <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h3 id="顺序点"><a href="#顺序点" class="headerlink" title="顺序点"></a>顺序点</h3><blockquote>
 <p>A sequence point is a point in program execution at which all side effects are evaluated before going on to the next step. In C, the semicolon in a statement marks a sequence point. That means all changes made by assignment operators, increment operators, and decrement operators in a statement must take place before a program proceeds to the next statement. Some operators that we’ll discuss in later chapters have sequence points. Also, the end of any full expression is a sequence point.</p>
 </blockquote>
-<p>在顺序点处，所有的副作用都在进入下一步前被计算。也就是说，一句语句中的赋值、自增、自减所作出的改变必须在程序进入下一个语句前发生。在C中，语句里的<strong>分号</strong>标志了一个顺序点。任何一个<strong>完整的表达式</strong>的结束也是一个顺序点。<br>但是，并<strong>没有保证</strong>在哪个表达式执行后发生。其结果取决于编译器的处理。</p>
+<p>在顺序点处，所有的副作用都在进入下一步前被计算。也就是说，一句语句中的赋值、自增、自减所作出的改变必须在程序进入下一个语句前发生。在C中，语句里的<strong>分号</strong>标志了一个顺序点。任何一个<strong>完整的表达式</strong>的结束也是一个顺序点。另，<code>while(x++ &lt; 10 &amp;&amp; x + y &lt; 20)</code>里的<code>&amp;&amp;</code>也是顺序点。<br>但是，顺序点前的语句包含的改变，并<strong>没有保证</strong>在哪个表达式执行后发生。其结果取决于编译器的处理。</p>
 <h3 id="完整的表达式"><a href="#完整的表达式" class="headerlink" title="完整的表达式"></a>完整的表达式</h3><blockquote>
 <p>What’s a full expression? A full expression is one that’s not a subexpression of a larger expression. Examples of full expressions include the expression in an expression statement and the expression serving as a test condition for a while loop.</p>
 </blockquote>

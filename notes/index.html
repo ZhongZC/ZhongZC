@@ -94,17 +94,17 @@
 
 
 
-<meta name="description" content="2017-09-09 JavaScriptatob(),btoa() - 两个函数，作用：不会被一下子看穿秘密      2017-09-08 Python淘宝比价爬虫12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152import requestsimpo">
+<meta name="description" content="2017-09-16  C  12while((ch = getchar()) != EOF)	putchar(ch); 结束输入需要手动模拟EOF，如Ctrl+Z  1echo_eof &amp;lt; words 把stdin重定位到words文件。 1echo_eof &amp;gt; mywords 把stdout重定位到mywords文件。 注：重定位是一个命令行概念。  向函数传入数组，如果对数组">
 <meta property="og:type" content="website">
 <meta property="og:title" content="便签">
 <meta property="og:url" content="http://gaufoo.com/notes/index.html">
 <meta property="og:site_name" content="苟富">
-<meta property="og:description" content="2017-09-09 JavaScriptatob(),btoa() - 两个函数，作用：不会被一下子看穿秘密      2017-09-08 Python淘宝比价爬虫12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152import requestsimpo">
+<meta property="og:description" content="2017-09-16  C  12while((ch = getchar()) != EOF)	putchar(ch); 结束输入需要手动模拟EOF，如Ctrl+Z  1echo_eof &amp;lt; words 把stdin重定位到words文件。 1echo_eof &amp;gt; mywords 把stdout重定位到mywords文件。 注：重定位是一个命令行概念。  向函数传入数组，如果对数组">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-09T18:05:52.254Z">
+<meta property="og:updated_time" content="2017-09-16T08:11:37.928Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="便签">
-<meta name="twitter:description" content="2017-09-09 JavaScriptatob(),btoa() - 两个函数，作用：不会被一下子看穿秘密      2017-09-08 Python淘宝比价爬虫12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152import requestsimpo">
+<meta name="twitter:description" content="2017-09-16  C  12while((ch = getchar()) != EOF)	putchar(ch); 结束输入需要手动模拟EOF，如Ctrl+Z  1echo_eof &amp;lt; words 把stdin重定位到words文件。 1echo_eof &amp;gt; mywords 把stdout重定位到mywords文件。 注：重定位是一个命令行概念。  向函数传入数组，如果对数组">
 
 
 
@@ -283,6 +283,46 @@
         
         
           <hr>
+<ul>
+<li><p>2017-09-16</p>
+<ul>
+<li><p>C</p>
+<ul>
+<li><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span>((ch = getchar()) != EOF)</div><div class="line">	<span class="built_in">putchar</span>(ch);</div></pre></td></tr></table></figure>
+<p>结束输入需要手动模拟<code>EOF</code>，如<code>Ctrl+Z</code></p>
+</li>
+<li><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">echo_eof &lt; words</div></pre></td></tr></table></figure>
+<p>把<code>stdin</code>重定位到words文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">echo_eof &gt; mywords</div></pre></td></tr></table></figure>
+<p>把<code>stdout</code>重定位到mywords文件。</p>
+<p><strong>注：重定位是一个命令行概念。</strong></p>
+</li>
+<li><p>向函数传入数组，如果对数组并不进行修改操作，建议形式参数使用<code>const</code>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> arr[], <span class="keyword">int</span> n)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">	<span class="comment">// something</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>声明字符串时最好用<code>char str[]</code>，这样<code>str</code>就有了<code>const</code>的感觉。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li><p>2017-09-15            </p>
+<ul>
+<li><p>C</p>
+<ul>
+<li><p>匿名数组</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> * pt1;</div><div class="line">pt1 = (<span class="keyword">int</span> [<span class="number">2</span>])&#123;<span class="number">10</span>, <span class="number">20</span>&#125;;</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> arr[], <span class="keyword">int</span> n)</span></span>;</div><div class="line">...</div><div class="line">...</div><div class="line"><span class="keyword">int</span> total;</div><div class="line">total = sum((<span class="keyword">int</span> [])&#123;<span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>&#125;, <span class="number">6</span>);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
 <ul>
 <li>2017-09-09<ul>
 <li>JavaScript<br><code>atob()</code>,<code>btoa()</code> - 两个函数，作用：不会被一下子看穿秘密</li>
