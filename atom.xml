@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-09-09T18:03:21.843Z</updated>
+  <updated>2017-09-16T08:43:01.416Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://gaufoo.com/2017/09/10/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://gaufoo.com/2017/09/10/编译原理学习笔记（一）/</id>
     <published>2017-09-09T17:52:49.000Z</published>
-    <updated>2017-09-09T18:03:21.843Z</updated>
+    <updated>2017-09-16T08:43:01.416Z</updated>
     
     <content type="html"><![CDATA[<p>记录</p>
 <a id="more"></a>
@@ -161,7 +161,19 @@
 <li>3型文法（RG）：A→wB 或 A→w (A→Bw 或A→w)</li>
 </ul>
 <hr>
-<h2 id="CFG的分析树"><a href="#CFG的分析树" class="headerlink" title="CFG的分析树"></a>CFG的分析树</h2><hr>
+<h2 id="CFG的分析树"><a href="#CFG的分析树" class="headerlink" title="CFG的分析树"></a>CFG的分析树</h2><h3 id="分析树举例"><a href="#分析树举例" class="headerlink" title="分析树举例"></a>分析树举例</h3><p><img src="/images/229534388000563683.jpg" width="500"></p>
+<ul>
+<li>分析树是推导的图形化表示<br>  推导过程：E =&gt; -E =&gt; - ( E ) =&gt; - ( E+E ) =&gt; - ( id+E ) =&gt; - ( id+id )</li>
+<li>结构<ul>
+<li><strong>根节点</strong>的标号为<strong>文法开始符号</strong></li>
+<li><strong>内部结点</strong>表示对一个产生式A→β的应用，该结点的标号是此产生式左部<strong>A</strong>。该结点的子结点的标号从左到右构成了产生式的右部<strong>β</strong></li>
+<li><strong>叶结点</strong>的标号既可以是非终结符，也可以是终结符。从左到右排列叶节点得到的符号串称为是这棵树的产出(yield)或边缘(frontier)</li>
+</ul>
+</li>
+</ul>
+<h3 id="二义性文法"><a href="#二义性文法" class="headerlink" title="二义性文法"></a>二义性文法</h3><p>如果一个文法可以为某个句子生成多棵分析树，则称这个文法是二义性的</p>
+<p>例：<br>文法：S → <strong>if</strong> E <strong>then</strong> S | <strong>if</strong> E <strong>then</strong> S <strong>else</strong> S | <strong>other</strong><br>句型：<strong>if</strong> E1 <strong>then</strong> <strong>if</strong> E2 <strong>then</strong> S1 <strong>else</strong> S2<br>    可生成的分析树有：<br><img src="/images/728669562437023693.jpg" width="500"></p>
+<hr>
 ]]></content>
     
     <summary type="html">

@@ -102,10 +102,13 @@
 <meta property="og:site_name" content="苟富">
 <meta property="og:description" content="记录">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-09T18:03:21.843Z">
+<meta property="og:image" content="http://gaufoo.com/images/229534388000563683.jpg">
+<meta property="og:image" content="http://gaufoo.com/images/728669562437023693.jpg">
+<meta property="og:updated_time" content="2017-09-16T08:43:01.416Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="编译原理学习笔记（一）">
 <meta name="twitter:description" content="记录">
+<meta name="twitter:image" content="http://gaufoo.com/images/229534388000563683.jpg">
 
 
 
@@ -372,7 +375,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,009 字
+                  1,229 字
                 </span>
               
 
@@ -536,7 +539,19 @@
 <li>3型文法（RG）：A→wB 或 A→w (A→Bw 或A→w)</li>
 </ul>
 <hr>
-<h2 id="CFG的分析树"><a href="#CFG的分析树" class="headerlink" title="CFG的分析树"></a>CFG的分析树</h2><hr>
+<h2 id="CFG的分析树"><a href="#CFG的分析树" class="headerlink" title="CFG的分析树"></a>CFG的分析树</h2><h3 id="分析树举例"><a href="#分析树举例" class="headerlink" title="分析树举例"></a>分析树举例</h3><p><img src="/images/229534388000563683.jpg" width="500"></p>
+<ul>
+<li>分析树是推导的图形化表示<br>  推导过程：E =&gt; -E =&gt; - ( E ) =&gt; - ( E+E ) =&gt; - ( id+E ) =&gt; - ( id+id )</li>
+<li>结构<ul>
+<li><strong>根节点</strong>的标号为<strong>文法开始符号</strong></li>
+<li><strong>内部结点</strong>表示对一个产生式A→β的应用，该结点的标号是此产生式左部<strong>A</strong>。该结点的子结点的标号从左到右构成了产生式的右部<strong>β</strong></li>
+<li><strong>叶结点</strong>的标号既可以是非终结符，也可以是终结符。从左到右排列叶节点得到的符号串称为是这棵树的产出(yield)或边缘(frontier)</li>
+</ul>
+</li>
+</ul>
+<h3 id="二义性文法"><a href="#二义性文法" class="headerlink" title="二义性文法"></a>二义性文法</h3><p>如果一个文法可以为某个句子生成多棵分析树，则称这个文法是二义性的</p>
+<p>例：<br>文法：S → <strong>if</strong> E <strong>then</strong> S | <strong>if</strong> E <strong>then</strong> S <strong>else</strong> S | <strong>other</strong><br>句型：<strong>if</strong> E1 <strong>then</strong> <strong>if</strong> E2 <strong>then</strong> S1 <strong>else</strong> S2<br>    可生成的分析树有：<br><img src="/images/728669562437023693.jpg" width="500"></p>
+<hr>
 
       
     </div>
@@ -781,7 +796,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#文法的形式化定义"><span class="nav-number">1.</span> <span class="nav-text">文法的形式化定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#各成分含义"><span class="nav-number">1.1.</span> <span class="nav-text">各成分含义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#符号约定"><span class="nav-number">1.2.</span> <span class="nav-text">符号约定</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语言的定义"><span class="nav-number">2.</span> <span class="nav-text">语言的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#推导和归约"><span class="nav-number">2.1.</span> <span class="nav-text">推导和归约</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#句型和句子"><span class="nav-number">2.2.</span> <span class="nav-text">句型和句子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chomsky-文法分类体系"><span class="nav-number">3.</span> <span class="nav-text">Chomsky 文法分类体系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0型文法-Type-0-Grammar"><span class="nav-number">3.1.</span> <span class="nav-text">0型文法 (Type-0 Grammar)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1型文法-Type-1-Grammar"><span class="nav-number">3.2.</span> <span class="nav-text">1型文法 (Type-1 Grammar)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2型文法-Type-2-Grammar"><span class="nav-number">3.3.</span> <span class="nav-text">2型文法 (Type-2 Grammar)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3型文法-Type-3-Grammar"><span class="nav-number">3.4.</span> <span class="nav-text">3型文法 (Type-3 Grammar)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四种文法之间的关系"><span class="nav-number">3.5.</span> <span class="nav-text">四种文法之间的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CFG的分析树"><span class="nav-number">4.</span> <span class="nav-text">CFG的分析树</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#文法的形式化定义"><span class="nav-number">1.</span> <span class="nav-text">文法的形式化定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#各成分含义"><span class="nav-number">1.1.</span> <span class="nav-text">各成分含义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#符号约定"><span class="nav-number">1.2.</span> <span class="nav-text">符号约定</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语言的定义"><span class="nav-number">2.</span> <span class="nav-text">语言的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#推导和归约"><span class="nav-number">2.1.</span> <span class="nav-text">推导和归约</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#句型和句子"><span class="nav-number">2.2.</span> <span class="nav-text">句型和句子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chomsky-文法分类体系"><span class="nav-number">3.</span> <span class="nav-text">Chomsky 文法分类体系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0型文法-Type-0-Grammar"><span class="nav-number">3.1.</span> <span class="nav-text">0型文法 (Type-0 Grammar)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1型文法-Type-1-Grammar"><span class="nav-number">3.2.</span> <span class="nav-text">1型文法 (Type-1 Grammar)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2型文法-Type-2-Grammar"><span class="nav-number">3.3.</span> <span class="nav-text">2型文法 (Type-2 Grammar)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3型文法-Type-3-Grammar"><span class="nav-number">3.4.</span> <span class="nav-text">3型文法 (Type-3 Grammar)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四种文法之间的关系"><span class="nav-number">3.5.</span> <span class="nav-text">四种文法之间的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CFG的分析树"><span class="nav-number">4.</span> <span class="nav-text">CFG的分析树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分析树举例"><span class="nav-number">4.1.</span> <span class="nav-text">分析树举例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二义性文法"><span class="nav-number">4.2.</span> <span class="nav-text">二义性文法</span></a></li></ol></li></ol></div>
             
 
           </div>
