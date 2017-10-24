@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="关键字constexpr用于修饰常量表达式（const express），常量表达式是指这样的一些对象：值不变且在编译过程即能得到计算结果的表达式。  具体说明如下">
+<meta name="description" content="关键字constexpr用于修饰常量表达式（const express），具体说明如下">
 <meta name="keywords" content="编程,C++">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++类型说明符constexpr">
+<meta property="og:title" content="C++11类型说明符：constexpr">
 <meta property="og:url" content="http://gaufoo.com/2017/10/24/CppConstexpr/index.html">
 <meta property="og:site_name" content="苟富">
-<meta property="og:description" content="关键字constexpr用于修饰常量表达式（const express），常量表达式是指这样的一些对象：值不变且在编译过程即能得到计算结果的表达式。  具体说明如下">
+<meta property="og:description" content="关键字constexpr用于修饰常量表达式（const express），具体说明如下">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-24T08:25:19.734Z">
+<meta property="og:updated_time" content="2017-10-24T11:39:43.821Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="C++类型说明符constexpr">
-<meta name="twitter:description" content="关键字constexpr用于修饰常量表达式（const express），常量表达式是指这样的一些对象：值不变且在编译过程即能得到计算结果的表达式。  具体说明如下">
+<meta name="twitter:title" content="C++11类型说明符：constexpr">
+<meta name="twitter:description" content="关键字constexpr用于修饰常量表达式（const express），具体说明如下">
 
 
 
@@ -141,7 +141,7 @@
 
 
 
-  <title>C++类型说明符constexpr | 苟富</title>
+  <title>C++11类型说明符：constexpr | 苟富</title>
   
 
 
@@ -295,7 +295,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">C++类型说明符constexpr</h2>
+          <h2 class="post-title" itemprop="name headline">C++11类型说明符：constexpr</h2>
         
 
         <div class="post-meta">
@@ -372,7 +372,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  122 字
+                  703 字
                 </span>
               
 
@@ -397,7 +397,7 @@
       
 
       
-        <p>  关键字<code>constexpr</code>用于修饰常量表达式（const express），常量表达式是指这样的一些对象：值不变且在编译过程即能得到计算结果的表达式。<br>  具体说明如下</p>
+        <p>关键字<code>constexpr</code>用于修饰常量表达式（const express），具体说明如下</p>
 <a id="more"></a>
 <hr>
 <h2 id="字面值常量（literal）"><a href="#字面值常量（literal）" class="headerlink" title="字面值常量（literal）"></a>字面值常量（literal）</h2><ul>
@@ -408,7 +408,54 @@
 </ul>
 </li>
 </ul>
-<h2 id="常量表达式（const-express）"><a href="#常量表达式（const-express）" class="headerlink" title="常量表达式（const express）"></a>常量表达式（const express）</h2><hr>
+<hr>
+<h2 id="常量表达式（const-express）"><a href="#常量表达式（const-express）" class="headerlink" title="常量表达式（const express）"></a>常量表达式（const express）</h2><blockquote>
+<p>The constexpr specifier declares that it is possible to evaluate the value of the function or variable at compile time. Such variables and functions can then be used where only compile time constant expressions are allowed (provided that appropriate function arguments are given). A <code>constexpr</code> specifier used in an <code>object</code> declaration implies <code>const</code>. A <code>constexpr</code> specifier used in a <code>function</code> or static member variable (since C++17) declaration implies <code>inline</code>.</p>
+</blockquote>
+<p>其中<code>literal</code>就是<code>const express</code>的一种。从文档可知，<code>const express</code>主要性质是可以在编译期间得到值。同时，<code>constexpr</code>修饰的对象自动获得<strong>常量</strong>属性，<code>constexpr</code>修饰的函数自动获得<strong>内联</strong>属性。</p>
+<hr>
+<h3 id="constexpr变量"><a href="#constexpr变量" class="headerlink" title="constexpr变量"></a>constexpr变量</h3><p>满足以下条件：</p>
+<ul>
+<li>其值必须为<code>literal</code>类型。</li>
+<li>必须能立即初始化，意味着所有的初始化方法，包括所有隐式转换、调用构造函数等，都必须为<code>const express</code>。</li>
+</ul>
+<p>特别需要说明的是指针变量，<code>constexpr</code>类型的指针变量有以下的几种存在方式：</p>
+<ul>
+<li><p>指向nullptr</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> *p = <span class="literal">nullptr</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p>指向全局变量、static变量，因其地址不会改变</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> i = <span class="number">0</span>;	<span class="comment">// i 定义在函数外部，是一个全局变量</span></div><div class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> *p = &amp;i;	<span class="comment">// 正确</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>另外：<br>虽然<code>constexpr</code>和<code>const</code>在某些方面有点相似，但<code>constexpr int *q = nullptr;</code>的含义却与<code>const int *q = nullptr;</code>的有些出入，前者<code>q</code>不能修改，后者<code>*q</code>不能修改。若需要指向常量的常量指针，可以这样定义：<code>constexpr const int *q = nullptr;</code>，这样<code>q</code>和<code>*q</code>就都是不可修改的常量了。</p>
+</li>
+</ul>
+<hr>
+<h3 id="constexpr函数"><a href="#constexpr函数" class="headerlink" title="constexpr函数"></a>constexpr函数</h3><p><code>constexpr</code>函数会被隐式地<code>inline</code>。<br>满足以下条件：</p>
+<ul>
+<li>形参和返回值都得为<code>literal</code>类型</li>
+<li>只能有一条<code>return</code>语句</li>
+</ul>
+<p>例：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">constexpr</span> <span class="keyword">int</span> <span class="title">new_sz</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> <span class="number">42</span>;&#125;</div><div class="line"><span class="function">cosntexpr size_t <span class="title">scale</span><span class="params">(<span class="keyword">size_t</span> cnt)</span> </span>&#123;<span class="keyword">return</span> new_sz() * cnt;&#125;</div><div class="line"><span class="keyword">int</span> arr[scale(<span class="number">2</span>)];	<span class="comment">// 正确，scale(2)是const express</span></div><div class="line"><span class="keyword">int</span> n = <span class="number">2</span>;</div><div class="line"><span class="keyword">int</span> arr2[scale(n)];	<span class="comment">// 错误，scale(n)不是const express</span></div></pre></td></tr></table></figure></p>
+<hr>
+<h3 id="constexpr类"><a href="#constexpr类" class="headerlink" title="constexpr类"></a>constexpr类</h3><p>满足以下条件：</p>
+<ul>
+<li>该类是聚合类，所谓聚合类：<ul>
+<li>所有成员都是public</li>
+<li>无显式定义的构造函数</li>
+<li>成员无初始值</li>
+<li>无基类，无virtual函数</li>
+</ul>
+</li>
+<li>若不是聚合类，需要满足<ul>
+<li>数据成员必须都为<code>literal</code>类型（函数成员无须是）</li>
+<li>至少含有一个<code>constexpr</code>构造函数</li>
+<li>只能使用默认的析构函数</li>
+</ul>
+</li>
+</ul>
+<p>例：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Debug</span></span></div><div class="line"><span class="class">&#123;</span></div><div class="line">  <span class="keyword">public</span>:</div><div class="line">    constexpr Debug(bool b = true) : hw(b), io(b), other(b) &#123;&#125;</div><div class="line">    constexpr Debug(bool h, bool i, bool o) : hw(h), io(i), other(o) &#123;&#125;</div><div class="line">    <span class="function"><span class="keyword">constexpr</span> <span class="keyword">bool</span> <span class="title">any</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> hw || io || other; &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">set_io</span><span class="params">(<span class="keyword">bool</span> b)</span> </span>&#123; io = b; &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">set_hw</span><span class="params">(<span class="keyword">bool</span> b)</span> </span>&#123; hw = b; &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">set_other</span><span class="params">(<span class="keyword">bool</span> b)</span> </span>&#123; other = b; &#125;</div><div class="line"></div><div class="line">  <span class="keyword">private</span>:</div><div class="line">    <span class="keyword">bool</span> hw;</div><div class="line">    <span class="keyword">bool</span> io;</div><div class="line">    <span class="keyword">bool</span> other;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">constexpr</span> Debug <span class="title">io_sub</span><span class="params">(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>)</span></span>;</div><div class="line">    <span class="keyword">if</span> (io_sub.any())</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cerr</span> &lt;&lt; <span class="string">"print appropriate error messages"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<hr>
 
       
     </div>
@@ -429,7 +476,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://gaufoo.com/2017/10/24/CppConstexpr/" title="C++类型说明符constexpr">http://gaufoo.com/2017/10/24/CppConstexpr/</a>
+    <a href="http://gaufoo.com/2017/10/24/CppConstexpr/" title="C++11类型说明符：constexpr">http://gaufoo.com/2017/10/24/CppConstexpr/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -653,7 +700,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#字面值常量（literal）"><span class="nav-number">1.</span> <span class="nav-text">字面值常量（literal）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常量表达式（const-express）"><span class="nav-number">2.</span> <span class="nav-text">常量表达式（const express）</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#字面值常量（literal）"><span class="nav-number">1.</span> <span class="nav-text">字面值常量（literal）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常量表达式（const-express）"><span class="nav-number">2.</span> <span class="nav-text">常量表达式（const express）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#constexpr变量"><span class="nav-number">2.1.</span> <span class="nav-text">constexpr变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#constexpr函数"><span class="nav-number">2.2.</span> <span class="nav-text">constexpr函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#constexpr类"><span class="nav-number">2.3.</span> <span class="nav-text">constexpr类</span></a></li></ol></li></ol></div>
             
 
           </div>
