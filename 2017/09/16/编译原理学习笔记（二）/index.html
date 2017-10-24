@@ -105,7 +105,9 @@
 <meta property="og:image" content="http://gaufoo.com/images/20170916182343.jpg">
 <meta property="og:image" content="http://gaufoo.com/images/20170916183203.jpg">
 <meta property="og:image" content="http://gaufoo.com/images/20170916183203.jpg">
-<meta property="og:updated_time" content="2017-09-16T12:07:46.852Z">
+<meta property="og:image" content="http://gaufoo.com/images/DFA.png">
+<meta property="og:image" content="http://gaufoo.com/images/NFA.png">
+<meta property="og:updated_time" content="2017-10-24T06:12:19.358Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="编译原理学习笔记（二）">
 <meta name="twitter:description" content="记录">
@@ -376,7 +378,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  871 字
+                  1,244 字
                 </span>
               
 
@@ -510,7 +512,37 @@
 <li>s0：开始状态 (或初始状态)，s0∈ S。</li>
 <li>F：接收状态（或终止状态）集合，F⊆ S。</li>
 </ul>
-<h4 id="NFA"><a href="#NFA" class="headerlink" title="NFA"></a>NFA</h4><hr>
+<p><img src="/images/DFA.png" width="500"></p>
+<blockquote>
+<p>r = (a|b)*abb</p>
+</blockquote>
+<h4 id="NFA"><a href="#NFA" class="headerlink" title="NFA"></a>NFA</h4><p><strong>M = ( S，Σ ，δ，s0，F )</strong></p>
+<ul>
+<li>S：有穷状态集。</li>
+<li>Σ：输入字母表，即输入字母表。假设 <strong>ε</strong> 不是 Σ 中的元素。</li>
+<li>δ：将S×Σ映射到2^S的<strong>转换函数</strong>。s∈S, a∈Σ, <strong>δ(s,a)</strong>表示从状态s出发，沿着标记为a的边所能到达的状态集合。</li>
+<li>s0：开始状态 (或初始状态)，s0∈ S。</li>
+<li>F：接收状态（或终止状态）集合，F⊆ S。</li>
+</ul>
+<p><img src="/images/NFA.png" width="500"></p>
+<blockquote>
+<p>r = (a|b)*abb</p>
+</blockquote>
+<h4 id="等价性"><a href="#等价性" class="headerlink" title="等价性"></a>等价性</h4><blockquote>
+<p>对任何非确定的有穷自动机N ，存在定义同一语言的确定的有穷自动机D<br>对任何确定的有穷自动机D ，存在定义同一语言的非确定的有穷自动机N</p>
+</blockquote>
+<h4 id="主要区别"><a href="#主要区别" class="headerlink" title="主要区别"></a>主要区别</h4><ul>
+<li>对于DFA，一个特定的符号输入，有且只能得到一个状态，而NFA就有可能得到一个状态集。因此NFA引擎必须记录所有的可能路径。</li>
+<li>DFA比较快，但不提供Backtrack（回溯）功能，NFA比较慢，但提供了Backtrack功能。</li>
+</ul>
+<h4 id="DFA的算法实现"><a href="#DFA的算法实现" class="headerlink" title="DFA的算法实现"></a>DFA的算法实现</h4><p>由于DFA对于特定输入，状态是确定的，因此实现起来很方便。</p>
+<ul>
+<li>输入：以文件结束符<strong>eof</strong>结尾的字符串<strong>x</strong>。DFA <strong>D</strong>的开始状态<strong>s0</strong>，接收状态集<strong>F</strong>，转换函数<strong>move</strong>。</li>
+<li>输出：如果<strong>D</strong>接收<strong>x</strong>，则回答“yes”，否则回答“no”。</li>
+<li>方法：将下述算法应用于输入串<strong>x</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">s = s0;</div><div class="line">c = next_char();</div><div class="line">while (c != eof) &#123;</div><div class="line">	s = move(s, c);</div><div class="line">	c = next_char();</div><div class="line">&#125;</div><div class="line">if (s is in F)</div><div class="line">	return &quot;yes&quot;;</div><div class="line">else</div><div class="line">	return &quot;no&quot;;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
 
       
     </div>
@@ -755,7 +787,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#正则表达式-Regular-Expression，RE"><span class="nav-number">1.</span> <span class="nav-text">正则表达式 ( Regular Expression，RE )</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义"><span class="nav-number">1.2.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#举例"><span class="nav-number">1.3.</span> <span class="nav-text">举例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代数定律"><span class="nav-number">1.4.</span> <span class="nav-text">代数定律</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单词的识别"><span class="nav-number">2.</span> <span class="nav-text">单词的识别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#有穷自动机-Finite-Automata，FA"><span class="nav-number">2.1.</span> <span class="nav-text">有穷自动机 ( Finite Automata，FA )</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#模型"><span class="nav-number">2.1.1.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#表示：转换图-Transition-Graph"><span class="nav-number">2.1.2.</span> <span class="nav-text">表示：转换图 ( Transition Graph )</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#接收的语言"><span class="nav-number">2.1.3.</span> <span class="nav-text">接收的语言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最长子串匹配原则"><span class="nav-number">2.1.4.</span> <span class="nav-text">最长子串匹配原则</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有穷自动机的分类"><span class="nav-number">2.2.</span> <span class="nav-text">有穷自动机的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DFA"><span class="nav-number">2.2.1.</span> <span class="nav-text">DFA</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NFA"><span class="nav-number">2.2.2.</span> <span class="nav-text">NFA</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#正则表达式-Regular-Expression，RE"><span class="nav-number">1.</span> <span class="nav-text">正则表达式 ( Regular Expression，RE )</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义"><span class="nav-number">1.2.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#举例"><span class="nav-number">1.3.</span> <span class="nav-text">举例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代数定律"><span class="nav-number">1.4.</span> <span class="nav-text">代数定律</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单词的识别"><span class="nav-number">2.</span> <span class="nav-text">单词的识别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#有穷自动机-Finite-Automata，FA"><span class="nav-number">2.1.</span> <span class="nav-text">有穷自动机 ( Finite Automata，FA )</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#模型"><span class="nav-number">2.1.1.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#表示：转换图-Transition-Graph"><span class="nav-number">2.1.2.</span> <span class="nav-text">表示：转换图 ( Transition Graph )</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#接收的语言"><span class="nav-number">2.1.3.</span> <span class="nav-text">接收的语言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最长子串匹配原则"><span class="nav-number">2.1.4.</span> <span class="nav-text">最长子串匹配原则</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有穷自动机的分类"><span class="nav-number">2.2.</span> <span class="nav-text">有穷自动机的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DFA"><span class="nav-number">2.2.1.</span> <span class="nav-text">DFA</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NFA"><span class="nav-number">2.2.2.</span> <span class="nav-text">NFA</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#等价性"><span class="nav-number">2.2.3.</span> <span class="nav-text">等价性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#主要区别"><span class="nav-number">2.2.4.</span> <span class="nav-text">主要区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DFA的算法实现"><span class="nav-number">2.2.5.</span> <span class="nav-text">DFA的算法实现</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
