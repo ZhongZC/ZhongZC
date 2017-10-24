@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-10-24T06:12:19.358Z</updated>
+  <updated>2017-10-24T08:25:19.734Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -16,11 +16,49 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>C++类型说明符constexpr</title>
+    <link href="http://gaufoo.com/2017/10/24/CppConstexpr/"/>
+    <id>http://gaufoo.com/2017/10/24/CppConstexpr/</id>
+    <published>2017-10-24T08:00:59.000Z</published>
+    <updated>2017-10-24T08:25:19.734Z</updated>
+    
+    <content type="html"><![CDATA[<p>  关键字<code>constexpr</code>用于修饰常量表达式（const express），常量表达式是指这样的一些对象：值不变且在编译过程即能得到计算结果的表达式。<br>  具体说明如下</p>
+<a id="more"></a>
+<hr>
+<h2 id="字面值常量（literal）"><a href="#字面值常量（literal）" class="headerlink" title="字面值常量（literal）"></a>字面值常量（literal）</h2><ul>
+<li>由形式和值来决定数据类型</li>
+<li>可手动指定类型<br>如：<ul>
+<li>常规<br>20 <em>—— 十进制数</em><br>0x8 <em>—— 十六进制数</em><br>“hello” <em>—— char[6]</em></li>
+<li>指定类型<br>3F <em>—— float</em><br>L’a’ <em>—— whar_t</em><br>u8”hi!” <em>—— utf-8</em><br>3.14159 <em>—— long double</em></li>
+</ul>
+</li>
+</ul>
+<h2 id="常量表达式（const-express）"><a href="#常量表达式（const-express）" class="headerlink" title="常量表达式（const express）"></a>常量表达式（const express）</h2><hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;  关键字&lt;code&gt;constexpr&lt;/code&gt;用于修饰常量表达式（const express），常量表达式是指这样的一些对象：值不变且在编译过程即能得到计算结果的表达式。&lt;br&gt;  具体说明如下&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="C++" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
+    
+    
+      <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
+    
+  </entry>
+  
+  <entry>
     <title>编译原理学习笔记（二）</title>
     <link href="http://gaufoo.com/2017/09/16/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
     <id>http://gaufoo.com/2017/09/16/编译原理学习笔记（二）/</id>
     <published>2017-09-16T09:46:00.000Z</published>
-    <updated>2017-10-24T06:12:19.358Z</updated>
+    <updated>2017-10-24T08:01:12.586Z</updated>
     
     <content type="html"><![CDATA[<p>记录</p>
 <a id="more"></a>
@@ -135,6 +173,7 @@
 <blockquote>
 <p>r = (a|b)*abb</p>
 </blockquote>
+<hr>
 <h4 id="NFA"><a href="#NFA" class="headerlink" title="NFA"></a>NFA</h4><p><strong>M = ( S，Σ ，δ，s0，F )</strong></p>
 <ul>
 <li>S：有穷状态集。</li>
@@ -147,13 +186,16 @@
 <blockquote>
 <p>r = (a|b)*abb</p>
 </blockquote>
+<hr>
 <h4 id="等价性"><a href="#等价性" class="headerlink" title="等价性"></a>等价性</h4><blockquote>
 <p>对任何非确定的有穷自动机N ，存在定义同一语言的确定的有穷自动机D<br>对任何确定的有穷自动机D ，存在定义同一语言的非确定的有穷自动机N</p>
 </blockquote>
+<hr>
 <h4 id="主要区别"><a href="#主要区别" class="headerlink" title="主要区别"></a>主要区别</h4><ul>
 <li>对于DFA，一个特定的符号输入，有且只能得到一个状态，而NFA就有可能得到一个状态集。因此NFA引擎必须记录所有的可能路径。</li>
 <li>DFA比较快，但不提供Backtrack（回溯）功能，NFA比较慢，但提供了Backtrack功能。</li>
 </ul>
+<hr>
 <h4 id="DFA的算法实现"><a href="#DFA的算法实现" class="headerlink" title="DFA的算法实现"></a>DFA的算法实现</h4><p>由于DFA对于特定输入，状态是确定的，因此实现起来很方便。</p>
 <ul>
 <li>输入：以文件结束符<strong>eof</strong>结尾的字符串<strong>x</strong>。DFA <strong>D</strong>的开始状态<strong>s0</strong>，接收状态集<strong>F</strong>，转换函数<strong>move</strong>。</li>
@@ -161,6 +203,17 @@
 <li>方法：将下述算法应用于输入串<strong>x</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">s = s0;</div><div class="line">c = next_char();</div><div class="line">while (c != eof) &#123;</div><div class="line">	s = move(s, c);</div><div class="line">	c = next_char();</div><div class="line">&#125;</div><div class="line">if (s is in F)</div><div class="line">	return &quot;yes&quot;;</div><div class="line">else</div><div class="line">	return &quot;no&quot;;</div></pre></td></tr></table></figure>
 </li>
 </ul>
+<hr>
+<h3 id="RE转换成NFA"><a href="#RE转换成NFA" class="headerlink" title="RE转换成NFA"></a>RE转换成NFA</h3><h4 id="ε"><a href="#ε" class="headerlink" title="ε"></a>ε</h4><p><img src="/images/20171024144829.png" width="400"></p>
+<h4 id="字母表Σ中符号a"><a href="#字母表Σ中符号a" class="headerlink" title="字母表Σ中符号a"></a>字母表Σ中符号a</h4><p><img src="/images/20171024144915.png" width="400"></p>
+<h4 id="r-r1r2"><a href="#r-r1r2" class="headerlink" title="r = r1r2"></a>r = r1r2</h4><p><img src="/images/20171024145410.png" width="500"></p>
+<h4 id="r-r1-r2"><a href="#r-r1-r2" class="headerlink" title="r = r1|r2"></a>r = r1|r2</h4><p><img src="/images/20171024145504.png" width="400"></p>
+<h4 id="r-r1"><a href="#r-r1" class="headerlink" title="r = (r1)*"></a>r = (r1)*</h4><p><img src="/images/20171024145520.png" width="200"></p>
+<hr>
+<blockquote>
+<p>r=(a|b)*abb 对应的NFA</p>
+</blockquote>
+<p><img src="/images/20171024150046.png" width="500"></p>
 <hr>
 ]]></content>
     
