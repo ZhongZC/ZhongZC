@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="我真的只是想写一个log()函数而已。">
+<meta name="description" content="我真的只是想写一个log函数而已。">
 <meta name="keywords" content="C,编程,C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++中三种实现可变参数的方法">
 <meta property="og:url" content="http://gaufoo.com/2017/10/24/Cpp可变参数/index.html">
 <meta property="og:site_name" content="苟富">
-<meta property="og:description" content="我真的只是想写一个log()函数而已。">
+<meta property="og:description" content="我真的只是想写一个log函数而已。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-24T16:09:51.629Z">
+<meta property="og:updated_time" content="2017-10-24T17:23:09.506Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++中三种实现可变参数的方法">
-<meta name="twitter:description" content="我真的只是想写一个log()函数而已。">
+<meta name="twitter:description" content="我真的只是想写一个log函数而已。">
 
 
 
@@ -372,7 +372,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  86 字
+                  1,121 字
                 </span>
               
 
@@ -397,11 +397,56 @@
       
 
       
-        <p>我真的只是想写一个log()函数而已。</p>
+        <p>我真的只是想写一个log函数而已。</p>
 <a id="more"></a>
 <hr>
-<p>Gaufoo牌log函数如下，三种方法待填<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> LOG_H_</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> LOG_H_</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="built_in">std</span>::<span class="function">ostream &amp;<span class="title">log</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="built_in">std</span>::<span class="built_in">cout</span>; &#125;</div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</div><div class="line"><span class="built_in">std</span>::<span class="function">ostream &amp;<span class="title">log</span><span class="params">(T <span class="keyword">const</span> &amp;p, Args <span class="keyword">const</span> &amp;... rest)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; p;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">log</span>(rest...);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* test.cpp */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"log.h"</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">int</span> n = <span class="number">2</span>;</div><div class="line">    <span class="built_in">log</span>(n, <span class="string">" hello "</span>, <span class="number">10086</span>) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>; <span class="comment">// std::cout &lt;&lt; "2 hello 10086" &lt;&lt; std::endl;</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="可变参数宏（C实现）"><a href="#可变参数宏（C实现）" class="headerlink" title="可变参数宏（C实现）"></a>可变参数宏（C实现）</h2><p>利用头文件<code>stdarg.h</code>中的宏定义：<code>va_list</code>、<code>va_start(va_list, arg)</code>、<code>va_arg(va_list, type)</code>、<code>va_end(va_list)</code>。可以实现可变参数且参数类型不同的函数。</p>
+<p>过程：</p>
+<ul>
+<li>函数声明中，可变参数用省略号表示。</li>
+<li>创建<code>va_list</code>变量，通过<code>va_start</code>访问参数列表并承接第一个参数。</li>
+<li>使用<code>va_arg</code>继续获取参数的值。</li>
+<li>使用<code>va_end</code>完成清理工作。</li>
+</ul>
+<p>以可变参数版本的sum作为例子：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdarg.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="keyword">int</span> count, ...)</span> <span class="comment">//count 表示可变参数个数</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    va_list ap;          <span class="comment">//声明一个va_list变量</span></div><div class="line">    va_start(ap, count); <span class="comment">//初始化，第二个参数为最后一个确定的形参（不能另开局部变量）</span></div><div class="line"></div><div class="line">    <span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++)</div><div class="line">        sum += va_arg(ap, <span class="keyword">int</span>); <span class="comment">//读取可变参数，第二个参数为可变参数的类型</span></div><div class="line"></div><div class="line">    va_end(ap); <span class="comment">//清理工作</span></div><div class="line">    <span class="keyword">return</span> sum;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, sum(<span class="number">5</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>));</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>局限性：</p>
+<blockquote>
+<ul>
+<li>可变参数宏只能实现<strong>顺序访问</strong>可变参数，无法后退访问。但可以重复使用<code>va_start</code>来初始化<code>va_list</code>变量。</li>
+<li>运行时，函数必须能够根据已有信息（既有约定，或确定实参）确定可变参数的具体个数与类型：函数定义需要知道可变参数的具体类型、个数，这些信息是在运行时确定的，那么显然应该由实参来确定。在上面的例子中count传递了可变参数的个数，而参数类型则是既有约定（整型）； </li>
+<li>该方法是<strong>极不安全</strong>的，宏本身无法提供任何安全性保证，他总是按照既定代码“自作多情”的认为实参就应该是那么多，即使实参并不是那么多。这就要求所有安全性必须由程序员来保证。例如，在以上的示例代码中，如果调用时指定count为10，但实际上只给出9个可变形参，那么函数还是会读取10个参数，显然第十次读取是多余的，多余的操作一般不会有什么好结果，当然如果实参过多，多余的实参也不会被读取而是被忽略。</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="initializer-list标准库类型（C-11）"><a href="#initializer-list标准库类型（C-11）" class="headerlink" title="initializer_list标准库类型（C++11）"></a>initializer_list标准库类型（C++11）</h2><p>过程：</p>
+<ul>
+<li>函数声明中使用<code>initializer_list</code>模板代表可变参数列表</li>
+<li>使用迭代器访问<code>initializer_list</code>中的参数</li>
+<li>传入参数时需要使用<code>{}</code>把多个参数括起来</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;initializer_list&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">initializer_list</span>&lt;<span class="keyword">int</span>&gt; il)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> p : il)   <span class="comment">// 使用范围for</span></div><div class="line">        sum += p;</div><div class="line">    <span class="comment">// for (auto p = il.begin(); p != il.end(); p++) //使用迭代器访问参数</span></div><div class="line">    <span class="comment">//     sum += *p;</span></div><div class="line">    <span class="keyword">return</span> sum;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; sum(&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>局限性：</p>
+<ul>
+<li>可变参数类型必须<strong>一致</strong></li>
+</ul>
+<hr>
+<h2 id="可变参数模板（C-11）"><a href="#可变参数模板（C-11）" class="headerlink" title="可变参数模板（C++11）"></a>可变参数模板（C++11）</h2><p>更方便安全有效地实现可变参数且参数类型不同的函数。</p>
+<p>过程：</p>
+<ul>
+<li>编写含有模板参数包和函数参数包的模板函数</li>
+<li>函数定义<strong>递归</strong>调用自己</li>
+<li>利用函数重载（参数包含有零个参数）来处理<strong>边界情况</strong>，编写处理边界情况的模板</li>
+</ul>
+<p>C++ primer 第五版中的例子：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 用来终止递归并打印最后一个元素的函数</span></div><div class="line"><span class="comment">// 此函数必须在可变参数版本的print定义之前声明（否则将出现neither visible nor found by argument-dependent lookup错误）</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="built_in">std</span>::<span class="function">ostream &amp;<span class="title">print</span><span class="params">(<span class="built_in">std</span>::ostream &amp;os, <span class="keyword">const</span> T &amp;t)</span></span>&#123;</div><div class="line">    <span class="keyword">return</span> os &lt;&lt; t;                <span class="comment">// 包中最后一个元素</span></div><div class="line">&#125;</div><div class="line"><span class="comment">//包中除最后一个元素之外的其他元素都会调用这个版本的pirnt</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</div><div class="line"><span class="built_in">std</span>::<span class="function">ostream &amp;<span class="title">print</span><span class="params">(<span class="built_in">std</span>::ostream &amp;os, <span class="keyword">const</span> T &amp;t, cosnt Args &amp;... rest)</span></span>&#123;</div><div class="line">    os &lt;&lt; t &lt;&lt; <span class="string">","</span>;               <span class="comment">// 打印第一个实参，包中元素减一</span></div><div class="line">    <span class="keyword">return</span> print(os, rest...);    <span class="comment">// 递归调用，打印剩余实参</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>局限性：</p>
+<ul>
+<li>由于只能递归实现，导致需要定义重载函数来处理边界情况，代码不够清晰自然。</li>
+<li>模板会为每一个不同的实例生成代码，函数的实例过多可能会使代码体积庞大。</li>
+<li>依靠递归使得功能具有局限性，并且效率也会受到影响。</li>
+</ul>
+<hr>
+<h2 id="log函数实现"><a href="#log函数实现" class="headerlink" title="log函数实现"></a>log函数实现</h2><p>头文件：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* log.h */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> LOG_H_</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> LOG_H_</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="built_in">std</span>::<span class="function">ostream &amp;<span class="title">log</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="built_in">std</span>::<span class="built_in">cout</span>; &#125;</div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</div><div class="line"><span class="built_in">std</span>::<span class="function">ostream &amp;<span class="title">log</span><span class="params">(T <span class="keyword">const</span> &amp;p, Args <span class="keyword">const</span> &amp;... rest)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; p;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">log</span>(rest...);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure></p>
+<p>测试代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* test.cpp */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"log.h"</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">int</span> n = <span class="number">2</span>;</div><div class="line">    <span class="built_in">log</span>(n, <span class="string">" hello "</span>, <span class="number">10086</span>) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>; <span class="comment">// std::cout &lt;&lt; "2 hello 10086" &lt;&lt; std::endl;</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <hr>
 
       
@@ -517,8 +562,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/avatar.jpg"
@@ -630,6 +684,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#可变参数宏（C实现）"><span class="nav-number">1.</span> <span class="nav-text">可变参数宏（C实现）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#initializer-list标准库类型（C-11）"><span class="nav-number">2.</span> <span class="nav-text">initializer_list标准库类型（C++11）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可变参数模板（C-11）"><span class="nav-number">3.</span> <span class="nav-text">可变参数模板（C++11）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#log函数实现"><span class="nav-number">4.</span> <span class="nav-text">log函数实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
