@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-10-24T17:23:09.506Z</updated>
+  <updated>2017-10-26T10:05:42.386Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -14,6 +14,57 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>手工构造词法分析器</title>
+    <link href="http://gaufoo.com/2017/10/26/%E6%89%8B%E5%B7%A5%E6%9E%84%E9%80%A0%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E5%99%A8/"/>
+    <id>http://gaufoo.com/2017/10/26/手工构造词法分析器/</id>
+    <published>2017-10-26T09:36:30.000Z</published>
+    <updated>2017-10-26T10:05:42.386Z</updated>
+    
+    <content type="html"><![CDATA[<p>简单笔记</p>
+<a id="more"></a>
+<hr>
+<h2 id="记号数据结构"><a href="#记号数据结构" class="headerlink" title="记号数据结构"></a>记号数据结构</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Token的数据结构</span></div><div class="line"><span class="comment">// 将字符流转化成Token流</span></div><div class="line"></div><div class="line"><span class="keyword">enum</span> kind &#123;IF, LPAREN, ID, INTLIT, ...&#125;;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">token</span> &#123;</span></div><div class="line">	<span class="keyword">enum</span> kind k;</div><div class="line">	<span class="keyword">char</span> lexeme[]; <span class="comment">// 单词</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>例：</p>
+<blockquote>
+<p>“if (x &gt; 5)”</p>
+</blockquote>
+<p>=&gt;<br>token {k = IF, lexeme = NULL};<br>// IF 和 “if” 一一对应，没必要记录单词<br>token {k = LPAREN, lexeme = NULL};<br>token {k = ID, lexeme = “x”};<br>…</p>
+<hr>
+<h2 id="转移图法"><a href="#转移图法" class="headerlink" title="转移图法"></a>转移图法</h2><h3 id="识别比较符"><a href="#识别比较符" class="headerlink" title="识别比较符"></a>识别比较符</h3><h4 id="转移图"><a href="#转移图" class="headerlink" title="转移图"></a>转移图</h4><p><img src="/images/cffx/20171026163706.png"></p>
+<h4 id="算法伪代码"><a href="#算法伪代码" class="headerlink" title="算法伪代码"></a>算法伪代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">// 上图的转换算法</div><div class="line"></div><div class="line">token nextToken()</div><div class="line">&#123;</div><div class="line">	c = getChar();</div><div class="line">	switch (c)</div><div class="line">	&#123;</div><div class="line">		case &apos;&lt;&apos;:</div><div class="line">			c = getChar();</div><div class="line">			switch(c)</div><div class="line">			&#123;</div><div class="line">				case &apos;=&apos;: return LE;</div><div class="line">				case &apos;&gt;&apos;: return NE;</div><div class="line">				default: rollback(); return LT;</div><div class="line">			&#125;</div><div class="line">		case &apos;=&apos;: return EQ;</div><div class="line">		case &apos;&gt;&apos;:</div><div class="line">			c = getChar();</div><div class="line">			switch(c)</div><div class="line">			&#123;</div><div class="line">				case &apos;=&apos;: return GE;</div><div class="line">				default: rollback(); return GT;</div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="识别标识符"><a href="#识别标识符" class="headerlink" title="识别标识符"></a>识别标识符</h3><h4 id="转移图-1"><a href="#转移图-1" class="headerlink" title="转移图"></a>转移图</h4><p><img src="/images/cffx/20171026165653.png"></p>
+<h4 id="算法伪代码-1"><a href="#算法伪代码-1" class="headerlink" title="算法伪代码"></a>算法伪代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">token nextToken()</div><div class="line">&#123;</div><div class="line">	c = getChar();</div><div class="line">	switch (c)</div><div class="line">	&#123;</div><div class="line">	/*</div><div class="line">	...</div><div class="line">	...</div><div class="line">	...</div><div class="line">	*/</div><div class="line">	case &apos;a&apos;, ..., &apos;z&apos;, &apos;A&apos;, ..., &apos;Z&apos;, &apos;_&apos;:</div><div class="line">		c = getChar();</div><div class="line">		while (c == &apos;a&apos; || ... || c == &apos;z&apos; </div><div class="line">			|| c == &apos;A&apos; || ... || c == &apos;Z&apos;</div><div class="line">			|| c == &apos;0&apos; || ... || c == &apos;9&apos;</div><div class="line">			|| c == &apos;_&apos;)</div><div class="line">			c = getChar();</div><div class="line">		rollback();</div><div class="line">		return ID;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h4 id="识别IF"><a href="#识别IF" class="headerlink" title="识别IF"></a>识别IF</h4><p>在识别标识符的基础上，进一步实现识别特定的关键字。</p>
+<h5 id="转移图-2"><a href="#转移图-2" class="headerlink" title="转移图"></a>转移图</h5><p><img src="/images/cffx/20171026173035.png"></p>
+<h5 id="算法伪代码-2"><a href="#算法伪代码-2" class="headerlink" title="算法伪代码"></a>算法伪代码</h5><p>代码太长太麻烦，我不想写。<br>如果对所有关键字都要写这样特定的代码，工作量显然是相当巨大的，于是便有了关键字表算法。</p>
+<h4 id="关键字表算法"><a href="#关键字表算法" class="headerlink" title="关键字表算法"></a>关键字表算法</h4><ul>
+<li>对所有关键字构造哈希表H</li>
+<li>先统一按标识符的转移图来识别标识符</li>
+<li>识别完成后，进一步查表H是否为关键字<br>通过合理的构造哈希表H（完美哈希），可以在O(1)时间完成。</li>
+</ul>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;简单笔记&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+    
+      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+  </entry>
   
   <entry>
     <title>C++中三种实现可变参数的方法</title>
@@ -86,11 +137,11 @@
       <category term="C++" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
-      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
-    
       <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
+    
+      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
     
   </entry>
   
@@ -1081,15 +1132,15 @@
 </tbody>
 </table>
 <hr>
-<h2 id="文件权限"><a href="#文件权限" class="headerlink" title="文件权限"></a>文件权限</h2><h3 id="查看文件权限"><a href="#查看文件权限" class="headerlink" title="查看文件权限"></a>查看文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> ls -l</div><div class="line">drwxr-xr-x 2 gaufoo gaufoo 4096 11月 6 15:30 Document</div></pre></td></tr></table></figure>
+<h2 id="文件权限"><a href="#文件权限" class="headerlink" title="文件权限"></a>文件权限</h2><h3 id="查看文件权限"><a href="#查看文件权限" class="headerlink" title="查看文件权限"></a>查看文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ls -l</span></div><div class="line">drwxr-xr-x 2 gaufoo gaufoo 4096 11月 6 15:30 Document</div></pre></td></tr></table></figure>
 <ul>
 <li>文件类型<br> <code>d</code>：目录<br> <code>l</code>：软链接<br> <code>b</code>：块设备<br> <code>c</code>：字符设备<br> <code>s</code>：socket<br> <code>p</code>：管道<br> <code>-</code>：普通文件</li>
 <li>文件权限<br> <code>r</code>：读<br> <code>w</code>：写<br> <code>x</code>：执行 </li>
 </ul>
-<h3 id="变更文件所有者"><a href="#变更文件所有者" class="headerlink" title="变更文件所有者"></a>变更文件所有者</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> sudo chown ??? ???</div></pre></td></tr></table></figure>
-<h3 id="修改文件权限"><a href="#修改文件权限" class="headerlink" title="修改文件权限"></a>修改文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> chmod 700 ???</div></pre></td></tr></table></figure>
-<h2 id="文件基本操作"><a href="#文件基本操作" class="headerlink" title="文件基本操作"></a>文件基本操作</h2><h3 id="复制目录"><a href="#复制目录" class="headerlink" title="复制目录"></a>复制目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> cp -r ??? ???</div></pre></td></tr></table></figure>
-<h3 id="删除目录"><a href="#删除目录" class="headerlink" title="删除目录"></a>删除目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> rm -r ???</div></pre></td></tr></table></figure>
+<h3 id="变更文件所有者"><a href="#变更文件所有者" class="headerlink" title="变更文件所有者"></a>变更文件所有者</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> sudo chown ??? ???</span></div></pre></td></tr></table></figure>
+<h3 id="修改文件权限"><a href="#修改文件权限" class="headerlink" title="修改文件权限"></a>修改文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> chmod 700 ???</span></div></pre></td></tr></table></figure>
+<h2 id="文件基本操作"><a href="#文件基本操作" class="headerlink" title="文件基本操作"></a>文件基本操作</h2><h3 id="复制目录"><a href="#复制目录" class="headerlink" title="复制目录"></a>复制目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> cp -r ??? ???</span></div></pre></td></tr></table></figure>
+<h3 id="删除目录"><a href="#删除目录" class="headerlink" title="删除目录"></a>删除目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> rm -r ???</span></div></pre></td></tr></table></figure>
 <hr>
 ]]></content>
     
@@ -2061,34 +2112,6 @@
       <category term="Hexo" scheme="http://gaufoo.com/tags/Hexo/"/>
     
       <category term="配置" scheme="http://gaufoo.com/tags/%E9%85%8D%E7%BD%AE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>赞美github</title>
-    <link href="http://gaufoo.com/2017/08/23/%E8%B5%9E%E7%BE%8Egithub/"/>
-    <id>http://gaufoo.com/2017/08/23/赞美github/</id>
-    <published>2017-08-23T04:21:02.000Z</published>
-    <updated>2017-09-06T09:18:21.335Z</updated>
-    
-    <content type="html"><![CDATA[<p>感谢github</p>
-<p>感谢hexo</p>
-<p>感谢cctv<br><a id="more"></a></p>
-<p>免费又夸张的博客</p>
-<p>hhhhhhhhh(大笑</p>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;感谢github&lt;/p&gt;
-&lt;p&gt;感谢hexo&lt;/p&gt;
-&lt;p&gt;感谢cctv&lt;br&gt;
-    
-    </summary>
-    
-      <category term="不归" scheme="http://gaufoo.com/categories/%E4%B8%8D%E5%BD%92/"/>
-    
     
   </entry>
   
