@@ -104,9 +104,9 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://gaufoo.com/images/cffx/20171026163706.png">
 <meta property="og:image" content="http://gaufoo.com/images/cffx/20171026165653.png">
-<meta property="og:image" content="http://gaufoo.com/images/cffx/20171026173035.png">
+<meta property="og:image" content="http://gaufoo.com/images/cffx/2017102617.png">
 <meta property="og:image" content="http://gaufoo.com/images/cffx/20171029163444.png">
-<meta property="og:updated_time" content="2017-10-29T08:34:40.925Z">
+<meta property="og:updated_time" content="2017-10-29T12:01:04.608Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="手工构造词法分析器">
 <meta name="twitter:description" content="简单笔记">
@@ -419,7 +419,7 @@
 <h4 id="算法伪代码-1"><a href="#算法伪代码-1" class="headerlink" title="算法伪代码"></a>算法伪代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">token nextToken()</div><div class="line">&#123;</div><div class="line">	c = getChar();</div><div class="line">	switch (c)</div><div class="line">	&#123;</div><div class="line">	/*</div><div class="line">	...</div><div class="line">	...</div><div class="line">	...</div><div class="line">	*/</div><div class="line">	case &apos;a&apos;, ..., &apos;z&apos;, &apos;A&apos;, ..., &apos;Z&apos;, &apos;_&apos;:</div><div class="line">		c = getChar();</div><div class="line">		while (c == &apos;a&apos; || ... || c == &apos;z&apos; </div><div class="line">			|| c == &apos;A&apos; || ... || c == &apos;Z&apos;</div><div class="line">			|| c == &apos;0&apos; || ... || c == &apos;9&apos;</div><div class="line">			|| c == &apos;_&apos;)</div><div class="line">			c = getChar();</div><div class="line">		rollback();</div><div class="line">		return ID;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <hr>
 <h4 id="识别IF"><a href="#识别IF" class="headerlink" title="识别IF"></a>识别IF</h4><p>在识别标识符的基础上，进一步实现识别特定的关键字。</p>
-<h5 id="转移图-2"><a href="#转移图-2" class="headerlink" title="转移图"></a>转移图</h5><p><img src="/images/cffx/20171026173035.png"></p>
+<h5 id="转移图-2"><a href="#转移图-2" class="headerlink" title="转移图"></a>转移图</h5><p><img src="/images/cffx/2017102617.png"></p>
 <h5 id="算法伪代码-2"><a href="#算法伪代码-2" class="headerlink" title="算法伪代码"></a>算法伪代码</h5><p>代码太长太麻烦，我不想写。<br>如果对所有关键字都要写这样特定的代码，工作量显然是相当巨大的，于是便有了关键字表算法。</p>
 <h4 id="关键字表算法"><a href="#关键字表算法" class="headerlink" title="关键字表算法"></a>关键字表算法</h4><ul>
 <li>对所有关键字构造哈希表H</li>
