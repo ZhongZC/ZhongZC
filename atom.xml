@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-10-29T13:27:53.203Z</updated>
+  <updated>2017-10-30T14:11:10.625Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://gaufoo.com/2017/10/29/%E8%BD%AC%E5%8C%96/"/>
     <id>http://gaufoo.com/2017/10/29/转化/</id>
     <published>2017-10-29T12:09:54.000Z</published>
-    <updated>2017-10-29T13:27:53.203Z</updated>
+    <updated>2017-10-30T14:11:10.625Z</updated>
     
     <content type="html"><![CDATA[<p>简单笔记</p>
 <a id="more"></a>
@@ -29,9 +29,7 @@
 <li>基本的RE直接构造</li>
 <li>复合的RE递归构造</li>
 </ul>
-<blockquote>
-<p>   <strong>e</strong><br>    -&gt; eps<br>    -&gt; 单个字符c    // 前两种可以直接构造<br>    -&gt; e1e2<br>    -&gt; e1|e2<br>    -&gt; e1*            // 后三种递归构造</p>
-</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">e</div><div class="line">  -&gt; eps</div><div class="line">  -&gt; 单个字符c	// 前两种可以直接构造</div><div class="line">  -&gt; e1e2</div><div class="line">  -&gt; e1|e2</div><div class="line">  -&gt; e1*	// 后三种递归构造</div></pre></td></tr></table></figure>
 <h3 id="eps"><a href="#eps" class="headerlink" title="eps"></a>eps</h3><p><img src="/images/vrhr/20171029202723.png"></p>
 <h3 id="c"><a href="#c" class="headerlink" title="c"></a>c</h3><p><img src="/images/vrhr/20171029202934.png"></p>
 <h3 id="e1e2"><a href="#e1e2" class="headerlink" title="e1e2"></a>e1e2</h3><p><img src="/images/vrhr/20171029203142.png"></p>
@@ -42,7 +40,7 @@
 </blockquote>
 <p><img src="/images/vrhr/20171029205037.png"></p>
 <hr>
-<h2 id="子集构造算法-——-NFA-gt-DFA"><a href="#子集构造算法-——-NFA-gt-DFA" class="headerlink" title="子集构造算法 —— NFA -&gt; DFA"></a>子集构造算法 —— NFA -&gt; DFA</h2><h3 id="基本思想-1"><a href="#基本思想-1" class="headerlink" title="基本思想"></a>基本思想</h3><p><img src="/images/vrhr/20171029205037.png"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">- 0 				=&gt; 记为q0</div><div class="line">- q0	——a——&gt; 1</div><div class="line">	==a(eps)==&gt; 1 2 3 4 6 *9 =&gt; 记为q1</div><div class="line">- q1	——b——&gt; 5				// delta(q1)集合，对每个q1元素的b通路</div><div class="line">	==b(eps)==&gt; 5 8 *9 3 4 6 =&gt; 记为q2	// eps-闭包(eps-closure)</div><div class="line">	——b——&gt; 5</div><div class="line">	==b(eps)==&gt; 5 8 9 3 4 6 == q2</div><div class="line">- q2	——c——&gt; 7</div><div class="line">	==c(eps)==&gt; 7 8 *9 3 4 6 =&gt; 记为q3</div><div class="line">	——b——&gt; 5</div><div class="line">	==b(eps)==&gt; 5 8 9 3 4 6 == q2</div><div class="line">	——c——&gt; 7</div><div class="line">	==c(eps)==&gt; 7 8 9 3 4 6 == q3</div><div class="line">- q3	——b——&gt; 5</div><div class="line">	==b(eps)==&gt; 5 8 9 3 4 6 == q2</div><div class="line">	——c——&gt; 7</div><div class="line">	==c(eps)==&gt; 7 8 9 3 4 6 == q3</div><div class="line">- q1	——c——&gt; 7</div><div class="line">	==c(eps)==&gt; 7 8 9 3 4 6 == q3</div></pre></td></tr></table></figure></p>
+<h2 id="子集构造算法-——-NFA-gt-DFA"><a href="#子集构造算法-——-NFA-gt-DFA" class="headerlink" title="子集构造算法 —— NFA -&gt; DFA"></a>子集构造算法 —— NFA -&gt; DFA</h2><h3 id="基本思想-1"><a href="#基本思想-1" class="headerlink" title="基本思想"></a>基本思想</h3><p><img src="/images/vrhr/20171029205037.png"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">- 0 	  			 =&gt; 记为q0</div><div class="line"></div><div class="line">- q0	——a——&gt; 1</div><div class="line">	==a(eps)==&gt; 1 2 3 4 6 *9 =&gt; 记为q1</div><div class="line"></div><div class="line">- q1	——b——&gt; 5				// delta(q1)集合，对每个q1元素的b通路</div><div class="line">	==b(eps)==&gt; 5 8 *9 3 4 6 =&gt; 记为q2	// eps-闭包(eps-closure)</div><div class="line">	——c——&gt; 7</div><div class="line">	==c(eps)==&gt; 7 8 *9 3 4 6 =&gt; 记为q3</div><div class="line">	</div><div class="line">- q2	——c——&gt; 7</div><div class="line">	==c(eps)==&gt; 7 8 9 3 4 6 == q3</div><div class="line">	——b——&gt; 5</div><div class="line">	==b(eps)==&gt; 5 8 9 3 4 6 == q2</div><div class="line"></div><div class="line">- q3	——b——&gt; 5</div><div class="line">	==b(eps)==&gt; 5 8 9 3 4 6 == q2</div><div class="line">	——c——&gt; 7</div><div class="line">	==c(eps)==&gt; 7 8 9 3 4 6 == q3</div></pre></td></tr></table></figure></p>
 <p><img src="/images/vrhr/20171029211417.png"></p>
 <hr>
 ]]></content>

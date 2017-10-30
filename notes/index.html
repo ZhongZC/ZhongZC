@@ -94,17 +94,21 @@
 
 
 
-<meta name="description" content="2017-10-01 Python替学委写的自动纠正文件名小程序，被学委嫌弃了。1234567891011121314151617181920212223242526272829303132333435363738394041424344# -*- coding:utf-8 -*-&quot;&quot;&quot;将此源码与 name.txt 存放在同一目录下双击运行 prog.py，重命名文件将生成于 new 文件夹中">
+<meta name="description" content="2017-10-30 Java Printing strings to the terminal window. Converting strings to primitive types. Mathematical functions.        2017-10-01 Python替学委写的自动纠正文件名小程序，被学委嫌弃了。1234567891011121314151617181920">
 <meta property="og:type" content="website">
 <meta property="og:title" content="便签">
 <meta property="og:url" content="http://gaufoo.com/notes/index.html">
 <meta property="og:site_name" content="苟富">
-<meta property="og:description" content="2017-10-01 Python替学委写的自动纠正文件名小程序，被学委嫌弃了。1234567891011121314151617181920212223242526272829303132333435363738394041424344# -*- coding:utf-8 -*-&quot;&quot;&quot;将此源码与 name.txt 存放在同一目录下双击运行 prog.py，重命名文件将生成于 new 文件夹中">
+<meta property="og:description" content="2017-10-30 Java Printing strings to the terminal window. Converting strings to primitive types. Mathematical functions.        2017-10-01 Python替学委写的自动纠正文件名小程序，被学委嫌弃了。1234567891011121314151617181920">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-24T12:36:51.746Z">
+<meta property="og:image" content="http://gaufoo.com/images/20171030/system.out.print-api.png">
+<meta property="og:image" content="http://gaufoo.com/images/20171030/parse-api.png">
+<meta property="og:image" content="http://gaufoo.com/images/20171030/math-api.png">
+<meta property="og:updated_time" content="2017-10-30T12:02:59.209Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="便签">
-<meta name="twitter:description" content="2017-10-01 Python替学委写的自动纠正文件名小程序，被学委嫌弃了。1234567891011121314151617181920212223242526272829303132333435363738394041424344# -*- coding:utf-8 -*-&quot;&quot;&quot;将此源码与 name.txt 存放在同一目录下双击运行 prog.py，重命名文件将生成于 new 文件夹中">
+<meta name="twitter:description" content="2017-10-30 Java Printing strings to the terminal window. Converting strings to primitive types. Mathematical functions.        2017-10-01 Python替学委写的自动纠正文件名小程序，被学委嫌弃了。1234567891011121314151617181920">
+<meta name="twitter:image" content="http://gaufoo.com/images/20171030/system.out.print-api.png">
 
 
 
@@ -284,12 +288,25 @@
         
           <hr>
 <ul>
+<li>2017-10-30<ul>
+<li>Java<ul>
+<li>Printing strings to the terminal window.<br><img src="/images/20171030/system.out.print-api.png"></li>
+<li>Converting strings to primitive types.<br><img src="/images/20171030/parse-api.png"></li>
+<li>Mathematical functions.<br><img src="/images/20171030/math-api.png"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
 <li>2017-10-01<ul>
 <li>Python<br>替学委写的自动纠正文件名小程序，被学委嫌弃了。<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding:utf-8 -*-</span></div><div class="line"><span class="string">"""</span></div><div class="line"><span class="string">将此源码与 name.txt 存放在同一目录下</span></div><div class="line"><span class="string">双击运行 prog.py，重命名文件将生成于 new 文件夹中</span></div><div class="line"><span class="string">"""</span></div><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> shutil</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getMap</span><span class="params">()</span>:</span></div><div class="line">	lst = []</div><div class="line">	<span class="keyword">with</span> open(<span class="string">"./name.txt"</span>, <span class="string">'r'</span>, encoding=<span class="string">"utf-8"</span>) <span class="keyword">as</span> f:</div><div class="line">		<span class="keyword">for</span> line <span class="keyword">in</span> f:</div><div class="line">			lst.append((line.split(<span class="string">"\t"</span>)[<span class="number">0</span>], line.split(<span class="string">"\t"</span>)[<span class="number">2</span>]))</div><div class="line">		f.close()</div><div class="line">	<span class="keyword">return</span> lst</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">changeName</span><span class="params">(folder, cap)</span>:</span></div><div class="line">	oldDir = folder</div><div class="line">	newDir = os.path.join(oldDir, <span class="string">"new"</span>)</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">not</span> os.path.isdir(newDir)):</div><div class="line">		os.mkdir(newDir)</div><div class="line"></div><div class="line">	nameToId = getMap()</div><div class="line">	<span class="keyword">for</span> oldFile <span class="keyword">in</span> os.listdir(oldDir):</div><div class="line">		flag = <span class="keyword">False</span></div><div class="line">		<span class="keyword">for</span> name, no <span class="keyword">in</span> nameToId:</div><div class="line">			<span class="keyword">if</span> (oldFile.find(name) != <span class="number">-1</span>):</div><div class="line">				newFile = <span class="string">"计科一班-"</span> + name + <span class="string">"-"</span> + cap + <span class="string">"-"</span> + no + <span class="string">"."</span> + oldFile.split(<span class="string">"."</span>)[<span class="number">-1</span>]</div><div class="line">				shutil.copyfile(os.path.join(oldDir, oldFile), os.path.join(newDir, newFile))</div><div class="line">				flag = <span class="keyword">True</span></div><div class="line">				print(<span class="string">"&#123;:30&#125;\t&#123;&#125;  &#123;&#125;"</span>.format(oldFile, <span class="string">" 已成功重命名为 "</span>, newFile))</div><div class="line">				<span class="keyword">break</span></div><div class="line"></div><div class="line">		<span class="keyword">if</span> (flag == <span class="keyword">False</span>):</div><div class="line">			<span class="keyword">if</span> (oldFile != <span class="string">"new"</span>):</div><div class="line">				print(<span class="string">"&#123;:30&#125;\t&#123;&#125;"</span>.format(oldFile, <span class="string">" 重命名失败！"</span>))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">	folder = input(<span class="string">"作业文件夹："</span>)</div><div class="line">	cap = input(<span class="string">"请输入章节："</span>)</div><div class="line">	changeName(folder, cap)</div><div class="line">	input(<span class="string">"---- 按 Enter 结束程序 ----"</span>)</div><div class="line">	</div><div class="line">main()</div></pre></td></tr></table></figure>
 </li>
 </ul>
 </li>
 </ul>
+<hr>
 <ul>
 <li><p>2017-09-16</p>
 <ul>
