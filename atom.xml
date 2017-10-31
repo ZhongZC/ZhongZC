@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-10-30T14:11:10.625Z</updated>
+  <updated>2017-10-31T16:06:34.022Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -17,10 +17,10 @@
   
   <entry>
     <title>RE转NFA，NFA转DFA</title>
-    <link href="http://gaufoo.com/2017/10/29/%E8%BD%AC%E5%8C%96/"/>
-    <id>http://gaufoo.com/2017/10/29/转化/</id>
+    <link href="http://gaufoo.com/2017/10/29/REtoNFAtoDFA/"/>
+    <id>http://gaufoo.com/2017/10/29/REtoNFAtoDFA/</id>
     <published>2017-10-29T12:09:54.000Z</published>
-    <updated>2017-10-30T14:11:10.625Z</updated>
+    <updated>2017-10-31T16:06:34.022Z</updated>
     
     <content type="html"><![CDATA[<p>简单笔记</p>
 <a id="more"></a>
@@ -40,8 +40,11 @@
 </blockquote>
 <p><img src="/images/vrhr/20171029205037.png"></p>
 <hr>
-<h2 id="子集构造算法-——-NFA-gt-DFA"><a href="#子集构造算法-——-NFA-gt-DFA" class="headerlink" title="子集构造算法 —— NFA -&gt; DFA"></a>子集构造算法 —— NFA -&gt; DFA</h2><h3 id="基本思想-1"><a href="#基本思想-1" class="headerlink" title="基本思想"></a>基本思想</h3><p><img src="/images/vrhr/20171029205037.png"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">- 0 	  			 =&gt; 记为q0</div><div class="line"></div><div class="line">- q0	——a——&gt; 1</div><div class="line">	==a(eps)==&gt; 1 2 3 4 6 *9 =&gt; 记为q1</div><div class="line"></div><div class="line">- q1	——b——&gt; 5				// delta(q1)集合，对每个q1元素的b通路</div><div class="line">	==b(eps)==&gt; 5 8 *9 3 4 6 =&gt; 记为q2	// eps-闭包(eps-closure)</div><div class="line">	——c——&gt; 7</div><div class="line">	==c(eps)==&gt; 7 8 *9 3 4 6 =&gt; 记为q3</div><div class="line">	</div><div class="line">- q2	——c——&gt; 7</div><div class="line">	==c(eps)==&gt; 7 8 9 3 4 6 == q3</div><div class="line">	——b——&gt; 5</div><div class="line">	==b(eps)==&gt; 5 8 9 3 4 6 == q2</div><div class="line"></div><div class="line">- q3	——b——&gt; 5</div><div class="line">	==b(eps)==&gt; 5 8 9 3 4 6 == q2</div><div class="line">	——c——&gt; 7</div><div class="line">	==c(eps)==&gt; 7 8 9 3 4 6 == q3</div></pre></td></tr></table></figure></p>
+<h2 id="子集构造算法-——-NFA-gt-DFA"><a href="#子集构造算法-——-NFA-gt-DFA" class="headerlink" title="子集构造算法 —— NFA -&gt; DFA"></a>子集构造算法 —— NFA -&gt; DFA</h2><h3 id="基本思想-1"><a href="#基本思想-1" class="headerlink" title="基本思想"></a>基本思想</h3><p><img src="/images/vrhr/20171029205037.png"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">- 0 	  			 =&gt; 记为q0，添加进Q状态集中，下同</div><div class="line"></div><div class="line">- q0	——a——&gt; 1</div><div class="line">	==a(eps)==&gt; 1 2 3 4 6 *9 =&gt; 记为q1</div><div class="line"></div><div class="line">- q1	——b——&gt; 5				// delta(q1)集合，对每个q1元素的b通路</div><div class="line">	==b(eps)==&gt; 5 8 *9 3 4 6 =&gt; 记为q2	// eps-闭包(eps-closure)</div><div class="line">	——c——&gt; 7</div><div class="line">	==c(eps)==&gt; 7 8 *9 3 4 6 =&gt; 记为q3</div><div class="line">	</div><div class="line">- q2	——c——&gt; 7</div><div class="line">	==c(eps)==&gt; 7 8 9 3 4 6 == q3</div><div class="line">	——b——&gt; 5</div><div class="line">	==b(eps)==&gt; 5 8 9 3 4 6 == q2</div><div class="line"></div><div class="line">- q3	——b——&gt; 5</div><div class="line">	==b(eps)==&gt; 5 8 9 3 4 6 == q2</div><div class="line">	——c——&gt; 7</div><div class="line">	==c(eps)==&gt; 7 8 9 3 4 6 == q3</div></pre></td></tr></table></figure></p>
 <p><img src="/images/vrhr/20171029211417.png"></p>
+<h3 id="算法伪代码"><a href="#算法伪代码" class="headerlink" title="算法伪代码"></a>算法伪代码</h3><p>由上面的基本思想，容易得到以下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">q0 &lt;- eps_closure(n0)</div><div class="line">Q &lt;- &#123;q0&#125;</div><div class="line">workList &lt;- q0</div><div class="line">while (!workList.empty())</div><div class="line">	q &lt;- workList.pop()</div><div class="line">	for each character c	// 256个ASCII码</div><div class="line">		t &lt;- eps_closure(delta(q, c))</div><div class="line">		if (t not in Q)</div><div class="line">			add t to Q</div><div class="line">			add t to workList</div><div class="line">		D[q, c] &lt;- t	// DFA记录此状态转换</div></pre></td></tr></table></figure></p>
+<p>eps-闭包的计算：深度优先<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">set closure = &#123;&#125;</div><div class="line"></div><div class="line">void eps_closure(x)</div><div class="line">	closure += &#123;x&#125;</div><div class="line">	for each (y| x --eps--&gt; y)</div><div class="line">		if (!visited(y))</div><div class="line">			eps_closure(y)	// 递归</div></pre></td></tr></table></figure></p>
+<p>eps-闭包的计算：宽度优先<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">set closure = &#123;&#125;</div><div class="line">Q = []		// queue</div><div class="line"></div><div class="line">void eps_closure(x)</div><div class="line">	Q = [x]</div><div class="line">	while (!Q.empty())</div><div class="line">		q &lt;- Q.deQueue()</div><div class="line">		closure += q</div><div class="line">		for each (y| q --eps--&gt; y)</div><div class="line">			if (!visited(y))</div><div class="line">				Q.enQueue(y)</div></pre></td></tr></table></figure></p>
 <hr>
 ]]></content>
     
