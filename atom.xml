@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-10-31T16:06:34.022Z</updated>
+  <updated>2017-12-08T18:04:46.546Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -14,6 +14,108 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>AppInventor2复刻FlappyBird</title>
+    <link href="http://gaufoo.com/2017/12/08/appinventor/"/>
+    <id>http://gaufoo.com/2017/12/08/appinventor/</id>
+    <published>2017-12-08T08:13:19.000Z</published>
+    <updated>2017-12-08T18:04:46.546Z</updated>
+    
+    <content type="html"><![CDATA[<p>数字创意设计课程大作业。</p>
+<a id="more"></a>
+<hr>
+<h1 id="画布、图像精灵控件的优点与缺陷"><a href="#画布、图像精灵控件的优点与缺陷" class="headerlink" title="画布、图像精灵控件的优点与缺陷"></a>画布、图像精灵控件的优点与缺陷</h1><ul>
+<li>图像精灵只能放在画布内</li>
+</ul>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ul>
+<li>自带与其他图像精灵的碰撞检测</li>
+<li>具有自主行为：根据属性值进行移动、旋转</li>
+</ul>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ul>
+<li>精灵的X、Y坐标不能取负值，换句话说，不能从屏幕左端、上端移出屏幕。这给动画实现带来困难。</li>
+</ul>
+<hr>
+<h1 id="核心模块"><a href="#核心模块" class="headerlink" title="核心模块"></a>核心模块</h1><h2 id="小鸟飞行动画实现"><a href="#小鸟飞行动画实现" class="headerlink" title="小鸟飞行动画实现"></a>小鸟飞行动画实现</h2><p>将小鸟动作分解成一系列的图片，定时按序更换图片。<br><img src="/images/flappybird/bird.png"></p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><img src="/images/flappybird/bird1.png" width="500px"></p>
+<hr>
+<h2 id="地面移动动画模拟"><a href="#地面移动动画模拟" class="headerlink" title="地面移动动画模拟"></a>地面移动动画模拟</h2><p>地面图像的X坐标定时减少一小步，减少到特定值后跳回去一大步。换句话说，地面的移动轨迹会是 左左左右左左左右左左左右……<br>到这里，画布的缺陷导致需要有一块“幕布”来遮挡最左边的部分。<br>// 此处有一张示意图</p>
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><p><img src="/images/flappybird/wall.png" width="500px"></p>
+<hr>
+<h2 id="小鸟控制实现"><a href="#小鸟控制实现" class="headerlink" title="小鸟控制实现"></a>小鸟控制实现</h2><p>表现：</p>
+<ul>
+<li>游戏开始后，触碰屏幕时，小鸟跳起，头朝上抬起</li>
+<li>游戏开始后，不触碰屏幕时，小鸟受重力作用向下坠落，头往下垂</li>
+</ul>
+<p>实现：</p>
+<ul>
+<li>角度：点击屏幕，角度设为45度，再定时减少10度</li>
+<li>位置：点击屏幕，速度设为负数（如-20），再定时 速度&lt;-加速度+速度，Y坐标&lt;-速度+Y坐标</li>
+</ul>
+<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><p><img src="/images/flappybird/clickBird.png" width="500px"></p>
+<hr>
+<h2 id="柱子数据存储结构"><a href="#柱子数据存储结构" class="headerlink" title="柱子数据存储结构"></a>柱子数据存储结构</h2><p>一共有三组柱子，每组柱子里有上柱子、增分板（下文介绍它的作用）、下柱子。容易想到用二维数组来存储。<br>// 此处有一张示意图</p>
+<p><img src="/images/flappybird/pipeStruct.png" width="500px"></p>
+<hr>
+<h2 id="无限柱子随机高度生成与移动"><a href="#无限柱子随机高度生成与移动" class="headerlink" title="无限柱子随机高度生成与移动"></a>无限柱子随机高度生成与移动</h2><h3 id="移动"><a href="#移动" class="headerlink" title="移动"></a>移动</h3><p>这里利用图像精灵自带的方向、速度、时间间隔属性，让柱子自己移动。<br><img src="/images/flappybird/pipeproperty.png" width="500px"></p>
+<h3 id="随机高度"><a href="#随机高度" class="headerlink" title="随机高度"></a>随机高度</h3><p>屏幕上方放有幕布。生成柱子时，上柱子的Y坐标在幕布高度范围内随机生成，增分板和下柱子依据上柱子的Y坐标计算而得。</p>
+<h3 id="无限柱子"><a href="#无限柱子" class="headerlink" title="无限柱子"></a>无限柱子</h3><p>游戏初始化时，每组柱子在屏幕外排好。<br>// 此处有一张示意图<br>当每组柱子到达屏幕最左边，让其直接跳到最右边柱子的右边（在屏幕外），用三组柱子模拟无限组柱子。<br>// 此处有一张示意图</p>
+<h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><p>柱子初始化<br><img src="/images/flappybird/initpipe.png" width="500px"><br>柱子到达最左边后更新<br><img src="/images/flappybird/p1.png" width="500px"><br><img src="/images/flappybird/p2.png" width="500px"><br><img src="/images/flappybird/p3.png" width="500px"></p>
+<hr>
+<h2 id="柱子与鸟碰撞检测"><a href="#柱子与鸟碰撞检测" class="headerlink" title="柱子与鸟碰撞检测"></a>柱子与鸟碰撞检测</h2><p>这里可以利用图像精灵自带的碰撞检测。另，控件自带碰撞检测是支撑我做这个项目的所有理由。</p>
+<h3 id="代码-4"><a href="#代码-4" class="headerlink" title="代码"></a>代码</h3><p>鸟碰到任何一根柱子就GameOver<br><img src="/images/flappybird/birdcopipe.png" width="500px"></p>
+<hr>
+<h2 id="得分实现策略"><a href="#得分实现策略" class="headerlink" title="得分实现策略"></a>得分实现策略</h2><p>总算要提及奇怪的增分板的作用，其实是供小鸟碰撞，撞到后分数+1</p>
+<h3 id="代码-5"><a href="#代码-5" class="headerlink" title="代码"></a>代码</h3><p><img src="/images/flappybird/getscore.png" width="500px"></p>
+<hr>
+<h2 id="标题显示模块"><a href="#标题显示模块" class="headerlink" title="标题显示模块"></a>标题显示模块</h2><p>选择时机更换标题图片并显示标题<br><img src="/images/flappybird/text_ready.png"><br><img src="/images/flappybird/text_game_over.png"><br><img src="/images/flappybird/title.png" width="500px"></p>
+<hr>
+<h2 id="分数显示模块"><a href="#分数显示模块" class="headerlink" title="分数显示模块"></a>分数显示模块</h2><p>分数包含10个十进制基数，所以要准备十张图片，分数更新时更新图片。</p>
+<h3 id="代码-6"><a href="#代码-6" class="headerlink" title="代码"></a>代码</h3><p><img src="/images/flappybird/score.png" width="500px"></p>
+<hr>
+<h2 id="分数结算板显示模块"><a href="#分数结算板显示模块" class="headerlink" title="分数结算板显示模块"></a>分数结算板显示模块</h2><p>显示所得分与最高分，最高分显然要用到微数据库，分数显示方法同上</p>
+<h3 id="代码-7"><a href="#代码-7" class="headerlink" title="代码"></a>代码</h3><p><img src="/images/flappybird/panel.png" width="500px"></p>
+<hr>
+<h1 id="驱动模块"><a href="#驱动模块" class="headerlink" title="驱动模块"></a>驱动模块</h1><h2 id="程序入口"><a href="#程序入口" class="headerlink" title="程序入口"></a>程序入口</h2><ul>
+<li>设置参数</li>
+<li>初始化所有图片尺寸</li>
+<li>初始化游戏</li>
+</ul>
+<p><img src="/images/flappybird/main.png" width="500px"></p>
+<hr>
+<h3 id="初始化所有图片尺寸"><a href="#初始化所有图片尺寸" class="headerlink" title="初始化所有图片尺寸"></a>初始化所有图片尺寸</h3><p><img src="/images/flappybird/initsize.png"></p>
+<h4 id="初始化图片尺寸举例"><a href="#初始化图片尺寸举例" class="headerlink" title="初始化图片尺寸举例"></a>初始化图片尺寸举例</h4><p>地面<br><img src="/images/flappybird/initwallsize.png" width="500px"><br>柱子<br><img src="/images/flappybird/initpipesize.png" width="500px"></p>
+<hr>
+<h3 id="初始化游戏"><a href="#初始化游戏" class="headerlink" title="初始化游戏"></a>初始化游戏</h3><p>未开始游戏时的界面，有“Get Ready”标题。<br><img src="/images/flappybird/initgame.png"></p>
+<hr>
+<h4 id="初始化所有物件位置"><a href="#初始化所有物件位置" class="headerlink" title="初始化所有物件位置"></a>初始化所有物件位置</h4><p><img src="/images/flappybird/initloc1.png"><br><strong>举例</strong><br>标题<br><img src="/images/flappybird/inittitleloc.png" width="500px"><br>柱子<br><img src="/images/flappybird/initpipeloc.png" width="500px"></p>
+<hr>
+<h2 id="开始游戏"><a href="#开始游戏" class="headerlink" title="开始游戏"></a>开始游戏</h2><p>当游戏未开始时，触摸屏幕开始游戏。<br><img src="/images/flappybird/startgame.png" width="500px"></p>
+<p>开始游戏，标题消失，分数显示，游戏元素启动。<br><img src="/images/flappybird/startgame1.png" width="500px"></p>
+<hr>
+<h2 id="游戏结束"><a href="#游戏结束" class="headerlink" title="游戏结束"></a>游戏结束</h2><p>当鸟碰到柱子时游戏结束。</p>
+<p>定格画面，显示“Game Over”标题，更新最高分，显示分数结算板。<br><img src="/images/flappybird/gameover.png" width="500px"></p>
+<hr>
+<h1 id="辅助模块"><a href="#辅助模块" class="headerlink" title="辅助模块"></a>辅助模块</h1><p>主要是关于各物件的静止、启动、显示、隐藏。<br><img src="/images/flappybird/thingaux.png" width="500px"></p>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;数字创意设计课程大作业。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Android" scheme="http://gaufoo.com/categories/Android/"/>
+    
+      <category term="AppInventor2" scheme="http://gaufoo.com/categories/Android/AppInventor2/"/>
+    
+    
+      <category term="Android" scheme="http://gaufoo.com/tags/Android/"/>
+    
+      <category term="AppInventor2" scheme="http://gaufoo.com/tags/AppInventor2/"/>
+    
+  </entry>
   
   <entry>
     <title>RE转NFA，NFA转DFA</title>
@@ -1997,87 +2099,6 @@
       <category term="Python" scheme="http://gaufoo.com/tags/Python/"/>
     
       <category term="web" scheme="http://gaufoo.com/tags/web/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>test指令用于比较数值大小的可能性及推导</title>
-    <link href="http://gaufoo.com/2017/08/25/test%E6%8C%87%E4%BB%A4%E7%94%A8%E4%BA%8E%E6%AF%94%E8%BE%83%E6%95%B0%E5%80%BC%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%8F%AF%E8%83%BD%E6%80%A7%E5%8F%8A%E6%8E%A8%E5%AF%BC/"/>
-    <id>http://gaufoo.com/2017/08/25/test指令用于比较数值大小的可能性及推导/</id>
-    <published>2017-08-24T16:50:36.000Z</published>
-    <updated>2017-09-06T09:17:58.902Z</updated>
-    
-    <content type="html"><![CDATA[<p>x86汇编语言中，cmp指令常用于两数值之间比较大小，test指令常用于位级判断。那么，test可不可以也用于比较数值大小呢？</p>
-<a id="more"></a>
-<hr>
-<h2 id="提出问题"><a href="#提出问题" class="headerlink" title="提出问题"></a>提出问题</h2><p>今天有朋友向我提出了这样的问题，<img src="/images/17-08-25-0.jpg" alt="p1"><br>为什么<code>test</code>还有这种操作，<code>set</code>指令和<code>test</code>究竟是怎么凑到一起的。</p>
-<h2 id="查找信息"><a href="#查找信息" class="headerlink" title="查找信息"></a>查找信息</h2><blockquote>
-<p>CMP指令与SUB指令的行为是一样的。在ATT格式中，列出操作数的顺序是相反的，这使代码有点难读。如果两个操作数相等，这些指令会将零标志位设置为1，而其他的标志可以用来确定两个操作数之间的大小关系。</p>
-<p>TEST指令的行为和AND指令一样，除了它们只设置条件码而不改变目的寄存器的值。典型的用法是，两个操作数是一样的（例如，testq %rax, %rax用来检查%rax是负数，零，还是正数），或其中的一个操作数是一个掩码，用来指示哪些位应该被测试。</p>
-</blockquote>
-<p>唔，看来课本只是重复了我们的问题，并没有给出解答。<br><br></p>
-<blockquote>
-<p>典型的用法是，两个操作数是一样的（例如，testq %rax, %rax用来检查%rax是负数，零，还是正数）</p>
-</blockquote>
-<p>但从这可以看出，<code>test</code>确实有这个用法。<br><br></p>
-<p><img src="/images/17-08-25-1.png" alt="p2"><br>这里找到线索，<code>set</code>指令是和条件码直接关联的。那么就从<code>test</code>如何影响和改变条件码入手吧。</p>
-<h2 id="推导"><a href="#推导" class="headerlink" title="推导"></a>推导</h2><blockquote>
-<p>机器是通过某些指令来改变条件码，然后通过判断条件码的组合来完成控制操作。个人理解是，这些控制指令是对条件码判断的一种封装。</p>
-</blockquote>
-<p>回到我们纠结的这个问题上面：为什么<code>test</code>可以用于判断大小，以及 如何形成判断。</p>
-<p><code>cmp</code>的行为相对容易理解，右操作数减去左操作数，然后修改<code>CF</code> <code>ZF</code> <code>SF</code> <code>OF</code>的值。<br>而<code>test</code>则是两个操作数进行<code>与</code>，不会影响到<code>OF</code> <code>CF</code>，仅能改变<code>SF</code> <code>ZF</code>，确定真的可以用来比较大小吗？</p>
-<p>不过，<code>test</code>用于比较大小的范围极窄，仅仅是用于判断符号，也就是和数值<code>0</code>作比较。只有这种特殊情况的话，进行推理则方便多了，大不了穷举嘛。</p>
-<p>下面就来对比<code>test S, S</code>和<code>cmp $0，S</code>。</p>
-<p>当<code>S</code>看作有符号数，且大于<code>0</code>时：</p>
-<ul>
-<li><code>test S, S</code>，<code>SF</code>置0，<code>ZF</code>置0，<code>OF</code>置0</li>
-<li><code>cmp $0，S</code>，<code>SF</code>置0，<code>ZF</code>置0，<code>OF</code>置0</li>
-</ul>
-<p>当<code>S</code>看作有符号数，且等于<code>0</code>时：</p>
-<ul>
-<li><code>test S, S</code>，<code>SF</code>置0，<code>ZF</code>置1，<code>OF</code>置0</li>
-<li><code>cmp $0，S</code>，<code>SF</code>置0，<code>ZF</code>置1，<code>OF</code>置0</li>
-</ul>
-<p>当<code>S</code>看作有符号数，且小于<code>0</code>时：</p>
-<ul>
-<li><code>test S, S</code>，<code>SF</code>置1，<code>ZF</code>置0，<code>OF</code>置0</li>
-<li><code>cmp $0，S</code>，<code>SF</code>置1，<code>ZF</code>置0，<code>OF</code>置0</li>
-</ul>
-<p>当<code>S</code>看作无符号数，且等于<code>0</code>时：</p>
-<ul>
-<li><code>test S, S</code>，<code>ZF</code>置1，<code>CF</code>置0</li>
-<li><code>cmp $0，S</code>，<code>ZF</code>置1，<code>CF</code>置0</li>
-</ul>
-<p>当<code>S</code>看作无符号数，且不等于<code>0</code>时：</p>
-<ul>
-<li><code>test S, S</code>，<code>ZF</code>置0，<code>CF</code>置0</li>
-<li><code>cmp $0，S</code>，<code>ZF</code>置0，<code>CF</code>置0</li>
-</ul>
-<p>惊奇地发现这两句指令的行为是<strong>一模一样</strong>的。原因在于<code>cmp</code>在与<code>0</code>作比较时，是不可能发生<strong>溢出</strong>和<strong>进（借）位</strong>的，因而不可能影响<code>OF</code> <code>CF</code>位，这和<code>test</code>指令是一样的。剩下的<code>SF</code>和<code>ZF</code>很容易推理，这里不赘述。</p>
-<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>对这样一段C代码进行汇编处理。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">test</span><span class="params">(<span class="keyword">int</span> a)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="keyword">return</span> a &gt; <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="不进行优化"><a href="#不进行优化" class="headerlink" title="不进行优化"></a>不进行优化</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -S test.c</div></pre></td></tr></table></figure>
-<p>得到汇编代码（节选）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">movl	%edi, -4(%rbp)</div><div class="line">cmpl	$0, -4(%rbp)</div><div class="line">setg	%al</div></pre></td></tr></table></figure></p>
-<h3 id="进行-O1-优化"><a href="#进行-O1-优化" class="headerlink" title="进行 O1 优化"></a>进行 O1 优化</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -S -O1 test.c</div></pre></td></tr></table></figure>
-<p>得到汇编代码（节选）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">testl	%edi, %edi</div><div class="line">setg	%al</div></pre></td></tr></table></figure></p>
-<p>事实证明，<code>test</code>确实可以用于与<code>0</code>进行大小比较，且编译器更愿意优化成这种形式。</p>
-<h2 id="结论与反思"><a href="#结论与反思" class="headerlink" title="结论与反思"></a>结论与反思</h2><p>当我们难以理解指令的逻辑时，则需要去探究它背后具体的操作过程，才能真正地理解操作的实际效果。</p>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;x86汇编语言中，cmp指令常用于两数值之间比较大小，test指令常用于位级判断。那么，test可不可以也用于比较数值大小呢？&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
-    
-      <category term="汇编" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/%E6%B1%87%E7%BC%96/"/>
-    
-    
-      <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
-    
-      <category term="汇编" scheme="http://gaufoo.com/tags/%E6%B1%87%E7%BC%96/"/>
     
   </entry>
   
