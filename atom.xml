@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-12-08T18:04:46.546Z</updated>
+  <updated>2017-12-09T06:42:24.488Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://gaufoo.com/2017/12/08/appinventor/"/>
     <id>http://gaufoo.com/2017/12/08/appinventor/</id>
     <published>2017-12-08T08:13:19.000Z</published>
-    <updated>2017-12-08T18:04:46.546Z</updated>
+    <updated>2017-12-09T06:42:24.488Z</updated>
     
     <content type="html"><![CDATA[<p>数字创意设计课程大作业。</p>
 <a id="more"></a>
@@ -39,7 +39,7 @@
 <h1 id="核心模块"><a href="#核心模块" class="headerlink" title="核心模块"></a>核心模块</h1><h2 id="小鸟飞行动画实现"><a href="#小鸟飞行动画实现" class="headerlink" title="小鸟飞行动画实现"></a>小鸟飞行动画实现</h2><p>将小鸟动作分解成一系列的图片，定时按序更换图片。<br><img src="/images/flappybird/bird.png"></p>
 <h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><img src="/images/flappybird/bird1.png" width="500px"></p>
 <hr>
-<h2 id="地面移动动画模拟"><a href="#地面移动动画模拟" class="headerlink" title="地面移动动画模拟"></a>地面移动动画模拟</h2><p>地面图像的X坐标定时减少一小步，减少到特定值后跳回去一大步。换句话说，地面的移动轨迹会是 左左左右左左左右左左左右……<br>到这里，画布的缺陷导致需要有一块“幕布”来遮挡最左边的部分。<br>// 此处有一张示意图</p>
+<h2 id="地面移动动画模拟"><a href="#地面移动动画模拟" class="headerlink" title="地面移动动画模拟"></a>地面移动动画模拟</h2><p>地面图像的X坐标定时减少一小步，减少到特定值后跳回去一大步。换句话说，地面的移动轨迹会是 左左左右左左左右左左左右……<br>到这里，画布的缺陷导致需要有一块“幕布”来遮挡最左边的部分。<br><img src="/images/flappybird/moveground.jpg"></p>
 <h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><p><img src="/images/flappybird/wall.png" width="500px"></p>
 <hr>
 <h2 id="小鸟控制实现"><a href="#小鸟控制实现" class="headerlink" title="小鸟控制实现"></a>小鸟控制实现</h2><p>表现：</p>
@@ -54,12 +54,12 @@
 </ul>
 <h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><p><img src="/images/flappybird/clickBird.png" width="500px"></p>
 <hr>
-<h2 id="柱子数据存储结构"><a href="#柱子数据存储结构" class="headerlink" title="柱子数据存储结构"></a>柱子数据存储结构</h2><p>一共有三组柱子，每组柱子里有上柱子、增分板（下文介绍它的作用）、下柱子。容易想到用二维数组来存储。<br>// 此处有一张示意图</p>
+<h2 id="柱子数据存储结构"><a href="#柱子数据存储结构" class="headerlink" title="柱子数据存储结构"></a>柱子数据存储结构</h2><p>一共有三组柱子，每组柱子里有上柱子、增分板（下文介绍它的作用）、下柱子。容易想到用二维数组来存储。<br><img src="/images/flappybird/pipes.jpg"></p>
 <p><img src="/images/flappybird/pipeStruct.png" width="500px"></p>
 <hr>
 <h2 id="无限柱子随机高度生成与移动"><a href="#无限柱子随机高度生成与移动" class="headerlink" title="无限柱子随机高度生成与移动"></a>无限柱子随机高度生成与移动</h2><h3 id="移动"><a href="#移动" class="headerlink" title="移动"></a>移动</h3><p>这里利用图像精灵自带的方向、速度、时间间隔属性，让柱子自己移动。<br><img src="/images/flappybird/pipeproperty.png" width="500px"></p>
 <h3 id="随机高度"><a href="#随机高度" class="headerlink" title="随机高度"></a>随机高度</h3><p>屏幕上方放有幕布。生成柱子时，上柱子的Y坐标在幕布高度范围内随机生成，增分板和下柱子依据上柱子的Y坐标计算而得。</p>
-<h3 id="无限柱子"><a href="#无限柱子" class="headerlink" title="无限柱子"></a>无限柱子</h3><p>游戏初始化时，每组柱子在屏幕外排好。<br>// 此处有一张示意图<br>当每组柱子到达屏幕最左边，让其直接跳到最右边柱子的右边（在屏幕外），用三组柱子模拟无限组柱子。<br>// 此处有一张示意图</p>
+<h3 id="无限柱子"><a href="#无限柱子" class="headerlink" title="无限柱子"></a>无限柱子</h3><p>游戏初始化时，每组柱子在屏幕外排好。<br><img src="/images/flappybird/initpipes.jpg"><br>当每组柱子到达屏幕最左边，让其直接跳到最右边柱子的右边（在屏幕外），用三组柱子模拟无限组柱子。<br><img src="/images/flappybird/movepipes.jpg"></p>
 <h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><p>柱子初始化<br><img src="/images/flappybird/initpipe.png" width="500px"><br>柱子到达最左边后更新<br><img src="/images/flappybird/p1.png" width="500px"><br><img src="/images/flappybird/p2.png" width="500px"><br><img src="/images/flappybird/p3.png" width="500px"></p>
 <hr>
 <h2 id="柱子与鸟碰撞检测"><a href="#柱子与鸟碰撞检测" class="headerlink" title="柱子与鸟碰撞检测"></a>柱子与鸟碰撞检测</h2><p>这里可以利用图像精灵自带的碰撞检测。另，控件自带碰撞检测是支撑我做这个项目的所有理由。</p>
