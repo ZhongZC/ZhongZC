@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-12-09T06:42:24.488Z</updated>
+  <updated>2017-12-09T07:21:36.400Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -16,11 +16,46 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>听说C语言也可以“泛型”</title>
+    <link href="http://gaufoo.com/2017/12/09/genericC/"/>
+    <id>http://gaufoo.com/2017/12/09/genericC/</id>
+    <published>2017-12-09T07:02:51.000Z</published>
+    <updated>2017-12-09T07:21:36.400Z</updated>
+    
+    <content type="html"><![CDATA[<p>都说泛型是C++的一大特性，我大C语言表示不服</p>
+<a id="more"></a>
+<hr>
+<h1 id="再探类型"><a href="#再探类型" class="headerlink" title="再探类型"></a>再探类型</h1><p>C/C++类型由以下各项组成：</p>
+<ul>
+<li>内存里的’0’、’1’序列</li>
+<li>‘0’、’1’串占用的内存大小</li>
+<li>作为操作数时如何解释与输出位模式（如cout、printf、强制类型转换）</li>
+<li>作为操作数时如何修改位模式（如+、-、*、/）</li>
+</ul>
+<h1 id="“泛型”原理"><a href="#“泛型”原理" class="headerlink" title="“泛型”原理"></a>“泛型”原理</h1><hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;都说泛型是C++的一大特性，我大C语言表示不服&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="C" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
+    
+    
+      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
+    
+  </entry>
+  
+  <entry>
     <title>AppInventor2复刻FlappyBird</title>
     <link href="http://gaufoo.com/2017/12/08/appinventor/"/>
     <id>http://gaufoo.com/2017/12/08/appinventor/</id>
     <published>2017-12-08T08:13:19.000Z</published>
-    <updated>2017-12-09T06:42:24.488Z</updated>
+    <updated>2017-12-09T07:27:57.570Z</updated>
     
     <content type="html"><![CDATA[<p>数字创意设计课程大作业。</p>
 <a id="more"></a>
@@ -39,7 +74,7 @@
 <h1 id="核心模块"><a href="#核心模块" class="headerlink" title="核心模块"></a>核心模块</h1><h2 id="小鸟飞行动画实现"><a href="#小鸟飞行动画实现" class="headerlink" title="小鸟飞行动画实现"></a>小鸟飞行动画实现</h2><p>将小鸟动作分解成一系列的图片，定时按序更换图片。<br><img src="/images/flappybird/bird.png"></p>
 <h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><img src="/images/flappybird/bird1.png" width="500px"></p>
 <hr>
-<h2 id="地面移动动画模拟"><a href="#地面移动动画模拟" class="headerlink" title="地面移动动画模拟"></a>地面移动动画模拟</h2><p>地面图像的X坐标定时减少一小步，减少到特定值后跳回去一大步。换句话说，地面的移动轨迹会是 左左左右左左左右左左左右……<br>到这里，画布的缺陷导致需要有一块“幕布”来遮挡最左边的部分。<br><img src="/images/flappybird/moveground.jpg"></p>
+<h2 id="地面移动动画模拟"><a href="#地面移动动画模拟" class="headerlink" title="地面移动动画模拟"></a>地面移动动画模拟</h2><p>地面图像的X坐标定时减少一小步，减少到特定值后跳回去一大步。换句话说，地面的移动轨迹会是 左左左右左左左右左左左右……<br>到这里，画布的缺陷导致需要有一块“幕布”来遮挡最左边的部分。<br><img src="/images/flappybird/moveground1.jpg"></p>
 <h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><p><img src="/images/flappybird/wall.png" width="500px"></p>
 <hr>
 <h2 id="小鸟控制实现"><a href="#小鸟控制实现" class="headerlink" title="小鸟控制实现"></a>小鸟控制实现</h2><p>表现：</p>
@@ -54,12 +89,12 @@
 </ul>
 <h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><p><img src="/images/flappybird/clickBird.png" width="500px"></p>
 <hr>
-<h2 id="柱子数据存储结构"><a href="#柱子数据存储结构" class="headerlink" title="柱子数据存储结构"></a>柱子数据存储结构</h2><p>一共有三组柱子，每组柱子里有上柱子、增分板（下文介绍它的作用）、下柱子。容易想到用二维数组来存储。<br><img src="/images/flappybird/pipes.jpg"></p>
+<h2 id="柱子数据存储结构"><a href="#柱子数据存储结构" class="headerlink" title="柱子数据存储结构"></a>柱子数据存储结构</h2><p>一共有三组柱子，每组柱子里有上柱子、增分板（下文介绍它的作用）、下柱子。容易想到用二维数组来存储。<br><img src="/images/flappybird/pipes1.jpg"></p>
 <p><img src="/images/flappybird/pipeStruct.png" width="500px"></p>
 <hr>
 <h2 id="无限柱子随机高度生成与移动"><a href="#无限柱子随机高度生成与移动" class="headerlink" title="无限柱子随机高度生成与移动"></a>无限柱子随机高度生成与移动</h2><h3 id="移动"><a href="#移动" class="headerlink" title="移动"></a>移动</h3><p>这里利用图像精灵自带的方向、速度、时间间隔属性，让柱子自己移动。<br><img src="/images/flappybird/pipeproperty.png" width="500px"></p>
 <h3 id="随机高度"><a href="#随机高度" class="headerlink" title="随机高度"></a>随机高度</h3><p>屏幕上方放有幕布。生成柱子时，上柱子的Y坐标在幕布高度范围内随机生成，增分板和下柱子依据上柱子的Y坐标计算而得。</p>
-<h3 id="无限柱子"><a href="#无限柱子" class="headerlink" title="无限柱子"></a>无限柱子</h3><p>游戏初始化时，每组柱子在屏幕外排好。<br><img src="/images/flappybird/initpipes.jpg"><br>当每组柱子到达屏幕最左边，让其直接跳到最右边柱子的右边（在屏幕外），用三组柱子模拟无限组柱子。<br><img src="/images/flappybird/movepipes.jpg"></p>
+<h3 id="无限柱子"><a href="#无限柱子" class="headerlink" title="无限柱子"></a>无限柱子</h3><p>游戏初始化时，每组柱子在屏幕外排好。<br><img src="/images/flappybird/initpipes1.jpg"><br>当每组柱子到达屏幕最左边，让其直接跳到最右边柱子的右边（在屏幕外），用三组柱子模拟无限组柱子。<br><img src="/images/flappybird/movepipes1.jpg"></p>
 <h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><p>柱子初始化<br><img src="/images/flappybird/initpipe.png" width="500px"><br>柱子到达最左边后更新<br><img src="/images/flappybird/p1.png" width="500px"><br><img src="/images/flappybird/p2.png" width="500px"><br><img src="/images/flappybird/p3.png" width="500px"></p>
 <hr>
 <h2 id="柱子与鸟碰撞检测"><a href="#柱子与鸟碰撞检测" class="headerlink" title="柱子与鸟碰撞检测"></a>柱子与鸟碰撞检测</h2><p>这里可以利用图像精灵自带的碰撞检测。另，控件自带碰撞检测是支撑我做这个项目的所有理由。</p>
@@ -2041,64 +2076,6 @@
     
     
       <category term="C" scheme="http://gaufoo.com/tags/C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python之获取豆瓣电影Top250</title>
-    <link href="http://gaufoo.com/2017/08/29/Python%E4%B9%8B%E8%8E%B7%E5%8F%96%E8%B1%86%E7%93%A3%E7%94%B5%E5%BD%B1Top250/"/>
-    <id>http://gaufoo.com/2017/08/29/Python之获取豆瓣电影Top250/</id>
-    <published>2017-08-29T09:57:35.000Z</published>
-    <updated>2017-09-07T09:12:44.650Z</updated>
-    
-    <content type="html"><![CDATA[<p>  练习html各元素的获取，熟悉BeautifulSoup的使用。<br>  实例：豆瓣top250电影名单获取。</p>
-<a id="more"></a>
-<hr>
-<h2 id="获取html页面"><a href="#获取html页面" class="headerlink" title="获取html页面"></a>获取html页面</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">download_page</span><span class="params">(url)</span>:</span></div><div class="line">    data = requests.get(url).text</div><div class="line">    <span class="string">'''</span></div><div class="line"><span class="string">    这里有效,但据说有时要伪装成浏览器,代码修改如下:</span></div><div class="line"><span class="string">    data = requests.get(url, headers=&#123;</span></div><div class="line"><span class="string">        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'</span></div><div class="line"><span class="string">    &#125;).content</span></div><div class="line"><span class="string">    '''</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> data</div></pre></td></tr></table></figure>
-<p><code>User-Agent</code>的获取方法：console敲入命令：<code>navigator.userAgent</code></p>
-<h2 id="解析页面"><a href="#解析页面" class="headerlink" title="解析页面"></a>解析页面</h2><ul>
-<li><p><strong>将html交给BeautifulSoup解析一下</strong></p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line">soup = BeautifulSoup(html, <span class="string">"html.parser"</span>)</div></pre></td></tr></table></figure>
-</li>
-<li><p><strong>找到数据element</strong></p>
-</li>
-</ul>
-<ol>
-<li>ol.grid_view<br><img src="/images/17-08-29-0.jpg" alt="t0"></li>
-<li>div.hd<br><img src="/images/17-08-29-1.jpg" alt="t1"></li>
-<li>span.title<br><img src="/images/17-08-29-2.jpg" alt="t2"></li>
-</ol>
-<ul>
-<li><p><strong>出动选择器</strong></p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">movie_list_soup = soup.find(<span class="string">'ol'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'grid_view'</span>&#125;)</div><div class="line">detail = movie_li.find(<span class="string">'div'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'hd'</span>&#125;)</div><div class="line">movie_name = detail.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'title'</span>&#125;).getText()</div></pre></td></tr></table></figure>
-</li>
-<li><p><strong>循环把一页结果存下来</strong></p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">movie_name_list = []</div><div class="line"></div><div class="line"><span class="keyword">for</span> movie_li <span class="keyword">in</span> movie_list_soup.find_all(<span class="string">'li'</span>):</div><div class="line">    detail = movie_li.find(<span class="string">'div'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'hd'</span>&#125;)</div><div class="line">    movie_name = detail.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'title'</span>&#125;).getText()</div><div class="line">    movie_name_list.append(movie_name)</div></pre></td></tr></table></figure>
-</li>
-<li><p><strong>拿到下一页的element</strong><br><img src="/images/17-08-29-3.jpg" alt="t3"></p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">next_page = soup.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'next'</span>&#125;).find(<span class="string">'a'</span>)</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h2 id="写入文件"><a href="#写入文件" class="headerlink" title="写入文件"></a>写入文件</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> open(<span class="string">'movies.txt'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> fp:</div><div class="line">    <span class="keyword">while</span> url:</div><div class="line">        html = download_page(url)</div><div class="line">        movies, url = parse_html(html)</div><div class="line">        fp.write(<span class="string">u'&#123;movies&#125;\n'</span>.format(movies=<span class="string">'\n'</span>.join(movies)))</div></pre></td></tr></table></figure>
-<hr>
-<h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line"></div><div class="line">DOWNLOAD_URL = <span class="string">"https://movie.douban.com/top250"</span></div><div class="line"></div><div class="line"><span class="comment"># 获取html页面</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">download_page</span><span class="params">(url)</span>:</span></div><div class="line"></div><div class="line">    data = requests.get(url).content</div><div class="line">    <span class="string">'''</span></div><div class="line"><span class="string">    这里有效,但据说有时要伪装成浏览器,代码修改如下:</span></div><div class="line"><span class="string">    data = requests.get(url, headers=&#123;</span></div><div class="line"><span class="string">        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'</span></div><div class="line"><span class="string">    &#125;).content</span></div><div class="line"><span class="string">    '''</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> data</div><div class="line"></div><div class="line"><span class="comment"># 解析页面并返回 list_movie 与 下一页的url</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_html</span><span class="params">(html)</span>:</span></div><div class="line"></div><div class="line">    soup = BeautifulSoup(html, <span class="string">"html.parser"</span>)</div><div class="line">    movie_list_soup = soup.find(<span class="string">'ol'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'grid_view'</span>&#125;)</div><div class="line"></div><div class="line">    movie_name_list = []</div><div class="line"></div><div class="line">    <span class="keyword">for</span> movie_li <span class="keyword">in</span> movie_list_soup.find_all(<span class="string">'li'</span>):</div><div class="line">        detail = movie_li.find(<span class="string">'div'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'hd'</span>&#125;)</div><div class="line">        movie_name = detail.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'title'</span>&#125;).getText()</div><div class="line">        movie_name_list.append(movie_name)</div><div class="line"></div><div class="line">    next_page = soup.find(<span class="string">'span'</span>, attrs=&#123;<span class="string">'class'</span>: <span class="string">'next'</span>&#125;).find(<span class="string">'a'</span>)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> next_page:</div><div class="line">        <span class="keyword">return</span> movie_name_list, DOWNLOAD_URL + next_page[<span class="string">'href'</span>]</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> movie_name_list, <span class="keyword">None</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    url = DOWNLOAD_URL</div><div class="line"></div><div class="line">    <span class="keyword">with</span> open(<span class="string">'movies.txt'</span>, <span class="string">'w'</span>) <span class="keyword">as</span> fp:</div><div class="line">        <span class="keyword">while</span> url:</div><div class="line">            html = download_page(url)</div><div class="line">            movies, url = parse_html(html)</div><div class="line">            fp.write(<span class="string">u'&#123;movies&#125;\n'</span>.format(movies=<span class="string">'\n'</span>.join(movies)))    </div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    main()</div></pre></td></tr></table></figure>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;  练习html各元素的获取，熟悉BeautifulSoup的使用。&lt;br&gt;  实例：豆瓣top250电影名单获取。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
-    
-      <category term="Python" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/Python/"/>
-    
-    
-      <category term="Python" scheme="http://gaufoo.com/tags/Python/"/>
-    
-      <category term="web" scheme="http://gaufoo.com/tags/web/"/>
     
   </entry>
   
