@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2017-12-30T06:46:34.499Z</updated>
+  <updated>2017-12-30T06:54:04.833Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -20,26 +20,26 @@
     <link href="http://gaufoo.com/2017/12/30/overflow/"/>
     <id>http://gaufoo.com/2017/12/30/overflow/</id>
     <published>2017-12-30T06:22:22.000Z</published>
-    <updated>2017-12-30T06:46:34.499Z</updated>
+    <updated>2017-12-30T06:54:04.833Z</updated>
     
     <content type="html"><![CDATA[<p>黑客初体验。</p>
 <a id="more"></a>
 <hr>
-<h1 id="栈帧结构"><a href="#栈帧结构" class="headerlink" title="栈帧结构"></a>栈帧结构</h1><h2 id="简单栈帧结构"><a href="#简单栈帧结构" class="headerlink" title="简单栈帧结构"></a>简单栈帧结构</h2><p>对栈帧结构最简单的解释就是，用<strong>栈指针(sp, stack pointer)</strong> 和<strong>帧指针(bp, base pointer)</strong> 标识内存头尾，中间部分的内存供函数的代码进行操作。<br><img src="/images/overflow/mmexport1514564834036.jpg" width="30%"></p>
+<h1 id="栈帧结构"><a href="#栈帧结构" class="headerlink" title="栈帧结构"></a>栈帧结构</h1><h2 id="简单栈帧结构"><a href="#简单栈帧结构" class="headerlink" title="简单栈帧结构"></a>简单栈帧结构</h2><p>对栈帧结构最简单的解释就是，用<strong>栈指针(sp, stack pointer)</strong> 和<strong>帧指针(bp, base pointer)</strong> 标识内存头尾，中间部分的内存供函数的代码进行操作。<br><img src="/images/overflow/mmexport1514564834036.jpg" width="400px"></p>
 <h2 id="函数执行"><a href="#函数执行" class="headerlink" title="函数执行"></a>函数执行</h2><p>包括代码域和数据域：</p>
 <ul>
 <li>代码域存放代码，但是是固定的，运行之前就已经确定。</li>
 <li>数据域存放临时变量，运行时才开辟出来，采用的是<strong>栈帧结构</strong>。</li>
 </ul>
-<p>当代码段执行<code>call &lt;func&gt;</code>，程序将跳转到<code>func</code>函数的代码头，执行<code>func</code>函数的代码，并让它自行开辟栈帧。<br><img src="/images/overflow/mmexport1514564847370.jpg" width="30%"></p>
+<p>当代码段执行<code>call &lt;func&gt;</code>，程序将跳转到<code>func</code>函数的代码头，执行<code>func</code>函数的代码，并让它自行开辟栈帧。<br><img src="/images/overflow/mmexport1514564847370.jpg" width="400px"></p>
 <h2 id="假想栈帧结构"><a href="#假想栈帧结构" class="headerlink" title="假想栈帧结构"></a>假想栈帧结构</h2><p>当<code>func</code>函数执行完，应该回到调用它的原来的函数代码，以及回到原来函数的栈帧。那么该如何实现呢？</p>
 <ul>
-<li><p>回到原来的栈帧：其中一种假想的思路是，栈指针和帧指针指向的内存分别存放原来的栈指针和帧指针，返回的时候直接替换就行了。<br><img src="/images/overflow/mmexport1514564838433.jpg" width="30%"></p>
+<li><p>回到原来的栈帧：其中一种假想的思路是，栈指针和帧指针指向的内存分别存放原来的栈指针和帧指针，返回的时候直接替换就行了。<br><img src="/images/overflow/mmexport1514564838433.jpg" width="400px"></p>
 </li>
-<li><p>回到原来的代码：可以在帧指针的上一处内存存放<code>call &lt;func&gt;</code>的下一句代码的地址，这样返回的时候让帧指针帮下忙，就可以轻松回到原来的代码。<br><img src="/images/overflow/mmexport1514564820384.jpg" width="70%"></p>
+<li><p>回到原来的代码：可以在帧指针的上一处内存存放<code>call &lt;func&gt;</code>的下一句代码的地址，这样返回的时候让帧指针帮下忙，就可以轻松回到原来的代码。<br><img src="/images/overflow/mmexport1514564820384.jpg"></p>
 </li>
 </ul>
-<h2 id="实际结构"><a href="#实际结构" class="headerlink" title="实际结构"></a>实际结构</h2><p>这样假想的栈帧结构其实已经很像真实的栈帧结构了。<br>为了所谓的追求速度，真正的函数栈帧结构其实是连续的，一串连着一串，像这样：<br><img src="/images/overflow/mmexport1514564829598.jpg" width="40%"><br>与假想的栈帧结构相比：</p>
+<h2 id="实际结构"><a href="#实际结构" class="headerlink" title="实际结构"></a>实际结构</h2><p>这样假想的栈帧结构其实已经很像真实的栈帧结构了。<br>为了所谓的追求速度，真正的函数栈帧结构其实是连续的，一串连着一串，像这样：<br><img src="/images/overflow/mmexport1514564829598.jpg" width="500px"><br>与假想的栈帧结构相比：</p>
 <ul>
 <li>不变的是返回地址还是在帧指针之上，帧指针还是指向原来的帧指针。</li>
 <li>不同的是栈指针不再需要存放原来的栈指针，因为返回地址之上就是原来栈指针所指的地方。</li>
@@ -74,7 +74,7 @@
 </ol>
 <hr>
 <ul>
-<li>反汇编：  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> objdump -d ./bufbomb &gt; disas.txt</span></div></pre></td></tr></table></figure>
+<li>反汇编：  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> objdump -d ./bufbomb &gt; disas.txt</div></pre></td></tr></table></figure>
 </li>
 </ul>
 <ul>
@@ -113,18 +113,18 @@
 <li><p>查看反汇编代码：<br>  <img src="/images/overflow/2.png"><br>  得到返回地址：<code>0x08048dbe</code></p>
 </li>
 <li><p>用<code>gdb</code>查看原bp：</p>
-  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> gdb ./bufbomb</span></div><div class="line">  </div><div class="line">(gdb) b getbuf</div><div class="line">(gdb) run -u gaufoo</div><div class="line">(gdb) p /x *(int *)$ebp</div></pre></td></tr></table></figure>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> gdb ./bufbomb</div><div class="line">  </div><div class="line">(gdb) b getbuf</div><div class="line">(gdb) run -u gaufoo</div><div class="line">(gdb) p /x *(int *)$ebp</div></pre></td></tr></table></figure>
 <p>  <img src="/images/overflow/5.png"></p>
 <p>  得到原bp：<code>0x55683d20</code></p>
 </li>
 <li><p>用<code>gdb</code>查看字符串首地址，就把代码注入到那：</p>
-  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> gdb ./bufbomb</span></div><div class="line">  </div><div class="line">(gdb) b getbuf</div><div class="line">(gdb) run -u gaufoo</div><div class="line">(gdb) p /x ($ebp-0x28)</div></pre></td></tr></table></figure>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> gdb ./bufbomb</div><div class="line">  </div><div class="line">(gdb) b getbuf</div><div class="line">(gdb) run -u gaufoo</div><div class="line">(gdb) p /x ($ebp-0x28)</div></pre></td></tr></table></figure>
 <p>  <img src="/images/overflow/7.png"></p>
 <p>  得到字符串首地址：<code>0x55683cc8</code></p>
 </li>
 <li><p>编写汇编代码，并译成机器码：</p>
   <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// sc.s</div><div class="line">mov $0x4a3e65c1,%eax</div><div class="line">push $0x08048dbe</div><div class="line">ret</div></pre></td></tr></table></figure>
-  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> gcc -m32 -c sc.s</span></div><div class="line"><span class="meta">$</span><span class="bash"> objdump -d sc.o</span></div></pre></td></tr></table></figure>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> gcc -m32 -c sc.s</div><div class="line"><span class="meta">$</span> objdump -d sc.o</div></pre></td></tr></table></figure>
 <p>  <img src="/images/overflow/6.png"></p>
 </li>
 <li><p>编写注入的16进制机器码：</p>
@@ -174,7 +174,7 @@
   <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mov $0x4a3e65c1,%eax</div><div class="line">lea -0x28(%esp),%ebp</div><div class="line">push $0x08048e3a</div><div class="line">ret</div></pre></td></tr></table></figure>
 <p>  <code>gcc</code>+<code>objdump</code>，翻译成机器码：<br>  <img src="/images/overflow/12.png"></p>
 </li>
-<li><p>编写注入机器码：<br>  首先0x208是字符串缓冲区长度，十进制为520。<br>  因此注入的机器码应为：509个字节空指令 + 15个字节注入代码 + 4个字节跳转地址 = 528个字节，<br>  因为要注入5次，所以后面要加上’\0a’，再复制5次。<br>  <img src="/images/overflow/13.png" width="65%"></p>
+<li><p>编写注入机器码：<br>  首先0x208是字符串缓冲区长度，十进制为520。<br>  因此注入的机器码应为：509个字节空指令 + 15个字节注入代码 + 4个字节跳转地址 = 528个字节，<br>  因为要注入5次，所以后面要加上’\0a’，再复制5次。<br>  <img src="/images/overflow/13.png"></p>
 </li>
 <li><p>转成ASCII字符串，此处省略</p>
 </li>
