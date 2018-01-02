@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="编译原理,C++11," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="纠结星人的胜利。">
+<meta name="keywords" content="编译原理,C++11">
+<meta property="og:type" content="article">
+<meta property="og:title" content="中缀表达式转化前后缀引发的思考">
+<meta property="og:url" content="http://gaufoo.com/2018/01/02/中缀表达式转前缀后缀引发的思考/index.html">
+<meta property="og:site_name" content="苟富">
+<meta property="og:description" content="纠结星人的胜利。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://gaufoo.com/images/prepost/0.png">
+<meta property="og:image" content="http://gaufoo.com/images/prepost/1.jpg">
+<meta property="og:updated_time" content="2018-01-02T01:56:24.357Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="中缀表达式转化前后缀引发的思考">
+<meta name="twitter:description" content="纠结星人的胜利。">
+<meta name="twitter:image" content="http://gaufoo.com/images/prepost/0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://gaufoo.com/2018/01/02/中缀表达式转前缀后缀引发的思考/"/>
+
+
+
+
+
+  <title>中缀表达式转化前后缀引发的思考 | 苟富</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">苟富</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-notes">
+          <a href="/notes/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sticky-note"></i> <br />
+            
+            便签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://gaufoo.com/2018/01/02/中缀表达式转前缀后缀引发的思考/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gaufoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="苟富">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">中缀表达式转化前后缀引发的思考</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T14:22:22+08:00">
+                2018-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/原理/" itemprop="url" rel="index">
+                    <span itemprop="name">原理</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/原理/编译原理/" itemprop="url" rel="index">
+                    <span itemprop="name">编译原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,755 字
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>纠结星人的胜利。</p>
+<a id="more"></a>
+<hr>
+<h1 id="平凡栈实现"><a href="#平凡栈实现" class="headerlink" title="平凡栈实现"></a>平凡栈实现</h1><p>一谈起中缀表达式转前后缀表达式，网上的解决办法中，有一大半是用栈实现，我称之为平凡实现。因为这种方法总让我感觉是在头痛医头、脚痛医脚，拓展性不大。下面来看看。</p>
+<hr>
+<h2 id="中缀表达式转后缀表达式"><a href="#中缀表达式转后缀表达式" class="headerlink" title="中缀表达式转后缀表达式"></a>中缀表达式转后缀表达式</h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>请原谅我很难把道理讲透，只能说说做法。大体上来看就是让操作符入栈，通过比较读取到的操作符和栈顶操作符优先级，进行入栈和出栈。</p>
+<ol>
+<li>遇到操作数直接输出</li>
+<li>遇到<strong>左</strong>括号，<strong>左</strong>括号入栈</li>
+<li>遇到<strong>右</strong>括号，将pop到<strong>左</strong>括号为止</li>
+<li>遇到操作符，把<strong>小于等于</strong>它优先级的操作符都出栈，直到<strong>左</strong>括号或者栈<strong>空</strong>，最后让它入栈</li>
+<li>读取完表达式，将栈全部pop</li>
+</ol>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">1 - ( 3 * 2 - 5 ) * 4</div><div class="line">^</div><div class="line">output: 1        </div><div class="line">stack:</div><div class="line"></div><div class="line">1 - ( 3 * 2 - 5 ) * 4     </div><div class="line">  ^</div><div class="line">output: 1       </div><div class="line">stack: -</div><div class="line"></div><div class="line">1 - ( 3 * 2 - 5 ) * 4</div><div class="line">    ^     </div><div class="line">// 左括号入栈</div><div class="line">output: 1</div><div class="line">stack: - (</div><div class="line"></div><div class="line">1 - ( 3 * 2 - 5 ) * 4</div><div class="line">      ^</div><div class="line">output: 1 3      </div><div class="line">stack: - (</div><div class="line"></div><div class="line">1 - ( 3 * 2 - 5 ) * 4</div><div class="line">        ^</div><div class="line">output: 1 3      </div><div class="line">stack: - ( *</div><div class="line"></div><div class="line">1 - ( 3 * 2 - 5 ) * 4</div><div class="line">          ^</div><div class="line">output: 1 3 2  </div><div class="line">stack: - ( *</div><div class="line"></div><div class="line">1 - ( 3 * 2 - 5 ) * 4</div><div class="line">            ^</div><div class="line">// 栈顶是*，-优先级比它小，*输出，-入栈</div><div class="line">output: 1 3 2 *     </div><div class="line">stack: - ( -</div><div class="line"></div><div class="line">1 - ( 3 * 2 - 5 ) * 4</div><div class="line">              ^</div><div class="line">output: 1 3 2 * 5     </div><div class="line">stack: - ( -</div><div class="line"></div><div class="line">1 - ( 3 * 2 - 5 ) * 4</div><div class="line">                ^</div><div class="line">// 遇到右括号，pop到左括号</div><div class="line">output: 1 3 2 * 5 -    </div><div class="line">stack: -</div><div class="line"></div><div class="line">1 - ( 3 * 2 - 5 ) * 4</div><div class="line">                  ^</div><div class="line">output: 1 3 2 * 5 - </div><div class="line">stack: - *</div><div class="line"></div><div class="line">1 - ( 3 * 2 - 5 ) * 4</div><div class="line">                    ^</div><div class="line">output: 1 3 2 * 5 - 4</div><div class="line">stack: - *</div><div class="line"></div><div class="line">1 - ( 3 * 2 - 5 ) * 4</div><div class="line">                      ^</div><div class="line">// 最后全部pop</div><div class="line">output: 1 3 2 * 5 - 4 * -</div><div class="line">stack:</div></pre></td></tr></table></figure>
+<h3 id="主要代码"><a href="#主要代码" class="headerlink" title="主要代码"></a>主要代码</h3><p>数据结构：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">enum</span> OP_TYPE &#123; OP_NUM, OP_SYMBOL, OP_ADD, OP_SUB, OP_MUL, OP_DIV, OP_LBAC, OP_RBAC, &#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Token</span></span></div><div class="line"><span class="class">&#123;</span></div><div class="line">    OP_TYPE _type;</div><div class="line">    <span class="keyword">int</span> _value;</div><div class="line"></div><div class="line">    Token(<span class="keyword">int</span> v) : _type(OP_NUM), _value(v) &#123;&#125;</div><div class="line">    Token(<span class="keyword">char</span> c) : _type(OP_SYMBOL), _value(CharToOp(c)) &#123;&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>实现代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">NiToPost</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;Token&gt; &amp;nifix, <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;Token&gt; &amp;post)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">stack</span>&lt;Token&gt; stk;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;i : nifix)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">if</span> (i._type == OP_NUM)</div><div class="line">        &#123;</div><div class="line">            post.push_back(i);</div><div class="line">        &#125;   <span class="comment">// 操作数直接输出</span></div><div class="line">        <span class="keyword">else</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">auto</span> iv = i._value;</div><div class="line">            <span class="keyword">if</span> (iv == OP_LBAC)</div><div class="line">            &#123;</div><div class="line">                stk.push(i);</div><div class="line">            &#125;   <span class="comment">// 左括号直接入栈</span></div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (iv == OP_RBAC)</div><div class="line">            &#123;</div><div class="line">                <span class="keyword">while</span> (stk.top()._value != OP_LBAC)</div><div class="line">                &#123;</div><div class="line">                    post.push_back(stk.top());</div><div class="line">                    stk.pop();</div><div class="line">                &#125;</div><div class="line">                stk.pop();</div><div class="line">            &#125;   <span class="comment">// 右括号，pop到左括号</span></div><div class="line">            <span class="keyword">else</span></div><div class="line">            &#123;</div><div class="line">                <span class="keyword">while</span> (!stk.empty() &amp;&amp; stk.top()._value != OP_LBAC &amp;&amp; CalcPriority(i) &lt;= CalcPriority(stk.top()))</div><div class="line">                &#123;</div><div class="line">                    post.push_back(stk.top());</div><div class="line">                    stk.pop();</div><div class="line">                &#125;</div><div class="line">                stk.push(i);</div><div class="line">            &#125;   <span class="comment">// 遇到操作符，把小于等于它优先级的操作符都出栈，直到左括号或者栈空，最后让它入栈</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">while</span> (!stk.empty())</div><div class="line">    &#123;</div><div class="line">        post.push_back(stk.top());</div><div class="line">        stk.pop();</div><div class="line">    &#125;   <span class="comment">// 读取完表达式，将栈全部pop</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="中缀表达式转前缀表达式"><a href="#中缀表达式转前缀表达式" class="headerlink" title="中缀表达式转前缀表达式"></a>中缀表达式转前缀表达式</h2><h3 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h3><p>和转后缀很接近，但是稍麻烦些，需要从后往前读取，最后再翻转过来。而且优先级的比较和转后缀也有所不同，转后缀是小于等于，这里是小于。</p>
+<ol>
+<li>从后向前读取表达式</li>
+<li>遇到操作数直接输出</li>
+<li>遇到<strong>右</strong>括号，<strong>右</strong>括号入栈</li>
+<li>遇到<strong>左</strong>括号，将pop到<strong>右</strong>括号为止</li>
+<li>遇到操作符，把<strong>小于</strong>它优先级的操作符都出栈，直到<strong>右</strong>括号或者栈<strong>空</strong>，最后让它入栈</li>
+<li>读取完表达式，将栈全部pop</li>
+<li>逆序输出</li>
+</ol>
+<h3 id="主要代码-1"><a href="#主要代码-1" class="headerlink" title="主要代码"></a>主要代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">NiToPre</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;Token&gt; &amp;nifix, <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;Token&gt; &amp;pre)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">stack</span>&lt;Token&gt; stk;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> it = nifix.rbegin(); it != nifix.rend(); ++it)</div><div class="line">    <span class="comment">// 从后往前读取</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">auto</span> i = *it;</div><div class="line">        <span class="keyword">if</span> (i._type == OP_NUM)</div><div class="line">        &#123;</div><div class="line">            pre.push_back(i);</div><div class="line">        &#125;   <span class="comment">// 操作数直接输出</span></div><div class="line">        <span class="keyword">else</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">auto</span> iv = i._value;</div><div class="line">            <span class="keyword">if</span> (iv == OP_RBAC)</div><div class="line">            &#123;</div><div class="line">                stk.push(i);</div><div class="line">            &#125;   <span class="comment">// 右括号直接入栈</span></div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (iv == OP_LBAC)</div><div class="line">            &#123;</div><div class="line">                <span class="keyword">while</span> (stk.top()._value != OP_RBAC)</div><div class="line">                &#123;</div><div class="line">                    pre.push_back(stk.top());</div><div class="line">                    stk.pop();</div><div class="line">                &#125;</div><div class="line">                stk.pop();</div><div class="line">            &#125;   <span class="comment">// 左括号，pop到右括号</span></div><div class="line">            <span class="keyword">else</span></div><div class="line">            &#123;</div><div class="line">                <span class="keyword">while</span> (!stk.empty() &amp;&amp; stk.top()._value != OP_RBAC &amp;&amp; CalcPriority(i) &lt; CalcPriority(stk.top()))</div><div class="line">                &#123;</div><div class="line">                    pre.push_back(stk.top());</div><div class="line">                    stk.pop();</div><div class="line">                &#125;</div><div class="line">                stk.push(i);</div><div class="line">            &#125;   <span class="comment">// 遇到操作符，把小于它优先级的操作符都出栈，直到左括号或者栈空，最后让它入栈</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">while</span> (!stk.empty())</div><div class="line">    &#123;</div><div class="line">        pre.push_back(stk.top());</div><div class="line">        stk.pop();</div><div class="line">    &#125;   <span class="comment">// 读取完表达式，将栈全部pop</span></div><div class="line"></div><div class="line">    reverse(pre.begin(), pre.end());    <span class="comment">// 最后逆序输出</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="/images/prepost/0.png" alt="0"></p>
+<hr>
+<h1 id="平凡二叉树实现"><a href="#平凡二叉树实现" class="headerlink" title="平凡二叉树实现"></a>平凡二叉树实现</h1><p>如果构造一棵语法树，那就想输出什么缀就输出什么缀，无非就是前序遍历和后序遍历。<br>像这样：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">PreTrav</span><span class="params">(Node *&amp;Node)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">if</span> (Node-&gt;left == <span class="literal">nullptr</span>)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; Node-&gt;token._value &lt;&lt; <span class="string">' '</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">    &#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; OpToChar(Node-&gt;token._value) &lt;&lt; <span class="string">' '</span>;</div><div class="line">        PreTrav(Node-&gt;left);</div><div class="line">        PreTrav(Node-&gt;right);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">PostTrav</span><span class="params">(Node *&amp;Node)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">if</span> (Node-&gt;left == <span class="literal">nullptr</span>)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; Node-&gt;token._value &lt;&lt; <span class="string">' '</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">    &#123;</div><div class="line">        PostTrav(Node-&gt;left);</div><div class="line">        PostTrav(Node-&gt;right);</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; OpToChar(Node-&gt;token._value) &lt;&lt; <span class="string">' '</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>终端输出：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">后序遍历：7 6 - 5 4 3 / + + 2 1 * -</div><div class="line">前序遍历：- + - 7 6 + 5 / 4 3 * 2 1</div></pre></td></tr></table></figure></p>
+<p>甚至可以画一棵二叉树：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">output_impl</span><span class="params">(Node *n, <span class="keyword">bool</span> left, <span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span> &amp;indent)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">if</span> (n-&gt;right)</div><div class="line">    &#123;</div><div class="line">        output_impl(n-&gt;right, <span class="literal">false</span>, indent + (left ? <span class="string">"|     "</span> : <span class="string">"      "</span>));</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; indent;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; (left ? <span class="string">'`'</span> : <span class="string">'.'</span>);</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"--- "</span>;</div><div class="line">    <span class="keyword">if</span> (n-&gt;token._type == OP_NUM)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; n-&gt;token._value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">    &#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; OpToChar(n-&gt;token._value) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (n-&gt;left)</div><div class="line">    &#123;</div><div class="line">        output_impl(n-&gt;left, <span class="literal">true</span>, indent + (left ? <span class="string">"      "</span> : <span class="string">"|     "</span>));</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">output</span><span class="params">(Node *root)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">if</span> (root-&gt;right)</div><div class="line">    &#123;</div><div class="line">        output_impl(root-&gt;right, <span class="literal">false</span>, <span class="string">""</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (root-&gt;token._type == OP_NUM)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; root-&gt;token._value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">    &#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; OpToChar(root-&gt;token._value) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (root-&gt;left)</div><div class="line">    &#123;</div><div class="line">        output_impl(root-&gt;left, <span class="literal">true</span>, <span class="string">""</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>终端输出：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">      .--- 1</div><div class="line">.--- *</div><div class="line">|     `--- 2</div><div class="line">-</div><div class="line">|                 .--- 3</div><div class="line">|           .--- /</div><div class="line">|           |     `--- 4</div><div class="line">|     .--- +</div><div class="line">|     |     `--- 5</div><div class="line">`--- +</div><div class="line">      |     .--- 6</div><div class="line">      `--- -</div><div class="line">            `--- 7</div></pre></td></tr></table></figure></p>
+<h2 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a>原理</h2><p>为什么又叫作平凡实现呢，因为这种实现在构造二叉树的时候，本质上和栈实现没太大差别，还是根据优先级进行入栈出栈。</p>
+<h3 id="主要代码-2"><a href="#主要代码-2" class="headerlink" title="主要代码"></a>主要代码</h3><p>数据结构：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span></span></div><div class="line"><span class="class">&#123;</span></div><div class="line">    Token token;</div><div class="line">    Node *left = <span class="literal">nullptr</span>;</div><div class="line">    Node *right = <span class="literal">nullptr</span>;</div><div class="line">    Node(<span class="keyword">const</span> Token &amp;t) : token(t) &#123;&#125;</div><div class="line">    Node(<span class="keyword">const</span> Token &amp;t, Node *l, Node *r) : token(t), left(l), right(r) &#123;&#125;</div><div class="line">    ~Node()</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">delete</span> left;</div><div class="line">        <span class="keyword">delete</span> right;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>实现代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">NiToBitree</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;Token&gt; &amp;nifix, Node *&amp;Tree)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">stack</span>&lt;Node *&gt; branch;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">stack</span>&lt;Token&gt; op;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;i : nifix)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">if</span> (i._type == OP_NUM)</div><div class="line">        &#123;</div><div class="line">            branch.push(<span class="keyword">new</span> Node(i));</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">auto</span> iv = i._value;</div><div class="line">            <span class="keyword">if</span> (iv == OP_LBAC)</div><div class="line">            &#123;</div><div class="line">                op.push(i);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (iv == OP_RBAC)</div><div class="line">            &#123;</div><div class="line">                <span class="keyword">while</span> (op.top()._value != OP_LBAC)</div><div class="line">                &#123;</div><div class="line">                    <span class="keyword">auto</span> r = branch.top();</div><div class="line">                    branch.pop();</div><div class="line">                    <span class="keyword">auto</span> l = branch.top();</div><div class="line">                    branch.pop();</div><div class="line">                    branch.push(<span class="keyword">new</span> Node(op.top(), l, r));</div><div class="line">                    op.pop();</div><div class="line">                &#125;</div><div class="line">                op.pop();</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span></div><div class="line">            &#123;</div><div class="line">                <span class="keyword">while</span> (!op.empty() &amp;&amp; op.top()._value != OP_LBAC &amp;&amp; CalcPriority(i) &lt;= CalcPriority(op.top()))</div><div class="line">                &#123;</div><div class="line">                    <span class="keyword">auto</span> r = branch.top();</div><div class="line">                    branch.pop();</div><div class="line">                    <span class="keyword">auto</span> l = branch.top();</div><div class="line">                    branch.pop();</div><div class="line">                    branch.push(<span class="keyword">new</span> Node(op.top(), l, r));</div><div class="line">                    op.pop();</div><div class="line">                &#125;</div><div class="line">                op.push(i);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">while</span> (!op.empty())</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">auto</span> r = branch.top();</div><div class="line">        branch.pop();</div><div class="line">        <span class="keyword">auto</span> l = branch.top();</div><div class="line">        branch.pop();</div><div class="line">        branch.push(<span class="keyword">new</span> Node(op.top(), l, r));</div><div class="line">        op.pop();</div><div class="line">    &#125;</div><div class="line">    Tree = branch.top();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="优雅实现之语法分析器"><a href="#优雅实现之语法分析器" class="headerlink" title="优雅实现之语法分析器"></a>优雅实现之语法分析器</h1><p>我实在是不满足平凡实现，觉得它太实在了，老老实实总会遭人欺负的。于是我对着这四则运算表达式圈圈画画，没想到还真看出来了端倪。然后赶紧上搜索引擎看看有没同道中人已经实现过这种思路，果然……轮子哥在八年前，也就是在我还是小学生的时候，就已经实现过了……好吧，下面一起来看看。</p>
+<hr>
+<h2 id="单位化"><a href="#单位化" class="headerlink" title="单位化"></a>单位化</h2><h3 id="Exp"><a href="#Exp" class="headerlink" title="Exp"></a>Exp</h3><p>一个表达式，可以看成是若干个单位通过<code>&#39;+&#39;</code>, <code>&#39;-&#39;</code>连接起来，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1 + 2            // 单位：1, 2</div><div class="line">3                // 单位：3</div><div class="line">5 + (4 - 2) * 3  // 单位：5, (4 - 2) * 3</div><div class="line">6 * 4 - 3        // 单位：6 * 4, 3</div></pre></td></tr></table></figure></p>
+<p>我们把这种单位抽象出来，取个名字：<strong>Factor</strong>。</p>
+<p>因此，表达式可以这样来表示： <code>Exp = Factor (( &#39;+&#39; | &#39;-&#39; ) Factor)*</code>，十分的简洁明了。</p>
+<h3 id="Factor"><a href="#Factor" class="headerlink" title="Factor"></a>Factor</h3><p>接下来Factor也不难表示，可以看成是若干个单位通过<code>&#39;*&#39;</code>, <code>&#39;/&#39;</code>连接起来，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1 * 2       // 单位：1, 2</div><div class="line">(4 - 2) * 3 // 单位：(4 - 2), 3</div><div class="line">5 / 4 * 6   // 单位：5, 4, 6</div></pre></td></tr></table></figure></p>
+<p>我们把这种单位抽象出来，取个名字：<strong>Term</strong>。</p>
+<p>因此，Factor可以这样来表示：<code>Factor = Term (( &#39;*&#39; | &#39;/&#39; ) Term)*</code></p>
+<h3 id="Term"><a href="#Term" class="headerlink" title="Term"></a>Term</h3><p>最后就是最基本的单位Term，通过观察可知Term要么是数字，要么是括号括起来的一个表达式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">50          --&gt; Term</div><div class="line">(4 - 2)     --&gt; Term</div></pre></td></tr></table></figure></p>
+<p>因此Term可以这样来表示：<code>Term = &lt;数字&gt; | &#39;(&#39; Exp &#39;)&#39;</code></p>
+<p>我们可以通过上面的关系来构造语法树，可以想象，生成过程真的很像一棵树的生长。</p>
+<p>没错！我就是想要这种非常函数式的实现，这种抽象美得让人陶醉。鲁迅先生好像说过：</p>
+<blockquote>
+<p>Any problem in computer science can be solved with another level of indirection.<br>计算机科学里面，没有什么问题是多加一层抽象不可以解决的。</p>
+</blockquote>
+<hr>
+<h2 id="语法树特点"><a href="#语法树特点" class="headerlink" title="语法树特点"></a>语法树特点</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">      .--- 1</div><div class="line">.--- *</div><div class="line">|     `--- 2</div><div class="line">-</div><div class="line">|                 .--- 3</div><div class="line">|           .--- /</div><div class="line">|           |     `--- 4</div><div class="line">|     .--- +</div><div class="line">|     |     `--- 5</div><div class="line">`--- +</div><div class="line">      |     .--- 6</div><div class="line">      `--- -</div><div class="line">            `--- 7</div></pre></td></tr></table></figure>
+<p>借用上边画出来的语法树，来观察语法树的结构：</p>
+<ul>
+<li>一个数字表达式的节点一定是一个叶子节点，没有左右孩子节点。</li>
+<li>一个二元运算表达式一定有两个孩子节点，因为二元运算符号左右两边必然都要有表达式。这两个叶子节点的类型，是抽象的表达式，既可以是二元运算表达式，也可以是数字表达式。</li>
+</ul>
+<p>由此可以定义<code>Expression</code>作为基类，派生出<code>NumberExpression</code>类和<code>BinaryExpression</code>类，来表示数字表达式和二元运算表达式。<br><img src="/images/prepost/1.jpg" alt="1"></p>
+<blockquote>
+<p>注：下面都是用现代C++来实现，区别于轮子哥八年前写的古老C++版。</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Expression</span></span></div><div class="line"><span class="class">&#123;</span></div><div class="line">  <span class="keyword">public</span>:</div><div class="line">    <span class="keyword">virtual</span> ~Expression() = <span class="keyword">default</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">NumberExpression</span> :</span> <span class="keyword">public</span> Expression</div><div class="line">&#123;</div><div class="line">  <span class="keyword">public</span>:</div><div class="line">    <span class="keyword">int</span> Value;</div><div class="line">    NumberExpression(<span class="keyword">int</span> number) : Value(number) &#123;&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">BinaryExpression</span> :</span> <span class="keyword">public</span> Expression</div><div class="line">&#123;</div><div class="line">  <span class="keyword">public</span>:</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Expression&gt; First;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Expression&gt; Second;</div><div class="line">    BinaryOperator Op;</div><div class="line">    BinaryExpression(BinaryOperator theOp, <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Expression&gt; theLeft, <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Expression&gt; theRight) : Op(theOp), First(theLeft), Second(theRight) &#123;&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p><code>BinaryOperator</code>枚举类型也要现代一点：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">enum</span> <span class="class"><span class="keyword">class</span> <span class="title">BinaryOperator</span></span></div><div class="line"><span class="class">&#123;</span></div><div class="line">    Plus,</div><div class="line">    Minus,</div><div class="line">    Multiply,</div><div class="line">    Divide,</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="构造语法树"><a href="#构造语法树" class="headerlink" title="构造语法树"></a>构造语法树</h2><h3 id="辅助函数"><a href="#辅助函数" class="headerlink" title="辅助函数"></a>辅助函数</h3><h4 id="Is"><a href="#Is" class="headerlink" title="Is"></a>Is</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Is</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *&amp;Stream, <span class="keyword">const</span> <span class="keyword">char</span> *Text)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">size_t</span> len = <span class="built_in">strlen</span>(Text);</div><div class="line">    <span class="comment">/*保存参数*/</span></div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *Read = Stream;</div><div class="line">    <span class="comment">/*过滤空格*/</span></div><div class="line">    <span class="keyword">while</span> (*Read == <span class="string">' '</span>)</div><div class="line">        Read++;</div><div class="line">    <span class="keyword">if</span> (<span class="built_in">strncmp</span>(Read, Text, len) == <span class="number">0</span>)</div><div class="line">    &#123;</div><div class="line">        Stream = Read + len;</div><div class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>用于判断Stream是不是由Text开头，如果是就将Stream偏移strlen(Text)个字符。</p>
+<h4 id="GetNumber"><a href="#GetNumber" class="headerlink" title="GetNumber"></a>GetNumber</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Expression&gt; GetNumber(<span class="keyword">const</span> <span class="keyword">char</span> *&amp;Stream)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> Result = <span class="number">0</span>;</div><div class="line">    <span class="keyword">bool</span> GotNumber = <span class="literal">false</span>;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *Read = Stream;</div><div class="line">    <span class="keyword">while</span> (*Read == <span class="string">' '</span>)</div><div class="line">        Read++;</div><div class="line">    <span class="keyword">while</span> (<span class="literal">true</span>)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">char</span> c = *Read;</div><div class="line">        <span class="keyword">if</span> (<span class="string">'0'</span> &lt;= c &amp;&amp; c &lt;= <span class="string">'9'</span>)</div><div class="line">        &#123;</div><div class="line">            Result = Result * <span class="number">10</span> + (c - <span class="string">'0'</span>);</div><div class="line">            GotNumber = <span class="literal">true</span>;</div><div class="line">            Read++;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (GotNumber)</div><div class="line">    &#123;</div><div class="line">        Stream = Read;</div><div class="line">        <span class="keyword">return</span> <span class="built_in">std</span>::make_shared&lt;NumberExpression&gt;(Result);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">throw</span> Exception(Stream, <span class="string">"此处需要表达式"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>这个函数的作用是，按照数字的方式，对Stream进行解析，如果解析成功，就将Stream指针的位置移动到解析完成的最后位置（代码中的Read），然后调用make_shared，构造一个shared_ptr并返回；而如果失败（即一个数字都没找到），则抛出一个异常。跟Is一样，这个函数会过滤掉开头的空格。</p>
+</blockquote>
+<hr>
+<h3 id="辅助异常类"><a href="#辅助异常类" class="headerlink" title="辅助异常类"></a>辅助异常类</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Exception</span></span></div><div class="line"><span class="class">&#123;</span></div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *Start;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *Error;</div><div class="line">    Exception(<span class="keyword">const</span> <span class="keyword">char</span> *aStart, <span class="keyword">const</span> <span class="keyword">char</span> *aError)</div><div class="line">    &#123;</div><div class="line">        Start = aStart;</div><div class="line">        Error = aError;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="核心代码"><a href="#核心代码" class="headerlink" title="核心代码"></a>核心代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Expression&gt; GetTerm(<span class="keyword">const</span> <span class="keyword">char</span> *&amp;Stream);</div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Expression&gt; GetFactor(<span class="keyword">const</span> <span class="keyword">char</span> *&amp;Stream);</div><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Expression&gt; GetExp(<span class="keyword">const</span> <span class="keyword">char</span> *&amp;Stream);</div></pre></td></tr></table></figure>
+<p>三个解析函数，完成语法树的构造。</p>
+<h4 id="GetExp"><a href="#GetExp" class="headerlink" title="GetExp"></a>GetExp</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Expression&gt; GetExp(<span class="keyword">const</span> <span class="keyword">char</span> *&amp;Stream)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *Read = Stream;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Expression&gt; Result = GetFactor(Read);</div><div class="line">    <span class="keyword">while</span> (<span class="literal">true</span>)</div><div class="line">    &#123;</div><div class="line">        BinaryOperator Operator;</div><div class="line">        <span class="keyword">if</span> (Is(Read, <span class="string">"+"</span>))</div><div class="line">        &#123;</div><div class="line">            Operator = BinaryOperator::Plus;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (Is(Read, <span class="string">"-"</span>))</div><div class="line">        &#123;</div><div class="line">            Operator = BinaryOperator::Minus;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">        Result = <span class="built_in">std</span>::make_shared&lt;BinaryExpression&gt;(Operator, Result, GetFactor(Read));</div><div class="line">    &#125;</div><div class="line">    Stream = Read;</div><div class="line">    <span class="keyword">return</span> Result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>完成：<code>Exp = Factor (( &#39;+&#39; | &#39;-&#39; ) Factor)*</code><br>构造出来的形状是这样的：<br>// 图下次补</p>
+<h4 id="GetFactor"><a href="#GetFactor" class="headerlink" title="GetFactor"></a>GetFactor</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Expression&gt; GetFactor(<span class="keyword">const</span> <span class="keyword">char</span> *&amp;Stream)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *Read = Stream;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Expression&gt; Result = GetTerm(Read);</div><div class="line">    <span class="keyword">while</span> (<span class="literal">true</span>)</div><div class="line">    &#123;</div><div class="line">        BinaryOperator Operator;</div><div class="line">        <span class="keyword">if</span> (Is(Read, <span class="string">"*"</span>))</div><div class="line">        &#123;</div><div class="line">            Operator = BinaryOperator::Multiply;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (Is(Read, <span class="string">"/"</span>))</div><div class="line">        &#123;</div><div class="line">            Operator = BinaryOperator::Divide;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">        Result = <span class="built_in">std</span>::make_shared&lt;BinaryExpression&gt;(Operator, Result, GetTerm(Read));</div><div class="line">    &#125;</div><div class="line">    Stream = Read;</div><div class="line">    <span class="keyword">return</span> Result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>完成：<code>Factor = Term (( &#39;*&#39; | &#39;/&#39; ) Term)*</code></p>
+<h4 id="GetTerm"><a href="#GetTerm" class="headerlink" title="GetTerm"></a>GetTerm</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Expression&gt; GetTerm(<span class="keyword">const</span> <span class="keyword">char</span> *&amp;Stream)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">try</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> GetNumber(Stream);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">catch</span> (Exception &amp;e)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">const</span> <span class="keyword">char</span> *Read = Stream;</div><div class="line">        <span class="keyword">if</span> (Is(Read, <span class="string">"("</span>))</div><div class="line">        &#123;</div><div class="line">            <span class="keyword">auto</span> Result = GetExp(Read);</div><div class="line">            <span class="keyword">if</span> (Is(Read, <span class="string">")"</span>))</div><div class="line">            &#123;</div><div class="line">                Stream = Read;</div><div class="line">                <span class="keyword">return</span> Result;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span></div><div class="line">            &#123;</div><div class="line">                <span class="keyword">throw</span> Exception(Stream, <span class="string">"此处需要右括号"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">throw</span> e;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>完成：<code>Term = &lt;数字&gt; | &#39;(&#39; Exp &#39;)&#39;</code></p>
+<p>好了，这样就搞定啦！虽然代码看起来有点点长，可是思路是十分清晰自然的。我相信用函数式语言来写会短几十倍的，用C++写只是为了照顾大部分人。最后奉上测试代码。</p>
+<hr>
+<h3 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">auto</span> a = <span class="string">"75 + 66 * (555-333*444) - 332 * 111"</span>;</div><div class="line">    <span class="keyword">try</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">auto</span> <span class="built_in">exp</span> = GetExp(a);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">catch</span> (Exception &amp;e)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; e.Start &lt;&lt; e.Error &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//Do what you want to do</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Gaufoo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://gaufoo.com/2018/01/02/中缀表达式转前缀后缀引发的思考/" title="中缀表达式转化前后缀引发的思考">http://gaufoo.com/2018/01/02/中缀表达式转前缀后缀引发的思考/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/" rel="external nofollow" target="_blank">CC BY-NC-ND 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编译原理/" rel="tag"># 编译原理</a>
+          
+            <a href="/tags/C-11/" rel="tag"># C++11</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/30/overflow/" rel="next" title="利用C语言缺陷进行缓冲区溢出攻击">
+                <i class="fa fa-chevron-left"></i> 利用C语言缺陷进行缓冲区溢出攻击
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="Gaufoo" />
+          <p class="site-author-name" itemprop="name">Gaufoo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhongzc/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhong-zhen-chi/activities" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-mortar-board"></i>
+                  
+                    
+                      知乎
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-nd.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              看看他们
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://lyfoon.com/" title="lyfoon" target="_blank">lyfoon</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://passer-by.com/" title="passer-by" target="_blank">passer-by</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#平凡栈实现"><span class="nav-number">1.</span> <span class="nav-text">平凡栈实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#中缀表达式转后缀表达式"><span class="nav-number">1.1.</span> <span class="nav-text">中缀表达式转后缀表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">1.1.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#示例"><span class="nav-number">1.1.2.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主要代码"><span class="nav-number">1.1.3.</span> <span class="nav-text">主要代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#中缀表达式转前缀表达式"><span class="nav-number">1.2.</span> <span class="nav-text">中缀表达式转前缀表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主要代码-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">主要代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.2.3.</span> <span class="nav-text">结果</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#平凡二叉树实现"><span class="nav-number">2.</span> <span class="nav-text">平凡二叉树实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理-2"><span class="nav-number">2.1.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主要代码-2"><span class="nav-number">2.1.1.</span> <span class="nav-text">主要代码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#优雅实现之语法分析器"><span class="nav-number">3.</span> <span class="nav-text">优雅实现之语法分析器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#单位化"><span class="nav-number">3.1.</span> <span class="nav-text">单位化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Exp"><span class="nav-number">3.1.1.</span> <span class="nav-text">Exp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Factor"><span class="nav-number">3.1.2.</span> <span class="nav-text">Factor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Term"><span class="nav-number">3.1.3.</span> <span class="nav-text">Term</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语法树特点"><span class="nav-number">3.2.</span> <span class="nav-text">语法树特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造语法树"><span class="nav-number">3.3.</span> <span class="nav-text">构造语法树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#辅助函数"><span class="nav-number">3.3.1.</span> <span class="nav-text">辅助函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Is"><span class="nav-number">3.3.1.1.</span> <span class="nav-text">Is</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GetNumber"><span class="nav-number">3.3.1.2.</span> <span class="nav-text">GetNumber</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#辅助异常类"><span class="nav-number">3.3.2.</span> <span class="nav-text">辅助异常类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#核心代码"><span class="nav-number">3.3.3.</span> <span class="nav-text">核心代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GetExp"><span class="nav-number">3.3.3.1.</span> <span class="nav-text">GetExp</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GetFactor"><span class="nav-number">3.3.3.2.</span> <span class="nav-text">GetFactor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GetTerm"><span class="nav-number">3.3.3.3.</span> <span class="nav-text">GetTerm</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试代码"><span class="nav-number">3.3.4.</span> <span class="nav-text">测试代码</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 &mdash; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gaufoo</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
