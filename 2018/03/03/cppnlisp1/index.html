@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="编程,C++," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="LISP赐予我力量。">
+<meta name="keywords" content="编程,C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用C++写出伪LISP代码（一）">
+<meta property="og:url" content="http://gaufoo.com/2018/03/03/cppnlisp1/index.html">
+<meta property="og:site_name" content="苟富">
+<meta property="og:description" content="LISP赐予我力量。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://gaufoo.com/images/180303/photo_2018-03-03_17-53-22.jpg">
+<meta property="og:updated_time" content="2018-03-03T12:22:44.893Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用C++写出伪LISP代码（一）">
+<meta name="twitter:description" content="LISP赐予我力量。">
+<meta name="twitter:image" content="http://gaufoo.com/images/180303/photo_2018-03-03_17-53-22.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://gaufoo.com/2018/03/03/cppnlisp1/"/>
+
+
+
+
+
+  <title>用C++写出伪LISP代码（一） | 苟富</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">苟富</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-notes">
+          <a href="/notes/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sticky-note"></i> <br />
+            
+            便签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://gaufoo.com/2018/03/03/cppnlisp1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gaufoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="苟富">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">用C++写出伪LISP代码（一）</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-03T16:48:23+08:00">
+                2018-03-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,719 字
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>LISP赐予我力量。</p>
+<a id="more"></a>
+<hr>
+<h1 id="序"><a href="#序" class="headerlink" title="序"></a>序</h1><p>当时在学《SICP》的时候，突发奇想，看用Scheme(LISP方言的一种)来写C++寒假作业是什么效果。不出意料，实在是太好写了。有了函数式的“我手写我心”加成，短短几十行就把C++寒假作业给搞定了。</p>
+<p>既然作业已经完成了，再重新用C++的命令式思路来做，显然太浪费精力和时间。于是萌生出了这么一个想法：何不尝试让C++去适应我的思路，让我写出函数式风格的C++作业呢？</p>
+<p>要完成这个工作，首先要模仿LISP简单的结构和功能，本文就是用来解决这个问题。</p>
+<hr>
+<h1 id="基础结构"><a href="#基础结构" class="headerlink" title="基础结构"></a>基础结构</h1><p>众所周知，LISP这个名字其实是来自于 “LISt Processor” —— “ list 处理器”。所谓的<code>list</code>，是如下的一个东西：</p>
+<p><img src="/images/180303/photo_2018-03-03_17-53-22.jpg"></p>
+<p>前一个盒子连着后一个盒子，第一个盒子有箭头指着，最后一个盒子什么都不指，用斜线填充。</p>
+<p>用C++来表达这样的结构是很轻松的事情，每个盒子(<code>Node</code>)包含元素部分，类型为<code>A</code>(<code>Arbitrary</code>)，还有箭头部分，类型为<code>std::shared_ptr&lt;A&gt;</code> (注：<code>std::shared_ptr</code>可以使我们从内存管理的泥潭中抽身而出)。可以通过调用内部的<code>head</code>、<code>tail</code>函数来获取该元素，以及箭头。代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyNode</span></span></div><div class="line"><span class="class">&#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">  MyNode(T a, <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;MyNode&gt; b) : n(a), next(b)&#123;&#125;;</div><div class="line"></div><div class="line">  <span class="function">T <span class="title">head</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> n; &#125;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;MyNode&gt; tail() &#123; <span class="keyword">return</span> next; &#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span>:</div><div class="line">  T n;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;MyNode&gt; next;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>初步的结构有了，但请注意到，<code>list</code>是一种递归的结构，我取出某个<code>list</code>的<code>tail</code>(箭头)，它仍然是一个<code>list</code>，直到最后代表<code>list</code>完结的斜线。</p>
+<p>所以，在这里我干脆把所有箭头都取相同的名字，叫做<code>Mylist</code>，给最后的斜线也取个名字，叫做<code>EmptyList</code>，<code>EmptyList</code>也是一个<code>list</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">using</span> MyList = <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;MyNode&lt;T&gt;&gt;;</div><div class="line"></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line">MyList&lt;T&gt; EmptyList = <span class="literal">nullptr</span>;</div></pre></td></tr></table></figure>
+<hr>
+<h1 id="基础函数"><a href="#基础函数" class="headerlink" title="基础函数"></a>基础函数</h1><h2 id="构造-LIST"><a href="#构造-LIST" class="headerlink" title="构造 LIST"></a>构造 LIST</h2><p>上面说过，<code>list</code>是一种递归的结构，所以构造<code>list</code>的方法很简单：给一个元素<code>X</code>，再一个<code>list</code>，就可以帮你构造一个新的<code>list</code>。这个新<code>list</code>的<code>head</code>是<code>x</code>，<code>tail</code>是旧<code>list</code>，相当于旧<code>list</code>往最前面再长了一个盒子。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * 构造List的基础函数</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line">MyList&lt;T&gt; Cons(T x, MyList&lt;T&gt; xs)</div><div class="line">&#123;</div><div class="line">  <span class="keyword">return</span> <span class="built_in">std</span>::make_shared&lt;MyNode&lt;T&gt;&gt;(x, xs);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// auto list3 = Cons(3, EmptyList&lt;int&gt;); </span></div><div class="line"><span class="comment">// =&gt; (3)</span></div><div class="line"><span class="comment">// auto list23 = Cons(2, list3); </span></div><div class="line"><span class="comment">// =&gt; (2, 3)</span></div><div class="line"><span class="comment">// auto list123 = Cons(1, list23); </span></div><div class="line"><span class="comment">// =&gt; (1, 2, 3)</span></div></pre></td></tr></table></figure></p>
+<p>每次都从斜线开始一个个盒子地构造<code>list</code>确实有点辛苦，所以我这里写了一个语法糖，让自己可以以轻松又易读的方式构造<code>list</code>：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * 构造List的语法糖</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line">MyList&lt;T&gt; toList(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">initializer_list</span>&lt;T&gt; &amp;il)</div><div class="line">&#123;</div><div class="line">  MyList&lt;T&gt; res = EmptyList&lt;T&gt;;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">auto</span> it = <span class="built_in">std</span>::rbegin(il); it != <span class="built_in">std</span>::rend(il); ++it)</div><div class="line">    res = Cons(*it, res);</div><div class="line">  <span class="keyword">return</span> res;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// auto list123_ = Cons(1, Cons(2, Cons(3, EmtpyList&lt;int&gt;))); </span></div><div class="line"><span class="comment">// =&gt; (1, 2, 3)</span></div><div class="line"><span class="comment">// auto list123__ = toList(&#123;1, 2, 3&#125;); </span></div><div class="line"><span class="comment">// =&gt; (1, 2, 3)</span></div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="左右折叠函数"><a href="#左右折叠函数" class="headerlink" title="左右折叠函数"></a>左右折叠函数</h2><p>由于函数式语言里并没有常规命令式语言里面的循环语句，使得函数式语言的程序员们通常会采用递归式对<code>list</code>进行遍历操作。而遍历操作又如此地常见，于是有人抽象出了最常见的两种遍历方式，一种是<code>fold left</code>，一种是<code>fold right</code>。它们可以让程序员不必显式地写出递归式，只需要提供1）对 <code>元素</code> 和 <code>已成功处理的结果</code> 之间操作的函数。2）初始结果。3）待处理<code>list</code>。便可以通过折叠(fold)函数将<code>list</code>折叠成期望的结构。</p>
+<p>例如求和操作：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">auto</span> lst = toList(&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;);</div><div class="line"></div><div class="line"><span class="keyword">auto</span> a = FoldLeft([](<span class="keyword">int</span> res, <span class="keyword">int</span> x) &#123; <span class="keyword">return</span> x + res; &#125;, <span class="number">0</span>, lst);</div><div class="line"><span class="comment">// a = 6</span></div><div class="line"></div><div class="line"><span class="keyword">auto</span> b = FoldRight([](<span class="keyword">int</span> x, <span class="keyword">int</span> res) &#123; <span class="keyword">return</span> x + res; &#125;, <span class="number">0</span>, lst);</div><div class="line"><span class="comment">// b = 6</span></div></pre></td></tr></table></figure></p>
+<p>对于求和操作，<code>fold left</code>和<code>fold right</code>都能求出结果，但求值的方式是有所不同：他们的求值结构和顺序是不同的。这里不详细解释他们之间的不同之处，有兴趣可以查阅维基百科：<a href="https://en.wikipedia.org/wiki/Fold_(higher-order_function" target="_blank" rel="external">https://en.wikipedia.org/wiki/Fold_(higher-order_function</a>)</p>
+<p>将左右折叠写成C++的形式：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * 左右折叠函数</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> Z, <span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function">Z <span class="title">FoldRight</span><span class="params">(F fn, Z zero, MyList&lt;T&gt; xs)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="keyword">if</span> (xs == EmptyList&lt;T&gt;)</div><div class="line">    <span class="keyword">return</span> zero;</div><div class="line">  <span class="keyword">else</span></div><div class="line">    <span class="keyword">return</span> fn(xs-&gt;head(), FoldRight(fn, zero, xs-&gt;tail()));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> Z, <span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function">Z <span class="title">FoldLeft</span><span class="params">(F fn, Z zero, MyList&lt;T&gt; xs)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="keyword">if</span> (xs == EmptyList&lt;T&gt;)</div><div class="line">    <span class="keyword">return</span> zero;</div><div class="line">  <span class="keyword">else</span></div><div class="line">    <span class="keyword">return</span> FoldLeft(fn, fn(zero, xs-&gt;head()), xs-&gt;tail());</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看出他们实际上都是递归式。</p>
+<hr>
+<h2 id="翻转-list"><a href="#翻转-list" class="headerlink" title="翻转 list"></a>翻转 list</h2><p>由于上面已经定义了左右折叠函数，在这里可以直接现用了，因为翻转<code>list</code>也不过是个遍历操作。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * 反转</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line">MyList&lt;T&gt; Reverse(MyList&lt;T&gt; xs)</div><div class="line">&#123;</div><div class="line">  <span class="keyword">return</span> FoldLeft([](MyList&lt;T&gt; xs, T x) -&gt; MyList&lt;T&gt; &#123; <span class="keyword">return</span> Cons(x, xs); &#125; , </div><div class="line">                  EmptyList&lt;T&gt;, xs);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>相信读者已经看出了函数式语句是何等的简洁了，我上面所定义的函数全都不过寥寥几行，却已经完整表达了我所期望的操作。</p>
+<hr>
+<h2 id="list-长度"><a href="#list-长度" class="headerlink" title="list 长度"></a>list 长度</h2><p>不出意外，一样是可以通过<code>fold</code>解决。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * Length</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">size_t</span> Length(MyList&lt;T&gt; xs)</div><div class="line">&#123;</div><div class="line">  <span class="keyword">return</span> FoldLeft( [](<span class="keyword">size_t</span> x, T rest) &#123; <span class="keyword">return</span> (x + <span class="number">1</span>); &#125;,</div><div class="line">                   <span class="number">0</span>, xs);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="Map-函数"><a href="#Map-函数" class="headerlink" title="Map 函数"></a>Map 函数</h2><p>这里的<code>Map</code>和<code>hash table</code>所表达的<code>Map</code>含义不同。这里只是指：提供一个将<code>list</code>元素映射到另外一个元素的函数，通过遍历<code>list</code>的每个元素，将原有的<code>list</code>映射到另外一个相同长度的<code>list</code>。</p>
+<p><code>fold</code>函数再次出场：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * Map</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> F&gt;</div><div class="line">MyList&lt;T&gt; PoorMap(F fn, MyList&lt;T&gt; xs)</div><div class="line">&#123;</div><div class="line">  <span class="keyword">return</span> FoldRight([&amp;fn](T x, MyList&lt;T&gt; xs) -&gt; MyList&lt;T&gt; &#123; <span class="keyword">return</span> Cons&lt;T&gt;(fn(x), xs); &#125;,</div><div class="line">                   EmptyList&lt;T&gt;, xs);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这里需要解释的是，真正的<code>Map</code>函数是可以将一种类型映射到另外一种类型的，这里只能是相同类型之间的映射，所以我称为<code>PoorMap</code>。原因是，以我的能力，要写可以映射到另外一种类型的<code>Map</code>，用户代码将变得丑陋。不得已，我牺牲了功能完备性，保留了简洁性。用户代码若需要映射到另外一种类型时，我将临时使用<code>for</code>循环代替。</p>
+<hr>
+<h2 id="过滤器函数"><a href="#过滤器函数" class="headerlink" title="过滤器函数"></a>过滤器函数</h2><p>给我一个判断条件，和一个<code>list</code>，可以将不符合条件的元素去除。</p>
+<p><code>fold</code>之舞：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * Filter</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> T&gt;</div><div class="line">MyList&lt;T&gt; Filter(F fn, MyList&lt;T&gt; xs)</div><div class="line">&#123;</div><div class="line">  <span class="keyword">return</span> FoldRight([&amp;fn](T x, MyList&lt;T&gt; xs) -&gt; MyList&lt;T&gt; &#123; <span class="keyword">return</span> (fn(x) ? Cons&lt;T&gt;(x, xs) : xs); &#125;,</div><div class="line">                   EmptyList&lt;T&gt;, xs);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="其他函数"><a href="#其他函数" class="headerlink" title="其他函数"></a>其他函数</h2><h3 id="取list前n个元素，构成新list"><a href="#取list前n个元素，构成新list" class="headerlink" title="取list前n个元素，构成新list"></a>取list前n个元素，构成新list</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * list-head</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line">MyList&lt;T&gt; ListHead(MyList&lt;T&gt; xs, <span class="keyword">size_t</span> n)</div><div class="line">&#123;</div><div class="line">  <span class="keyword">return</span> ( n == <span class="number">0</span> ) ? EmptyList&lt;T&gt; : Cons(xs-&gt;head(), ListHead(xs-&gt;tail(), n - <span class="number">1</span>)) ;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="丢弃list前n个元素，构成新list"><a href="#丢弃list前n个元素，构成新list" class="headerlink" title="丢弃list前n个元素，构成新list"></a>丢弃list前n个元素，构成新list</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * list-tail</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line">MyList&lt;T&gt; ListTail(MyList&lt;T&gt; xs, <span class="keyword">size_t</span> n)</div><div class="line">&#123;</div><div class="line">  <span class="keyword">return</span> ( n == <span class="number">0</span> ) ? xs : ListTail(xs-&gt;tail(), n - <span class="number">1</span>) ;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="list-里是否存在符合条件的元素"><a href="#list-里是否存在符合条件的元素" class="headerlink" title="list 里是否存在符合条件的元素"></a>list 里是否存在符合条件的元素</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * any</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Any</span><span class="params">(F pred, MyList&lt;T&gt; lst)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="keyword">return</span> FoldLeft( [&amp;pred](<span class="keyword">bool</span> x, T rest) &#123; <span class="keyword">return</span> pred(rest) || x; &#125;, </div><div class="line">                   <span class="literal">false</span>, lst);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<p>基础结构和功能已经构造完毕，下面将用以……完成作业。</p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Gaufoo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://gaufoo.com/2018/03/03/cppnlisp1/" title="用C++写出伪LISP代码（一）">http://gaufoo.com/2018/03/03/cppnlisp1/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/" rel="external nofollow" target="_blank">CC BY-NC-ND 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编程/" rel="tag"># 编程</a>
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/02/ni_to_pre_post/" rel="next" title="中缀表达式转化前后缀引发的思考">
+                <i class="fa fa-chevron-left"></i> 中缀表达式转化前后缀引发的思考
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/03/cppnlisp2/" rel="prev" title="用C++写出伪LISP代码（二）">
+                用C++写出伪LISP代码（二） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="Gaufoo" />
+          <p class="site-author-name" itemprop="name">Gaufoo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhongzc/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhong-zhen-chi/activities" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-mortar-board"></i>
+                  
+                    
+                      知乎
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-nd.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              看看他们
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://lyfoon.com/" title="lyfoon" target="_blank">lyfoon</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://passer-by.com/" title="passer-by" target="_blank">passer-by</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#序"><span class="nav-number">1.</span> <span class="nav-text">序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基础结构"><span class="nav-number">2.</span> <span class="nav-text">基础结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基础函数"><span class="nav-number">3.</span> <span class="nav-text">基础函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#构造-LIST"><span class="nav-number">3.1.</span> <span class="nav-text">构造 LIST</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#左右折叠函数"><span class="nav-number">3.2.</span> <span class="nav-text">左右折叠函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#翻转-list"><span class="nav-number">3.3.</span> <span class="nav-text">翻转 list</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#list-长度"><span class="nav-number">3.4.</span> <span class="nav-text">list 长度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Map-函数"><span class="nav-number">3.5.</span> <span class="nav-text">Map 函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#过滤器函数"><span class="nav-number">3.6.</span> <span class="nav-text">过滤器函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他函数"><span class="nav-number">3.7.</span> <span class="nav-text">其他函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#取list前n个元素，构成新list"><span class="nav-number">3.7.1.</span> <span class="nav-text">取list前n个元素，构成新list</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#丢弃list前n个元素，构成新list"><span class="nav-number">3.7.2.</span> <span class="nav-text">丢弃list前n个元素，构成新list</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#list-里是否存在符合条件的元素"><span class="nav-number">3.7.3.</span> <span class="nav-text">list 里是否存在符合条件的元素</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 &mdash; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gaufoo</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
