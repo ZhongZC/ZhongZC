@@ -124,7 +124,7 @@
 <meta property="og:image" content="http://gaufoo.com/images/overflow/12.png">
 <meta property="og:image" content="http://gaufoo.com/images/overflow/13.png">
 <meta property="og:image" content="http://gaufoo.com/images/overflow/14.png">
-<meta property="og:updated_time" content="2017-12-30T06:54:04.000Z">
+<meta property="og:updated_time" content="2017-12-30T06:54:04.833Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="利用C语言缺陷进行缓冲区溢出攻击">
 <meta name="twitter:description" content="黑客初体验。">
@@ -384,7 +384,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                   字
+                  2,476 字
                 </span>
               
 
@@ -461,7 +461,7 @@
 </ol>
 <hr>
 <ul>
-<li>反汇编：  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> objdump -d ./bufbomb &gt; disas.txt</div></pre></td></tr></table></figure>
+<li>反汇编：  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> objdump -d ./bufbomb &gt; disas.txt</span></div></pre></td></tr></table></figure>
 </li>
 </ul>
 <ul>
@@ -500,18 +500,18 @@
 <li><p>查看反汇编代码：<br>  <img src="/images/overflow/2.png"><br>  得到返回地址：<code>0x08048dbe</code></p>
 </li>
 <li><p>用<code>gdb</code>查看原bp：</p>
-  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> gdb ./bufbomb</div><div class="line">  </div><div class="line">(gdb) b getbuf</div><div class="line">(gdb) run -u gaufoo</div><div class="line">(gdb) p /x *(int *)$ebp</div></pre></td></tr></table></figure>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> gdb ./bufbomb</span></div><div class="line">  </div><div class="line">(gdb) b getbuf</div><div class="line">(gdb) run -u gaufoo</div><div class="line">(gdb) p /x *(int *)$ebp</div></pre></td></tr></table></figure>
 <p>  <img src="/images/overflow/5.png"></p>
 <p>  得到原bp：<code>0x55683d20</code></p>
 </li>
 <li><p>用<code>gdb</code>查看字符串首地址，就把代码注入到那：</p>
-  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> gdb ./bufbomb</div><div class="line">  </div><div class="line">(gdb) b getbuf</div><div class="line">(gdb) run -u gaufoo</div><div class="line">(gdb) p /x ($ebp-0x28)</div></pre></td></tr></table></figure>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> gdb ./bufbomb</span></div><div class="line">  </div><div class="line">(gdb) b getbuf</div><div class="line">(gdb) run -u gaufoo</div><div class="line">(gdb) p /x ($ebp-0x28)</div></pre></td></tr></table></figure>
 <p>  <img src="/images/overflow/7.png"></p>
 <p>  得到字符串首地址：<code>0x55683cc8</code></p>
 </li>
 <li><p>编写汇编代码，并译成机器码：</p>
   <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// sc.s</div><div class="line">mov $0x4a3e65c1,%eax</div><div class="line">push $0x08048dbe</div><div class="line">ret</div></pre></td></tr></table></figure>
-  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> gcc -m32 -c sc.s</div><div class="line"><span class="meta">$</span> objdump -d sc.o</div></pre></td></tr></table></figure>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> gcc -m32 -c sc.s</span></div><div class="line"><span class="meta">$</span><span class="bash"> objdump -d sc.o</span></div></pre></td></tr></table></figure>
 <p>  <img src="/images/overflow/6.png"></p>
 </li>
 <li><p>编写注入的16进制机器码：</p>
@@ -714,7 +714,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-count">27</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
