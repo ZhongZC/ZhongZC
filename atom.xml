@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2018-03-03T16:43:55.645Z</updated>
+  <updated>2018-03-03T17:07:48.709Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://gaufoo.com/2018/03/03/cppnlisp2/"/>
     <id>http://gaufoo.com/2018/03/03/cppnlisp2/</id>
     <published>2018-03-03T12:28:29.000Z</published>
-    <updated>2018-03-03T16:43:55.645Z</updated>
+    <updated>2018-03-03T17:07:48.709Z</updated>
     
     <content type="html"><![CDATA[<p>既已有基础材料，撸起袖子做作业。</p>
 <a id="more"></a>
@@ -29,7 +29,7 @@
 <hr>
 <h1 id="作业要求"><a href="#作业要求" class="headerlink" title="作业要求"></a>作业要求</h1><p>问题描述：<br>  设计一个程序实现两个任意长的正数（包括正数和负数）、任意精度实数的算术运算；<br>提示：<br>  （1）用动态链表存储数据，每节点含一个整型变量，表示若干位数；<br>  （2）整数输入和输出按中国对于长整数的习惯表示，每3位1组，组间用逗号隔开；<br>  （3）实现长整数的加、减运算；<br>  （4）程序运行界面清晰实用；<br>选做：<br>  （1）求两长整数之商、积<br>  （2）高精度实数算术运算</p>
 <hr>
-<h1 id="最终成果"><a href="#最终成果" class="headerlink" title="最终成果"></a>最终成果</h1><p><img src="/images/180303/photo_2018-03-03_20-43-54.jpg"></p>
+<h1 id="最终成果"><a href="#最终成果" class="headerlink" title="最终成果"></a>最终成果</h1><p><img src="/images/180303/photo_2018-03-03_20-43-54.gif"></p>
 <hr>
 <h1 id="实现基础"><a href="#实现基础" class="headerlink" title="实现基础"></a>实现基础</h1><p>要求3位3位地分割大数，对于我来说，很容易想到这是1000进制的加减乘除问题。因此问题转换成：如何实现任意进制的加减乘除。问题变得更通用，解决起来更有趣味和意义。</p>
 <hr>
