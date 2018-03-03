@@ -103,7 +103,7 @@
 <meta property="og:description" content="LISP赐予我力量。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://gaufoo.com/images/180303/photo_2018-03-03_17-53-22.jpg">
-<meta property="og:updated_time" content="2018-03-03T12:22:44.893Z">
+<meta property="og:updated_time" content="2018-03-03T14:20:54.898Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用C++写出伪LISP代码（一）">
 <meta name="twitter:description" content="LISP赐予我力量。">
@@ -374,7 +374,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,719 字
+                  1,735 字
                 </span>
               
 
@@ -410,6 +410,7 @@
 <p><img src="/images/180303/photo_2018-03-03_17-53-22.jpg"></p>
 <p>前一个盒子连着后一个盒子，第一个盒子有箭头指着，最后一个盒子什么都不指，用斜线填充。</p>
 <p>用C++来表达这样的结构是很轻松的事情，每个盒子(<code>Node</code>)包含元素部分，类型为<code>A</code>(<code>Arbitrary</code>)，还有箭头部分，类型为<code>std::shared_ptr&lt;A&gt;</code> (注：<code>std::shared_ptr</code>可以使我们从内存管理的泥潭中抽身而出)。可以通过调用内部的<code>head</code>、<code>tail</code>函数来获取该元素，以及箭头。代码如下：</p>
+<p>(*注：以下所有C++代码均采用C++14标准)</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyNode</span></span></div><div class="line"><span class="class">&#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">  MyNode(T a, <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;MyNode&gt; b) : n(a), next(b)&#123;&#125;;</div><div class="line"></div><div class="line">  <span class="function">T <span class="title">head</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> n; &#125;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;MyNode&gt; tail() &#123; <span class="keyword">return</span> next; &#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span>:</div><div class="line">  T n;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;MyNode&gt; next;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 <p>初步的结构有了，但请注意到，<code>list</code>是一种递归的结构，我取出某个<code>list</code>的<code>tail</code>(箭头)，它仍然是一个<code>list</code>，直到最后代表<code>list</code>完结的斜线。</p>
 <p>所以，在这里我干脆把所有箭头都取相同的名字，叫做<code>Mylist</code>，给最后的斜线也取个名字，叫做<code>EmptyList</code>，<code>EmptyList</code>也是一个<code>list</code>。</p>
@@ -425,7 +426,7 @@
 <p>可以看出他们实际上都是递归式。</p>
 <hr>
 <h2 id="翻转-list"><a href="#翻转-list" class="headerlink" title="翻转 list"></a>翻转 list</h2><p>由于上面已经定义了左右折叠函数，在这里可以直接现用了，因为翻转<code>list</code>也不过是个遍历操作。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * 反转</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line">MyList&lt;T&gt; Reverse(MyList&lt;T&gt; xs)</div><div class="line">&#123;</div><div class="line">  <span class="keyword">return</span> FoldLeft([](MyList&lt;T&gt; xs, T x) -&gt; MyList&lt;T&gt; &#123; <span class="keyword">return</span> Cons(x, xs); &#125; , </div><div class="line">                  EmptyList&lt;T&gt;, xs);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * 反转</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line">MyList&lt;T&gt; Reverse(MyList&lt;T&gt; xs)</div><div class="line">&#123;</div><div class="line">  <span class="keyword">return</span> FoldLeft([](MyList&lt;T&gt; xs, T x) -&gt; MyList&lt;T&gt; &#123; <span class="keyword">return</span> Cons&lt;T&gt;(x, xs); &#125; , </div><div class="line">                  EmptyList&lt;T&gt;, xs);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>相信读者已经看出了函数式语句是何等的简洁了，我上面所定义的函数全都不过寥寥几行，却已经完整表达了我所期望的操作。</p>
 <hr>
 <h2 id="list-长度"><a href="#list-长度" class="headerlink" title="list 长度"></a>list 长度</h2><p>不出意外，一样是可以通过<code>fold</code>解决。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * Length</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">size_t</span> Length(MyList&lt;T&gt; xs)</div><div class="line">&#123;</div><div class="line">  <span class="keyword">return</span> FoldLeft( [](<span class="keyword">size_t</span> x, T rest) &#123; <span class="keyword">return</span> (x + <span class="number">1</span>); &#125;,</div><div class="line">                   <span class="number">0</span>, xs);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
@@ -441,7 +442,7 @@
 <h3 id="丢弃list前n个元素，构成新list"><a href="#丢弃list前n个元素，构成新list" class="headerlink" title="丢弃list前n个元素，构成新list"></a>丢弃list前n个元素，构成新list</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * list-tail</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line">MyList&lt;T&gt; ListTail(MyList&lt;T&gt; xs, <span class="keyword">size_t</span> n)</div><div class="line">&#123;</div><div class="line">  <span class="keyword">return</span> ( n == <span class="number">0</span> ) ? xs : ListTail(xs-&gt;tail(), n - <span class="number">1</span>) ;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h3 id="list-里是否存在符合条件的元素"><a href="#list-里是否存在符合条件的元素" class="headerlink" title="list 里是否存在符合条件的元素"></a>list 里是否存在符合条件的元素</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * any</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Any</span><span class="params">(F pred, MyList&lt;T&gt; lst)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="keyword">return</span> FoldLeft( [&amp;pred](<span class="keyword">bool</span> x, T rest) &#123; <span class="keyword">return</span> pred(rest) || x; &#125;, </div><div class="line">                   <span class="literal">false</span>, lst);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <hr>
-<p>基础结构和功能已经构造完毕，下面将用以……完成作业。</p>
+<p>基础结构和功能已经构造完毕，下面将用来……完成作业。</p>
 <hr>
 
       
@@ -502,10 +503,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/03/03/cppnlisp2/" rel="prev" title="用C++写出伪LISP代码（二）">
-                用C++写出伪LISP代码（二） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -586,7 +583,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-count">27</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
