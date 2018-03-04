@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="编程,C++," />
+  <meta name="keywords" content="编程,C++,LISP,函数式编程," />
 
 
 
@@ -95,7 +95,7 @@
 
 
 <meta name="description" content="LISP赐予我力量。">
-<meta name="keywords" content="编程,C++">
+<meta name="keywords" content="编程,C++,LISP,函数式编程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="用C++写出伪LISP代码（一）">
 <meta property="og:url" content="http://gaufoo.com/2018/03/03/cppnlisp1/index.html">
@@ -103,7 +103,7 @@
 <meta property="og:description" content="LISP赐予我力量。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://gaufoo.com/images/180303/photo_2018-03-03_17-53-22.jpg">
-<meta property="og:updated_time" content="2018-03-04T00:39:25.783Z">
+<meta property="og:updated_time" content="2018-03-04T04:16:35.891Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用C++写出伪LISP代码（一）">
 <meta name="twitter:description" content="LISP赐予我力量。">
@@ -374,7 +374,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,737 字
+                  1,750 字
                 </span>
               
 
@@ -448,7 +448,7 @@
 <h3 id="丢弃list前n个元素，构成新list"><a href="#丢弃list前n个元素，构成新list" class="headerlink" title="丢弃list前n个元素，构成新list"></a>丢弃list前n个元素，构成新list</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * list-tail</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line">MyList&lt;T&gt; ListTail(MyList&lt;T&gt; xs, <span class="keyword">size_t</span> n)</div><div class="line">&#123;</div><div class="line">  <span class="keyword">return</span> ( n == <span class="number">0</span> ) ? xs : ListTail(xs-&gt;tail(), n - <span class="number">1</span>) ;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h3 id="list-里是否存在符合条件的元素"><a href="#list-里是否存在符合条件的元素" class="headerlink" title="list 里是否存在符合条件的元素"></a>list 里是否存在符合条件的元素</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * any</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Any</span><span class="params">(F pred, MyList&lt;T&gt; lst)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="keyword">return</span> FoldLeft( [&amp;pred](<span class="keyword">bool</span> x, T rest) &#123; <span class="keyword">return</span> pred(rest) || x; &#125;, </div><div class="line">                   <span class="literal">false</span>, lst);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <hr>
-<p>基础结构和功能已经构造完毕，下面将用来……完成作业。</p>
+<p>基础结构和功能已经构造完毕，下面将用来……完成作业。<br>完整代码：<a href="https://github.com/zhongzc/C-/blob/master/mylist.h" target="_blank" rel="external">https://github.com/zhongzc/C-/blob/master/mylist.h</a></p>
 <hr>
 
       
@@ -488,6 +488,10 @@
             <a href="/tags/编程/" rel="tag"># 编程</a>
           
             <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/LISP/" rel="tag"># LISP</a>
+          
+            <a href="/tags/函数式编程/" rel="tag"># 函数式编程</a>
           
         </div>
       
@@ -593,7 +597,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -615,7 +619,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

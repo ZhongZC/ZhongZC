@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2018-03-04T00:43:21.760Z</updated>
+  <updated>2018-03-04T04:17:16.966Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -16,11 +16,78 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>用C++写出伪LISP代码（三）</title>
+    <link href="http://gaufoo.com/2018/03/04/cppnlisp3/"/>
+    <id>http://gaufoo.com/2018/03/04/cppnlisp3/</id>
+    <published>2018-03-04T01:36:56.000Z</published>
+    <updated>2018-03-04T04:17:16.966Z</updated>
+    
+    <content type="html"><![CDATA[<p>迷。</p>
+<a id="more"></a>
+<hr>
+<p>老规矩<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mylist.h"</span></span></div></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="作业要求"><a href="#作业要求" class="headerlink" title="作业要求"></a>作业要求</h1><p>设计一个迷宫游戏，给定迷宫的入口；如果存在出口，程序能够显示行走的路径，并最终到达出口，并输出“成功走出迷宫”；如果不存在出口，程序也能够显示行走的过程，并最终回退到入口，并输出“回退到入口”；</p>
+<hr>
+<h1 id="最终成果"><a href="#最终成果" class="headerlink" title="最终成果"></a>最终成果</h1><p><img src="/images/180303/photo_2333.gif"></p>
+<hr>
+<h1 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h1><p>要是以为这个作业的难度在于走迷宫，那就大错特错了。走迷宫不要太简单，像我这样完全没接触过OI、ACM的普通学生，一般都能想到用所谓的广度优先算法解决。<br>实际上，这个问题困难的地方在于生成迷宫，如何生成一个有且仅有一条通路的、视觉效果还不赖的迷宫，是做这个作业最终要解决的问题。</p>
+<hr>
+<h1 id="走迷宫"><a href="#走迷宫" class="headerlink" title="走迷宫"></a>走迷宫</h1><p>既然走迷宫是很容易解决的问题，我们就先挑这个软柿子捏捏。</p>
+<h2 id="按意愿编程法"><a href="#按意愿编程法" class="headerlink" title="按意愿编程法"></a>按意愿编程法</h2><p>《SICP》提出过这么一种编程思路 —— 按意愿编程。意思是，先别管你写的程序能不能跑，假装代码中的所有函数都能正常工作，尽管实际上还没实现。这个办法能让人从细节的纠缠中脱离，从大局出发，每次专注于某个功能的实现。<br>当初我用Scheme来写走迷宫就采用了这样的办法，所以非常快地解决了问题。</p>
+<hr>
+<h2 id="主要函数"><a href="#主要函数" class="headerlink" title="主要函数"></a>主要函数</h2><p>是该有这么一个<code>find_way</code>函数，功能是这样的：查看走出迷宫没有，如果没有，那就走下一步，再查看走出迷宫没有，如果没有，那就走下一步，……，直至走出迷宫。<br><code>find_shortest_way</code>函数就是按意愿编程法的产物，因为我还没实现它，只是期望它能够帮我查找<code>ways</code>的所有路线中是否存在某条路线走出了迷宫。若找到了这条路线，<code>find_way</code>就圆满完成了任务，返回这条最短路线。<br>接下来的<code>for</code>循环，是由于我的<code>Map</code>函数不够完善而临时采用的遍历操作。它利用假想的<code>next_steps</code>函数，让<code>ways</code>中的每条路线都走出下一步，然后把这些“下一步”存储在<code>poor_new_ways</code>中。叫<code>poor</code>的原因是，我假想的<code>next_steps</code>函数直接产生上下左右四个新位置，还需要下一步的过滤操作。<br>过滤操作利用<code>is_forwardable</code>，就可以筛选出真正可以走的下一步。<br>最后再递归进行如上操作。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function">Way <span class="title">find_way</span><span class="params">(MyWayList ways)</span> </span>&#123;</div><div class="line">  <span class="keyword">auto</span> shortest_way&#123;find_shortest_way(ways)&#125;;</div><div class="line">  <span class="keyword">if</span> (!(shortest_way == EmptyCorList)) &#123;</div><div class="line">    <span class="keyword">return</span> shortest_way;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">auto</span> poor_new_ways&#123;EmptyWayList&#125;;</div><div class="line">    <span class="keyword">for</span>( <span class="keyword">auto</span> old_ways = ways</div><div class="line">        ; old_ways != EmptyWayList</div><div class="line">        ; poor_new_ways = Append(next_steps(old_ways-&gt;head()), poor_new_ways)</div><div class="line">        , old_ways = old_ways-&gt;tail()) &#123;&#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> find_way(Filter([<span class="keyword">this</span>](Way way) &#123; <span class="keyword">return</span> is_forwardable(way-&gt;head()); &#125;,</div><div class="line">                    poor_new_ways));    </div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>下面再去实现上面所需要的子函数。</p>
+<hr>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><p>生成某条路线的所有可能的下一步。<code>first</code>、<code>second</code>分别代表坐标<code>x</code>、<code>y</code>。<code>C</code>函数用于构造坐标。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function">MyWayList <span class="title">next_steps</span><span class="params">(Way way)</span> </span>&#123;</div><div class="line">  <span class="keyword">auto</span> last_pstion&#123;way-&gt;head()&#125;;</div><div class="line"></div><div class="line">  <span class="keyword">auto</span> d&#123;Cons(C(last_pstion-&gt;first + <span class="number">1</span>, last_pstion-&gt;second), way)&#125;;</div><div class="line">  <span class="keyword">auto</span> u&#123;Cons(C(last_pstion-&gt;first - <span class="number">1</span>, last_pstion-&gt;second), way)&#125;;</div><div class="line">  <span class="keyword">auto</span> l&#123;Cons(C(last_pstion-&gt;first, last_pstion-&gt;second - <span class="number">1</span>), way)&#125;;</div><div class="line">  <span class="keyword">auto</span> r&#123;Cons(C(last_pstion-&gt;first, last_pstion-&gt;second + <span class="number">1</span>), way)&#125;;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> toList(&#123; d, u, l, r &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="可达与否"><a href="#可达与否" class="headerlink" title="可达与否"></a>可达与否</h2><p>下一步不可达的情况是：走出了边界范围、撞了墙、走了别的路线走过的位置。<br>需要特别提出的是：走了别的路线走过的位置。感觉这是一种挺精巧的想法：既然你慢了一步，不是第一条走这个位置的路线，你就已经失去了成为最短路线的可能，淘汰吧。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">is_forwardable</span><span class="params">(CorP step)</span> </span>&#123;</div><div class="line">  <span class="keyword">auto</span> not_out_of_bound = [=]() -&gt; <span class="keyword">bool</span> &#123;</div><div class="line">    <span class="keyword">auto</span> x_&#123;step-&gt;first&#125;;</div><div class="line">    <span class="keyword">auto</span> y_&#123;step-&gt;second&#125;;</div><div class="line">    <span class="keyword">return</span> (x_ &lt; xbound) &amp;&amp; (y_ &lt; ybound) &amp;&amp; (x_ &gt;= <span class="number">0</span>) &amp;&amp; (y_ &gt;= <span class="number">0</span>);</div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  <span class="keyword">auto</span> not_wall = [=]() -&gt; <span class="keyword">bool</span> &#123;</div><div class="line">    <span class="keyword">return</span> step != wall; <span class="comment">// 伪代码，取决于具体实现</span></div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  <span class="keyword">auto</span> not_been = [=]() -&gt; <span class="keyword">bool</span> &#123;</div><div class="line">    <span class="keyword">return</span> step != been; <span class="comment">// 伪代码，取决于具体实现</span></div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> not_out_of_bound() &amp;&amp; not_wall() &amp;&amp; not_been();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="到达终点与否"><a href="#到达终点与否" class="headerlink" title="到达终点与否"></a>到达终点与否</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function">Way <span class="title">find_shortest_way</span><span class="params">(MyWayList ways)</span> </span>&#123;</div><div class="line">  <span class="keyword">auto</span> is_reached = [=](Way way) -&gt; <span class="keyword">bool</span> &#123;</div><div class="line">    <span class="keyword">auto</span> step = way-&gt;head();</div><div class="line">    <span class="keyword">return</span> (step-&gt;first == destination-&gt;first &amp;&amp;</div><div class="line">      step-&gt;second == destination-&gt;second);</div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  <span class="keyword">auto</span> reachs&#123;Filter(is_reached, ways)&#125;;</div><div class="line">  <span class="keyword">return</span> (reachs == EmptyWayList) ? EmptyCorList : reachs-&gt;head();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<p>到此，走迷宫的代码已经完成。马上迎来重头戏：生成迷宫。</p>
+<hr>
+<h1 id="生成迷宫"><a href="#生成迷宫" class="headerlink" title="生成迷宫"></a>生成迷宫</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>首先看到这样一个有望成为迷宫的胚子：<br><img src="/images/180303/photo_2018-03-04_11-02-31.jpg"><br>我们需要做的是，把某些墙推倒，解放每个格子(cell)。但又不能乱解放，导致生成不好用的迷宫。这时候，离散数学中的最小生成树算法就派上了用场。<br>把每个格子都当成一个结点，让所有格子连成一棵树。树的每两个结点，都必定只有一条最短路径可达。这样恰好就是一个迷宫了。<br>说是最小生成树，那每个结点的权重是多少呢？这里假设每个格子的东南西北四个方向邻接的格子权重相同，与其他格子的距离无限大。并采用随机挑选的办法来处理权重相同的结点。</p>
+<h2 id="Prim-算法"><a href="#Prim-算法" class="headerlink" title="Prim 算法"></a>Prim 算法</h2><p>Prim算法是比较简单的最小生成树算法。我把他的思路整理成了这样的伪代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">未连通::Set &lt;- All</div><div class="line">已连通::Set &lt;- []</div><div class="line">待连通::Set &lt;- []</div><div class="line"></div><div class="line">a &lt;- 未连通.RandomGet()</div><div class="line">已连通.Add(a)</div><div class="line">未连通.Remove(a)</div><div class="line"></div><div class="line">b[] &lt;- Filter(a.Around, 未连通)</div><div class="line">待连通.Add(b[])</div><div class="line">未连通.Remove(b[])</div><div class="line"></div><div class="line">while (not 待连通.EMPTY)</div><div class="line">&#123;</div><div class="line">    c &lt;- 待连通.RandomGet()</div><div class="line">    d[] &lt;- Filter(c.Around, 已连通)</div><div class="line"></div><div class="line">    e &lt;- d[].RandomGet()</div><div class="line">    Connect(c, e)</div><div class="line">    待连通.Remove(c)</div><div class="line">    已连通.Add(c)</div><div class="line">    </div><div class="line">    f[] &lt;- Filter(c.Around, 未连通)</div><div class="line">    待连通.Add(f[])</div><div class="line">    未连通.Remove(f[])</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>首先明确，任何已连通的格子周围的格子都是待连通的格子。于是算法思路总结成，最开始先随机找到一个格子，加入已连通的集合。再从待连通集合里随机挑选一个格子，推倒它与已连通集合中随机挑选出的它周围的格子之间的墙。重复前过程直至待连通集合再无格子。<br>参考链接: <a href="http://weblog.jamisbuck.org/2011/1/10/maze-generation-prim-s-algorithm" target="_blank" rel="external">http://weblog.jamisbuck.org/2011/1/10/maze-generation-prim-s-algorithm</a></p>
+<p>来观察一下我的C++代码，基本与上述的伪代码一一对应：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">CorSet un;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> y = <span class="number">0</span>; y &lt; height; y++) &#123;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> x = <span class="number">0</span>; x &lt; width; x++) &#123;</div><div class="line">    un.insert( Cor(x, y) );</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">CorSet ed;</div><div class="line">CorSet ing;</div><div class="line"></div><div class="line"></div><div class="line">Cor a = *(<span class="built_in">std</span>::next(un.begin(), rand_int(<span class="number">0</span>, un.size())));</div><div class="line">ed.insert(a);</div><div class="line">un.erase(a);</div><div class="line"></div><div class="line"><span class="keyword">auto</span> b&#123;filterAround(a, un)&#125;;</div><div class="line"><span class="keyword">for</span> ( <span class="keyword">const</span> <span class="keyword">auto</span>&amp; x : *b ) &#123; </div><div class="line">  ing.insert(x);</div><div class="line">  un.erase(x);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">while</span> (!ing.empty()) &#123;</div><div class="line">  Cor c = *(<span class="built_in">std</span>::next(ing.begin(), rand_int(<span class="number">0</span>, ing.size())));</div><div class="line">  <span class="keyword">auto</span> d =  filterAround(c, ed);</div><div class="line"></div><div class="line">  Cor e = d-&gt;at(rand_int(<span class="number">0</span>, d-&gt;size()));</div><div class="line">  pullDown(c, e);</div><div class="line">  ing.erase(c);</div><div class="line">  ed.insert(c);</div><div class="line"></div><div class="line">  <span class="keyword">auto</span> f&#123;filterAround(c, un)&#125;;</div><div class="line">  <span class="keyword">for</span> ( <span class="keyword">const</span> <span class="keyword">auto</span>&amp; x : *f ) &#123; </div><div class="line">    ing.insert(x);</div><div class="line">    un.erase(x);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<hr>
+<p>最后就会得到一个长这样的迷宫：<br><img src="/images/180303/photo_2018-03-04_11-32-17.jpg"></p>
+<hr>
+<p>寒假作业终于告一段落，要开始写周末作业了……<br>完整代码：<a href="https://github.com/zhongzc/C-/blob/master/maze.cpp" target="_blank" rel="external">https://github.com/zhongzc/C-/blob/master/maze.cpp</a></p>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;迷。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="C++" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
+    
+    
+      <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
+    
+      <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
+    
+      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+  </entry>
+  
+  <entry>
     <title>用C++写出伪LISP代码（二）</title>
     <link href="http://gaufoo.com/2018/03/03/cppnlisp2/"/>
     <id>http://gaufoo.com/2018/03/03/cppnlisp2/</id>
     <published>2018-03-03T12:28:29.000Z</published>
-    <updated>2018-03-04T00:43:21.760Z</updated>
+    <updated>2018-03-04T04:16:58.892Z</updated>
     
     <content type="html"><![CDATA[<p>既已有基础材料，撸起袖子做作业。</p>
 <a id="more"></a>
@@ -81,7 +148,7 @@
 <h2 id="ONE-LOOP"><a href="#ONE-LOOP" class="headerlink" title="ONE LOOP"></a>ONE LOOP</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Engine</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"\n\n请输入运算符(+ - * /)："</span>;</div><div class="line">  <span class="keyword">char</span> op;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cin</span> &gt;&gt; op;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">string</span> junk;</div><div class="line">  <span class="built_in">std</span>::getline(<span class="built_in">std</span>::<span class="built_in">cin</span>, junk, <span class="string">'\n'</span>);</div><div class="line">  <span class="keyword">if</span> (op != <span class="string">'+'</span> &amp;&amp; op != <span class="string">'-'</span> &amp;&amp; op != <span class="string">'*'</span> &amp;&amp; op != <span class="string">'/'</span> ) &#123;</div><div class="line">    <span class="keyword">throw</span> <span class="built_in">std</span>::runtime_error(<span class="string">"###### 操作符解析错误：应为 + 或 - 或 * 或 /。"</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"请输入第一个操作数 (示例：-123, 456, 789 )："</span>;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">string</span> s1&#123;<span class="string">""</span>&#125;;</div><div class="line">  <span class="built_in">std</span>::getline(<span class="built_in">std</span>::<span class="built_in">cin</span>, s1, <span class="string">'\n'</span>);</div><div class="line">  <span class="keyword">auto</span> n1 = make_number(Parser(s1));</div><div class="line"></div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"请输入第二个操作数 (示例：-123, 456, 789 )："</span>;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">string</span> s2&#123;<span class="string">""</span>&#125;;</div><div class="line">  <span class="built_in">std</span>::getline(<span class="built_in">std</span>::<span class="built_in">cin</span>, s2, <span class="string">'\n'</span>);  </div><div class="line">  <span class="keyword">auto</span> n2 = make_number(Parser(s2));</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (Length(n1) &lt;= <span class="number">0</span> || Length(n2) &lt;= <span class="number">0</span>) &#123;</div><div class="line">    <span class="keyword">throw</span> <span class="built_in">std</span>::runtime_error(<span class="string">"###### 操作数解析错误，格式应为：-123, 456, 789"</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">auto</span> res = Eval(op, n1, n2);</div><div class="line">  PrettyPrint(op, n1, n2, res);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="REPL-以及错误处理"><a href="#REPL-以及错误处理" class="headerlink" title="REPL 以及错误处理"></a>REPL 以及错误处理</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="keyword">while</span> (<span class="number">1</span>) &#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      Engine();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">catch</span> (<span class="built_in">std</span>::runtime_error err) &#123;</div><div class="line">      <span class="built_in">std</span>::<span class="built_in">cerr</span> &lt;&lt; <span class="string">"\n"</span> &lt;&lt; err.what() &lt;&lt; <span class="string">"\n"</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"\n\n继续输入？请键入 y 或 n 进行确认："</span>;</div><div class="line">    <span class="keyword">char</span> c;</div><div class="line">    <span class="keyword">if</span> (!(<span class="built_in">std</span>::<span class="built_in">cin</span> &gt;&gt; c) || c == <span class="string">'n'</span>) <span class="keyword">break</span>;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <hr>
-<p>作业一到此为止，作业二更有意思，让我们拭目以待。</p>
+<p>作业一到此为止，作业二更有意思，让我们拭目以待。<br>完整代码：<a href="https://github.com/zhongzc/C-/blob/master/longnum.cpp" target="_blank" rel="external">https://github.com/zhongzc/C-/blob/master/longnum.cpp</a></p>
 <hr>
 ]]></content>
     
@@ -100,6 +167,10 @@
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
     
+      <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
+    
+      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
   </entry>
   
   <entry>
@@ -107,7 +178,7 @@
     <link href="http://gaufoo.com/2018/03/03/cppnlisp1/"/>
     <id>http://gaufoo.com/2018/03/03/cppnlisp1/</id>
     <published>2018-03-03T08:48:23.000Z</published>
-    <updated>2018-03-04T00:39:25.783Z</updated>
+    <updated>2018-03-04T04:16:35.891Z</updated>
     
     <content type="html"><![CDATA[<p>LISP赐予我力量。</p>
 <a id="more"></a>
@@ -158,7 +229,7 @@
 <h3 id="丢弃list前n个元素，构成新list"><a href="#丢弃list前n个元素，构成新list" class="headerlink" title="丢弃list前n个元素，构成新list"></a>丢弃list前n个元素，构成新list</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * list-tail</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line">MyList&lt;T&gt; ListTail(MyList&lt;T&gt; xs, <span class="keyword">size_t</span> n)</div><div class="line">&#123;</div><div class="line">  <span class="keyword">return</span> ( n == <span class="number">0</span> ) ? xs : ListTail(xs-&gt;tail(), n - <span class="number">1</span>) ;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h3 id="list-里是否存在符合条件的元素"><a href="#list-里是否存在符合条件的元素" class="headerlink" title="list 里是否存在符合条件的元素"></a>list 里是否存在符合条件的元素</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// * any</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Any</span><span class="params">(F pred, MyList&lt;T&gt; lst)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="keyword">return</span> FoldLeft( [&amp;pred](<span class="keyword">bool</span> x, T rest) &#123; <span class="keyword">return</span> pred(rest) || x; &#125;, </div><div class="line">                   <span class="literal">false</span>, lst);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <hr>
-<p>基础结构和功能已经构造完毕，下面将用来……完成作业。</p>
+<p>基础结构和功能已经构造完毕，下面将用来……完成作业。<br>完整代码：<a href="https://github.com/zhongzc/C-/blob/master/mylist.h" target="_blank" rel="external">https://github.com/zhongzc/C-/blob/master/mylist.h</a></p>
 <hr>
 ]]></content>
     
@@ -176,6 +247,10 @@
       <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
+    
+      <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
+    
+      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -2294,31 +2369,6 @@
       <category term="Python" scheme="http://gaufoo.com/tags/Python/"/>
     
       <category term="web" scheme="http://gaufoo.com/tags/web/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>生活中的不愉快</title>
-    <link href="http://gaufoo.com/2017/09/01/%E7%94%9F%E6%B4%BB%E4%B8%AD%E7%9A%84%E4%B8%8D%E6%84%89%E5%BF%AB/"/>
-    <id>http://gaufoo.com/2017/09/01/生活中的不愉快/</id>
-    <published>2017-08-31T16:03:35.000Z</published>
-    <updated>2017-09-06T09:18:18.241Z</updated>
-    
-    <content type="html"><![CDATA[<p>总会遇到被气的时刻，还得忍。</p>
-<a id="more"></a>
-<hr>
-<p>总会有人不但不愿欣赏你的作品，甚至乐于践踏你的劳动成果。<br>学不会善良，总该学会尊重吧。学不会尊重，为什么不学学安静呢。<br>至少我还知道远离，五山那家咖啡厅挺不错。</p>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;总会遇到被气的时刻，还得忍。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="不归" scheme="http://gaufoo.com/categories/%E4%B8%8D%E5%BD%92/"/>
-    
     
   </entry>
   

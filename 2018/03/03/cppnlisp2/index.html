@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="编程,C++," />
+  <meta name="keywords" content="编程,C++,LISP,函数式编程," />
 
 
 
@@ -95,7 +95,7 @@
 
 
 <meta name="description" content="既已有基础材料，撸起袖子做作业。">
-<meta name="keywords" content="编程,C++">
+<meta name="keywords" content="编程,C++,LISP,函数式编程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="用C++写出伪LISP代码（二）">
 <meta property="og:url" content="http://gaufoo.com/2018/03/03/cppnlisp2/index.html">
@@ -103,7 +103,7 @@
 <meta property="og:description" content="既已有基础材料，撸起袖子做作业。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://gaufoo.com/images/180303/photo_2018-03-03_20-43-54.gif">
-<meta property="og:updated_time" content="2018-03-04T00:43:21.760Z">
+<meta property="og:updated_time" content="2018-03-04T04:16:58.892Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用C++写出伪LISP代码（二）">
 <meta name="twitter:description" content="既已有基础材料，撸起袖子做作业。">
@@ -374,7 +374,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,989 字
+                  3,002 字
                 </span>
               
 
@@ -458,7 +458,7 @@
 <h2 id="ONE-LOOP"><a href="#ONE-LOOP" class="headerlink" title="ONE LOOP"></a>ONE LOOP</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Engine</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"\n\n请输入运算符(+ - * /)："</span>;</div><div class="line">  <span class="keyword">char</span> op;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cin</span> &gt;&gt; op;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">string</span> junk;</div><div class="line">  <span class="built_in">std</span>::getline(<span class="built_in">std</span>::<span class="built_in">cin</span>, junk, <span class="string">'\n'</span>);</div><div class="line">  <span class="keyword">if</span> (op != <span class="string">'+'</span> &amp;&amp; op != <span class="string">'-'</span> &amp;&amp; op != <span class="string">'*'</span> &amp;&amp; op != <span class="string">'/'</span> ) &#123;</div><div class="line">    <span class="keyword">throw</span> <span class="built_in">std</span>::runtime_error(<span class="string">"###### 操作符解析错误：应为 + 或 - 或 * 或 /。"</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"请输入第一个操作数 (示例：-123, 456, 789 )："</span>;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">string</span> s1&#123;<span class="string">""</span>&#125;;</div><div class="line">  <span class="built_in">std</span>::getline(<span class="built_in">std</span>::<span class="built_in">cin</span>, s1, <span class="string">'\n'</span>);</div><div class="line">  <span class="keyword">auto</span> n1 = make_number(Parser(s1));</div><div class="line"></div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"请输入第二个操作数 (示例：-123, 456, 789 )："</span>;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">string</span> s2&#123;<span class="string">""</span>&#125;;</div><div class="line">  <span class="built_in">std</span>::getline(<span class="built_in">std</span>::<span class="built_in">cin</span>, s2, <span class="string">'\n'</span>);  </div><div class="line">  <span class="keyword">auto</span> n2 = make_number(Parser(s2));</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (Length(n1) &lt;= <span class="number">0</span> || Length(n2) &lt;= <span class="number">0</span>) &#123;</div><div class="line">    <span class="keyword">throw</span> <span class="built_in">std</span>::runtime_error(<span class="string">"###### 操作数解析错误，格式应为：-123, 456, 789"</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">auto</span> res = Eval(op, n1, n2);</div><div class="line">  PrettyPrint(op, n1, n2, res);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="REPL-以及错误处理"><a href="#REPL-以及错误处理" class="headerlink" title="REPL 以及错误处理"></a>REPL 以及错误处理</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="keyword">while</span> (<span class="number">1</span>) &#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      Engine();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">catch</span> (<span class="built_in">std</span>::runtime_error err) &#123;</div><div class="line">      <span class="built_in">std</span>::<span class="built_in">cerr</span> &lt;&lt; <span class="string">"\n"</span> &lt;&lt; err.what() &lt;&lt; <span class="string">"\n"</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"\n\n继续输入？请键入 y 或 n 进行确认："</span>;</div><div class="line">    <span class="keyword">char</span> c;</div><div class="line">    <span class="keyword">if</span> (!(<span class="built_in">std</span>::<span class="built_in">cin</span> &gt;&gt; c) || c == <span class="string">'n'</span>) <span class="keyword">break</span>;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <hr>
-<p>作业一到此为止，作业二更有意思，让我们拭目以待。</p>
+<p>作业一到此为止，作业二更有意思，让我们拭目以待。<br>完整代码：<a href="https://github.com/zhongzc/C-/blob/master/longnum.cpp" target="_blank" rel="external">https://github.com/zhongzc/C-/blob/master/longnum.cpp</a></p>
 <hr>
 
       
@@ -499,6 +499,10 @@
           
             <a href="/tags/C/" rel="tag"># C++</a>
           
+            <a href="/tags/LISP/" rel="tag"># LISP</a>
+          
+            <a href="/tags/函数式编程/" rel="tag"># 函数式编程</a>
+          
         </div>
       
 
@@ -519,6 +523,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/04/cppnlisp3/" rel="prev" title="用C++写出伪LISP代码（三）">
+                用C++写出伪LISP代码（三） <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -599,7 +607,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -621,7 +629,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
