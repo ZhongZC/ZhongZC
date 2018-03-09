@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2018-03-09T18:28:57.833Z</updated>
+  <updated>2018-03-09T18:30:37.432Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://gaufoo.com/2018/03/10/parser/"/>
     <id>http://gaufoo.com/2018/03/10/parser/</id>
     <published>2018-03-09T18:28:27.000Z</published>
-    <updated>2018-03-09T18:28:57.833Z</updated>
+    <updated>2018-03-09T18:30:37.432Z</updated>
     
     <content type="html"><![CDATA[<p>某高中生眼中入门级别的程序。</p>
 <a id="more"></a>
@@ -34,14 +34,10 @@
 <li>简单了解Haskell语法即可。</li>
 </ul>
 <hr>
-<h1 id="Parser-Combinator-概念"><a href="#Parser-Combinator-概念" class="headerlink" title="Parser Combinator 概念"></a>Parser Combinator 概念</h1><p><strong>什么是Parser：</strong></p>
-<p>简单地说：给定一个字符流，比如一个字符串、一段代码、一篇文章等，输入到Parser，会把原本平坦的结构改造成有层次有内涵的结构。</p>
-<p><strong>什么是Parser Combinator：</strong></p>
-<p>由于函数式语言里函数是头等公民，可以把一个函数作为另一个函数的参数，一个函数可以产生出另外一个函数。基于这样的特点，我们可以把一个Parser作为参数传给另外一个Parser，一个Parser也可以产生另外一个新的Parser。有了这样的结合性，我们就可以实现Parser Combinator。<br>它是一种基于递归下降原理的非常简洁的Parser实现方法。</p>
-<p><strong>为什么是Parser Combinator：</strong></p>
-<p>Parser Combinator在模块化、可读性、易维护等方面有着无可比拟的优势。<br>举个简单的例子：就像小孩子读文章，一开始他只认识一个一个字，拿着手指一个字一个字地点着读。接着他学会了把字结合起来变成词，认识词后又学会如何识别句子（很可能是因为学会了标点符号），慢慢长大后他便一目十行，脑中自然形成了文章的概念。Parser Combinator就很像这样一步一步组合的过程，非常符合人类直觉，所以编写起来相当容易。</p>
-<p><strong>编写语言：</strong></p>
-<p>Haskell，不想写C++找罪受。<br>注：演示代码将尽量详细，所以可能不够point-free。</p>
+<h1 id="Parser-Combinator-概念"><a href="#Parser-Combinator-概念" class="headerlink" title="Parser Combinator 概念"></a>Parser Combinator 概念</h1><p><strong>什么是Parser：</strong><br>简单地说：给定一个字符流，比如一个字符串、一段代码、一篇文章等，输入到Parser，会把原本平坦的结构改造成有层次有内涵的结构。</p>
+<p><strong>什么是Parser Combinator：</strong><br>由于函数式语言里函数是头等公民，可以把一个函数作为另一个函数的参数，一个函数可以产生出另外一个函数。基于这样的特点，我们可以把一个Parser作为参数传给另外一个Parser，一个Parser也可以产生另外一个新的Parser。有了这样的结合性，我们就可以实现Parser Combinator。<br>它是一种基于递归下降原理的非常简洁的Parser实现方法。</p>
+<p><strong>为什么是Parser Combinator：</strong><br>Parser Combinator在模块化、可读性、易维护等方面有着无可比拟的优势。<br>举个简单的例子：就像小孩子读文章，一开始他只认识一个一个字，拿着手指一个字一个字地点着读。接着他学会了把字结合起来变成词，认识词后又学会如何识别句子（很可能是因为学会了标点符号），慢慢长大后他便一目十行，脑中自然形成了文章的概念。Parser Combinator就很像这样一步一步组合的过程，非常符合人类直觉，所以编写起来相当容易。</p>
+<p><strong>编写语言：</strong><br>Haskell，不想写C++找罪受。<br>注：演示代码将尽量详细，所以可能不够point-free。</p>
 <hr>
 <h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><p>第一步，先定义Parser的数据类型。<br>还记得我上面说过，Parser是将字符流转换成一种结构，比如<code>Tree</code>。所以可以适当猜想一下数据类型的样子：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">type</span> <span class="type">Parser</span> = <span class="type">String</span> -&gt; <span class="type">Tree</span></span></div></pre></td></tr></table></figure></p>
 <p>但显然不可能这样一步到位，一个<code>Parser</code>直接生成一棵树，那还谈什么结合。按道理，应该是一个Parser接受字符串，消耗一定字符，产生特定的结构，完成后把剩余的字符交给下一个<code>Parser</code>继续解析：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">type</span> <span class="type">Parser</span> = <span class="type">String</span> -&gt; (<span class="type">Tree</span>, <span class="type">String</span>)</span></div></pre></td></tr></table></figure></p>
