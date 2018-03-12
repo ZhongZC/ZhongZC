@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2018-03-09T18:30:37.432Z</updated>
+  <updated>2018-03-12T09:33:52.006Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -16,11 +16,143 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Continuation与Call-With-Current-Continuation</title>
+    <link href="http://gaufoo.com/2018/03/12/continuation/"/>
+    <id>http://gaufoo.com/2018/03/12/continuation/</id>
+    <published>2018-03-12T01:50:13.000Z</published>
+    <updated>2018-03-12T09:33:52.006Z</updated>
+    
+    <content type="html"><![CDATA[<p>和我同乘时光机。</p>
+<a id="more"></a>
+<hr>
+<h1 id="本文要点"><a href="#本文要点" class="headerlink" title="本文要点"></a>本文要点</h1><h2 id="你将收获"><a href="#你将收获" class="headerlink" title="你将收获"></a>你将收获</h2><ul>
+<li>了解<code>Continuation</code>的概念。</li>
+<li>了解<code>CPS</code>(<code>Continuation Passing Style</code>)的概念与优势。</li>
+<li>有机会搭乘<code>Call With Current Continuation</code>这台时光机。</li>
+</ul>
+<h2 id="所需基础"><a href="#所需基础" class="headerlink" title="所需基础"></a>所需基础</h2><ul>
+<li>熟悉Haskell的Monad用法。</li>
+</ul>
+<hr>
+<h1 id="Continuation"><a href="#Continuation" class="headerlink" title="Continuation"></a>Continuation</h1><h2 id="什么是Continuation"><a href="#什么是Continuation" class="headerlink" title="什么是Continuation"></a>什么是Continuation</h2><p>为了了解何谓<code>Continuation</code>，我们先来考虑这样一个表达式：<code>4 * 3</code><br>如果把焦点放在<code>3</code>上，在这里给出两种求值风格：</p>
+<ul>
+<li><code>(4*) 3</code></li>
+<li><code>($3) (4*)</code></li>
+</ul>
+<p>它们的结果都是一样的：<code>12</code>。<br>前者，<code>3</code>被函数<code>(4*)</code>调用。后者，<code>3</code>选择让<code>(4*)</code>调用自己。<br>这期间微妙的区别，便是CPS(<code>Continuation Passing Style</code>)的来由。后者是典型的CPS，<code>(4*)</code>就是<code>3</code>的<code>Continuation</code>。</p>
+<p>从<code>CPS</code>的角度看，<code>($3)</code>要做的事情就是等待。它的类型是：<code>(a -&gt; r) -&gt; r</code>，意味着，它需要一个函数作为参数，才能求出最后的结果。它所等待的函数，类型为<code>a -&gt; r</code>，被称为<code>Continuation</code>，<code>Continuation</code>指定了最终值应该如何被求得。</p>
+<p>在实践中，我们可以简单地通过<code>flip ($)</code>，将一个值转换成等待应用的形式。另外，可以通过传递<code>id</code>函数作为其参数，把原始值返回。</p>
+<hr>
+<h2 id="Continuation的好处"><a href="#Continuation的好处" class="headerlink" title="Continuation的好处"></a>Continuation的好处</h2><p><code>Continuation</code>的内涵可不仅仅是这样简单地调换应用顺序，更重要的是，它带给了我们显式操控和动态选择程序控制流的可能。比如，实现程序的提前返回，异常的传递和处理可以通过<code>Continuation</code>实现 —— 一个<code>Continuation</code>用于处理正常情况，另一个<code>Continuation</code>用于处理异常情况，以及实现简单的并发(<code>Concurrency</code>)。</p>
+<p>而且，当我们所有的函数都严格按照<code>CPS</code>来编写，那么所有的函数调用都会是尾调用(<code>Tail Call</code>)的形式。使用尾调用形式可以进行尾调用优化(<code>TCO</code>, <code>Tail Call Optimization</code>)，使得程序不再需要运行时栈(<code>Run-time Stack</code>)，在现在的许多解释器和编译器中，都能找到这样一种技术。</p>
+<hr>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>想要采用<code>Continuation</code>的简单方法是修改所有函数，让函数返回待应用的形式。下面将演示两个实例。</p>
+<h3 id="pythagoras"><a href="#pythagoras" class="headerlink" title="pythagoras"></a>pythagoras</h3><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 普通函数调用风格，计算平方和:</span></div><div class="line"></div><div class="line"><span class="title">add</span> :: <span class="type">Int</span> -&gt; <span class="type">Int</span> -&gt; <span class="type">Int</span></div><div class="line"><span class="title">add</span> x y = x + y</div><div class="line"></div><div class="line"><span class="title">square</span> :: <span class="type">Int</span> -&gt; <span class="type">Int</span></div><div class="line"><span class="title">square</span> x = x * x</div><div class="line"></div><div class="line"><span class="title">pythagoras</span> :: <span class="type">Int</span> -&gt; <span class="type">Int</span> -&gt; <span class="type">Int</span></div><div class="line"><span class="title">pythagoras</span> x y = add (square x) (square y)</div></pre></td></tr></table></figure>
+<p>将返回值修改成待应用形式，<code>pythagoras</code>将变成：</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 函数的CPS版本</span></div><div class="line"></div><div class="line"><span class="title">add_cps</span> :: <span class="type">Int</span> -&gt; <span class="type">Int</span> -&gt; ((<span class="type">Int</span> -&gt; r) -&gt; r)</div><div class="line"><span class="title">add_cps</span> x y = \k -&gt; k (add x y)</div><div class="line"></div><div class="line"><span class="title">square_cps</span> :: <span class="type">Int</span> -&gt; ((<span class="type">Int</span> -&gt; r) -&gt; r)</div><div class="line"><span class="title">square_cps</span> x = \k -&gt; k (square x)</div><div class="line"></div><div class="line"><span class="title">pythagoras_cps</span> :: <span class="type">Int</span> -&gt; <span class="type">Int</span> -&gt; ((<span class="type">Int</span> -&gt; r) -&gt; r)</div><div class="line"><span class="title">pythagoras_cps</span> x y = \k -&gt;</div><div class="line"> square_cps x $ \x_squared -&gt;</div><div class="line"> square_cps y $ \y_squared -&gt;</div><div class="line"> add_cps x_squared y_squared $ k</div></pre></td></tr></table></figure>
+<p><code>pythagoras_cps</code>执行过程：</p>
+<ul>
+<li>把<code>x</code>求平方，把结果丢到<code>\x_squared -&gt; ...</code>这个<code>Continuation</code>里。</li>
+<li>把<code>y</code>求平方，把结果丢到<code>\y_squared -&gt; ...</code>这个<code>Continuation</code>里。</li>
+<li>把<code>x_squared</code>和<code>y_squared</code>加起来，把结果丢到<code>k</code>这个<code>Continuation</code>里。</li>
+</ul>
+<p>在GHCi里运行一下，把<code>id</code>作为参数/<code>Continuation</code>传给最终程序：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">λ&gt; pythagoras_cps <span class="number">3</span> <span class="number">4</span> id</div><div class="line"><span class="number">25</span></div></pre></td></tr></table></figure></p>
+<p>从这里我们已经可以看出，<code>CPS</code>这种风格最突出的特征是：所有函数调用都要把未来需要做的事情显式地传递给它。函数不止关注自己的值如何求出，还关注求出的值如何被使用。</p>
+<h3 id="thrice"><a href="#thrice" class="headerlink" title="thrice"></a>thrice</h3><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 一个高阶函数，无Continuation版本</span></div><div class="line"></div><div class="line"><span class="title">thrice</span> :: (a -&gt; a) -&gt; a -&gt; a</div><div class="line"><span class="title">thrice</span> f x = f (f (f x))</div></pre></td></tr></table></figure>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">λ&gt; thrice tail <span class="string">"foobar"</span></div><div class="line"><span class="string">"bar"</span></div></pre></td></tr></table></figure>
+<p>像<code>thrice</code>这样的高阶函数，转换成<code>CPS</code>时，它接受的函数参数也要改成相应的<code>CPS</code>版本。因此<code>f :: a -&gt; a</code>将变成<code>f_cps :: a -&gt; ((a -&gt; r) -&gt; r)</code>，最终类型变成<code>thrice_cps :: (a -&gt; ((a -&gt; r) -&gt; r)) -&gt; a -&gt; ((a -&gt; r) -&gt; r)</code>。</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 高阶函数带Continuation版本</span></div><div class="line"></div><div class="line"><span class="title">thrice_cps</span> :: (a -&gt; ((a -&gt; r) -&gt; r)) -&gt; a -&gt; ((a -&gt; r) -&gt; r)</div><div class="line"><span class="title">thrice_cps</span> f_cps x = \k -&gt;</div><div class="line"> f_cps x $ \fx -&gt;</div><div class="line"> f_cps fx $ \ffx -&gt;</div><div class="line"> f_cps ffx $ k</div></pre></td></tr></table></figure>
+<hr>
+<h1 id="Cont-Monad"><a href="#Cont-Monad" class="headerlink" title="Cont Monad"></a>Cont Monad</h1><p>有了这些<code>continuation-passing</code>函数，下一步应该做的是提供一种更简洁的组合它们的方法，而不是像上面那样嵌套那么多<code>lambda</code>。<br>先来尝试写出用于应用(<code>apply</code>)待应用函数的组合子(<code>Combinator</code>)。它的类型应该是这样的：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">chainCPS</span> :: ((a -&gt; r) -&gt; r) -&gt; (a -&gt; ((b -&gt; r) -&gt; r)) -&gt; ((b -&gt; r) -&gt; r)</div></pre></td></tr></table></figure></p>
+<p>实现如下：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">chainCPS</span> s f = \k -&gt; s $ \x -&gt; f x $ k</div></pre></td></tr></table></figure></p>
+<p>调用者首先提供一个待应用形式的值<code>s</code>，通过嵌套的<code>lambda</code>把<code>a</code>类型的值拿到，让<code>f</code>应用于它，最后再用新的<code>Continuation</code>即<code>k</code>把这一切包裹起来。</p>
+<p>没错，相信聪明的读者已经看出来，上面的函数类型和<code>Monad</code>里的<code>(&gt;&gt;=)</code>函数类型相当相似。而且，<code>flip ($)</code>也可以充当<code>return</code>的角色。</p>
+<p><br><br><strong>一个新的<code>Monad</code>诞生了。</strong><br><br></p>
+<p>我们可以定义<code>Cont r a</code>来包裹这种待应用形式的值，再实现包装和解包函数：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">cont</span> :: ((a -&gt; r) -&gt; r) -&gt; <span class="type">Cont</span> r a</div><div class="line"><span class="title">runCont</span> :: <span class="type">Cont</span> r a -&gt; (a -&gt; r) -&gt; r</div></pre></td></tr></table></figure></p>
+<p><code>Monad</code>的实现上面已经介绍过，不同的只是包装和解包：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">instance</span> <span class="type">Monad</span> (<span class="type">Cont</span> <span class="title">r</span>) <span class="keyword">where</span></span></div><div class="line">    return x = cont ($ x)</div><div class="line">    s &gt;&gt;= f  = cont $ \c -&gt; runCont s $ \x -&gt; runCont (f x) c</div></pre></td></tr></table></figure></p>
+<p><code>Monad</code>实例把<code>Continuation</code>的传递隐藏起来，拥有了<code>Monad</code>绑定的种种好处，把上面的<code>pythagoras</code>重写一下：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 使用transformers包里面的Cont Monad</span></div><div class="line"><span class="keyword">import</span> Control.Monad.Trans.Cont</div><div class="line"></div><div class="line"><span class="title">add_cont</span> :: <span class="type">Int</span> -&gt; <span class="type">Int</span> -&gt; <span class="type">Cont</span> r <span class="type">Int</span></div><div class="line"><span class="title">add_cont</span> x y = return (add x y)</div><div class="line"></div><div class="line"><span class="title">square_cont</span> :: <span class="type">Int</span> -&gt; <span class="type">Cont</span> r <span class="type">Int</span></div><div class="line"><span class="title">square_cont</span> x = return (square x)</div><div class="line"></div><div class="line"><span class="title">pythagoras_cont</span> :: <span class="type">Int</span> -&gt; <span class="type">Int</span> -&gt; <span class="type">Cont</span> r <span class="type">Int</span></div><div class="line"><span class="title">pythagoras_cont</span> x y = <span class="keyword">do</span></div><div class="line">    x_squared &lt;- square_cont x</div><div class="line">    y_squared &lt;- square_cont y</div><div class="line">    add_cont x_squared y_squared</div></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="callCC"><a href="#callCC" class="headerlink" title="callCC"></a>callCC</h1><p>实现了可爱的<code>Monad</code>固然是值得高兴的，可是别忘了我们想要<code>CPS</code>的目的：用<code>Continuation</code>精确操控程序控制流。如果把<code>Continuation</code>都隐藏在<code>Monad</code>背后，这种控制将不复存在。为了纠正这个问题，我们引入了<code>callCC</code>函数。</p>
+<p><code>callCC</code>是一个非常神奇的函数，举个例子：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- Without callCC</span></div><div class="line"><span class="title">square</span> :: <span class="type">Int</span> -&gt; <span class="type">Cont</span> r <span class="type">Int</span></div><div class="line"><span class="title">square</span> n = return (n ^ <span class="number">2</span>)</div><div class="line"></div><div class="line"><span class="comment">-- With callCC</span></div><div class="line"><span class="title">squareCCC</span> :: <span class="type">Int</span> -&gt; <span class="type">Cont</span> r <span class="type">Int</span></div><div class="line"><span class="title">squareCCC</span> n = callCC $ \k -&gt; k (n ^ <span class="number">2</span>)</div></pre></td></tr></table></figure></p>
+<p>传递给<code>callCC</code>的是一个函数，这个函数的返回值是一个待应用形式的值(即类型为<code>Cont r a</code>)。重点来了：让<code>callCC</code>如此特殊的原因就在于<code>k</code>，是<code>k</code>让精确控制程序成为可能。</p>
+<p><strong>那么<code>k</code>究竟是何方神圣？</strong></p>
+<p>事情是这样的：<br>程序调用<code>callCC</code>的瞬间，在此处就放置了一个<code>传送门</code>、或者说<code>存档点</code>、或者说<code>时光机</code>。业界所说的放置了<code>坑</code>，我认为不甚准确。<code>k</code>就是这个<code>传送门</code>在<code>callCC</code>内部的另一端。一旦内部有任何一个值调用了<code>k</code>，<code>k</code>就会无条件地把这个值传递回去，内部此后任何对<code>k</code>的调用都将被无情抛弃。<br>从另一个角度来看，<code>k</code>也可以说是调用<code>callCC</code>以后的所有计算，一旦<code>callCC</code>内部有值调用了<code>k</code>，<code>k</code>就将外面的整个世界传递给这个值，毕竟<code>callCC</code>的全称是<code>call with current continuation</code>。<br>随读者怎么理解，我更倾向于前者。</p>
+<p>下面我们就来探索<code>callCC</code>究竟可以有怎样的可能性。</p>
+<hr>
+<h2 id="决定何时使用k"><a href="#决定何时使用k" class="headerlink" title="决定何时使用k"></a>决定何时使用k</h2><p><code>callCC</code>允许我们决定让什么值传递回去，以及何时传递。下面举个例子：</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 简单的callCC调用</span></div><div class="line"></div><div class="line"><span class="title">foo</span> :: <span class="type">Int</span> -&gt; <span class="type">Cont</span> r <span class="type">String</span></div><div class="line"><span class="title">foo</span> x = callCC $ \k -&gt; <span class="keyword">do</span></div><div class="line">    <span class="keyword">let</span> y = x ^ <span class="number">2</span> + <span class="number">3</span></div><div class="line">    when (y &gt; <span class="number">20</span>) $ k <span class="string">"over twenty"</span></div><div class="line">    return (show $ y - <span class="number">4</span>)</div></pre></td></tr></table></figure>
+<p>如果<code>y</code>的值大于<code>20</code>，<code>k</code>就会带着<code>&quot;over twenty&quot;</code>回到<code>Continuation</code>，否则，直到最终才让<code>show $ y - 4</code>返回到<code>Continuation</code>中。<br>从这里看，<code>k</code>有点像命令式语言里的<code>return</code>，但实际上<code>k</code>远远强大于<code>return</code>，因为它是头等公民，你可以把<code>k</code>传递给其他函数，比如<code>when</code>，把<code>k</code>存储在<code>Reader</code>里等等。</p>
+<p>同样，你可以在<code>do</code>里面嵌入<code>callCC</code>：</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="title">bar</span> :: <span class="type">Char</span> -&gt; <span class="type">String</span> -&gt; <span class="type">Cont</span> r <span class="type">Int</span></div><div class="line"><span class="title">bar</span> c s = <span class="keyword">do</span></div><div class="line">    msg &lt;- callCC $ \k -&gt; <span class="keyword">do</span></div><div class="line">        <span class="keyword">let</span> s0 = c : s</div><div class="line">        when (s0 == <span class="string">"hello"</span>) $ k <span class="string">"They say hello."</span></div><div class="line">        <span class="keyword">let</span> s1 = show s0</div><div class="line">        return (<span class="string">"They appear to be saying "</span> ++ s1)</div><div class="line">    return (length msg)</div></pre></td></tr></table></figure>
+<p>从这里看，<code>k</code>又有点像其他语言里的<code>goto</code>，调用了<code>k</code>就会返回到<code>msg &lt;- ...</code>这一行。</p>
+<p><code>k</code>后面的无用的行：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="title">quux</span> :: <span class="type">Cont</span> r <span class="type">Int</span></div><div class="line"><span class="title">quux</span> = callCC $ \k -&gt; <span class="keyword">do</span></div><div class="line">    <span class="keyword">let</span> n = <span class="number">5</span></div><div class="line">    k n</div><div class="line">    return <span class="number">25</span></div></pre></td></tr></table></figure></p>
+<p>这个函数会把<code>5</code>返回到<code>Continuation</code>中，<code>return 25</code>是完完全全没有作用的。</p>
+<hr>
+<h2 id="舞台背后"><a href="#舞台背后" class="headerlink" title="舞台背后"></a>舞台背后</h2><p>如此神奇的<code>callCC</code>究竟如何实现。经过上面的举例，我们可以得出<code>callCC</code>的类型为：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">callCC</span> :: ((a -&gt; <span class="type">Cont</span> r b) -&gt; <span class="type">Cont</span> r a) -&gt; <span class="type">Cont</span> r a</div></pre></td></tr></table></figure></p>
+<p>总体返回应该和参数函数的返回类型一致(即<code>Cont r a</code>)，因为在没有调用<code>k</code>的情况下，得出的返回值应该一致。<br>那么<code>k</code>的类型呢？<br>正如上面所演示的，<code>k</code>的参数将被传到<code>calCC</code>调用点处。所以，<code>k</code>的参数类型是<code>a</code>。<br>不过<code>k</code>的返回类型就有点意思了，<code>b</code>代表着任意类型。因为上面提过，<code>k</code>意味着跟在<code>callCC</code>以后的任何<code>Continuation</code>，所以<code>k</code>的返回类型是任意的。</p>
+<blockquote>
+<p> <strong>注意：</strong><br>    <figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 有错误的代码</span></div><div class="line"></div><div class="line"><span class="title">quux</span> :: <span class="type">Cont</span> r <span class="type">Int</span></div><div class="line"><span class="title">quux</span> = callCC $ \k -&gt; <span class="keyword">do</span></div><div class="line">  <span class="keyword">let</span> n = <span class="number">5</span></div><div class="line">  when <span class="type">True</span> $ k n</div><div class="line">  k <span class="number">25</span></div></pre></td></tr></table></figure></p>
+</blockquote>
+<p>由于<code>when</code>，<code>k n</code>的类型已经被约束为<code>Cont r ()</code>，因此后面的<code>k 25</code>与<code>quux</code>的返回类型不符合，应该改成<code>return 25</code>。</p>
+<p>实际实现：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">callCC</span> f = cont $ \h -&gt; runCont (f (\a -&gt; cont $ \_ -&gt; h a)) h</div></pre></td></tr></table></figure></p>
+<p>慢慢看，慢慢理解。</p>
+<hr>
+<h1 id="更多实例"><a href="#更多实例" class="headerlink" title="更多实例"></a>更多实例</h1><h2 id="复杂控制结构"><a href="#复杂控制结构" class="headerlink" title="复杂控制结构"></a>复杂控制结构</h2><p>让我们来看看更现实的控制流操控的例子。</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&#123;- We use the continuation monad to perform "escapes" from code blocks.</span></div><div class="line"><span class="comment">This function implements a complicated control structure to process</span></div><div class="line"><span class="comment">numbers:</span></div><div class="line"><span class="comment"></span></div><div class="line"><span class="comment">Input (n)     Output                    List Shown</span></div><div class="line"><span class="comment">=========     ======                    ==========</span></div><div class="line"><span class="comment">0-9           n                         none</span></div><div class="line"><span class="comment">10-199        number of digits in (n/2) digits of (n/2)</span></div><div class="line"><span class="comment">200-19999     n                         digits of (n/2)</span></div><div class="line"><span class="comment">20000-1999999 (n/2) backwards           none</span></div><div class="line"><span class="comment">&gt;= 2000000    sum of digits of (n/2)    digits of (n/2)</span></div><div class="line"><span class="comment">-&#125;</span> </div><div class="line"><span class="title">fun</span> :: <span class="type">Int</span> -&gt; <span class="type">String</span></div><div class="line"><span class="title">fun</span> n = (`runCont` id) $ <span class="keyword">do</span></div><div class="line">    str &lt;- callCC $ \exit1 -&gt; <span class="keyword">do</span>                            <span class="comment">-- define "exit1"</span></div><div class="line">        when (n &lt; <span class="number">10</span>) (exit1 (show n))</div><div class="line">        <span class="keyword">let</span> ns = map digitToInt (show (n `div` <span class="number">2</span>))</div><div class="line">        n' &lt;- callCC $ \exit2 -&gt; <span class="keyword">do</span>                         <span class="comment">-- define "exit2"</span></div><div class="line">            when ((length ns) &lt; <span class="number">3</span>) (exit2 (length ns))</div><div class="line">            when ((length ns) &lt; <span class="number">5</span>) (exit2 n)</div><div class="line">            when ((length ns) &lt; <span class="number">7</span>) $ <span class="keyword">do</span></div><div class="line">                <span class="keyword">let</span> ns' = map intToDigit (reverse ns)</div><div class="line">                exit1 (dropWhile (=='<span class="number">0</span>') ns')               <span class="comment">--escape 2 levels</span></div><div class="line">            return $ sum ns</div><div class="line">        return $ <span class="string">"(ns = "</span> ++ (show ns) ++ <span class="string">") "</span> ++ (show n')</div><div class="line">    return $ <span class="string">"Answer: "</span> ++ str</div></pre></td></tr></table></figure>
+<p><code>fun</code>是一个使用<code>Cont</code>和<code>callCC</code>建立起来的控制结构，接受不同的整数值<code>n</code>，而落到不同范围，从而做出不同的事情。剖析一下：</p>
+<ol>
+<li><code>(`runCont` id)</code>意味着把最终的计算结果<code>Continuation</code>通过<code>id</code>给拿出来。</li>
+<li>我们将<code>callCC</code>的结果绑定到<code>str</code>中：<ol>
+<li>如果<code>n</code>小于10，直接退出，只显示<code>n</code>。</li>
+<li>如果不是，继续进行。构造一个<code>list</code>，叫<code>ns</code>，里面转载<code>n `div` 2</code>的数字字符。</li>
+<li>内部<code>callCC</code>，结果绑定到<code>n&#39;</code>：<ol>
+<li>如果<code>length ns &lt; 3</code>，带着<code>length ns</code>从内部<code>do-block</code>退出。</li>
+<li>如果<code>n `div` 2</code>小于5个字符，带着<code>n</code>从内部<code>do-block</code>退出。</li>
+<li>如果<code>n `div` 2</code>小于7个字符，带着一个<code>String</code>直接退出到外部的<code>callCC</code>。</li>
+<li>否则，最终带着<code>n `div` 2</code>的<code>sum</code>退出。</li>
+</ol>
+</li>
+<li>最终带着字符串返回。</li>
+</ol>
+</li>
+<li>最终带着<code>str</code>返回。</li>
+</ol>
+<hr>
+<h2 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h2><p><code>Continuation</code>的一种用途是对异常进行建模。要做到这一点，我们要维护两个<code>Continuation</code>，一个带我们到<code>handler</code>处理函数以处理异常，一个在无异常的情况下带我们到处理后的代码。</p>
+<p>这里有一个简单的函数，模拟除零异常：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="title">divExcpt</span> :: <span class="type">Int</span> -&gt; <span class="type">Int</span> -&gt; (<span class="type">String</span> -&gt; <span class="type">Cont</span> r <span class="type">Int</span>) -&gt; <span class="type">Cont</span> r <span class="type">Int</span></div><div class="line"><span class="title">divExcpt</span> x y handler = callCC $ \ok -&gt; <span class="keyword">do</span></div><div class="line">    err &lt;- callCC $ \notOk -&gt; <span class="keyword">do</span></div><div class="line">        when (y == <span class="number">0</span>) $ notOk <span class="string">"Denominator 0"</span></div><div class="line">        ok $ x `div` y</div><div class="line">    handler err</div><div class="line"></div><div class="line"><span class="comment">&#123;- For example,</span></div><div class="line"><span class="comment">runCont (divExcpt 10 2 error) id --&gt; 5</span></div><div class="line"><span class="comment">runCont (divExcpt 10 0 error) id --&gt; *** Exception: Denominator 0</span></div><div class="line"><span class="comment">-&#125;</span></div></pre></td></tr></table></figure></p>
+<p>从代码中可以看出，我们嵌套使用了两个<code>callCC</code>，一个是将在没出问题时使用的<code>Continuation</code>，一个是我们希望抛出异常时将使用到的<code>Continuation</code>。如果分母不是<code>0</code>，则<code>ok</code>的<code>Continuation</code>将直接返回到顶层，否则，<code>err</code>将带着<code>&quot;Denominator 0&quot;</code>交给<code>handler</code>处理。</p>
+<p>下面介绍更通用的异常处理方法。第一个参数传递计算方法（准确地说，这个计算会得到一个<code>throw</code>函数，并在定义中决定是否使用）。另一个参数为错误处理程序。</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> Control.Monad.Cont</div><div class="line"></div><div class="line"><span class="title">tryCont</span> :: <span class="type">MonadCont</span> m =&gt; ((err -&gt; m a) -&gt; m a) -&gt; (err -&gt; m a) -&gt; m a</div><div class="line"><span class="title">tryCont</span> c h = callCC $ \ok -&gt; <span class="keyword">do</span></div><div class="line">    err &lt;- callCC $ \notOk -&gt; <span class="keyword">do</span></div><div class="line">        x &lt;- c notOk</div><div class="line">        ok x</div><div class="line">    h err</div></pre></td></tr></table></figure>
+<p>将<code>try</code>用到<code>action</code>中：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">data</span> <span class="type">SqrtException</span> = <span class="type">LessThanZero</span> <span class="keyword">deriving</span> (<span class="type">Show</span>, <span class="type">Eq</span>)</span></div><div class="line"></div><div class="line"><span class="title">sqrtIO</span> :: (<span class="type">SqrtException</span> -&gt; <span class="type">ContT</span> r <span class="type">IO</span> ()) -&gt; <span class="type">ContT</span> r <span class="type">IO</span> ()</div><div class="line"><span class="title">sqrtIO</span> throw = <span class="keyword">do</span> </div><div class="line">    ln &lt;- lift (putStr <span class="string">"Enter a number to sqrt: "</span> &gt;&gt; readLn)</div><div class="line">    when (ln &lt; <span class="number">0</span>) (throw <span class="type">LessThanZero</span>)</div><div class="line">    lift $ print (sqrt ln)</div><div class="line"></div><div class="line"><span class="title">main</span> = runContT (tryCont sqrtIO (lift . print)) return</div></pre></td></tr></table></figure></p>
+<p>在这个例子中，<code>throw</code>意味着从封闭的<code>callCC</code>中逃脱(<code>escape</code>)了，这个<code>throw</code>原本在<code>tryCont</code>的内部<code>callCC</code>中。</p>
+<hr>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://zhuanlan.zhihu.com/p/34064655" target="_blank" rel="external">柯里化的前生今世（八）：尾调用与CPS</a><br><a href="https://en.wikipedia.org/wiki/Continuation-passing_style#CPS_in_Haskell" target="_blank" rel="external">https://en.wikipedia.org/wiki/Continuation-passing_style#CPS_in_Haskell</a><br><a href="https://en.m.wikibooks.org/wiki/Haskell/Continuation_passing_style#callCC" target="_blank" rel="external">https://en.m.wikibooks.org/wiki/Haskell/Continuation_passing_style#callCC</a></p>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;和我同乘时光机。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="计算原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E5%8E%9F%E7%90%86/"/>
+    
+    
+      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
+    
+  </entry>
+  
+  <entry>
     <title>用Haskell构建Parser Combinator（一）</title>
     <link href="http://gaufoo.com/2018/03/10/parser/"/>
     <id>http://gaufoo.com/2018/03/10/parser/</id>
     <published>2018-03-09T18:28:27.000Z</published>
-    <updated>2018-03-09T18:30:37.432Z</updated>
+    <updated>2018-03-12T01:53:28.126Z</updated>
     
     <content type="html"><![CDATA[<p>某高中生眼中入门级别的程序。</p>
 <a id="more"></a>
@@ -160,6 +292,8 @@
 <li>将带来更多的实例。</li>
 </ul>
 <hr>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://www.cs.nott.ac.uk/~pszgmh/monparsing.pdf" target="_blank" rel="external">Monadic Parser Combinators</a><br><a href="https://en.wikipedia.org/wiki/Parser_combinator" target="_blank" rel="external">https://en.wikipedia.org/wiki/Parser_combinator</a></p>
+<hr>
 ]]></content>
     
     <summary type="html">
@@ -173,9 +307,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
       <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
       <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
     
@@ -717,9 +851,9 @@
     
       <category term="C" scheme="http://gaufoo.com/tags/C/"/>
     
-      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
-    
       <category term="汇编" scheme="http://gaufoo.com/tags/%E6%B1%87%E7%BC%96/"/>
+    
+      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -923,9 +1057,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
-    
       <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -985,9 +1119,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
-    
       <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -1332,9 +1466,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
-    
       <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -1514,9 +1648,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
-    
       <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -2203,221 +2337,6 @@
       <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
       <category term="操作系统" scheme="http://gaufoo.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>计算机网络学习笔记（一）</title>
-    <link href="http://gaufoo.com/2017/09/03/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
-    <id>http://gaufoo.com/2017/09/03/计算机网络学习笔记（一）/</id>
-    <published>2017-09-02T17:57:00.000Z</published>
-    <updated>2017-09-06T09:18:14.944Z</updated>
-    
-    <content type="html"><![CDATA[<p>记录以备后用</p>
-<a id="more"></a>
-<hr>
-<h2 id="计算机网络定义"><a href="#计算机网络定义" class="headerlink" title="计算机网络定义"></a>计算机网络定义</h2><ul>
-<li>计算机网络就是<strong>互连</strong>的、<strong>自治</strong>的计算机集合。<ul>
-<li>自治：无主从关系</li>
-<li>互连：通过通信链路互联互通</li>
-</ul>
-</li>
-<li>距离远、数量大时，通过<strong>交换网络</strong>互联主机。</li>
-</ul>
-<hr>
-<h2 id="Internet-定义"><a href="#Internet-定义" class="headerlink" title="Internet 定义"></a>Internet 定义</h2><h3 id="组成细节角度"><a href="#组成细节角度" class="headerlink" title="组成细节角度"></a>组成细节角度</h3><ul>
-<li>全球最大的<strong>互联网络</strong><ul>
-<li>由ISP(Internet Service Provider)网络互连的“网络之网络”</li>
-</ul>
-</li>
-<li>数以百万计的互连的<strong>计算设备</strong>集合<ul>
-<li>主机(hosts) == 端系统(end systems)</li>
-<li>运行各种网络应用</li>
-</ul>
-</li>
-<li>通信链路<ul>
-<li>光纤、铜缆、无线电、卫星……</li>
-</ul>
-</li>
-<li>分组交换：转发分组(数据包)<ul>
-<li>路由器(routers)</li>
-<li>交换机(switches)</li>
-</ul>
-</li>
-</ul>
-<h3 id="服务提供角度"><a href="#服务提供角度" class="headerlink" title="服务提供角度"></a>服务提供角度</h3><ul>
-<li>为网络应用提供通信服务<ul>
-<li>Web, VolP, email, 电子商务, 社交网络</li>
-</ul>
-</li>
-<li>为网络应用提供编程接口(API)<ul>
-<li>支持应用程序“连接”Internet, 发送/接收数据</li>
-<li>提供类似于邮政系统的数据传输服务</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2 id="网络协议"><a href="#网络协议" class="headerlink" title="网络协议"></a>网络协议</h2><h3 id="类比"><a href="#类比" class="headerlink" title="类比"></a>类比</h3><ul>
-<li>交通系统中的交通规则</li>
-<li>人类交谈作为信息交换的过程，同样包括交流时间、问题请教、人员引荐等</li>
-<li>网络通信<ul>
-<li>通信<strong>主体</strong>：机器，而非人</li>
-<li>交换“<strong>数字化</strong>”或“<strong>电子化</strong>”信息</li>
-<li>所有通信过程必须遵循某些规则：<strong>协议</strong></li>
-</ul>
-</li>
-</ul>
-<h3 id="要素"><a href="#要素" class="headerlink" title="要素"></a>要素</h3><ul>
-<li><strong>语法(Syntax)</strong><ul>
-<li>数据与控制信息的结构或格式</li>
-<li>信号电平</li>
-</ul>
-</li>
-<li><strong>语义(Semantics)</strong><ul>
-<li>需要发出何种控制信息</li>
-<li>完成何种动作以及做出何种响应</li>
-<li>差错控制</li>
-</ul>
-</li>
-<li><strong>时序(Timing)</strong><ul>
-<li>事件顺序</li>
-<li>速度匹配</li>
-</ul>
-</li>
-</ul>
-<h3 id="Internet-协议标准"><a href="#Internet-协议标准" class="headerlink" title="Internet 协议标准"></a>Internet 协议标准</h3><ul>
-<li>RFC：Request for Comments</li>
-<li>IETF：互联网工程任务组(Internet Engineering Task Force)</li>
-</ul>
-<hr>
-<h2 id="计算机网络结构"><a href="#计算机网络结构" class="headerlink" title="计算机网络结构"></a>计算机网络结构</h2><h3 id="网络边缘"><a href="#网络边缘" class="headerlink" title="网络边缘"></a>网络边缘</h3><ul>
-<li>主机（端系统）</li>
-<li>网络应用，如：Web，email</li>
-<li>模型：<ul>
-<li>客户/服务器（client/server）应用模型</li>
-<li>对等（peer-peer，P2P）应用模型</li>
-</ul>
-</li>
-</ul>
-<h3 id="接入网络、物理介质"><a href="#接入网络、物理介质" class="headerlink" title="接入网络、物理介质"></a>接入网络、物理介质</h3><ul>
-<li>有线或无线通信链路<ul>
-<li>住宅（家庭）接入网络</li>
-<li>机构接入网络（学校、企业等）</li>
-<li>移动接入网络</li>
-</ul>
-</li>
-<li>用户关心<ul>
-<li>带宽（bps）</li>
-<li>共享/独占</li>
-</ul>
-</li>
-<li>类型<ul>
-<li>电缆网络 - 频分多路复用</li>
-<li>数字用户线路（DSL） - 电话线</li>
-<li>Ethernet，端系统通常直接连接以太网交换机（switch）</li>
-<li>无线接入网络 - 通过基站或“接入点”<ul>
-<li>无线局域网（LANs）</li>
-<li>广域无线接入 - 电信运营商（蜂窝网）</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="网络核心（核心网络）"><a href="#网络核心（核心网络）" class="headerlink" title="网络核心（核心网络）"></a>网络核心（核心网络）</h3><ul>
-<li>互连的路由器（或分组转发设备）</li>
-<li>关键功能：<ul>
-<li>路由（routing）</li>
-<li>转发（forwarding）</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2 id="Internet-结构"><a href="#Internet-结构" class="headerlink" title="Internet 结构"></a>Internet 结构</h2><ul>
-<li>端系统通过<strong>接入ISP</strong>（access ISPs）连接到 Internet<ul>
-<li>家庭、公司、大学 ISPs</li>
-</ul>
-</li>
-<li>区域网络（regional networks）连接到<strong>接入ISP</strong>和运营商ISP</li>
-<li>每一个<strong>接入ISP</strong>连接到大型ISP</li>
-<li>大型ISP网络必须互连</li>
-<li>网络中心：少数互连的大型网络<ul>
-<li><strong>“一级”（tier-1）商业ISPs</strong>（如：网通、电信、Sprint、AT&amp;T），提供国家或国际范围的覆盖</li>
-<li><strong>内容提供商网络</strong>（content provider network，如：Google），私有网络，连接其数据中心与Internet</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2 id="数据交换"><a href="#数据交换" class="headerlink" title="数据交换"></a>数据交换</h2><h3 id="电路交换"><a href="#电路交换" class="headerlink" title="电路交换"></a>电路交换</h3><ul>
-<li>典型：电话网络</li>
-<li>阶段<ul>
-<li>建立连接</li>
-<li>通信</li>
-<li>释放资源</li>
-</ul>
-</li>
-<li>特点：独占资源 </li>
-<li>解决：多路复用<ul>
-<li>特点<ul>
-<li>将资源片分配给各路“呼叫”</li>
-<li>每路呼叫独占所分配资源</li>
-<li>资源片可能闲置（idle）</li>
-</ul>
-</li>
-<li>方法<ul>
-<li>频分多路复用（“frequency” FDM）</li>
-<li>时分多路复用（“time” TDM）</li>
-<li>波分多路复用（“wavelength” WDM）</li>
-<li>码分多路复用（“code” CDM）<ul>
-<li>每个用户分配一个<strong>码片序列</strong></li>
-<li>编码信号 = （原始数据）×（码片序列）</li>
-<li>各用户码片序列互相<strong>正交</strong>（orthogonal）</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="报文交换"><a href="#报文交换" class="headerlink" title="报文交换"></a>报文交换</h3><ul>
-<li>报文：源（应用）发送信息整体</li>
-</ul>
-<h3 id="分组交换"><a href="#分组交换" class="headerlink" title="分组交换"></a>分组交换</h3><ul>
-<li>分组：报文分拆出来的一系列相对较小的数据包</li>
-<li>分组交换需要报文的拆分与重组</li>
-<li>产生额外开销</li>
-</ul>
-<h3 id="报文-vs-分组"><a href="#报文-vs-分组" class="headerlink" title="报文 vs 分组"></a>报文 vs 分组</h3><ul>
-<li>两者都是存储转发方式，区别：报文 - 完整报文，分组 - 较小的分组</li>
-<li>报文：M bits 链路带宽：R bps 分组长度：L bits 路由器数：n<ul>
-<li>分组交换：T = M/R + nL/R</li>
-<li>报文交换：T = (n + 1)M/R</li>
-</ul>
-</li>
-<li>分组交换允许更多用户同时使用网络，网络资源充分共享</li>
-<li>分组交换缺陷<ol>
-<li>适用于突发数据传输网络 </li>
-<li>可能发生拥塞（congestion）：分组延迟和丢失 </li>
-<li>无电路级性能保障。</li>
-</ol>
-</li>
-</ul>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;记录以备后用&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
-    
-      <category term="计算机网络" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
-    
-    
-      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
-    
-      <category term="网络" scheme="http://gaufoo.com/tags/%E7%BD%91%E7%BB%9C/"/>
     
   </entry>
   

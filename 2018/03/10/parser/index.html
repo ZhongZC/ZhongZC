@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="编译原理,函数式编程,Haskell," />
+  <meta name="keywords" content="函数式编程,编译原理,Haskell," />
 
 
 
@@ -95,14 +95,14 @@
 
 
 <meta name="description" content="某高中生眼中入门级别的程序。">
-<meta name="keywords" content="编译原理,函数式编程,Haskell">
+<meta name="keywords" content="函数式编程,编译原理,Haskell">
 <meta property="og:type" content="article">
 <meta property="og:title" content="用Haskell构建Parser Combinator（一）">
 <meta property="og:url" content="http://gaufoo.com/2018/03/10/parser/index.html">
 <meta property="og:site_name" content="苟富">
 <meta property="og:description" content="某高中生眼中入门级别的程序。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-09T18:30:37.432Z">
+<meta property="og:updated_time" content="2018-03-12T01:53:28.126Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用Haskell构建Parser Combinator（一）">
 <meta name="twitter:description" content="某高中生眼中入门级别的程序。">
@@ -372,7 +372,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3,342 字
+                  3,353 字
                 </span>
               
 
@@ -535,6 +535,8 @@
 <li>将带来更多的实例。</li>
 </ul>
 <hr>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://www.cs.nott.ac.uk/~pszgmh/monparsing.pdf" target="_blank" rel="external">Monadic Parser Combinators</a><br><a href="https://en.wikipedia.org/wiki/Parser_combinator" target="_blank" rel="external">https://en.wikipedia.org/wiki/Parser_combinator</a></p>
+<hr>
 
       
     </div>
@@ -570,9 +572,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/编译原理/" rel="tag"># 编译原理</a>
-          
             <a href="/tags/函数式编程/" rel="tag"># 函数式编程</a>
+          
+            <a href="/tags/编译原理/" rel="tag"># 编译原理</a>
           
             <a href="/tags/Haskell/" rel="tag"># Haskell</a>
           
@@ -596,6 +598,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/12/continuation/" rel="prev" title="Continuation与Call-With-Current-Continuation">
+                Continuation与Call-With-Current-Continuation <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -676,7 +682,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-count">31</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -687,7 +693,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -781,7 +787,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#本文要点"><span class="nav-number">1.</span> <span class="nav-text">本文要点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#你将收获"><span class="nav-number">1.1.</span> <span class="nav-text">你将收获</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#所需基础"><span class="nav-number">1.2.</span> <span class="nav-text">所需基础</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Parser-Combinator-概念"><span class="nav-number">2.</span> <span class="nav-text">Parser Combinator 概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据类型"><span class="nav-number">3.</span> <span class="nav-text">数据类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#热身"><span class="nav-number">4.</span> <span class="nav-text">热身</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开始构建"><span class="nav-number">5.</span> <span class="nav-text">开始构建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#satisfy"><span class="nav-number">5.1.</span> <span class="nav-text">satisfy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#string"><span class="nav-number">5.2.</span> <span class="nav-text">string</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Combinator"><span class="nav-number">5.3.</span> <span class="nav-text">Combinator</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Monad"><span class="nav-number">6.</span> <span class="nav-text">Monad</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Functor"><span class="nav-number">6.1.</span> <span class="nav-text">Functor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Applicative"><span class="nav-number">6.2.</span> <span class="nav-text">Applicative</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Monad-1"><span class="nav-number">6.3.</span> <span class="nav-text">Monad</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#选择与回溯"><span class="nav-number">7.</span> <span class="nav-text">选择与回溯</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他函数"><span class="nav-number">8.</span> <span class="nav-text">其他函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#between"><span class="nav-number">8.1.</span> <span class="nav-text">between</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sepBy"><span class="nav-number">8.2.</span> <span class="nav-text">sepBy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#endBy"><span class="nav-number">8.3.</span> <span class="nav-text">endBy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chainl"><span class="nav-number">8.4.</span> <span class="nav-text">chainl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chainr"><span class="nav-number">8.5.</span> <span class="nav-text">chainr</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实例：构造四则运算语法树"><span class="nav-number">9.</span> <span class="nav-text">实例：构造四则运算语法树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#语法树数据结构"><span class="nav-number">9.1.</span> <span class="nav-text">语法树数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解析数字"><span class="nav-number">9.2.</span> <span class="nav-text">解析数字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Term-Factor-Expression"><span class="nav-number">9.3.</span> <span class="nav-text">Term Factor Expression</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Exp-Factor-‘-’-‘-‘-Factor"><span class="nav-number">9.3.1.</span> <span class="nav-text">Exp = Factor (( ‘+’ | ‘-‘ ) Factor)*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Factor-Term-‘-‘-‘-‘-Term"><span class="nav-number">9.3.2.</span> <span class="nav-text">Factor = Term (( ‘*‘ | ‘/‘ ) Term)*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Term-lt-数字-gt-‘-‘-Exp-‘-’"><span class="nav-number">9.3.3.</span> <span class="nav-text">Term = <数字> | ‘(‘ Exp ‘)’</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">9.4.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#下一步"><span class="nav-number">10.</span> <span class="nav-text">下一步</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#本文要点"><span class="nav-number">1.</span> <span class="nav-text">本文要点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#你将收获"><span class="nav-number">1.1.</span> <span class="nav-text">你将收获</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#所需基础"><span class="nav-number">1.2.</span> <span class="nav-text">所需基础</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Parser-Combinator-概念"><span class="nav-number">2.</span> <span class="nav-text">Parser Combinator 概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据类型"><span class="nav-number">3.</span> <span class="nav-text">数据类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#热身"><span class="nav-number">4.</span> <span class="nav-text">热身</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开始构建"><span class="nav-number">5.</span> <span class="nav-text">开始构建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#satisfy"><span class="nav-number">5.1.</span> <span class="nav-text">satisfy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#string"><span class="nav-number">5.2.</span> <span class="nav-text">string</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Combinator"><span class="nav-number">5.3.</span> <span class="nav-text">Combinator</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Monad"><span class="nav-number">6.</span> <span class="nav-text">Monad</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Functor"><span class="nav-number">6.1.</span> <span class="nav-text">Functor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Applicative"><span class="nav-number">6.2.</span> <span class="nav-text">Applicative</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Monad-1"><span class="nav-number">6.3.</span> <span class="nav-text">Monad</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#选择与回溯"><span class="nav-number">7.</span> <span class="nav-text">选择与回溯</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他函数"><span class="nav-number">8.</span> <span class="nav-text">其他函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#between"><span class="nav-number">8.1.</span> <span class="nav-text">between</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sepBy"><span class="nav-number">8.2.</span> <span class="nav-text">sepBy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#endBy"><span class="nav-number">8.3.</span> <span class="nav-text">endBy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chainl"><span class="nav-number">8.4.</span> <span class="nav-text">chainl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chainr"><span class="nav-number">8.5.</span> <span class="nav-text">chainr</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实例：构造四则运算语法树"><span class="nav-number">9.</span> <span class="nav-text">实例：构造四则运算语法树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#语法树数据结构"><span class="nav-number">9.1.</span> <span class="nav-text">语法树数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解析数字"><span class="nav-number">9.2.</span> <span class="nav-text">解析数字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Term-Factor-Expression"><span class="nav-number">9.3.</span> <span class="nav-text">Term Factor Expression</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Exp-Factor-‘-’-‘-‘-Factor"><span class="nav-number">9.3.1.</span> <span class="nav-text">Exp = Factor (( ‘+’ | ‘-‘ ) Factor)*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Factor-Term-‘-‘-‘-‘-Term"><span class="nav-number">9.3.2.</span> <span class="nav-text">Factor = Term (( ‘*‘ | ‘/‘ ) Term)*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Term-lt-数字-gt-‘-‘-Exp-‘-’"><span class="nav-number">9.3.3.</span> <span class="nav-text">Term = <数字> | ‘(‘ Exp ‘)’</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">9.4.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#下一步"><span class="nav-number">10.</span> <span class="nav-text">下一步</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">10.1.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
             
 
           </div>
