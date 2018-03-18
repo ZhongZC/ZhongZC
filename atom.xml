@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2018-03-12T09:38:36.524Z</updated>
+  <updated>2018-03-18T05:59:25.583Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -14,6 +14,87 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>用Haskell构建Parser Combinator（二）</title>
+    <link href="http://gaufoo.com/2018/03/18/parser2/"/>
+    <id>http://gaufoo.com/2018/03/18/parser2/</id>
+    <published>2018-03-18T02:16:34.000Z</published>
+    <updated>2018-03-18T05:59:25.583Z</updated>
+    
+    <content type="html"><![CDATA[<p>上期链接：<a href="http://gaufoo.com/2018/03/10/parser/">用Haskell构建Parser Combinator（一）</a></p>
+<a id="more"></a>
+<hr>
+<h1 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h1><p>上篇文章从<code>Parser</code>的类型、<code>Parser</code>的最简实现，一步步讲到<code>Parser</code>的<code>Monad</code>和相对完整的<code>Parser</code>库。<br>实际上，该<code>Parser</code>已经可以完成大部分的解析工作了。然而，当解析错误时，此<code>Parser</code>仅仅简单地返回<code>Nothing</code>。<br>当我们需要更为丰富的错误信息时，则需要在原来<code>Parser</code>的基础上，增加相应的模块。</p>
+<hr>
+<h1 id="类型修改"><a href="#类型修改" class="headerlink" title="类型修改"></a>类型修改</h1><p>还记得（一）中，<code>Parser</code>类型是：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">newtype</span> <span class="type">Parser</span> a = <span class="type">Parser</span> (<span class="type">String</span> -&gt; <span class="type">Maybe</span> (<span class="title">a</span>, <span class="type">String</span>))</span></div></pre></td></tr></table></figure></p>
+<p>既然需要错误信息，就不能简单地返回<code>Nothing</code>，而应该是一个<code>String</code>。因此需要把类型改成<code>Either</code>/<code>Except</code>。<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">newtype</span> <span class="type">Parser</span> a = <span class="type">Parser</span> (<span class="type">String</span> -&gt; <span class="type">Either</span> <span class="type">String</span> (<span class="title">a</span>, <span class="type">String</span>))</span></div></pre></td></tr></table></figure></p>
+<h2 id="添加错误信息"><a href="#添加错误信息" class="headerlink" title="添加错误信息"></a>添加错误信息</h2><h3 id="satisfy"><a href="#satisfy" class="headerlink" title="satisfy"></a>satisfy</h3><p>在<code>satisfy</code>实现中添加错误信息：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="title">satisfy</span> :: (<span class="type">Char</span> -&gt; <span class="type">Bool</span>) -&gt; <span class="type">Parser</span> <span class="type">Char</span></div><div class="line"><span class="title">satisfy</span> prd = <span class="type">Parser</span> $ \<span class="keyword">case</span></div><div class="line">    <span class="string">""</span> -&gt; <span class="type">Left</span> <span class="string">"End of input"</span></div><div class="line">    (x:xs) -&gt; <span class="keyword">if</span> prd x </div><div class="line">                <span class="keyword">then</span> <span class="type">Right</span> (x, xs) </div><div class="line">                <span class="keyword">else</span> <span class="type">Left</span> $ <span class="string">"unexcepted: "</span> ++ show x</div></pre></td></tr></table></figure></p>
+<p>测试：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">λ&gt; runParse (char 'a') <span class="string">"a"</span></div><div class="line"><span class="type">Right</span> ('a',<span class="string">""</span>)</div><div class="line">λ&gt; runParse (char 'a') <span class="string">"b"</span></div><div class="line"><span class="type">Left</span> <span class="string">"unexcepted: 'b'"</span></div><div class="line">λ&gt; runParse (char 'a') <span class="string">""</span></div><div class="line"><span class="type">Left</span> <span class="string">"End of input"</span></div></pre></td></tr></table></figure></p>
+<h3 id="Monad"><a href="#Monad" class="headerlink" title="Monad"></a>Monad</h3><p>把这些<code>instance</code>改一下，就完成了程序的修改。</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">instance</span> <span class="type">Functor</span> <span class="type">Parser</span> <span class="keyword">where</span></span></div><div class="line">  fmap f pa = <span class="type">Parser</span> $ \inp -&gt;</div><div class="line">    <span class="keyword">case</span> runParse pa inp <span class="keyword">of</span></div><div class="line">      <span class="type">Right</span> (x, rest) -&gt; <span class="type">Right</span> (f x, rest)</div><div class="line">      <span class="type">Left</span> x -&gt; <span class="type">Left</span> x</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">instance</span> <span class="type">Applicative</span> <span class="type">Parser</span> <span class="keyword">where</span></span></div><div class="line">  pure x = <span class="type">Parser</span> $ \inp -&gt; <span class="type">Right</span> (x, inp)</div><div class="line">  pab &lt;*&gt; pa = <span class="type">Parser</span> $ \inp -&gt;</div><div class="line">    <span class="keyword">case</span> runParse pab inp <span class="keyword">of</span></div><div class="line">      <span class="type">Right</span> (fab, rest) -&gt; runParse (fmap fab pa) rest</div><div class="line">      <span class="type">Left</span> x -&gt; <span class="type">Left</span> x</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">instance</span> <span class="type">Monad</span> <span class="type">Parser</span> <span class="keyword">where</span></span></div><div class="line">  pa &gt;&gt;= apb = <span class="type">Parser</span> $ \inp -&gt;</div><div class="line">    <span class="keyword">case</span> runParse pa inp <span class="keyword">of</span></div><div class="line">      <span class="type">Right</span> (a, rest) -&gt; runParse (apb a) rest</div><div class="line">      <span class="type">Left</span> x -&gt; <span class="type">Left</span> x</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">instance</span> <span class="type">Alternative</span> <span class="type">Parser</span> <span class="keyword">where</span></span></div><div class="line">  empty = <span class="type">Parser</span> $ const (<span class="type">Left</span> <span class="string">""</span>)</div><div class="line">  pa &lt;|&gt; pb = <span class="type">Parser</span> $ \inp -&gt;</div><div class="line">    <span class="keyword">case</span> runParse pa inp <span class="keyword">of</span></div><div class="line">      <span class="type">Left</span> _ -&gt; runParse pb inp</div><div class="line">      x -&gt; x</div></pre></td></tr></table></figure>
+<p>测试：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">λ&gt; runParse nature <span class="string">"123"</span></div><div class="line"><span class="type">Right</span> (<span class="number">123</span>,<span class="string">""</span>)</div><div class="line">λ&gt; runParse nature <span class="string">"adc"</span></div><div class="line"><span class="type">Left</span> <span class="string">"unexcepted: 'a'"</span></div></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="进一步"><a href="#进一步" class="headerlink" title="进一步"></a>进一步</h1><p>以上的“错误信息”虽聊胜于无，但是我们不应该就此满足。一份能用的错误信息，应该是具体的、有效的、能给用户以适当指示的。<br>因此，最好能够加上位置信息，以及能够自由地给出和修改提示。<br>接下来，让我们进一步修改类型。</p>
+<h2 id="位置信息"><a href="#位置信息" class="headerlink" title="位置信息"></a>位置信息</h2><p>平时我们使用编译器、解释器，代码中存在语法错误时，编译器、解释器的<code>Parser</code>总能正确地指出错误所在位置，使我们不必迷失在代码的海洋中不知所措（C++ template metaprogramming除外）。</p>
+<p>考虑到添加位置信息的需求，那就需要考虑位置信息的存在、更新方式。我们这里的做法是，把位置信息与待解析字符串捆绑在一起，形成<code>PString</code>，消耗字符串的时候，位置信息同步更新。<br><code>PString</code>类型：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">newtype</span> <span class="type">Pos</span> = <span class="type">Pos</span> (<span class="type">Int</span>, <span class="type">Int</span>)</span></div><div class="line"><span class="class"><span class="keyword">newtype</span> <span class="type">PString</span> = <span class="type">PString</span> (<span class="type">Pos</span>, <span class="type">String</span>)</span></div></pre></td></tr></table></figure></p>
+<h2 id="错误信息"><a href="#错误信息" class="headerlink" title="错误信息"></a>错误信息</h2><p>有了位置信息，接下来我们就可以修改错误信息了。原本错误信息类型是简单的<code>String</code>，现在使用自定义的错误信息类型：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">data</span> <span class="type">ParseError</span> = <span class="type">DefaultError</span> <span class="type">String</span></span></div><div class="line">                | <span class="type">EndOfInput</span> <span class="type">Pos</span></div><div class="line">                | <span class="type">Chatty</span> <span class="type">String</span> <span class="type">Pos</span></div></pre></td></tr></table></figure></p>
+<ul>
+<li><code>DefaultError</code>和原来的差不多，仅仅封装了<code>String</code>。</li>
+<li><code>EndOfInput</code>只需要装上位置信息。</li>
+<li><code>Chatty</code>同时需要位置信息和错误信息，以便于精确控制错误信息。</li>
+</ul>
+<h2 id="重造Parser类型"><a href="#重造Parser类型" class="headerlink" title="重造Parser类型"></a>重造Parser类型</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> Control.Monad</div><div class="line"><span class="keyword">import</span> Control.Monad.Except</div><div class="line"><span class="keyword">import</span> Control.Monad.State</div><div class="line"><span class="keyword">import</span> Control.Applicative</div><div class="line"></div><div class="line">...</div><div class="line">...</div><div class="line">...</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">newtype</span> <span class="type">Parser</span> a = <span class="type">Parser</span></span></div><div class="line">  &#123; runP :: <span class="type">ExceptT</span> <span class="type">ParseError</span> (<span class="type">State</span> <span class="type">PString</span>) a &#125;</div><div class="line">  <span class="keyword">deriving</span> (<span class="type">Functor</span>, <span class="type">Applicative</span>, <span class="type">Monad</span>, <span class="type">MonadError</span> <span class="type">ParseError</span>)</div></pre></td></tr></table></figure>
+<p>以上便是最终的<code>Parser</code>类型。<br>用上了<code>Monad Transformer</code>，有以下好处：</p>
+<ul>
+<li>便于结合多种<code>Monad</code>。</li>
+<li>让编译器自动实现各种范畴。仅仅需要在文件头加上：<code>{-# LANGUAGE GeneralizedNewtypeDeriving #-}</code></li>
+</ul>
+<p>此时，由于使用了<code>ExceptT</code>，通过<code>throwError</code>和<code>catchError</code>，我们就可以非常方便地添加和修改错误信息。</p>
+<hr>
+<h3 id="Alternative"><a href="#Alternative" class="headerlink" title="Alternative"></a>Alternative</h3><p>还记得上篇文章中提到，<code>&lt;|&gt;</code>的实现是强制回溯的。现在有了<code>catchError</code>，我们可以实现不回溯的<code>&lt;|&gt;</code>版本。当需要回溯时，可以使用<code>try</code>。</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">instance</span> <span class="type">Alternative</span> <span class="type">Parser</span> <span class="keyword">where</span></span></div><div class="line">  empty = throwError (<span class="type">DefaultError</span> <span class="string">""</span>)</div><div class="line">  p1 &lt;|&gt; p2 = p1 `catchError` const p2</div></pre></td></tr></table></figure>
+<p>直接<code>catch</code> <code>p1</code>的失败，这时<code>PString</code>已经消耗，若此时再让<code>p2</code>去解析，回溯就不会发生。</p>
+<p><br><br><code>try</code>的实现：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="title">try</span> :: <span class="type">Parser</span> a -&gt; <span class="type">Parser</span> a</div><div class="line"><span class="title">try</span> p = <span class="keyword">do</span></div><div class="line">  <span class="type">PString</span> s &lt;- <span class="type">Parser</span> $ lift get</div><div class="line">  p `catchError` \e -&gt; <span class="type">Parser</span> $ lift (put $ <span class="type">PString</span> s) &gt;&gt; throwError e</div></pre></td></tr></table></figure></p>
+<p><code>get</code>把<code>PString</code>拿到，如果<code>p</code>解析失败了，就把原来的<code>PString</code>放回去然后抛出错误，从而实现了回溯。</p>
+<hr>
+<h2 id="Position"><a href="#Position" class="headerlink" title="Position"></a>Position</h2><p>待解析字符串和位置信息要同时更新，因此我们要重新实现<code>satisfy</code>，以满足需求：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="title">satisfy</span> :: (<span class="type">Char</span> -&gt; <span class="type">Bool</span>) -&gt; <span class="type">Parser</span> <span class="type">Char</span></div><div class="line"><span class="title">satisfy</span> prd = <span class="keyword">do</span></div><div class="line">  <span class="type">PString</span> s &lt;- <span class="type">Parser</span> $ lift get</div><div class="line">  <span class="keyword">case</span> s <span class="keyword">of</span></div><div class="line">    (p, <span class="string">""</span>) -&gt; throwError $ <span class="type">EndOfInput</span> p</div><div class="line">    (p@(<span class="type">Pos</span> (r, c)), x : xs) -&gt; <span class="keyword">if</span> prd x</div><div class="line">                                <span class="keyword">then</span> <span class="keyword">let</span> newPos = <span class="keyword">case</span> x <span class="keyword">of</span></div><div class="line">                                                    '\n' -&gt; <span class="type">Pos</span> (r + <span class="number">1</span>, <span class="number">1</span>)</div><div class="line">                                                    '\t' -&gt; <span class="type">Pos</span> (r, c + <span class="number">8</span>)</div><div class="line">                                                    _    -&gt; <span class="type">Pos</span> (r, c + <span class="number">1</span>)</div><div class="line">                                     <span class="keyword">in</span> <span class="type">Parser</span> $ lift (put $ <span class="type">PString</span> (newPos, xs)) &gt;&gt; return x</div><div class="line">                                <span class="keyword">else</span> throwError $ <span class="type">Chatty</span> (<span class="string">"unexcepted char: "</span> ++ show x) p</div></pre></td></tr></table></figure></p>
+<p>注意到<code>&#39;\n&#39;</code>, <code>&#39;\t&#39;</code>以及其他字符的区别。</p>
+<hr>
+<h2 id="runParser与错误信息输出"><a href="#runParser与错误信息输出" class="headerlink" title="runParser与错误信息输出"></a>runParser与错误信息输出</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="title">runParser</span> :: <span class="type">Parser</span> a -&gt; <span class="type">String</span> -&gt; <span class="type">Either</span> <span class="type">ParseError</span> a</div><div class="line"><span class="title">runParser</span> p str =</div><div class="line">  <span class="keyword">case</span> (runState . runExceptT . runP) p (<span class="type">PString</span> (<span class="type">Pos</span> (<span class="number">1</span>, <span class="number">1</span>), str)) <span class="keyword">of</span></div><div class="line">    (<span class="type">Left</span> err, _) -&gt; <span class="type">Left</span> (<span class="type">DefaultError</span> $ <span class="string">"&lt;interactive&gt;:"</span> ++ showErr err str)</div><div class="line">    (<span class="type">Right</span> r, _) -&gt; <span class="type">Right</span> r</div><div class="line"></div><div class="line"><span class="title">showErr</span> :: <span class="type">ParseError</span> -&gt; <span class="type">String</span> -&gt; <span class="type">String</span></div><div class="line"><span class="title">showErr</span> x input = <span class="keyword">case</span> x <span class="keyword">of</span></div><div class="line">    <span class="type">EndOfInput</span> (<span class="type">Pos</span> (r, c)) -&gt; show r ++ <span class="string">":"</span> ++ show c</div><div class="line">                               ++ <span class="string">": error: end of input\n&lt;EOF&gt;\n^"</span></div><div class="line">    <span class="type">Chatty</span> msg (<span class="type">Pos</span> (r, c)) -&gt; show r ++ <span class="string">":"</span> ++ show c</div><div class="line">                               ++ <span class="string">": error: "</span> ++ msg ++ <span class="string">"\n"</span></div><div class="line">                               ++ (lines input !! (r - <span class="number">1</span>)) ++ <span class="string">"&lt;EOF&gt;\n"</span></div><div class="line">                               ++ replicate (c - <span class="number">1</span>) ' ' ++ <span class="string">"^"</span> </div><div class="line">    <span class="type">DefaultError</span> s -&gt; s</div></pre></td></tr></table></figure>
+<p>注意到<code>runParser</code>中，待解析字符串和位置<code>(1, 1)</code>结合。<br><code>showErr</code>中，<code>Chatty</code>和<code>EndOfInput</code>错误都有对应的<code>Pretty Print</code>。</p>
+<p>把这些都封装在<code>parse</code>函数中，转换成<code>IO ()</code>类型：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="title">parse</span> :: <span class="type">Show</span> a =&gt; <span class="type">Parser</span> a -&gt; <span class="type">String</span> -&gt; <span class="type">IO</span> ()</div><div class="line"><span class="title">parse</span> p str =</div><div class="line">  <span class="keyword">case</span> runParser p str <span class="keyword">of</span></div><div class="line">    <span class="type">Left</span> (<span class="type">DefaultError</span> x) -&gt; putStrLn $ <span class="string">"Failure: "</span> ++ x</div><div class="line">    <span class="type">Right</span> r -&gt; putStrLn $ <span class="string">"Success: "</span> ++ show r</div></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="添加错误信息-1"><a href="#添加错误信息-1" class="headerlink" title="添加错误信息"></a>添加错误信息</h1><p>由于<code>ExceptT</code>带有<code>catchError</code>，可以利用它来提供更丰富的错误信息。</p>
+<p>首先实现通用的<code>catchChattyError</code>，它的作用是<code>catch</code>到<code>ChattyError</code>，添加上我们指定的额外错误信息。<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="title">catchChattyError</span> :: <span class="type">Parser</span> a -&gt; <span class="type">String</span> -&gt; <span class="type">Parser</span> a</div><div class="line"><span class="title">catchChattyError</span> p msg = p </div><div class="line">  `catchError` </div><div class="line">    \<span class="keyword">case</span></div><div class="line">      <span class="type">Chatty</span> m pos -&gt; throwError $ <span class="type">Chatty</span> (m ++ <span class="string">", "</span> ++ msg) pos</div><div class="line">      otherError -&gt; throwError otherError</div></pre></td></tr></table></figure></p>
+<p>接着恰当修改之前实现过的所有<code>Parser</code>，在末尾加上更有用的信息：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="title">char</span> :: <span class="type">Char</span> -&gt; <span class="type">Parser</span> <span class="type">Char</span></div><div class="line"><span class="title">char</span> x = satisfy (==x) `catchChattyError` (<span class="string">"excepted char: "</span> ++ show x)</div><div class="line"></div><div class="line"><span class="title">space</span> :: <span class="type">Parser</span> <span class="type">Char</span></div><div class="line"><span class="title">space</span> = satisfy isSpace `catchChattyError` <span class="string">"excepted a white space character"</span></div><div class="line"></div><div class="line"><span class="title">upper</span> :: <span class="type">Parser</span> <span class="type">Char</span></div><div class="line"><span class="title">upper</span> = satisfy isUpper `catchChattyError` <span class="string">"excepted an upper letter"</span></div><div class="line"></div><div class="line"><span class="title">lower</span> :: <span class="type">Parser</span> <span class="type">Char</span></div><div class="line"><span class="title">lower</span> = satisfy isLower `catchChattyError` <span class="string">"excepted a lower letter"</span></div><div class="line"></div><div class="line"><span class="title">alphaNum</span> :: <span class="type">Parser</span> <span class="type">Char</span></div><div class="line"><span class="title">alphaNum</span> = satisfy isAlphaNum `catchChattyError` <span class="string">"excepted a letter or digit"</span></div><div class="line"></div><div class="line"><span class="title">letter</span> :: <span class="type">Parser</span> <span class="type">Char</span></div><div class="line"><span class="title">letter</span> = satisfy isAlpha `catchChattyError` <span class="string">"excepted a letter"</span></div><div class="line"></div><div class="line"><span class="title">digit</span> :: <span class="type">Parser</span> <span class="type">Char</span></div><div class="line"><span class="title">digit</span> = satisfy isDigit `catchChattyError` <span class="string">"excepted a digit"</span></div><div class="line"></div><div class="line"><span class="title">hexDigit</span> :: <span class="type">Parser</span> <span class="type">Char</span></div><div class="line"><span class="title">hexDigit</span> = satisfy isHexDigit `catchChattyError` <span class="string">"excepted a hexadecimal digit"</span></div><div class="line"></div><div class="line"><span class="title">octDigit</span> :: <span class="type">Parser</span> <span class="type">Char</span></div><div class="line"><span class="title">octDigit</span> = satisfy isOctDigit `catchChattyError` <span class="string">"excepted a octal digit"</span></div><div class="line"></div><div class="line"><span class="title">oneOf</span> :: <span class="type">String</span> -&gt; <span class="type">Parser</span> <span class="type">Char</span></div><div class="line"><span class="title">oneOf</span> cs = satisfy (`elem` cs) `catchChattyError` (<span class="string">"excepted one char of ["</span> ++ cs ++ <span class="string">"]"</span>)</div></pre></td></tr></table></figure></p>
+<p>测试：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">λ&gt; parse (string <span class="string">"123"</span>) <span class="string">"124"</span></div><div class="line"><span class="type">Failure</span>: &lt;interactive&gt;:<span class="number">1</span>:<span class="number">3</span>: error: unexcepted char: '<span class="number">4</span>', excepted char: '<span class="number">3</span>'</div><div class="line"><span class="number">124</span>&lt;<span class="type">EOF</span>&gt;</div><div class="line">  ^</div><div class="line">λ&gt; parse (string <span class="string">"123"</span>) <span class="string">""</span></div><div class="line"><span class="type">Failure</span>: &lt;interactive&gt;:<span class="number">1</span>:<span class="number">1</span>: error: end <span class="keyword">of</span> input</div><div class="line">&lt;<span class="type">EOF</span>&gt;</div><div class="line">^</div><div class="line">λ&gt; parse (oneOf <span class="string">"123"</span>) <span class="string">"abcde"</span></div><div class="line"><span class="type">Failure</span>: &lt;interactive&gt;:<span class="number">1</span>:<span class="number">1</span>: error: unexcepted char: 'a', excepted one char <span class="keyword">of</span> [<span class="number">123</span>]</div><div class="line"><span class="title">abcde</span>&lt;<span class="type">EOF</span>&gt;</div><div class="line">^</div><div class="line">λ&gt; parse (some (oneOf <span class="string">"123"</span>)) <span class="string">"123321"</span></div><div class="line"><span class="type">Success</span>: <span class="string">"123321"</span></div></pre></td></tr></table></figure></p>
+<p>达成任务。</p>
+<hr>
+<h1 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h1><ul>
+<li>现实例子，比如解析<code>JSON</code>类型。</li>
+</ul>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;上期链接：&lt;a href=&quot;http://gaufoo.com/2018/03/10/parser/&quot;&gt;用Haskell构建Parser Combinator（一）&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+    
+      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
+    
+      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+  </entry>
   
   <entry>
     <title>Continuation与Call/CC</title>
@@ -141,9 +222,9 @@
       <category term="计算原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
+    
+      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -307,11 +388,11 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
       <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
+    
+      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -377,9 +458,9 @@
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
     
-      <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
-    
       <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
     
   </entry>
   
@@ -468,9 +549,9 @@
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
     
-      <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
-    
       <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
     
   </entry>
   
@@ -549,9 +630,9 @@
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
     
-      <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
-    
       <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
     
   </entry>
   
@@ -851,9 +932,9 @@
     
       <category term="C" scheme="http://gaufoo.com/tags/C/"/>
     
-      <category term="汇编" scheme="http://gaufoo.com/tags/%E6%B1%87%E7%BC%96/"/>
-    
       <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="汇编" scheme="http://gaufoo.com/tags/%E6%B1%87%E7%BC%96/"/>
     
   </entry>
   
@@ -1057,9 +1138,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
       <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -1119,9 +1200,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
       <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -1466,9 +1547,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
       <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -1648,9 +1729,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
       <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -2193,15 +2274,15 @@
 </tbody>
 </table>
 <hr>
-<h2 id="文件权限"><a href="#文件权限" class="headerlink" title="文件权限"></a>文件权限</h2><h3 id="查看文件权限"><a href="#查看文件权限" class="headerlink" title="查看文件权限"></a>查看文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> ls -l</div><div class="line">drwxr-xr-x 2 gaufoo gaufoo 4096 11月 6 15:30 Document</div></pre></td></tr></table></figure>
+<h2 id="文件权限"><a href="#文件权限" class="headerlink" title="文件权限"></a>文件权限</h2><h3 id="查看文件权限"><a href="#查看文件权限" class="headerlink" title="查看文件权限"></a>查看文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ls -l</span></div><div class="line">drwxr-xr-x 2 gaufoo gaufoo 4096 11月 6 15:30 Document</div></pre></td></tr></table></figure>
 <ul>
 <li>文件类型<br> <code>d</code>：目录<br> <code>l</code>：软链接<br> <code>b</code>：块设备<br> <code>c</code>：字符设备<br> <code>s</code>：socket<br> <code>p</code>：管道<br> <code>-</code>：普通文件</li>
 <li>文件权限<br> <code>r</code>：读<br> <code>w</code>：写<br> <code>x</code>：执行 </li>
 </ul>
-<h3 id="变更文件所有者"><a href="#变更文件所有者" class="headerlink" title="变更文件所有者"></a>变更文件所有者</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> sudo chown ??? ???</div></pre></td></tr></table></figure>
-<h3 id="修改文件权限"><a href="#修改文件权限" class="headerlink" title="修改文件权限"></a>修改文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> chmod 700 ???</div></pre></td></tr></table></figure>
-<h2 id="文件基本操作"><a href="#文件基本操作" class="headerlink" title="文件基本操作"></a>文件基本操作</h2><h3 id="复制目录"><a href="#复制目录" class="headerlink" title="复制目录"></a>复制目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> cp -r ??? ???</div></pre></td></tr></table></figure>
-<h3 id="删除目录"><a href="#删除目录" class="headerlink" title="删除目录"></a>删除目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> rm -r ???</div></pre></td></tr></table></figure>
+<h3 id="变更文件所有者"><a href="#变更文件所有者" class="headerlink" title="变更文件所有者"></a>变更文件所有者</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> sudo chown ??? ???</span></div></pre></td></tr></table></figure>
+<h3 id="修改文件权限"><a href="#修改文件权限" class="headerlink" title="修改文件权限"></a>修改文件权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> chmod 700 ???</span></div></pre></td></tr></table></figure>
+<h2 id="文件基本操作"><a href="#文件基本操作" class="headerlink" title="文件基本操作"></a>文件基本操作</h2><h3 id="复制目录"><a href="#复制目录" class="headerlink" title="复制目录"></a>复制目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> cp -r ??? ???</span></div></pre></td></tr></table></figure>
+<h3 id="删除目录"><a href="#删除目录" class="headerlink" title="删除目录"></a>删除目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> rm -r ???</span></div></pre></td></tr></table></figure>
 <hr>
 ]]></content>
     
@@ -2217,126 +2298,6 @@
     
     
       <category term="Linux" scheme="http://gaufoo.com/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>操作系统boot实验报告</title>
-    <link href="http://gaufoo.com/2017/09/03/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9Fboot%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/"/>
-    <id>http://gaufoo.com/2017/09/03/操作系统boot实验报告/</id>
-    <published>2017-09-03T07:14:00.000Z</published>
-    <updated>2017-09-06T09:18:08.350Z</updated>
-    
-    <content type="html"><![CDATA[<p>HIT操作系统课程第一个实验。</p>
-<a id="more"></a>
-<hr>
-<h2 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h2><ul>
-<li>熟悉hit-oslab实验环境；</li>
-<li>建立对操作系统引导过程的深入认识；</li>
-<li>掌握操作系统的基本开发过程；</li>
-<li>能对操作系统代码进行简单的控制，揭开操作系统的神秘面纱。</li>
-</ul>
-<hr>
-<h2 id="实验内容"><a href="#实验内容" class="headerlink" title="实验内容"></a>实验内容</h2><p>此次实验的基本内容是：</p>
-<ol>
-<li>阅读《Linux内核完全注释》的第6章，对计算机和Linux 0.11的引导过程进行初步的了解；</li>
-<li>按照下面的要求改写0.11的引导程序bootsect.s</li>
-<li>有兴趣同学可以做做进入保护模式前的设置程序setup.s。</li>
-</ol>
-<p>改写bootsect.s主要完成如下功能：</p>
-<ol>
-<li>bootsect.s能在屏幕上打印一段提示信息“XXX is booting…”，其中XXX是你给自己的操作系统起的名字，例如LZJos、Sunix等（可以上论坛上秀秀谁的OS名字最帅，也可以显示一个特色logo，以表示自己操作系统的与众不同。）</li>
-</ol>
-<p>改写setup.s主要完成如下功能：</p>
-<ol>
-<li>bootsect.s能完成setup.s的载入，并跳转到setup.s开始地址执行。而setup.s向屏幕输出一行”Now we are in SETUP”。</li>
-<li>setup.s能获取至少一个基本的硬件参数（如内存参数、显卡参数、硬盘参数等），将其存放在内存的特定地址，并输出到屏幕上。</li>
-<li>setup.s不再加载Linux内核，保持上述信息显示在屏幕上即可。</li>
-</ol>
-<hr>
-<h2 id="实验报告要求"><a href="#实验报告要求" class="headerlink" title="实验报告要求"></a>实验报告要求</h2><p>在实验报告中回答如下问题：</p>
-<ol>
-<li>有时，继承传统意味着别手蹩脚。x86计算机为了向下兼容，导致启动过程比较复杂。请找出x86计算机启动过程中，被硬件强制，软件必须遵守的两个“多此一举”的步骤（多找几个也无妨），说说它们为什么多此一举，并设计更简洁的替代方案。</li>
-</ol>
-<hr>
-<h2 id="实验记录"><a href="#实验记录" class="headerlink" title="实验记录"></a>实验记录</h2><h3 id="改写bootsect-s："><a href="#改写bootsect-s：" class="headerlink" title="改写bootsect.s："></a>改写<code>bootsect.s</code>：</h3><ol>
-<li><p>进入目录<code>~/oslab/linux-0.11/boot/</code>，执行<code>$ vi bootsect.s</code>，将<code>bootsect.s</code>修改如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">...</div><div class="line">! Print some inane message</div><div class="line"></div><div class="line">	mov	ah,#0x03		! read cursor pos</div><div class="line">	xor	bh,bh</div><div class="line">	int	0x10</div><div class="line">	</div><div class="line">	mov	cx,#29          ! 修改字符数</div><div class="line">	mov	bx,#0x0007		! page 0, attribute 7 (normal)</div><div class="line">	mov	bp,#msg1</div><div class="line">	mov	ax,#0x1301		! write string, move cursor</div><div class="line">	int	0x10</div><div class="line"></div><div class="line">! ok, we&apos;ve written the message, now</div><div class="line">...</div><div class="line">...</div><div class="line">msg1:</div><div class="line">	.byte 13,10</div><div class="line">	.ascii &quot;Fooooooos is loading...&quot;     ! 修改成自己的字符串</div><div class="line">	.byte 13,10,13,10</div><div class="line">...</div><div class="line">...</div></pre></td></tr></table></figure>
-</li>
-<li><p>进入目录<code>~/oslab/linux-0.11/boot/</code>，执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> as86 -0 -a -o bootsect.o bootsect.s</span></div><div class="line"><span class="meta">$</span><span class="bash"> ld86 -0 -s -o bootsect bootsect.o</span></div><div class="line"><span class="meta">$</span><span class="bash"> dd bs=1 <span class="keyword">if</span>=bootsect of=Image skip=32</span></div><div class="line"><span class="meta">$</span><span class="bash"> cp Image ../</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>进入目录<code>~/oslab/</code>，执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ./run</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>实验结果：<br><img src="/images/5193451504415525106-wm.png" alt="实验楼"></p>
-</li>
-</ol>
-<hr>
-<h3 id="读入setup-s并输出字符串："><a href="#读入setup-s并输出字符串：" class="headerlink" title="读入setup.s并输出字符串："></a>读入<code>setup.s</code>并输出字符串：</h3><ol>
-<li><p>进入目录<code>~/oslab/linux-0.11/boot/</code>，执行<code>$ vi setup.s</code>，删除加载内核的88-223行代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">! Check that there IS a hd1 :-)</div><div class="line"></div><div class="line">	mov	ax,#0x01500</div><div class="line">	mov	dl,#0x81</div><div class="line">	int	0x13</div><div class="line">	jc	no_disk1</div><div class="line">	cmp	ah,#3</div><div class="line">	je	is_disk1</div><div class="line">...</div><div class="line">...</div><div class="line">gdt_48:</div><div class="line">	.word	0x800		! gdt limit=2048, 256 GDT entries</div><div class="line">	.word	512+gdt,0x9	! gdt base = 0X9xxxx</div></pre></td></tr></table></figure>
-</li>
-<li><p>进入目录<code>~/oslab/linux-0.11/boot/</code>，执行<code>$ vi setup.s</code>，添加代码至<code>start:</code>后，以及末尾：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">...</div><div class="line">start:</div><div class="line"></div><div class="line">! Print some inane message</div><div class="line">	mov ax,cs</div><div class="line">	mov ds,ax</div><div class="line">	mov es,ax</div><div class="line">	mov	ah,#0x03		! read cursor pos</div><div class="line">	xor	bh,bh</div><div class="line">	int	0x10</div><div class="line">	</div><div class="line">	mov	cx,#24</div><div class="line">	mov	bx,#0x0007		! page 0, attribute 7 (normal)</div><div class="line">	mov	bp,#msg1</div><div class="line">	mov	ax,#0x1301		! write string, move cursor</div><div class="line">	int	0x10</div><div class="line">...</div><div class="line">...</div><div class="line">msg1:</div><div class="line">	.byte 13,10</div><div class="line">	.ascii &quot;Now we are in SETUP&quot;</div><div class="line">	.byte 13,10,13,10</div><div class="line">...</div><div class="line">...</div></pre></td></tr></table></figure>
-</li>
-<li><p>进入目录<code>~/oslab/linux-0.11/tools/</code>，执行<code>$ vi build.c</code>，添加如下代码：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">...</div><div class="line">    <span class="keyword">while</span> (i&lt;SETUP_SECTS*<span class="number">512</span>) &#123;</div><div class="line">    	c = SETUP_SECTS*<span class="number">512</span>-i;</div><div class="line">    	<span class="keyword">if</span> (c &gt; <span class="keyword">sizeof</span>(buf))</div><div class="line">    		c = <span class="keyword">sizeof</span>(buf);</div><div class="line">    	<span class="keyword">if</span> (write(<span class="number">1</span>,buf,c) != c)</div><div class="line">    		die(<span class="string">"Write call failed"</span>);</div><div class="line">    	i += c;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (<span class="built_in">strcmp</span>(argv[<span class="number">3</span>], <span class="string">"none"</span>) == <span class="number">0</span>)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Ignore system written.\n"</span>);</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> ((id=open(argv[<span class="number">3</span>],O_RDONLY,<span class="number">0</span>))&lt;<span class="number">0</span>)</div><div class="line">    	die(<span class="string">"Unable to open 'system'"</span>);</div><div class="line">...</div><div class="line">...</div></pre></td></tr></table></figure>
-</li>
-<li><p>进入目录<code>~/oslab/linux-0.11/</code>，执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> make BootImage</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>进入目录<code>~/oslab/</code>，执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ./run</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>实验结果：<br><img src="/images/5193451504417795652-wm.png" alt="实验楼"></p>
-</li>
-</ol>
-<hr>
-<h3 id="setup-s获取硬件参数，并显示："><a href="#setup-s获取硬件参数，并显示：" class="headerlink" title="setup.s获取硬件参数，并显示："></a><code>setup.s</code>获取硬件参数，并显示：</h3><ol>
-<li><p>进入目录<code>~/oslab/linux-0.11/boot/</code>，执行<code>$ vi setup.s</code>，在末尾添加函数如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">...</div><div class="line">print_hex:</div><div class="line">	mov bp,sp</div><div class="line">	add bp,#2</div><div class="line">	mov cx,#4</div><div class="line">	mov dx,(bp)</div><div class="line">print_digit:</div><div class="line">	rol dx,#4</div><div class="line">	mov ax,#0xe0f</div><div class="line">	and al,dl</div><div class="line">	add al,#0x30</div><div class="line">	cmp al,#0x3a</div><div class="line">	jl outp</div><div class="line">	add al,#0x07</div><div class="line">outp:</div><div class="line">	int 0x10</div><div class="line">	loop print_digit</div><div class="line">	ret</div><div class="line">print_nl:</div><div class="line">	mov ax,#0xe0d</div><div class="line">	int 0x10</div><div class="line">	mov al,#0xa</div><div class="line">	int 0x10</div><div class="line">	</div><div class="line">.text</div><div class="line">endtext:</div><div class="line">.data</div><div class="line">enddata:</div><div class="line">.bss</div><div class="line">endbss:</div></pre></td></tr></table></figure>
-</li>
-<li><p>进入目录<code>~/oslab/linux-0.11/boot/</code>，执行<code>$ vi setup.s</code>，在获取内存大小的模块添加代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">...</div><div class="line">! Get memory size (extended mem, kB)</div><div class="line"></div><div class="line">    	mov	ah,#0x88</div><div class="line">    	int	0x15</div><div class="line">    	mov	[2],ax</div><div class="line"></div><div class="line">        mov     ah,#0x03                ! read cursor pos</div><div class="line">        xor     bh,bh</div><div class="line">        int     0x10</div><div class="line"></div><div class="line">        mov     cx,#14</div><div class="line">        mov     bx,#0x0007              ! page 0, attribute 7 (normal)</div><div class="line">        mov     bp,#memory</div><div class="line">        mov     ax,#0x1301              ! write string, move cursor</div><div class="line">        int     0x10</div><div class="line"></div><div class="line">        push [2]</div><div class="line">        call print_hex</div><div class="line">    	mov ax,#0xe4b</div><div class="line">    	int 0x10			! output &apos;K&apos;</div><div class="line">    	mov al,#0x42</div><div class="line">    	int 0x10			! output &apos;B&apos;</div><div class="line">        call print_nl</div><div class="line">        pop [2]</div><div class="line">...</div><div class="line">...</div></pre></td></tr></table></figure>
-</li>
-<li><p>进入目录<code>~/oslab/linux-0.11/</code>，执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> make BootImage</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>进入目录<code>~/oslab/</code>，执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ./run</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>实验结果<br><img src="/images/5193451504420514329-wm.png" alt="实验楼"></p>
-</li>
-</ol>
-<hr>
-<h2 id="实验报告"><a href="#实验报告" class="headerlink" title="实验报告"></a>实验报告</h2><ol>
-<li>计算机启动时，BIOS把中断表置于内存位置为0的地方，导致引导时必须把system代码先置于其他地方（0x10000），拷贝中断表后，再挪回地址0处。替代方案：BIOS可把中断表放置在其余不影响引导、且方便获取的地方。</li>
-<li>由于实模式的地址计算方式保守，导致内存可寻址范围只有1MB，使得需要进入保护模式，才能采用32位地址寻址。替代方案：改变硬件的地址计算方式，使之直接采用32位地址寻址。 </li>
-</ol>
-<hr>
-<h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><ul>
-<li><a href="http://gaufoo.com/code/lab1/bootsect.s" download="bootsect.s">bootsect.s</a></li>
-<li><a href="http://gaufoo.com/code/lab1/setup.s" download="setup.s">setup.s</a></li>
-<li><a href="http://gaufoo.com/code/lab1/build.c" download="build.c">build.c</a></li>
-</ul>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;HIT操作系统课程第一个实验。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
-    
-      <category term="操作系统" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
-    
-      <category term="操作系统" scheme="http://gaufoo.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     
   </entry>
   
