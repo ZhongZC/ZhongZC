@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2018-03-18T05:59:25.583Z</updated>
+  <updated>2018-03-18T05:59:25.000Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://gaufoo.com/2018/03/18/parser2/"/>
     <id>http://gaufoo.com/2018/03/18/parser2/</id>
     <published>2018-03-18T02:16:34.000Z</published>
-    <updated>2018-03-18T05:59:25.583Z</updated>
+    <updated>2018-03-18T05:59:25.000Z</updated>
     
     <content type="html"><![CDATA[<p>上期链接：<a href="http://gaufoo.com/2018/03/10/parser/">用Haskell构建Parser Combinator（一）</a></p>
 <a id="more"></a>
@@ -88,11 +88,11 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
       <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
     
       <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -101,7 +101,7 @@
     <link href="http://gaufoo.com/2018/03/12/continuation/"/>
     <id>http://gaufoo.com/2018/03/12/continuation/</id>
     <published>2018-03-12T01:50:13.000Z</published>
-    <updated>2018-03-12T09:38:36.524Z</updated>
+    <updated>2018-03-12T09:38:36.000Z</updated>
     
     <content type="html"><![CDATA[<p>和我同乘时光机。</p>
 <a id="more"></a>
@@ -233,7 +233,7 @@
     <link href="http://gaufoo.com/2018/03/10/parser/"/>
     <id>http://gaufoo.com/2018/03/10/parser/</id>
     <published>2018-03-09T18:28:27.000Z</published>
-    <updated>2018-03-12T01:53:28.126Z</updated>
+    <updated>2018-03-12T01:53:28.000Z</updated>
     
     <content type="html"><![CDATA[<p>某高中生眼中入门级别的程序。</p>
 <a id="more"></a>
@@ -388,11 +388,11 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
       <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
     
       <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -401,7 +401,7 @@
     <link href="http://gaufoo.com/2018/03/04/cppnlisp3/"/>
     <id>http://gaufoo.com/2018/03/04/cppnlisp3/</id>
     <published>2018-03-04T01:36:56.000Z</published>
-    <updated>2018-03-04T04:22:54.297Z</updated>
+    <updated>2018-03-04T04:22:54.000Z</updated>
     
     <content type="html"><![CDATA[<p>迷。</p>
 <a id="more"></a>
@@ -454,11 +454,11 @@
       <category term="C++" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
+      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
       <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
-    
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
       <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
     
@@ -469,7 +469,7 @@
     <link href="http://gaufoo.com/2018/03/03/cppnlisp2/"/>
     <id>http://gaufoo.com/2018/03/03/cppnlisp2/</id>
     <published>2018-03-03T12:28:29.000Z</published>
-    <updated>2018-03-04T04:16:58.892Z</updated>
+    <updated>2018-03-04T04:16:58.000Z</updated>
     
     <content type="html"><![CDATA[<p>既已有基础材料，撸起袖子做作业。</p>
 <a id="more"></a>
@@ -545,11 +545,11 @@
       <category term="C++" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
+      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
       <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
-    
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
       <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
     
@@ -560,7 +560,7 @@
     <link href="http://gaufoo.com/2018/03/03/cppnlisp1/"/>
     <id>http://gaufoo.com/2018/03/03/cppnlisp1/</id>
     <published>2018-03-03T08:48:23.000Z</published>
-    <updated>2018-03-04T04:16:35.891Z</updated>
+    <updated>2018-03-04T04:16:35.000Z</updated>
     
     <content type="html"><![CDATA[<p>LISP赐予我力量。</p>
 <a id="more"></a>
@@ -626,11 +626,11 @@
       <category term="C++" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
+      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
       <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
-    
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
       <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
     
@@ -641,7 +641,7 @@
     <link href="http://gaufoo.com/2018/01/02/ni_to_pre_post/"/>
     <id>http://gaufoo.com/2018/01/02/ni_to_pre_post/</id>
     <published>2018-01-02T06:22:22.000Z</published>
-    <updated>2018-01-02T02:51:53.334Z</updated>
+    <updated>2018-01-02T02:51:53.000Z</updated>
     
     <content type="html"><![CDATA[<p>纠结星人的胜利。</p>
 <a id="more"></a>
@@ -757,7 +757,7 @@
     <link href="http://gaufoo.com/2017/12/30/overflow/"/>
     <id>http://gaufoo.com/2017/12/30/overflow/</id>
     <published>2017-12-30T06:22:22.000Z</published>
-    <updated>2017-12-30T06:54:04.833Z</updated>
+    <updated>2017-12-30T06:54:04.000Z</updated>
     
     <content type="html"><![CDATA[<p>黑客初体验。</p>
 <a id="more"></a>
@@ -943,7 +943,7 @@
     <link href="http://gaufoo.com/2017/12/09/genericC/"/>
     <id>http://gaufoo.com/2017/12/09/genericC/</id>
     <published>2017-12-09T07:02:51.000Z</published>
-    <updated>2017-12-09T10:09:04.462Z</updated>
+    <updated>2017-12-09T10:09:04.000Z</updated>
     
     <content type="html"><![CDATA[<p>都说泛型是C++的一大特性，我大C语言表示不服</p>
 <a id="more"></a>
@@ -997,7 +997,7 @@
     <link href="http://gaufoo.com/2017/12/08/appinventor/"/>
     <id>http://gaufoo.com/2017/12/08/appinventor/</id>
     <published>2017-12-08T08:13:19.000Z</published>
-    <updated>2017-12-09T07:27:57.570Z</updated>
+    <updated>2017-12-09T07:27:57.000Z</updated>
     
     <content type="html"><![CDATA[<p>数字创意设计课程大作业。</p>
 <a id="more"></a>
@@ -1099,7 +1099,7 @@
     <link href="http://gaufoo.com/2017/10/29/REtoNFAtoDFA/"/>
     <id>http://gaufoo.com/2017/10/29/REtoNFAtoDFA/</id>
     <published>2017-10-29T12:09:54.000Z</published>
-    <updated>2017-10-31T16:06:34.022Z</updated>
+    <updated>2017-10-31T16:06:34.000Z</updated>
     
     <content type="html"><![CDATA[<p>简单笔记</p>
 <a id="more"></a>
@@ -1138,9 +1138,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
-    
       <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -1149,7 +1149,7 @@
     <link href="http://gaufoo.com/2017/10/26/%E6%89%8B%E5%B7%A5%E6%9E%84%E9%80%A0%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E5%99%A8/"/>
     <id>http://gaufoo.com/2017/10/26/手工构造词法分析器/</id>
     <published>2017-10-26T09:36:30.000Z</published>
-    <updated>2017-10-30T00:45:51.190Z</updated>
+    <updated>2017-10-30T00:45:51.000Z</updated>
     
     <content type="html"><![CDATA[<p>简单笔记</p>
 <a id="more"></a>
@@ -1200,9 +1200,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
-    
       <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -1211,7 +1211,7 @@
     <link href="http://gaufoo.com/2017/10/24/Cpp%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0/"/>
     <id>http://gaufoo.com/2017/10/24/Cpp可变参数/</id>
     <published>2017-10-24T12:20:56.000Z</published>
-    <updated>2017-10-24T17:23:09.506Z</updated>
+    <updated>2017-10-24T17:23:09.000Z</updated>
     
     <content type="html"><![CDATA[<p>我真的只是想写一个log函数而已。</p>
 <a id="more"></a>
@@ -1277,11 +1277,11 @@
       <category term="C++" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
+      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
+    
       <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
-    
-      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
     
   </entry>
   
@@ -1290,7 +1290,7 @@
     <link href="http://gaufoo.com/2017/10/24/CppConstexpr/"/>
     <id>http://gaufoo.com/2017/10/24/CppConstexpr/</id>
     <published>2017-10-24T08:00:59.000Z</published>
-    <updated>2017-10-24T11:39:43.821Z</updated>
+    <updated>2017-10-24T11:39:43.000Z</updated>
     
     <content type="html"><![CDATA[<p>关键字<code>constexpr</code>用于修饰常量表达式（const express），具体说明如下</p>
 <a id="more"></a>
@@ -1375,7 +1375,7 @@
     <link href="http://gaufoo.com/2017/09/16/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
     <id>http://gaufoo.com/2017/09/16/编译原理学习笔记（二）/</id>
     <published>2017-09-16T09:46:00.000Z</published>
-    <updated>2017-10-27T01:53:29.778Z</updated>
+    <updated>2017-10-27T01:53:29.000Z</updated>
     
     <content type="html"><![CDATA[<p>记录</p>
 <a id="more"></a>
@@ -1547,9 +1547,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
-    
       <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -1558,7 +1558,7 @@
     <link href="http://gaufoo.com/2017/09/10/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://gaufoo.com/2017/09/10/编译原理学习笔记（一）/</id>
     <published>2017-09-09T17:52:49.000Z</published>
-    <updated>2017-09-16T10:05:05.373Z</updated>
+    <updated>2017-09-16T10:05:05.000Z</updated>
     
     <content type="html"><![CDATA[<p>记录</p>
 <a id="more"></a>
@@ -1729,9 +1729,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
-    
       <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -1740,7 +1740,7 @@
     <link href="http://gaufoo.com/2017/09/06/Hexo%E4%B8%8B%E7%9A%84NexT%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE%EF%BC%88%E4%B8%8B%EF%BC%89/"/>
     <id>http://gaufoo.com/2017/09/06/Hexo下的NexT主题配置（下）/</id>
     <published>2017-09-06T09:40:00.000Z</published>
-    <updated>2017-09-06T12:51:52.367Z</updated>
+    <updated>2017-09-06T12:51:52.000Z</updated>
     
     <content type="html"><![CDATA[<p>上期链接：<a href="http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（上）/">http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（上）/</a></p>
 <a id="more"></a>
@@ -1862,7 +1862,7 @@
     <link href="http://gaufoo.com/2017/09/05/C%E4%B9%8B32%E4%BD%8D%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%95%B0%E5%86%851%E7%9A%84%E4%B8%AA%E6%95%B0%E6%B1%82%E6%B3%95/"/>
     <id>http://gaufoo.com/2017/09/05/C之32位二进制数内1的个数求法/</id>
     <published>2017-09-05T13:43:00.000Z</published>
-    <updated>2017-09-07T09:54:13.757Z</updated>
+    <updated>2017-09-07T09:54:13.000Z</updated>
     
     <content type="html"><![CDATA[<p>《CSAPP》上的题目，略有难度。</p>
 <a id="more"></a>
@@ -1923,7 +1923,7 @@
     <link href="http://gaufoo.com/2017/09/05/Python%E4%B9%8BRe%E5%BA%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     <id>http://gaufoo.com/2017/09/05/Python之Re库学习笔记/</id>
     <published>2017-09-05T09:05:00.000Z</published>
-    <updated>2017-09-06T09:17:49.869Z</updated>
+    <updated>2017-09-06T09:17:49.000Z</updated>
     
     <content type="html"><![CDATA[<p>记录以备后用</p>
 <a id="more"></a>
@@ -2192,7 +2192,7 @@
     <link href="http://gaufoo.com/2017/09/05/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%EF%BC%8C%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/"/>
     <id>http://gaufoo.com/2017/09/05/Linux常用命令，持续更新/</id>
     <published>2017-09-05T07:14:00.000Z</published>
-    <updated>2017-09-06T09:17:26.979Z</updated>
+    <updated>2017-09-06T09:17:26.000Z</updated>
     
     <content type="html"><![CDATA[<p>记录<br><a id="more"></a></p>
 <hr>
