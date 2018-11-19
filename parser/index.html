@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Haskell,函数式编程,编译原理," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="某高中生眼中入门级别的程序。">
+<meta name="keywords" content="Haskell,函数式编程,编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用Haskell构建Parser Combinator（一）">
+<meta property="og:url" content="http://gaufoo.com/parser/index.html">
+<meta property="og:site_name" content="苟富">
+<meta property="og:description" content="某高中生眼中入门级别的程序。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-12T01:53:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用Haskell构建Parser Combinator（一）">
+<meta name="twitter:description" content="某高中生眼中入门级别的程序。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://gaufoo.com/parser/"/>
+
+
+
+
+
+  <title>用Haskell构建Parser Combinator（一） | 苟富</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?918a16b20170b5642d2b55b0793aab3a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">苟富</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-notes">
+          <a href="/notes/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sticky-note"></i> <br />
+            
+            便签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://gaufoo.com/parser/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gaufoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="苟富">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">用Haskell构建Parser Combinator（一）</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-10T02:28:27+08:00">
+                2018-03-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/原理/" itemprop="url" rel="index">
+                    <span itemprop="name">原理</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/原理/编译原理/" itemprop="url" rel="index">
+                    <span itemprop="name">编译原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3,353 字
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>某高中生眼中入门级别的程序。</p>
+<a id="more"></a>
+<hr>
+<h1 id="本文要点"><a href="#本文要点" class="headerlink" title="本文要点"></a>本文要点</h1><h2 id="你将收获"><a href="#你将收获" class="headerlink" title="你将收获"></a>你将收获</h2><ul>
+<li>了解Parser Combinator的概念、特点以及使用方法。</li>
+<li>学会用Haskell亲手构建简单却实用的Parser Combinator。</li>
+<li>加深对Monad的理解。</li>
+</ul>
+<h2 id="所需基础"><a href="#所需基础" class="headerlink" title="所需基础"></a>所需基础</h2><ul>
+<li>简单了解Haskell语法即可。</li>
+</ul>
+<hr>
+<h1 id="Parser-Combinator-概念"><a href="#Parser-Combinator-概念" class="headerlink" title="Parser Combinator 概念"></a>Parser Combinator 概念</h1><p><strong>什么是Parser：</strong><br>简单地说：给定一个字符流，比如一个字符串、一段代码、一篇文章等，输入到Parser，会把原本平坦的结构改造成有层次有内涵的结构。</p>
+<p><strong>什么是Parser Combinator：</strong><br>由于函数式语言里函数是头等公民，可以把一个函数作为另一个函数的参数，一个函数可以产生出另外一个函数。基于这样的特点，我们可以把一个Parser作为参数传给另外一个Parser，一个Parser也可以产生另外一个新的Parser。有了这样的结合性，我们就可以实现Parser Combinator。<br>它是一种基于递归下降原理的非常简洁的Parser实现方法。</p>
+<p><strong>为什么是Parser Combinator：</strong><br>Parser Combinator在模块化、可读性、易维护等方面有着无可比拟的优势。<br>举个简单的例子：就像小孩子读文章，一开始他只认识一个一个字，拿着手指一个字一个字地点着读。接着他学会了把字结合起来变成词，认识词后又学会如何识别句子（很可能是因为学会了标点符号），慢慢长大后他便一目十行，脑中自然形成了文章的概念。Parser Combinator就很像这样一步一步组合的过程，非常符合人类直觉，所以编写起来相当容易。</p>
+<p><strong>编写语言：</strong><br>Haskell，不想写C++找罪受。<br>注：演示代码将尽量详细，所以可能不够point-free。</p>
+<hr>
+<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><p>第一步，先定义Parser的数据类型。<br>还记得我上面说过，Parser是将字符流转换成一种结构，比如<code>Tree</code>。所以可以适当猜想一下数据类型的样子：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">type</span> <span class="type">Parser</span> = <span class="type">String</span> -&gt; <span class="type">Tree</span></span></div></pre></td></tr></table></figure></p>
+<p>但显然不可能这样一步到位，一个<code>Parser</code>直接生成一棵树，那还谈什么结合。按道理，应该是一个Parser接受字符串，消耗一定字符，产生特定的结构，完成后把剩余的字符交给下一个<code>Parser</code>继续解析：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">type</span> <span class="type">Parser</span> = <span class="type">String</span> -&gt; (<span class="type">Tree</span>, <span class="type">String</span>)</span></div></pre></td></tr></table></figure></p>
+<p>这个看起来还行，不过只能产生<code>Tree</code>这种数据结构。我们不应该给它这样的限制，而是允许使用者自由地决定解析什么数据结构，所以把<code>Tree</code>抽象成任意具体类型。<br>最后再加上代表解析失败的信号，就形成了一个可用的<code>Parser</code>类型。<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">newtype</span> <span class="type">Parser</span> a = <span class="type">Parser</span> (<span class="type">String</span> -&gt; <span class="type">Maybe</span> (<span class="title">a</span>, <span class="type">String</span>))</span></div></pre></td></tr></table></figure></p>
+<p>解析失败将返回<code>Nothing</code>。</p>
+<hr>
+<h1 id="热身"><a href="#热身" class="headerlink" title="热身"></a>热身</h1><p>在最开始的地方，就让我们写个最简单的，能够解析一个特定字符的的<code>Parser</code>：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">char</span> :: <span class="type">Char</span> -&gt; <span class="type">Parser</span> <span class="type">Char</span></div></pre></td></tr></table></figure></p>
+<p>接受一个字符，返回解析该字符的<code>Parser</code>：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="title">char</span> :: <span class="type">Char</span> -&gt; <span class="type">Parser</span> <span class="type">Char</span></div><div class="line"><span class="title">char</span> c = <span class="type">Parser</span> $ \str -&gt;</div><div class="line">  <span class="keyword">case</span> str <span class="keyword">of</span></div><div class="line">    <span class="string">""</span> -&gt; <span class="type">Nothing</span></div><div class="line">    (x:xs) -&gt; <span class="keyword">if</span> x == c </div><div class="line">                <span class="keyword">then</span> <span class="type">Just</span> (x, xs) </div><div class="line">                <span class="keyword">else</span> <span class="type">Nothing</span></div></pre></td></tr></table></figure></p>
+<p>为了测试效果，还得实现一个运行函数：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">runParse</span> :: <span class="type">Parser</span> a -&gt; <span class="type">String</span> -&gt; <span class="type">Maybe</span> (a, <span class="type">String</span>)</div><div class="line"><span class="title">runParse</span> (<span class="type">Parser</span> psr) str = psr str</div></pre></td></tr></table></figure></p>
+<p>终端：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">λ&gt; runParse (char 'a') <span class="string">"abc"</span></div><div class="line"><span class="type">Just</span> ('a',<span class="string">"bc"</span>)</div><div class="line">λ&gt; runParse (char 'a') <span class="string">"b"</span></div><div class="line"><span class="type">Nothing</span></div></pre></td></tr></table></figure></p>
+<ol>
+<li>解析 a 字符。给定 “abc” 字符串，字符串消耗一个 ‘a’ ，返回一个 ‘a’ ，剩余字符串为 “bc” 。</li>
+<li>解析 a 字符。给定 “b” 字符串，解析失败，返回 Nothing 。</li>
+</ol>
+<p>太好了，莫大的鼓励。</p>
+<hr>
+<h1 id="开始构建"><a href="#开始构建" class="headerlink" title="开始构建"></a>开始构建</h1><h2 id="satisfy"><a href="#satisfy" class="headerlink" title="satisfy"></a>satisfy</h2><p>上面简单实现了<code>char</code>。不过，是否可以略微抽象一下呢。不一定要相等，只要满足给定的条件就算解析成功。<br>相信读者已经想到了，把<code>Char</code>改成函数<code>Char -&gt; Bool</code>不就可以了吗，就取名作<code>satisfy</code>吧：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="title">satisfy</span> :: (<span class="type">Char</span> -&gt; <span class="type">Bool</span>) -&gt; <span class="type">Parser</span> <span class="type">Char</span></div><div class="line"><span class="title">satisfy</span> prd = <span class="type">Parser</span> $ \str -&gt;</div><div class="line">  <span class="keyword">case</span> str <span class="keyword">of</span></div><div class="line">    <span class="string">""</span> -&gt; <span class="type">Nothing</span></div><div class="line">    (x:xs) -&gt; <span class="keyword">if</span> prd x </div><div class="line">                <span class="keyword">then</span> <span class="type">Just</span> (x, xs) </div><div class="line">                <span class="keyword">else</span> <span class="type">Nothing</span></div></pre></td></tr></table></figure></p>
+<p>对比上面的<code>char</code>，这里只是把<code>if</code>右边的判断语句改了一下，就实现了更丰富的功能。</p>
+<p>既然<code>satisfy</code>是由<code>char</code>抽象而来的，那么<code>char</code>应该也可以由<code>satisfy</code>实现：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">char</span> :: <span class="type">Char</span> -&gt; <span class="type">Parser</span> <span class="type">Char</span> <span class="comment">-- 改写char实现</span></div><div class="line"><span class="title">char</span> c = satisfy $ \x -&gt; x == c</div></pre></td></tr></table></figure></p>
+<p>不仅如此，现在因为有了<code>satisfy</code>，从<code>Data.Char</code>包里找到一些<code>Char -&gt; Bool</code>的函数，我们就又可以实现一大堆<code>Parser</code>了：</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> Data.Char</div><div class="line"></div><div class="line">...</div><div class="line">...</div><div class="line"></div><div class="line"><span class="title">space</span> :: <span class="type">Parser</span> <span class="type">Char</span> <span class="comment">-- 解析空格</span></div><div class="line"><span class="title">space</span> = satisfy isSpace</div><div class="line"></div><div class="line"><span class="title">digit</span> :: <span class="type">Parser</span> <span class="type">Char</span> <span class="comment">-- 解析十进制数字</span></div><div class="line"><span class="title">digit</span> = satisfy isDigit</div><div class="line"></div><div class="line"><span class="title">lower</span> :: <span class="type">Parser</span> <span class="type">Char</span> <span class="comment">-- 解析小写字母</span></div><div class="line"><span class="title">lower</span> = satisfy isLower</div><div class="line"></div><div class="line"><span class="title">upper</span> :: <span class="type">Parser</span> <span class="type">Char</span> <span class="comment">-- 解析大写字母</span></div><div class="line"><span class="title">upper</span> = satisfy isUpper</div><div class="line"></div><div class="line"><span class="title">letter</span> :: <span class="type">Parser</span> <span class="type">Char</span> <span class="comment">-- 解析字母</span></div><div class="line"><span class="title">letter</span> = satisfy isLetter</div><div class="line"></div><div class="line"><span class="title">alphanum</span> :: <span class="type">Parser</span> <span class="type">Char</span> <span class="comment">-- 解析字母和数字</span></div><div class="line"><span class="title">alphanum</span> = satisfy isAlphaNum</div><div class="line"></div><div class="line"><span class="title">hexDigit</span> :: <span class="type">Parser</span> <span class="type">Char</span> <span class="comment">-- 解析十六进制数字</span></div><div class="line"><span class="title">hexDigit</span> = satisfy isHexDigit</div><div class="line"></div><div class="line"><span class="title">octDigit</span> :: <span class="type">Parser</span> <span class="type">Char</span> <span class="comment">-- 解析八进制数字</span></div><div class="line"><span class="title">octDigit</span> = satisfy isOctDigit</div></pre></td></tr></table></figure>
+<p>赚大了，简直是买一送十，实现个<code>satisfy</code>白拿这么多<code>Parser</code>。</p>
+<p>测试：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">λ&gt; runParse letter <span class="string">"bc"</span></div><div class="line"><span class="type">Just</span> ('b',<span class="string">"c"</span>)</div><div class="line">λ&gt; runParse digit <span class="string">"123"</span></div><div class="line"><span class="type">Just</span> ('<span class="number">1</span>',<span class="string">"23"</span>)</div><div class="line">λ&gt; runParse digit <span class="string">"abc"</span></div><div class="line"><span class="type">Nothing</span></div></pre></td></tr></table></figure></p>
+<p>还有这两个相当有用的<code>Parser</code>：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="title">oneOf</span> :: <span class="type">String</span> -&gt; <span class="type">Parser</span> <span class="type">Char</span></div><div class="line"><span class="title">oneOf</span> cs = satisfy (`elem` cs) <span class="comment">-- 解析给定字符串里的其中一个Char</span></div><div class="line"></div><div class="line"><span class="title">noneOf</span> :: <span class="type">String</span> -&gt; <span class="type">Parser</span> <span class="type">Char</span></div><div class="line"><span class="title">noneOf</span> cs = satisfy (not . (`elem` cs)) <span class="comment">-- 解析给定字符串以外的任何Char</span></div></pre></td></tr></table></figure></p>
+<p>测试：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">λ&gt; runParse (oneOf <span class="string">"abc"</span>) <span class="string">"biiii"</span></div><div class="line"><span class="type">Just</span> ('b',<span class="string">"iiii"</span>)</div><div class="line">λ&gt; runParse (noneOf <span class="string">"abc"</span>) <span class="string">"iiii"</span></div><div class="line"><span class="type">Just</span> ('i',<span class="string">"iii"</span>)</div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="string"><a href="#string" class="headerlink" title="string"></a>string</h2><p>尽管上面已经实现了很多<code>Parser</code>，但我们发现它们都是解析<code>Char</code>类型的，不能就此停下脚步。<br>现在尝试一下实现解析多个<code>Char</code>的<code>Parser</code>，也就是<code>String</code>：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="title">string</span> :: <span class="type">String</span> -&gt; <span class="type">Parser</span> <span class="type">String</span></div><div class="line"><span class="title">string</span> <span class="string">""</span> = <span class="type">Parser</span> $ \s -&gt; <span class="type">Just</span> (<span class="string">""</span>, s) <span class="comment">-- 空字符串，解析成功</span></div><div class="line"><span class="title">string</span> (x:xs) = <span class="type">Parser</span> $ \inp -&gt;</div><div class="line">  <span class="keyword">case</span> runParse (char x) inp <span class="keyword">of</span> <span class="comment">-- 解析第一个字符</span></div><div class="line">    <span class="type">Nothing</span> -&gt; <span class="type">Nothing</span></div><div class="line">    <span class="type">Just</span> (r, rest) -&gt; <span class="keyword">case</span> runParse (string xs) rest <span class="keyword">of</span> <span class="comment">-- 解析剩余字符串</span></div><div class="line">                        <span class="type">Nothing</span> -&gt; <span class="type">Nothing</span></div><div class="line">                        <span class="type">Just</span> (rs, outp) -&gt; <span class="type">Just</span> (r:rs, outp) <span class="comment">-- 连接字符和字符串</span></div></pre></td></tr></table></figure></p>
+<p>测试：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">λ&gt; runParse (string <span class="string">"abc"</span>) <span class="string">"abc"</span></div><div class="line"><span class="type">Just</span> (<span class="string">"abc"</span>,<span class="string">""</span>)</div><div class="line">λ&gt; runParse (string <span class="string">"abc"</span>) <span class="string">"ab"</span></div><div class="line"><span class="type">Nothing</span></div></pre></td></tr></table></figure></p>
+<p>这里使用了递归，看起来似乎有点复杂，嵌套了两层<code>case</code>，但在注释的帮助下，相信读者能够轻松理解。</p>
+<hr>
+<h2 id="Combinator"><a href="#Combinator" class="headerlink" title="Combinator"></a>Combinator</h2><p>也许会有读者问到，我们仅仅是解析一串字符串，都要嵌套来嵌套去，这就是所谓的可读性和易构建吗？<br>这个问题问得非常好。假设我们要连续解析多个类型，如果继续按照上面的做法，很可能会产生一大串<code>case</code>链，这是非常难写和难懂的。<br>这个问题的解决，还是只有那个办法 —— 抽象。</p>
+<p>要在旧的<code>Parser</code>产生的结果的基础上构造新的另外一种类型的<code>Parser</code>，可以这样做：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="title">bind</span> :: <span class="type">Parser</span> a -&gt; (a -&gt; <span class="type">Parser</span> b) -&gt; <span class="type">Parser</span> b</div><div class="line"><span class="title">pa</span> `bind` apb = <span class="type">Parser</span> $ \inp -&gt;</div><div class="line">  <span class="keyword">case</span> runParse pa inp <span class="keyword">of</span></div><div class="line">    <span class="type">Nothing</span> -&gt; <span class="type">Nothing</span></div><div class="line">    <span class="type">Just</span> (a, rest) -&gt; <span class="keyword">let</span> (<span class="type">Parser</span> pb) = apb a</div><div class="line">                      <span class="keyword">in</span> pb rest</div></pre></td></tr></table></figure></p>
+<p>第二个参数<code>a -&gt; Parser b</code>实际上只是一个幌子，它最大的作用是把第一个<code>Parser a</code>的结果<code>a</code>「骗」出来。平时使用时通常写成一个<code>lambda</code>表达式，然后在这个<code>lambda</code>里专注于<code>Parser b</code>的实现。<br>若一头雾水，请留意接下来的演示。</p>
+<p>用它来重新写<code>string</code>：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="title">string</span> :: <span class="type">String</span> -&gt; <span class="type">Parser</span> <span class="type">String</span></div><div class="line"><span class="title">string</span> <span class="string">""</span> = lift <span class="string">""</span></div><div class="line"><span class="title">string</span> (x:xs) = char x `bind` \s -&gt;       <span class="comment">-- 「骗」出char的结果s</span></div><div class="line">                string xs `bind` \ss -&gt;   <span class="comment">-- 「骗」出剩余string的结果ss</span></div><div class="line">                lift (s:ss)               <span class="comment">-- 返回结构Parser</span></div><div class="line"></div><div class="line"><span class="title">lift</span> :: a -&gt; <span class="type">Parser</span> a</div><div class="line"><span class="title">lift</span> x = <span class="type">Parser</span> $ \inp -&gt; <span class="type">Just</span> (x, inp)</div></pre></td></tr></table></figure></p>
+<p><code>lift</code>函数不消耗字符串，只为把<code>Parser</code>结构补上。</p>
+<p>如此奇妙的思路，如此精巧的实现，当然这不是我这种普通人能够「显而易见」的。<br>在此致敬相关数学家。</p>
+<hr>
+<h1 id="Monad"><a href="#Monad" class="headerlink" title="Monad"></a>Monad</h1><p>躲不过的，躲不过的。写Haskell无论如何都是是躲不过Monad的。</p>
+<hr>
+<p>Haskell上<code>bind</code>语法的简化版：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="title">string</span> :: <span class="type">String</span> -&gt; <span class="type">Parser</span> <span class="type">String</span></div><div class="line"><span class="title">string</span> <span class="string">""</span> = return <span class="string">""</span></div><div class="line"><span class="title">string</span> (x:xs) = <span class="keyword">do</span></div><div class="line">  s  &lt;- char x     <span class="comment">-- char x解析结果绑定到s上</span></div><div class="line">  ss &lt;- string xs  <span class="comment">-- string xs解析结果绑定到ss上</span></div><div class="line">  return (s:ss)    <span class="comment">-- 返回结构Parser</span></div></pre></td></tr></table></figure></p>
+<p>看起来更加清晰自然，这才是<code>Combinator</code>应有的样子。<br>想要得到这种<code>do</code>语法，只需要将<code>Parser</code>类型实现<code>Monad</code>。<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">λ&gt; :t (&gt;&gt;=)</div><div class="line">(&gt;&gt;=) :: <span class="type">Monad</span> m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b</div><div class="line">λ&gt; :t bind</div><div class="line"><span class="title">bind</span> :: <span class="type">Parser</span> a -&gt; (a -&gt; <span class="type">Parser</span> b) -&gt; <span class="type">Parser</span> b</div><div class="line">λ&gt; :t return</div><div class="line"><span class="title">return</span> :: <span class="type">Monad</span> m =&gt; a -&gt; m a</div><div class="line">λ&gt; :t lift</div><div class="line"><span class="title">lift</span> :: a -&gt; <span class="type">Parser</span> a</div></pre></td></tr></table></figure></p>
+<p>其实我们已经实现了<code>Monad</code>需要的<code>(&gt;&gt;=)</code>和<code>return</code>函数，但由于还未实现<code>Monad</code>的前置范畴<code>Functor</code>和<code>Applicative</code>，所以暂时还不能<code>instance Monad</code>。<code>Functor</code>和<code>Applicative</code>也是很有用的范畴，下面就来实现一下。</p>
+<hr>
+<h2 id="Functor"><a href="#Functor" class="headerlink" title="Functor"></a>Functor</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">λ&gt; :i <span class="type">Functor</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="type">Functor</span> (<span class="title">f</span> :: * -&gt; *) <span class="keyword">where</span></span></div><div class="line">  fmap :: (a -&gt; b) -&gt; f a -&gt; f b</div><div class="line">  (&lt;$) :: a -&gt; f b -&gt; f a</div><div class="line">  <span class="meta">&#123;-# MINIMAL fmap #-&#125;</span></div></pre></td></tr></table></figure>
+<p>最少实现：<code>fmap :: (a -&gt; b) -&gt; f a -&gt; f b</code><br>下面来尝试一下：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">instance</span> <span class="type">Functor</span> <span class="type">Parser</span> <span class="keyword">where</span></span></div><div class="line">  fmap f pa = <span class="type">Parser</span> $ \inp -&gt;</div><div class="line">    <span class="keyword">case</span> runParse pa inp <span class="keyword">of</span></div><div class="line">      <span class="type">Nothing</span> -&gt; <span class="type">Nothing</span></div><div class="line">      <span class="type">Just</span> (x, rest) -&gt; <span class="type">Just</span> (f x, rest)</div></pre></td></tr></table></figure></p>
+<p><code>fmap</code>需要提供一个函数<code>a -&gt; b</code>和一个<code>Parser a</code>，然后就可以产生另外一个<code>Parser b</code>。</p>
+<hr>
+<h2 id="Applicative"><a href="#Applicative" class="headerlink" title="Applicative"></a>Applicative</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">λ&gt; :i <span class="type">Applicative</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="type">Functor</span> f =&gt; <span class="type">Applicative</span> (<span class="title">f</span> :: * -&gt; *) <span class="keyword">where</span></span></div><div class="line">  pure :: a -&gt; f a</div><div class="line">  (&lt;*&gt;) :: f (a -&gt; b) -&gt; f a -&gt; f b</div><div class="line">  <span class="type">GHC</span>.<span class="type">Base</span>.liftA2 :: (a -&gt; b -&gt; c) -&gt; f a -&gt; f b -&gt; f c</div><div class="line">  (*&gt;) :: f a -&gt; f b -&gt; f b</div><div class="line">  (&lt;*) :: f a -&gt; f b -&gt; f a</div><div class="line">  <span class="meta">&#123;-# MINIMAL pure, ((&lt;*&gt;) | liftA2) #-&#125;</span></div></pre></td></tr></table></figure>
+<p>最少实现：<code>pure :: a -&gt; f a</code>、<code>(&lt;*&gt;) :: f (a -&gt; b) -&gt; f a -&gt; f b</code></p>
+<ul>
+<li><p><code>pure</code>已经实现过了，就是上面的<code>lift</code>：</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">pure</span> x = <span class="type">Parser</span> $ \inp -&gt; <span class="type">Just</span> (x, inp)</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>lift</code>：</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="title">pab</span> &lt;*&gt; pa = <span class="type">Parser</span> $ \inp -&gt;</div><div class="line">  <span class="keyword">case</span> runParse pab inp <span class="keyword">of</span></div><div class="line">    <span class="type">Nothing</span> -&gt; <span class="type">Nothing</span></div><div class="line">    <span class="type">Just</span> (fab, rest) -&gt; runParse (fmap fab pa) rest</div></pre></td></tr></table></figure>
+</li>
+<li><p>合起来：</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">instance</span> <span class="type">Applicative</span> <span class="type">Parser</span> <span class="keyword">where</span></span></div><div class="line"><span class="title">pure</span> x = <span class="type">Parser</span> $ \inp -&gt; <span class="type">Just</span> (x, inp)</div><div class="line"><span class="title">pab</span> &lt;*&gt; pa = <span class="type">Parser</span> $ \inp -&gt;</div><div class="line">  <span class="keyword">case</span> runParse pab inp <span class="keyword">of</span></div><div class="line">    <span class="type">Nothing</span> -&gt; <span class="type">Nothing</span></div><div class="line">    <span class="type">Just</span> (fab, rest) -&gt; runParse (fmap fab pa) rest</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h2 id="Monad-1"><a href="#Monad-1" class="headerlink" title="Monad"></a>Monad</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">λ&gt; :i <span class="type">Monad</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="type">Applicative</span> m =&gt; <span class="type">Monad</span> (<span class="title">m</span> :: * -&gt; *) <span class="keyword">where</span></span></div><div class="line">  (&gt;&gt;=) :: m a -&gt; (a -&gt; m b) -&gt; m b</div><div class="line">  (&gt;&gt;) :: m a -&gt; m b -&gt; m b</div><div class="line">  return :: a -&gt; m a</div><div class="line">  fail :: <span class="type">String</span> -&gt; m a</div><div class="line">  <span class="meta">&#123;-# MINIMAL (&gt;&gt;=) #-&#125;</span></div></pre></td></tr></table></figure>
+<p>最少实现：<code>(&gt;&gt;=) :: m a -&gt; (a -&gt; m b) -&gt; m b</code></p>
+<p>直接复制上面的<code>bind</code></p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">instance</span> <span class="type">Monad</span> <span class="type">Parser</span> <span class="keyword">where</span></span></div><div class="line">  pa &gt;&gt;= apb = <span class="type">Parser</span> $ \inp -&gt;</div><div class="line">    <span class="keyword">case</span> runParse pa inp <span class="keyword">of</span></div><div class="line">      <span class="type">Nothing</span> -&gt; <span class="type">Nothing</span></div><div class="line">      <span class="type">Just</span> (a, rest) -&gt; runParse (apb a) rest</div></pre></td></tr></table></figure>
+<ul>
+<li><p>用<code>Monad</code>改写<code>string</code>：</p>
+  <figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="title">string</span> :: <span class="type">String</span> -&gt; <span class="type">Parser</span> <span class="type">String</span></div><div class="line"><span class="title">string</span> <span class="string">""</span> = return <span class="string">""</span></div><div class="line"><span class="title">string</span> (x:xs) = <span class="keyword">do</span></div><div class="line">  s  &lt;- char x </div><div class="line">  ss &lt;- string xs</div><div class="line">  return (s:ss)</div></pre></td></tr></table></figure>
+<p>  测试：</p>
+  <figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">λ&gt; runParse (string <span class="string">"abc"</span>) <span class="string">"abcd"</span></div><div class="line"><span class="type">Just</span> (<span class="string">"abc"</span>,<span class="string">"d"</span>)</div><div class="line">λ&gt; runParse (string <span class="string">"abcde"</span>) <span class="string">"abcd"</span></div><div class="line"><span class="type">Nothing</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>用<code>Functor</code>和<code>Applicative</code>改写<code>string</code>：</p>
+  <figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="title">string</span> :: <span class="type">String</span> -&gt; <span class="type">Parser</span> <span class="type">String</span></div><div class="line"><span class="title">string</span> <span class="string">""</span>     = return <span class="string">""</span></div><div class="line"><span class="title">string</span> (x:xs) = (:) &lt;$&gt; char x &lt;*&gt; string xs</div></pre></td></tr></table></figure>
+<p>  测试：</p>
+  <figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">λ&gt; runParse (string <span class="string">"abc"</span>) <span class="string">"abcd"</span></div><div class="line"><span class="type">Just</span> (<span class="string">"abc"</span>,<span class="string">"d"</span>)</div><div class="line">λ&gt; runParse (string <span class="string">"abcde"</span>) <span class="string">"abcd"</span></div><div class="line"><span class="type">Nothing</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h1 id="选择与回溯"><a href="#选择与回溯" class="headerlink" title="选择与回溯"></a>选择与回溯</h1><p>尽管有上面的<code>Monad</code>，我们已经可以构建绝大多数的<code>Parser</code>了。<br>但当我们常常希望解析同样的值多次，或是尝试解析<code>a</code>失败后继续解析<code>b</code>。<br>幸运的是，只要<code>instance Alternative</code>，就能一次性获得以上好处。</p>
+<p>首先需要<code>import</code>：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> Control.Applicative</div></pre></td></tr></table></figure></p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">λ&gt; :i <span class="type">Alternative</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="type">Applicative</span> f =&gt; <span class="type">Alternative</span> (<span class="title">f</span> :: * -&gt; *) <span class="keyword">where</span></span></div><div class="line">  empty :: f a</div><div class="line">  (&lt;|&gt;) :: f a -&gt; f a -&gt; f a</div><div class="line">  some :: f a -&gt; f [a]</div><div class="line">  many :: f a -&gt; f [a]</div><div class="line">  <span class="meta">&#123;-# MINIMAL empty, (&lt;|&gt;) #-&#125;</span></div></pre></td></tr></table></figure>
+<p>只要实现<code>empty</code>和<code>&lt;|&gt;</code>：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">instance</span> <span class="type">Alternative</span> <span class="type">Parser</span> <span class="keyword">where</span></span></div><div class="line">  empty = <span class="type">Parser</span> $ const <span class="type">Nothing</span></div><div class="line">  pa &lt;|&gt; pb = <span class="type">Parser</span> $ \inp -&gt;</div><div class="line">    <span class="keyword">case</span> runParse pa inp <span class="keyword">of</span></div><div class="line">      <span class="type">Nothing</span> -&gt; runParse pb inp</div><div class="line">      x -&gt; x</div></pre></td></tr></table></figure></p>
+<p>注：这里发生了件很微妙的事情 —— 这里的<code>&lt;|&gt;</code>实现是必回溯的，也就是说，如果左边的<code>pa</code>失败了，则<code>pb</code>会从头开始解析。</p>
+<hr>
+<p>现在我们有了<code>some</code>、<code>many</code>、<code>&lt;|&gt;</code>，可以用来做一些更酷的事情。</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="title">skipMany</span> :: <span class="type">Parser</span> a -&gt; <span class="type">Parser</span> ()</div><div class="line"><span class="title">skipMany</span> p = many p &gt;&gt; return ()</div><div class="line"><span class="title">skipMany1</span> :: <span class="type">Parser</span> a -&gt; <span class="type">Parser</span> ()</div><div class="line"><span class="title">skipMany1</span> p = some p &gt;&gt; return ()</div></pre></td></tr></table></figure>
+<p>注：<code>&gt;&gt;</code>是<code>&gt;&gt;=</code>的丢弃结果版本，<code>a &gt;&gt; b</code>相当于<code>a &gt;&gt;= \_ -&gt; b</code>。带<code>1</code>的函数代表至少解析一个值，对应<code>some</code>。</p>
+<p>测试：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">λ&gt; runParse (skipMany space &gt;&gt; char 'a') <span class="string">"    a"</span></div><div class="line"><span class="type">Just</span> ('a',<span class="string">""</span>)</div></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="其他函数"><a href="#其他函数" class="headerlink" title="其他函数"></a>其他函数</h1><h2 id="between"><a href="#between" class="headerlink" title="between"></a>between</h2><p>通常用来解析括号之间的值，利用<code>Applicative</code>。</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">between</span> :: <span class="type">Parser</span> open -&gt; <span class="type">Parser</span> a -&gt; <span class="type">Parser</span> close -&gt; <span class="type">Parser</span> a</div><div class="line"><span class="title">between</span> o a c = o *&gt; a &lt;* c</div></pre></td></tr></table></figure>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">λ&gt; runParse (between (char '(') digit (char ')')) <span class="string">"(2)"</span></div><div class="line"><span class="type">Just</span> ('<span class="number">2</span>',<span class="string">""</span>)</div></pre></td></tr></table></figure>
+<h2 id="sepBy"><a href="#sepBy" class="headerlink" title="sepBy"></a>sepBy</h2><p>通常用来解析列表形式的值，每个值之间用特定分隔符隔开，解析成功则返回值的列表。</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="title">sepBy1</span> :: <span class="type">Parser</span> a -&gt; <span class="type">Parser</span> sep -&gt; <span class="type">Parser</span> [a]</div><div class="line"><span class="title">sepBy1</span> p sep = <span class="keyword">do</span></div><div class="line">  a &lt;- p</div><div class="line">  <span class="keyword">as</span> &lt;- many (sep &gt;&gt; p)</div><div class="line">  return $ a:<span class="keyword">as</span></div><div class="line"></div><div class="line"><span class="title">sepBy</span> :: <span class="type">Parser</span> a -&gt; <span class="type">Parser</span> sep -&gt; <span class="type">Parser</span> [a]</div><div class="line"><span class="title">sepBy</span> p sep = sepBy1 p sep &lt;|&gt; return []</div></pre></td></tr></table></figure>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">λ&gt; runParse (sepBy (many letter) (oneOf <span class="string">" "</span>)) <span class="string">"abc def fg b"</span></div><div class="line"><span class="type">Just</span> ([<span class="string">"abc"</span>,<span class="string">"def"</span>,<span class="string">"fg"</span>,<span class="string">"b"</span>],<span class="string">""</span>)</div></pre></td></tr></table></figure>
+<h2 id="endBy"><a href="#endBy" class="headerlink" title="endBy"></a>endBy</h2><p>和<code>sepBy</code>的区别是，<code>endBy</code>末尾还有分隔符。</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="title">endBy</span> :: <span class="type">Parser</span> a -&gt; <span class="type">Parser</span> sep -&gt; <span class="type">Parser</span> [a]</div><div class="line"><span class="title">endBy</span> p sep = many (p &lt;* sep)</div><div class="line"></div><div class="line"><span class="title">endBy1</span> :: <span class="type">Parser</span> a -&gt; <span class="type">Parser</span> sep -&gt; <span class="type">Parser</span> [a]</div><div class="line"><span class="title">endBy1</span> p sep = some (p &lt;* sep)</div></pre></td></tr></table></figure>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">λ&gt; runParse (endBy (many letter) (oneOf <span class="string">" "</span>)) <span class="string">"abc def fg b "</span></div><div class="line"><span class="type">Just</span> ([<span class="string">"abc"</span>,<span class="string">"def"</span>,<span class="string">"fg"</span>,<span class="string">"b"</span>],<span class="string">""</span>)</div></pre></td></tr></table></figure>
+<h2 id="chainl"><a href="#chainl" class="headerlink" title="chainl"></a>chainl</h2><p>左结合，需要提供结合两个值的函数。</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="title">chainl1</span> :: <span class="type">Parser</span> a -&gt; <span class="type">Parser</span> (a -&gt; a -&gt; a) -&gt; <span class="type">Parser</span> a</div><div class="line"><span class="title">chainl1</span> p op = <span class="keyword">do</span></div><div class="line">  x &lt;- p</div><div class="line">  trav x</div><div class="line">  <span class="keyword">where</span> trav x_ = try (<span class="keyword">do</span> f &lt;- op</div><div class="line">                          y &lt;- p</div><div class="line">                          trav (f x_ y)) &lt;|&gt; return x_</div><div class="line"></div><div class="line"><span class="title">chainl</span> :: <span class="type">Parser</span> a -&gt; <span class="type">Parser</span> (a -&gt; a -&gt; a) -&gt; a -&gt; <span class="type">Parser</span> a</div><div class="line"><span class="title">chainl</span> p op x = chainl1 p op &lt;|&gt; return x</div></pre></td></tr></table></figure>
+<h2 id="chainr"><a href="#chainr" class="headerlink" title="chainr"></a>chainr</h2><p>右结合，需要提供结合两个值的函数。</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="title">chainr1</span> :: <span class="type">Parser</span> a -&gt; <span class="type">Parser</span> (a -&gt; a -&gt; a) -&gt; <span class="type">Parser</span> a</div><div class="line"><span class="title">chainr1</span> p op = <span class="keyword">do</span></div><div class="line">  x &lt;- p</div><div class="line">  try (<span class="keyword">do</span> f &lt;- op</div><div class="line">          rest &lt;- chainr1 p op</div><div class="line">          return (f x rest)) &lt;|&gt; return x</div><div class="line"></div><div class="line"><span class="title">chainr</span> :: <span class="type">Parser</span> a -&gt; <span class="type">Parser</span> (a -&gt; a -&gt; a) -&gt; a -&gt; <span class="type">Parser</span> a</div><div class="line"><span class="title">chainr</span> p op x = chainr1 p op &lt;|&gt; return x</div></pre></td></tr></table></figure>
+<hr>
+<h1 id="实例：构造四则运算语法树"><a href="#实例：构造四则运算语法树" class="headerlink" title="实例：构造四则运算语法树"></a>实例：构造四则运算语法树</h1><h2 id="语法树数据结构"><a href="#语法树数据结构" class="headerlink" title="语法树数据结构"></a>语法树数据结构</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">data</span> <span class="type">Op</span> = <span class="type">Add</span> | <span class="type">Sub</span> | <span class="type">Mul</span> | <span class="type">Div</span> <span class="keyword">deriving</span> (<span class="type">Eq</span>)</span></div><div class="line"><span class="class"><span class="keyword">data</span> <span class="type">ExprTree</span> = <span class="type">Number</span> <span class="type">Int</span></span></div><div class="line">              | <span class="type">Node</span> <span class="type">Op</span> <span class="type">ExprTree</span> <span class="type">ExprTree</span> <span class="keyword">deriving</span> (<span class="type">Eq</span>)</div></pre></td></tr></table></figure>
+<p>顺便<code>instance Show</code>，按S-表达式语法：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">instance</span> <span class="type">Show</span> <span class="type">Op</span> <span class="keyword">where</span></span></div><div class="line">  show <span class="type">Add</span> = <span class="string">"+"</span></div><div class="line">  show <span class="type">Sub</span> = <span class="string">"-"</span></div><div class="line">  show <span class="type">Mul</span> = <span class="string">"*"</span></div><div class="line">  show <span class="type">Div</span> = <span class="string">"/"</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">instance</span> <span class="type">Show</span> <span class="type">ExprTree</span> <span class="keyword">where</span></span></div><div class="line">  show (<span class="type">Number</span> x) = show x</div><div class="line">  show (<span class="type">Node</span> op l r) = <span class="string">"("</span> ++ show op ++ <span class="string">" "</span> ++ show l ++ <span class="string">" "</span> ++ show r ++ <span class="string">")"</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">λ&gt; <span class="type">Node</span> <span class="type">Add</span> (<span class="type">Number</span> <span class="number">1</span>) (<span class="type">Number</span> <span class="number">2</span>)</div><div class="line">(+ <span class="number">1</span> <span class="number">2</span>)</div></pre></td></tr></table></figure>
+<h2 id="解析数字"><a href="#解析数字" class="headerlink" title="解析数字"></a>解析数字</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">nature</span> :: <span class="type">Parser</span> <span class="type">Int</span></div><div class="line"><span class="title">nature</span> = read &lt;$&gt; some digit</div></pre></td></tr></table></figure>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">λ&gt; runParse nature <span class="string">"10086"</span></div><div class="line"><span class="type">Just</span> (<span class="number">10086</span>,<span class="string">""</span>)</div></pre></td></tr></table></figure>
+<h2 id="Term-Factor-Expression"><a href="#Term-Factor-Expression" class="headerlink" title="Term Factor Expression"></a>Term Factor Expression</h2><p>读者可以参考<a href="http://gaufoo.com/2018/01/02/ni_to_pre_post/#%E4%BC%98%E9%9B%85%E5%AE%9E%E7%8E%B0%E4%B9%8B%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90%E5%99%A8">中缀表达式转化前后缀引发的思考</a>。</p>
+<p>由于四则运算的结合性都是左结合，需要一个<code>Parser (a -&gt; a -&gt; a)</code>类型的结合函数：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">pNode</span> :: <span class="type">Op</span> -&gt; <span class="type">Parser</span> (<span class="type">ExprTree</span> -&gt; <span class="type">ExprTree</span> -&gt; <span class="type">ExprTree</span>)</div><div class="line"><span class="title">pNode</span> = return . <span class="type">Node</span></div></pre></td></tr></table></figure></p>
+<h3 id="Exp-Factor-‘-’-‘-‘-Factor"><a href="#Exp-Factor-‘-’-‘-‘-Factor" class="headerlink" title="Exp = Factor (( ‘+’ | ‘-‘ ) Factor)*"></a>Exp = Factor (( ‘+’ | ‘-‘ ) Factor)*</h3><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">expression</span> :: <span class="type">Parser</span> <span class="type">ExprTree</span></div><div class="line"><span class="title">expression</span> = chainl1 factor ((char '+' &gt;&gt; pNode <span class="type">Add</span>) &lt;|&gt; (char '-' &gt;&gt; pNode <span class="type">Sub</span>))</div></pre></td></tr></table></figure>
+<h3 id="Factor-Term-‘-‘-‘-‘-Term"><a href="#Factor-Term-‘-‘-‘-‘-Term" class="headerlink" title="Factor = Term (( ‘*‘ | ‘/‘ ) Term)*"></a>Factor = Term (( ‘*‘ | ‘/‘ ) Term)*</h3><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">factor</span> :: <span class="type">Parser</span> <span class="type">ExprTree</span></div><div class="line"><span class="title">factor</span> = chainl1 term ((char '*' &gt;&gt; pNode <span class="type">Mul</span>) &lt;|&gt; (char '/' &gt;&gt; pNode <span class="type">Div</span>))</div></pre></td></tr></table></figure>
+<h3 id="Term-lt-数字-gt-‘-‘-Exp-‘-’"><a href="#Term-lt-数字-gt-‘-‘-Exp-‘-’" class="headerlink" title="Term = &lt;数字&gt; | ‘(‘ Exp ‘)’"></a>Term = &lt;数字&gt; | ‘(‘ Exp ‘)’</h3><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">term</span> :: <span class="type">Parser</span> <span class="type">ExprTree</span></div><div class="line"><span class="title">term</span> = <span class="type">Number</span> &lt;$&gt; nature &lt;|&gt; between (char '(') expression (char ')')</div></pre></td></tr></table></figure>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">λ&gt; runParse expression <span class="string">"2+5*7/(39+54)-7/6"</span></div><div class="line"><span class="type">Just</span> ((- (+ <span class="number">2</span> (/ (* <span class="number">5</span> <span class="number">7</span>) (+ <span class="number">39</span> <span class="number">54</span>))) (/ <span class="number">7</span> <span class="number">6</span>)),<span class="string">""</span>)</div></pre></td></tr></table></figure>
+<p>注意到，这里的原始式不能带空格。</p>
+<p>练习：请读者自行实现一个允许带空格的四则运算<code>Parser</code>。</p>
+<hr>
+<h1 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h1><ul>
+<li>本文实现的<code>Parser Combinator</code>的缺陷：不包含错误信息提示、<code>&lt;|&gt;</code>强制回溯等，将在下篇文章解决。</li>
+<li>将带来更多的实例。</li>
+</ul>
+<hr>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://www.cs.nott.ac.uk/~pszgmh/monparsing.pdf" target="_blank" rel="external">Monadic Parser Combinators</a><br><a href="https://en.wikipedia.org/wiki/Parser_combinator" target="_blank" rel="external">https://en.wikipedia.org/wiki/Parser_combinator</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Gaufoo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://gaufoo.com/parser/" title="用Haskell构建Parser Combinator（一）">http://gaufoo.com/parser/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/" rel="external nofollow" target="_blank">CC BY-NC-ND 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Haskell/" rel="tag"># Haskell</a>
+          
+            <a href="/tags/函数式编程/" rel="tag"># 函数式编程</a>
+          
+            <a href="/tags/编译原理/" rel="tag"># 编译原理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/cppnlisp3/" rel="next" title="用C++写出伪LISP代码（三）">
+                <i class="fa fa-chevron-left"></i> 用C++写出伪LISP代码（三）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/continuation/" rel="prev" title="Continuation与Call/CC">
+                Continuation与Call/CC <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="Gaufoo" />
+          <p class="site-author-name" itemprop="name">Gaufoo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhongzc/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhong-zhen-chi/activities" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-mortar-board"></i>
+                  
+                    
+                      知乎
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-nd.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              看看他们
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://lyfoon.com/" title="lyfoon" target="_blank">lyfoon</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://passer-by.com/" title="passer-by" target="_blank">passer-by</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#本文要点"><span class="nav-number">1.</span> <span class="nav-text">本文要点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#你将收获"><span class="nav-number">1.1.</span> <span class="nav-text">你将收获</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#所需基础"><span class="nav-number">1.2.</span> <span class="nav-text">所需基础</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Parser-Combinator-概念"><span class="nav-number">2.</span> <span class="nav-text">Parser Combinator 概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据类型"><span class="nav-number">3.</span> <span class="nav-text">数据类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#热身"><span class="nav-number">4.</span> <span class="nav-text">热身</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开始构建"><span class="nav-number">5.</span> <span class="nav-text">开始构建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#satisfy"><span class="nav-number">5.1.</span> <span class="nav-text">satisfy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#string"><span class="nav-number">5.2.</span> <span class="nav-text">string</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Combinator"><span class="nav-number">5.3.</span> <span class="nav-text">Combinator</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Monad"><span class="nav-number">6.</span> <span class="nav-text">Monad</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Functor"><span class="nav-number">6.1.</span> <span class="nav-text">Functor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Applicative"><span class="nav-number">6.2.</span> <span class="nav-text">Applicative</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Monad-1"><span class="nav-number">6.3.</span> <span class="nav-text">Monad</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#选择与回溯"><span class="nav-number">7.</span> <span class="nav-text">选择与回溯</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他函数"><span class="nav-number">8.</span> <span class="nav-text">其他函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#between"><span class="nav-number">8.1.</span> <span class="nav-text">between</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sepBy"><span class="nav-number">8.2.</span> <span class="nav-text">sepBy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#endBy"><span class="nav-number">8.3.</span> <span class="nav-text">endBy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chainl"><span class="nav-number">8.4.</span> <span class="nav-text">chainl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chainr"><span class="nav-number">8.5.</span> <span class="nav-text">chainr</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实例：构造四则运算语法树"><span class="nav-number">9.</span> <span class="nav-text">实例：构造四则运算语法树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#语法树数据结构"><span class="nav-number">9.1.</span> <span class="nav-text">语法树数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解析数字"><span class="nav-number">9.2.</span> <span class="nav-text">解析数字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Term-Factor-Expression"><span class="nav-number">9.3.</span> <span class="nav-text">Term Factor Expression</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Exp-Factor-‘-’-‘-‘-Factor"><span class="nav-number">9.3.1.</span> <span class="nav-text">Exp = Factor (( ‘+’ | ‘-‘ ) Factor)*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Factor-Term-‘-‘-‘-‘-Term"><span class="nav-number">9.3.2.</span> <span class="nav-text">Factor = Term (( ‘*‘ | ‘/‘ ) Term)*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Term-lt-数字-gt-‘-‘-Exp-‘-’"><span class="nav-number">9.3.3.</span> <span class="nav-text">Term = <数字> | ‘(‘ Exp ‘)’</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">9.4.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#下一步"><span class="nav-number">10.</span> <span class="nav-text">下一步</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">10.1.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 &mdash; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gaufoo</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

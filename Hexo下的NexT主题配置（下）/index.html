@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo,配置," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="上期链接：http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（上）/">
+<meta name="keywords" content="Hexo,配置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo下的NexT主题配置（下）">
+<meta property="og:url" content="http://gaufoo.com/Hexo下的NexT主题配置（下）/index.html">
+<meta property="og:site_name" content="苟富">
+<meta property="og:description" content="上期链接：http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（上）/">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-09-06T12:51:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo下的NexT主题配置（下）">
+<meta name="twitter:description" content="上期链接：http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（上）/">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://gaufoo.com/Hexo下的NexT主题配置（下）/"/>
+
+
+
+
+
+  <title>Hexo下的NexT主题配置（下） | 苟富</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?918a16b20170b5642d2b55b0793aab3a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">苟富</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-notes">
+          <a href="/notes/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sticky-note"></i> <br />
+            
+            便签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://gaufoo.com/Hexo下的NexT主题配置（下）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gaufoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="苟富">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Hexo下的NexT主题配置（下）</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-06T17:40:00+08:00">
+                2017-09-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hexo教程/" itemprop="url" rel="index">
+                    <span itemprop="name">Hexo教程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,362 字
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>上期链接：<a href="http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（上）/">http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（上）/</a></p>
+<a id="more"></a>
+<hr>
+<h2 id="文章设置"><a href="#文章设置" class="headerlink" title="文章设置"></a>文章设置</h2><h3 id="直达余下全文"><a href="#直达余下全文" class="headerlink" title="直达余下全文"></a>直达余下全文</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">scroll_to_more:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
+<p>点击阅读全文后，是否直达 <code>&lt;!--more--&gt;</code> 后的余下全文位置。</p>
+<h3 id="保存页面位置"><a href="#保存页面位置" class="headerlink" title="保存页面位置"></a>保存页面位置</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">save_scroll:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
+<p>是否在cookies里为每个页面保存阅读位置。</p>
+<h3 id="自动序言"><a href="#自动序言" class="headerlink" title="自动序言"></a>自动序言</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">excerpt_description:</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
+<p>主页显示文章是否自动摘录描述作为序言。</p>
+<h3 id="截取序言"><a href="#截取序言" class="headerlink" title="截取序言"></a>截取序言</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">auto_excerpt:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  length:</span> <span class="number">150</span></div></pre></td></tr></table></figure>
+<p>不建议开启，推荐使用 <code>&lt;!--more--&gt;</code> 来精确控制序言。</p>
+<h3 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="attr">post_meta:</span></div><div class="line"><span class="attr">  item_text:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  created_at:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  updated_at:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  categories:</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
+<p><code>created_at</code>：是否显示创建时间，<code>updated_at</code>：是否显示更新时间， <code>categories</code>：是否显示分类目录。</p>
+<h3 id="字数统计信息"><a href="#字数统计信息" class="headerlink" title="字数统计信息"></a>字数统计信息</h3><p>启动功能需要下载插件：<a href="https://github.com/willin/hexo-wordcount" target="_blank" rel="external">https://github.com/willin/hexo-wordcount</a><br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="attr">post_wordcount:</span></div><div class="line"><span class="attr">  item_text:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  wordcount:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  min2read:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  totalcount:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  separated_meta:</span> <span class="literal">false</span></div></pre></td></tr></table></figure></p>
+<p><code>wordcount</code>：开启字数统计，<code>min2read</code>：开启大致阅读时间，<code>totalcount</code>：开启所有文章总字体显示，<code>separated_meta</code>：开启独占一行。</p>
+<h3 id="微信二维码"><a href="#微信二维码" class="headerlink" title="微信二维码"></a>微信二维码</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">wechat_subscriber:</span></div><div class="line"><span class="attr">  enabled:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  qcode:</span> <span class="string">/path/to/your/wechatqcode</span> <span class="string">ex.</span> <span class="string">/uploads/wechat-qcode.jpg</span></div><div class="line"><span class="attr">  description:</span> <span class="string">ex.</span> <span class="string">subscribe</span> <span class="string">to</span> <span class="string">my</span> <span class="string">blog</span> <span class="string">by</span> <span class="string">scanning</span> <span class="string">my</span> <span class="string">public</span> <span class="string">wechat</span> <span class="string">account</span></div></pre></td></tr></table></figure>
+<p><code>enabled</code>：文末是否开启微信二维码显示，<code>qcode</code>：二维码图片所在路径，示例: <code>/uploads/wechat-qcode.jpg</code>，<code>description</code>：二维码底下的简要描述文字。</p>
+<h3 id="打赏"><a href="#打赏" class="headerlink" title="打赏"></a>打赏</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">reward_comment:</span> <span class="string">您的支持将鼓励我继续创作！</span></div><div class="line"><span class="attr">wechatpay:</span> <span class="string">/images/wechatpay.jpg</span></div><div class="line"><span class="attr">alipay:</span> <span class="string">/images/alipay.jpg</span></div><div class="line"><span class="attr">bitcoin:</span> <span class="string">/images/bitcoin.png</span></div></pre></td></tr></table></figure>
+<p><code>reward_comment</code>：打赏提示性语句，<code>wechatpay</code>：微信支付二维码图片存储路径，<code>alipay</code>：支付宝二维码图片存储路径，<code>bitcoin</code>：比特币支付二维码图片存储路径。</p>
+<h3 id="文章版权声明"><a href="#文章版权声明" class="headerlink" title="文章版权声明"></a>文章版权声明</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">post_copyright:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  license:</span> <span class="string">CC</span> <span class="string">BY-NC-ND</span> <span class="number">3.0</span></div><div class="line"><span class="attr">  license_url:</span> <span class="attr">https://creativecommons.org/licenses/by-nc-nd/3.0/</span></div></pre></td></tr></table></figure>
+<p><code>enable</code>：开启版权声明提醒，<code>license</code>：版权声明类型，<code>license_url</code>：全球版权页</p>
+<hr>
+<h2 id="Misc-主题方案设置"><a href="#Misc-主题方案设置" class="headerlink" title="Misc 主题方案设置"></a>Misc 主题方案设置</h2><h3 id="移动设备减少边框"><a href="#移动设备减少边框" class="headerlink" title="移动设备减少边框"></a>移动设备减少边框</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">mobile_layout_economy:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
+<p>不建议true</p>
+<h3 id="安卓设备面板颜色"><a href="#安卓设备面板颜色" class="headerlink" title="安卓设备面板颜色"></a>安卓设备面板颜色</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">android_chrome_color:</span> <span class="string">"#222"</span></div></pre></td></tr></table></figure>
+<h3 id="代码高亮主题"><a href="#代码高亮主题" class="headerlink" title="代码高亮主题"></a>代码高亮主题</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">highlight_theme:</span> <span class="string">normal</span></div></pre></td></tr></table></figure>
+<p><code>highlight_theme</code>：可用值为：<code>normal</code>，<code>night</code>，<code>night eighties</code>，<code>night blue</code>，<code>night bright</code><br>效果示例： <a href="https://github.com/chriskempson/tomorrow-theme" target="_blank" rel="external">https://github.com/chriskempson/tomorrow-theme</a></p>
+<hr>
+<h2 id="字体设置"><a href="#字体设置" class="headerlink" title="字体设置"></a>字体设置</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">font:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  host:</span></div></pre></td></tr></table></figure>
+<p><code>host</code>：外链字体库地址，例如 //fonts.googleapis.com (默认值)</p>
+<h3 id="全局字体"><a href="#全局字体" class="headerlink" title="全局字体"></a>全局字体</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">global:</span></div><div class="line"><span class="attr">  external:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  family:</span> <span class="string">Lato</span></div></pre></td></tr></table></figure>
+<p>全局字体将应用在body元素上，<code>external</code>表示从<code>host</code>加载字体库，<code>family</code>：选择字体。</p>
+<h3 id="标题字体"><a href="#标题字体" class="headerlink" title="标题字体"></a>标题字体</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">headings:</span></div><div class="line"><span class="attr">  external:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  family:</span></div></pre></td></tr></table></figure>
+<p>标题字体将应用于h1,h2,h3,h4,h5,h6标题上，<code>external</code>同上，<code>family</code>：选择字体，空白则应用全局字体。</p>
+<h3 id="文章字体"><a href="#文章字体" class="headerlink" title="文章字体"></a>文章字体</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">posts:</span></div><div class="line"><span class="attr">  external:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  family:</span></div></pre></td></tr></table></figure>
+<p><code>external</code>、<code>family</code>同上。</p>
+<h3 id="LOGO-字体"><a href="#LOGO-字体" class="headerlink" title="LOGO 字体"></a>LOGO 字体</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">logo:</span></div><div class="line"><span class="attr">  external:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  family:</span></div><div class="line"><span class="attr">  size:</span></div></pre></td></tr></table></figure>
+<p><code>external</code>、<code>family</code>同上。<code>size</code>：字体大小单独设置。</p>
+<h3 id="代码块字体"><a href="#代码块字体" class="headerlink" title="代码块字体"></a>代码块字体</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">codes:</span></div><div class="line"><span class="attr">  external:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  family:</span></div><div class="line"><span class="attr">  size:</span></div></pre></td></tr></table></figure>
+<p><code>external</code>、<code>family</code>、<code>size</code>同上。</p>
+<hr>
+<h2 id="第三方服务设置"><a href="#第三方服务设置" class="headerlink" title="第三方服务设置"></a>第三方服务设置</h2><h3 id="MathJax"><a href="#MathJax" class="headerlink" title="MathJax"></a>MathJax</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">mathjax:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  per_page:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  cdn:</span> <span class="string">//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML</span></div></pre></td></tr></table></figure>
+<p><code>enable</code>：是否开启 MathJax 来显示数学公式，<code>cdn</code>：用于指定 MathJax 的脚本地址，默认是 MathJax 官方提供的 CDN 地址。</p>
+<h3 id="Han"><a href="#Han" class="headerlink" title="Han"></a>Han</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">han:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
+<p>文档：<a href="https://hanzi.pro/" target="_blank" rel="external">https://hanzi.pro/</a></p>
+<h3 id="Swiftype-站内搜索"><a href="#Swiftype-站内搜索" class="headerlink" title="Swiftype 站内搜索"></a>Swiftype 站内搜索</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">swiftype_key:</span></div></pre></td></tr></table></figure>
+<p>填写Swiftype Search API的值</p>
+<h3 id="百度分析"><a href="#百度分析" class="headerlink" title="百度分析"></a>百度分析</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">baidu_analytics:</span></div></pre></td></tr></table></figure>
+<p>填写百度分析ID</p>
+<h3 id="多说"><a href="#多说" class="headerlink" title="多说"></a>多说</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="attr">duoshuo_shortname:</span></div><div class="line"></div><div class="line"><span class="attr">duoshuo_share:</span> <span class="literal">true</span></div><div class="line"></div><div class="line"><span class="attr">duoshuo_info:</span></div><div class="line"><span class="attr">  ua_enable:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  admin_enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  user_id:</span> <span class="number">0</span></div><div class="line"><span class="attr">  admin_nickname:</span> <span class="string">Author</span></div></pre></td></tr></table></figure>
+<p>相关：<a href="http://dev.duoshuo.com" target="_blank" rel="external">http://dev.duoshuo.com</a></p>
+<h3 id="Disqus"><a href="#Disqus" class="headerlink" title="Disqus"></a>Disqus</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">disqus:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  shortname:</span></div><div class="line"><span class="attr">  count:</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
+<p><code>enable</code>：是否开启 Disqus 评论，<code>count</code>：是否显示评论数</p>
+<h3 id="Hypercomments"><a href="#Hypercomments" class="headerlink" title="Hypercomments"></a>Hypercomments</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">hypercomments_id:</span></div></pre></td></tr></table></figure>
+<h3 id="畅言"><a href="#畅言" class="headerlink" title="畅言"></a>畅言</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">changyan:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  appid:</span></div><div class="line"><span class="attr">  appkey:</span></div></pre></td></tr></table></figure>
+<h3 id="Valine"><a href="#Valine" class="headerlink" title="Valine"></a>Valine</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="attr">valine:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  appid:</span>  <span class="comment"># your leancloud application appid</span></div><div class="line"><span class="attr">  appkey:</span>  <span class="comment"># your leancloud application appkey</span></div><div class="line"><span class="attr">  notify:</span> <span class="literal">false</span> <span class="comment"># mail notifier , https://github.com/xCss/Valine/wiki</span></div><div class="line"><span class="attr">  verify:</span> <span class="literal">false</span> <span class="comment"># Verification code</span></div><div class="line"><span class="attr">  placeholder:</span> <span class="string">Comment</span> <span class="string">input</span> <span class="string">placeholder</span></div></pre></td></tr></table></figure>
+<p>相关：<a href="https://leancloud.cn" target="_blank" rel="external">https://leancloud.cn</a></p>
+<h3 id="友言"><a href="#友言" class="headerlink" title="友言"></a>友言</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">youyan_uid:</span> <span class="string">your</span> <span class="string">uid</span></div></pre></td></tr></table></figure>
+<h3 id="LiveRe"><a href="#LiveRe" class="headerlink" title="LiveRe"></a>LiveRe</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">livere_uid:</span> <span class="string">your</span> <span class="string">uid</span></div></pre></td></tr></table></figure>
+<p>相关：<a href="https://livere.com/insight/myCode" target="_blank" rel="external">https://livere.com/insight/myCode</a></p>
+<h3 id="百度分享"><a href="#百度分享" class="headerlink" title="百度分享"></a>百度分享</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attr">baidushare:</span></div><div class="line"><span class="attr">  type:</span> <span class="string">button</span></div></pre></td></tr></table></figure>
+<p>注意：百度分享不支持https。<code>type</code>可选项：<code>button</code>，<code>slice</code>。</p>
+<h3 id="JiaThis"><a href="#JiaThis" class="headerlink" title="JiaThis"></a>JiaThis</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">add_this_id:</span></div></pre></td></tr></table></figure>
+<p>相关：<a href="http://www.jiathis.com/" target="_blank" rel="external">http://www.jiathis.com/</a></p>
+<h3 id="Google"><a href="#Google" class="headerlink" title="Google"></a>Google</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">google_site_verification:</span></div></pre></td></tr></table></figure>
+<p>Google 验证码，相关：<a href="https://www.google.com/webmasters/" target="_blank" rel="external">https://www.google.com/webmasters/</a><br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">google_analytics:</span></div></pre></td></tr></table></figure></p>
+<p>Google 分析</p>
+<h3 id="Yandex"><a href="#Yandex" class="headerlink" title="Yandex"></a>Yandex</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">yandex_site_verification:</span></div></pre></td></tr></table></figure>
+<p>相关：<a href="https://webmaster.yandex.ru/" target="_blank" rel="external">https://webmaster.yandex.ru/</a></p>
+<h3 id="CNZZ-统计"><a href="#CNZZ-统计" class="headerlink" title="CNZZ 统计"></a>CNZZ 统计</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">cnzz_siteid:</span></div></pre></td></tr></table></figure>
+<h3 id="Application-Insights"><a href="#Application-Insights" class="headerlink" title="Application Insights"></a>Application Insights</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">application_insights:</span></div></pre></td></tr></table></figure>
+<p>相关：<a href="https://azure.microsoft.com/en-us/services/application-insights/" target="_blank" rel="external">https://azure.microsoft.com/en-us/services/application-insights/</a></p>
+<h3 id="Facebook-SDK"><a href="#Facebook-SDK" class="headerlink" title="Facebook SDK"></a>Facebook SDK</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="attr">facebook_sdk:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  app_id:</span>       <span class="comment">#&lt;app_id&gt;</span></div><div class="line"><span class="attr">  fb_admin:</span>     <span class="comment">#&lt;user_id&gt;</span></div><div class="line"><span class="attr">  like_button:</span>  <span class="comment">#true</span></div><div class="line"><span class="attr">  webmaster:</span>    <span class="comment">#true</span></div></pre></td></tr></table></figure>
+<p>相关：<a href="https://github.com/iissnan/hexo-theme-next/pull/410" target="_blank" rel="external">https://github.com/iissnan/hexo-theme-next/pull/410</a></p>
+<h3 id="Facebook-评论"><a href="#Facebook-评论" class="headerlink" title="Facebook 评论"></a>Facebook 评论</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="attr">facebook_comments_plugin:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  num_of_posts:</span> <span class="number">10</span>  <span class="comment"># min posts num is 1</span></div><div class="line"><span class="attr">  width:</span> <span class="number">100</span><span class="string">%</span>       <span class="comment"># default width is 550px</span></div><div class="line"><span class="attr">  scheme:</span> <span class="string">light</span>     <span class="comment"># default scheme is light (light or dark)</span></div></pre></td></tr></table></figure>
+<h3 id="VKontakte-API"><a href="#VKontakte-API" class="headerlink" title="VKontakte API"></a>VKontakte API</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="attr">vkontakte_api:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  app_id:</span>       <span class="comment">#&lt;app_id&gt;</span></div><div class="line"><span class="attr">  like:</span>         <span class="literal">true</span></div><div class="line"><span class="attr">  comments:</span>     <span class="literal">true</span></div><div class="line"><span class="attr">  num_of_posts:</span> <span class="number">10</span></div></pre></td></tr></table></figure>
+<p>相关：<a href="https://vk.com/editapp?act=create" target="_blank" rel="external">https://vk.com/editapp?act=create</a></p>
+<h3 id="星星评级"><a href="#星星评级" class="headerlink" title="星星评级"></a>星星评级</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">rating:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  id:</span>     <span class="comment">#&lt;app_id&gt;</span></div><div class="line"><span class="attr">  color:</span>  <span class="string">fc6423</span></div></pre></td></tr></table></figure>
+<p>相关：<a href="https://widgetpack.com" target="_blank" rel="external">https://widgetpack.com</a></p>
+<h3 id="阅读数统计"><a href="#阅读数统计" class="headerlink" title="阅读数统计"></a>阅读数统计</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">leancloud_visitors:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  app_id:</span> <span class="comment">#&lt;app_id&gt;</span></div><div class="line"><span class="attr">  app_key:</span> <span class="comment">#&lt;app_key&gt;</span></div></pre></td></tr></table></figure>
+<p>相关：<a href="https://leancloud.cn" target="_blank" rel="external">https://leancloud.cn</a></p>
+<h3 id="不蒜子统计"><a href="#不蒜子统计" class="headerlink" title="不蒜子统计"></a>不蒜子统计</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="attr">busuanzi_count:</span></div><div class="line">  <span class="comment"># count values only if the other configs are false</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line">  <span class="comment"># custom uv span for the whole site</span></div><div class="line"><span class="attr">  site_uv:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  site_uv_header:</span> <span class="string">&lt;i</span> <span class="string">class="fa</span> <span class="string">fa-user"&gt;&lt;/i&gt;</span></div><div class="line"><span class="attr">  site_uv_footer:</span></div><div class="line">  <span class="comment"># custom pv span for the whole site</span></div><div class="line"><span class="attr">  site_pv:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  site_pv_header:</span> <span class="string">&lt;i</span> <span class="string">class="fa</span> <span class="string">fa-eye"&gt;&lt;/i&gt;</span></div><div class="line"><span class="attr">  site_pv_footer:</span></div><div class="line">  <span class="comment"># custom pv span for one page only</span></div><div class="line"><span class="attr">  page_pv:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  page_pv_header:</span> <span class="string">&lt;i</span> <span class="string">class="fa</span> <span class="string">fa-file-o"&gt;&lt;/i&gt;</span></div><div class="line"><span class="attr">  page_pv_footer:</span></div></pre></td></tr></table></figure>
+<p>相关：<a href="http://ibruce.info/2015/04/04/busuanzi/" target="_blank" rel="external">http://ibruce.info/2015/04/04/busuanzi/</a><br>例：<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="attr">busuanzi_count:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  site_uv:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  site_uv_header:</span> <span class="string">本站访客数</span></div><div class="line"><span class="attr">  site_uv_footer:</span> <span class="string">人次</span></div><div class="line"><span class="attr">  site_pv:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  site_pv_header:</span> <span class="string">本站总访问量</span></div><div class="line"><span class="attr">  site_pv_footer:</span> <span class="string">次</span></div><div class="line"><span class="attr">  page_pv:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  page_pv_header:</span> <span class="string">本文总阅读量</span></div><div class="line"><span class="attr">  page_pv_footer:</span> <span class="string">次</span></div></pre></td></tr></table></figure></p>
+<h3 id="腾讯分析"><a href="#腾讯分析" class="headerlink" title="腾讯分析"></a>腾讯分析</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">tencent_analytics:</span></div></pre></td></tr></table></figure>
+<p>移动分析<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">tencent_mta:</span></div></pre></td></tr></table></figure></p>
+<h3 id="推送百度"><a href="#推送百度" class="headerlink" title="推送百度"></a>推送百度</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">baidu_push:</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
+<p>自动把博客推送到百度上，更容易被搜索。</p>
+<h3 id="Google-日历"><a href="#Google-日历" class="headerlink" title="Google 日历"></a>Google 日历</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="attr">calendar:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  calendar_id:</span> <span class="string">&lt;required&gt;</span></div><div class="line"><span class="attr">  api_key:</span> <span class="string">&lt;required&gt;</span></div><div class="line"><span class="attr">  orderBy:</span> <span class="string">startTime</span></div><div class="line"><span class="attr">  offsetMax:</span> <span class="number">24</span></div><div class="line"><span class="attr">  offsetMin:</span> <span class="number">4</span></div><div class="line"><span class="attr">  timeZone:</span></div><div class="line"><span class="attr">  showDeleted:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  singleEvents:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  maxResults:</span> <span class="number">250</span></div></pre></td></tr></table></figure>
+<p>相关：<a href="https://developers.google.com/google-apps/calendar/v3/reference/events/list" target="_blank" rel="external">https://developers.google.com/google-apps/calendar/v3/reference/events/list</a></p>
+<h3 id="Algolia-搜索"><a href="#Algolia-搜索" class="headerlink" title="Algolia 搜索"></a>Algolia 搜索</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="attr">algolia_search:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  hits:</span></div><div class="line"><span class="attr">    per_page:</span> <span class="number">10</span></div><div class="line"><span class="attr">  labels:</span></div><div class="line"><span class="attr">    input_placeholder:</span> <span class="string">Search</span> <span class="string">for</span> <span class="string">Posts</span></div><div class="line"><span class="attr">    hits_empty:</span> <span class="string">"We didn't find any results for the search: $&#123;query&#125;"</span></div><div class="line"><span class="attr">    hits_stats:</span> <span class="string">"$&#123;hits&#125; results found in $&#123;time&#125; ms"</span></div></pre></td></tr></table></figure>
+<h3 id="Local-搜索"><a href="#Local-搜索" class="headerlink" title="Local 搜索"></a>Local 搜索</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">local_search:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  trigger:</span> <span class="string">aut</span></div><div class="line"><span class="attr">  top_n_per_article:</span> <span class="number">1</span></div></pre></td></tr></table></figure>
+<p>相关：<a href="https://github.com/flashlab/hexo-generator-search" target="_blank" rel="external">https://github.com/flashlab/hexo-generator-search</a></p>
+<hr>
+<h2 id="动画设置"><a href="#动画设置" class="headerlink" title="动画设置"></a>动画设置</h2><h3 id="加载动画"><a href="#加载动画" class="headerlink" title="加载动画"></a>加载动画</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">use_motion:</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
+<p>加载页面时的动画是否开启。</p>
+<h3 id="背景动画"><a href="#背景动画" class="headerlink" title="背景动画"></a>背景动画</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">canvas_nest:</span> <span class="literal">false</span></div><div class="line"><span class="attr">three_waves:</span> <span class="literal">false</span></div><div class="line"><span class="attr">canvas_lines:</span> <span class="literal">false</span></div><div class="line"><span class="attr">canvas_sphere:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
+<p>四种背景动画只能选一种改为true，不过不建议开启，影响注意力。</p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Gaufoo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://gaufoo.com/Hexo下的NexT主题配置（下）/" title="Hexo下的NexT主题配置（下）">http://gaufoo.com/Hexo下的NexT主题配置（下）/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/" rel="external nofollow" target="_blank">CC BY-NC-ND 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hexo/" rel="tag"># Hexo</a>
+          
+            <a href="/tags/配置/" rel="tag"># 配置</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/C之32位二进制数内1的个数求法/" rel="next" title="C之32位二进制数内1的个数求法">
+                <i class="fa fa-chevron-left"></i> C之32位二进制数内1的个数求法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/编译原理学习笔记（一）/" rel="prev" title="编译原理学习笔记（一）">
+                编译原理学习笔记（一） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="Gaufoo" />
+          <p class="site-author-name" itemprop="name">Gaufoo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhongzc/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhong-zhen-chi/activities" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-mortar-board"></i>
+                  
+                    
+                      知乎
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-nd.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              看看他们
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://lyfoon.com/" title="lyfoon" target="_blank">lyfoon</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://passer-by.com/" title="passer-by" target="_blank">passer-by</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#文章设置"><span class="nav-number">1.</span> <span class="nav-text">文章设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#直达余下全文"><span class="nav-number">1.1.</span> <span class="nav-text">直达余下全文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#保存页面位置"><span class="nav-number">1.2.</span> <span class="nav-text">保存页面位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动序言"><span class="nav-number">1.3.</span> <span class="nav-text">自动序言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#截取序言"><span class="nav-number">1.4.</span> <span class="nav-text">截取序言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#作者信息"><span class="nav-number">1.5.</span> <span class="nav-text">作者信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字数统计信息"><span class="nav-number">1.6.</span> <span class="nav-text">字数统计信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微信二维码"><span class="nav-number">1.7.</span> <span class="nav-text">微信二维码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#打赏"><span class="nav-number">1.8.</span> <span class="nav-text">打赏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文章版权声明"><span class="nav-number">1.9.</span> <span class="nav-text">文章版权声明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Misc-主题方案设置"><span class="nav-number">2.</span> <span class="nav-text">Misc 主题方案设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#移动设备减少边框"><span class="nav-number">2.1.</span> <span class="nav-text">移动设备减少边框</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安卓设备面板颜色"><span class="nav-number">2.2.</span> <span class="nav-text">安卓设备面板颜色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码高亮主题"><span class="nav-number">2.3.</span> <span class="nav-text">代码高亮主题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字体设置"><span class="nav-number">3.</span> <span class="nav-text">字体设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#全局字体"><span class="nav-number">3.1.</span> <span class="nav-text">全局字体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标题字体"><span class="nav-number">3.2.</span> <span class="nav-text">标题字体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文章字体"><span class="nav-number">3.3.</span> <span class="nav-text">文章字体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LOGO-字体"><span class="nav-number">3.4.</span> <span class="nav-text">LOGO 字体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码块字体"><span class="nav-number">3.5.</span> <span class="nav-text">代码块字体</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三方服务设置"><span class="nav-number">4.</span> <span class="nav-text">第三方服务设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MathJax"><span class="nav-number">4.1.</span> <span class="nav-text">MathJax</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Han"><span class="nav-number">4.2.</span> <span class="nav-text">Han</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Swiftype-站内搜索"><span class="nav-number">4.3.</span> <span class="nav-text">Swiftype 站内搜索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#百度分析"><span class="nav-number">4.4.</span> <span class="nav-text">百度分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多说"><span class="nav-number">4.5.</span> <span class="nav-text">多说</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Disqus"><span class="nav-number">4.6.</span> <span class="nav-text">Disqus</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hypercomments"><span class="nav-number">4.7.</span> <span class="nav-text">Hypercomments</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#畅言"><span class="nav-number">4.8.</span> <span class="nav-text">畅言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Valine"><span class="nav-number">4.9.</span> <span class="nav-text">Valine</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#友言"><span class="nav-number">4.10.</span> <span class="nav-text">友言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LiveRe"><span class="nav-number">4.11.</span> <span class="nav-text">LiveRe</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#百度分享"><span class="nav-number">4.12.</span> <span class="nav-text">百度分享</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JiaThis"><span class="nav-number">4.13.</span> <span class="nav-text">JiaThis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Google"><span class="nav-number">4.14.</span> <span class="nav-text">Google</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Yandex"><span class="nav-number">4.15.</span> <span class="nav-text">Yandex</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CNZZ-统计"><span class="nav-number">4.16.</span> <span class="nav-text">CNZZ 统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Application-Insights"><span class="nav-number">4.17.</span> <span class="nav-text">Application Insights</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Facebook-SDK"><span class="nav-number">4.18.</span> <span class="nav-text">Facebook SDK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Facebook-评论"><span class="nav-number">4.19.</span> <span class="nav-text">Facebook 评论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VKontakte-API"><span class="nav-number">4.20.</span> <span class="nav-text">VKontakte API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#星星评级"><span class="nav-number">4.21.</span> <span class="nav-text">星星评级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#阅读数统计"><span class="nav-number">4.22.</span> <span class="nav-text">阅读数统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不蒜子统计"><span class="nav-number">4.23.</span> <span class="nav-text">不蒜子统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#腾讯分析"><span class="nav-number">4.24.</span> <span class="nav-text">腾讯分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#推送百度"><span class="nav-number">4.25.</span> <span class="nav-text">推送百度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Google-日历"><span class="nav-number">4.26.</span> <span class="nav-text">Google 日历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Algolia-搜索"><span class="nav-number">4.27.</span> <span class="nav-text">Algolia 搜索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Local-搜索"><span class="nav-number">4.28.</span> <span class="nav-text">Local 搜索</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动画设置"><span class="nav-number">5.</span> <span class="nav-text">动画设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#加载动画"><span class="nav-number">5.1.</span> <span class="nav-text">加载动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#背景动画"><span class="nav-number">5.2.</span> <span class="nav-text">背景动画</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 &mdash; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gaufoo</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

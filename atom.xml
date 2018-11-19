@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2018-05-19T09:33:40.129Z</updated>
+  <updated>2018-11-19T09:30:57.545Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -16,9 +16,312 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>《DDIA》读与记（一）</title>
+    <link href="http://gaufoo.com/ddia-i/"/>
+    <id>http://gaufoo.com/ddia-i/</id>
+    <published>2018-11-19T09:26:00.000Z</published>
+    <updated>2018-11-19T09:30:57.545Z</updated>
+    
+    <content type="html"><![CDATA[<p>开始读DDIA。</p>
+<a id="more"></a>
+<hr>
+<h1 id="序"><a href="#序" class="headerlink" title="序"></a>序</h1><p>再不更新博客，主页都要长草了。但暂时没想好要写些什么，毕竟在我的技能五芒星里，写文章这一块是缺掉的。</p>
+<p>为什么突然想开始每天写些东西，算是一种对无趣生活的对抗吧。想看看自己能一直写多久，也许明天就写不下去了，倒也无所谓了。</p>
+<p>一开始不能太难，要有个适应期，所以打算先写点读书笔记。于是就有了《DDIA》读书笔记系列。</p>
+<hr>
+<h1 id="为什么是DDIA"><a href="#为什么是DDIA" class="headerlink" title="为什么是DDIA"></a>为什么是DDIA</h1><p>DDIA，全称Designing Data-Intensive Application，一本讲数据型应用的高层次概括和指导的书。为什么选择看这本书？我曾学过Spark，也学过Akka，但在学的过程中，看不清楚自己想要解决什么问题，为了学而学，学不进去，学不透彻。所以找来这本数据型应用圣经，从上帝视角来看看整个概况，以清晰视野，明确方向。</p>
+<hr>
+<h1 id="约定"><a href="#约定" class="headerlink" title="约定"></a>约定</h1><p>英文为主，中英混合。</p>
+<hr>
+<h1 id="第一章：可靠性，可扩展性，可维护性"><a href="#第一章：可靠性，可扩展性，可维护性" class="headerlink" title="第一章：可靠性，可扩展性，可维护性"></a>第一章：可靠性，可扩展性，可维护性</h1><p>A data-intensive application is typically built from standard building blocks that provide commonly needed functionality. Many applications need to:</p>
+<ul>
+<li>Store data so that they, or another application, can find it again later (<em>databases</em>)</li>
+<li>Remember the result of an expensive operation, to speed up reads (<em>caches</em>)</li>
+<li>Allow users to search data by keyword or filter it in various ways (<em>search indexes</em>)</li>
+<li>Send a message to another process, to be handled asynchronously (<em>stream processing</em>)</li>
+<li>Periodically crunch a large amount of accumulated data (<em>batch processing</em>)</li>
+</ul>
+<p><br><br>Three concerns that are important in most software systems:</p>
+<p><strong>Reliability</strong><br>The system should continue to work corrently (performing the correct function at the desired level of performance) even in the face of adversity (hardware or software faults, and even human error).</p>
+<p><strong>Scalability</strong><br>As the system grows (in data volume, traffic volume, or complexity), there should be resonable ways of dealing with that growth.</p>
+<p><strong>Maintainability</strong><br>Over time, many different people will work on the system (engineering and operations, both maintaining current behavior and adapting the system to new use cases), and they shold all be able to work on it productively.</p>
+<hr>
+<h2 id="Reliability"><a href="#Reliability" class="headerlink" title="Reliability"></a>Reliability</h2><ul>
+<li>The application performs the function that the user expected.</li>
+<li>It can tolerate the user making mistakes or using the software in unexpected ways.</li>
+<li>Its performance is good enough for the required use case, under the expected load and data volume.</li>
+<li>The system prevents any unauthorized access and abuse.</li>
+</ul>
+<blockquote>
+<p>“continuing to work corrently, even when things go wrong.”</p>
+</blockquote>
+<p>不是所有fault都能容忍的，it only makes sense to talk about tolerating certain types of faults. 比如地球突然蒸发所造成的影响，基本上是恢复不了的。</p>
+<p>Note that a fault is not the same as failure. A fault is usually defined as one component of the system deviating from its spec, whereas a failure is when the the system as a whole stops providing the required service to the user.<br>It usually best to design fault-tolerance mechanisms that prevent faults from causing failures.</p>
+<h3 id="Hardware-Faults"><a href="#Hardware-Faults" class="headerlink" title="Hardware Faults"></a>Hardware Faults</h3><p>对于硬件错误，我们常常想到用redundancy来解决问题。Disks may be set up in a RAID configuration, servers may have dual power supplies and hot-swappable CPUs, and datacenters may have batteries and diesel generators for backup power.<br>尽管这些方法不能完全避免硬件问题所造成的failures，但足够简单易懂，and can often keep a machine running uninterrupted for years.</p>
+<h3 id="Software-Errors"><a href="#Software-Errors" class="headerlink" title="Software Errors"></a>Software Errors</h3><p>系统里面的系统级错误是另外一种类型的fault。Such faults are harder to anticipate, and because they are correlated across nodes, they tend to cause many more system failures than uncorrelated hardware faults.</p>
+<p>对于软件错误，没有什么万能灵药。但是可以关注这些事情：</p>
+<ul>
+<li>Carefully thinking about assumptions and interactions in the system</li>
+<li>Process isolation</li>
+<li>Allowing processes to crash and restart</li>
+<li>Measuring, monitoring, and analyzing system behavior in production</li>
+</ul>
+<h3 id="Human-Errors"><a href="#Human-Errors" class="headerlink" title="Human Errors"></a>Human Errors</h3><p>是人就会犯错，one study of large internet services found that configuration errors by operators were the leading cause of outages.</p>
+<p>To make our systems reliable, in spite of unreliable humans:</p>
+<ul>
+<li>Design systems in a way that minimizes opportunities for error. 好的abstractions, APIs, admin interfaces等等。</li>
+<li>Decouple the places where people make the most mistakes from the places where they can cause failure. 提供fully featured non-production sandbox environments where 人类可以在里面胡作非为。</li>
+<li>Test thoroughly at all levels, from unit tests to whole-system integration tests and manual tests.</li>
+<li>Allow quick and easy recovery from human errors, to minimize the impact in the case of a failure.</li>
+<li>Set up detailed and clear monitoring, such as performance metrics and error rates.</li>
+<li>做好培训</li>
+</ul>
+<hr>
+<h2 id="Scalability"><a href="#Scalability" class="headerlink" title="Scalability"></a>Scalability</h2><p><em>Scalability</em> is the term we use to describe a system’s ability to cope with increased load.</p>
+<p>讨论scalability，我们实际上说的是，”If the system grows in a particular way, what are our options for coping with the growth?” 以及 “How can we add computing resources to handle the additional load?”</p>
+<h3 id="Describing-Load"><a href="#Describing-Load" class="headerlink" title="Describing Load"></a>Describing Load</h3><p>我们需要描述load，实际上我们描述的这些数字叫做<em>load parameters</em>。不同的<em>load parameters</em>取决于the architecture of your system: it may be requests per second to a web server, the ratio of reads to writes in a database, the number of simultaneously active users in a chat room等等</p>
+<p>拿Twitter做例子，他们所描述的是：</p>
+<ul>
+<li>Post tweet: A user can publish a new message to their followers (4.6k requests/sec on average, over 12k requests/sec at peak).</li>
+<li>Home timeline: A user can view tweets posts by the people they follow (300k requests/sec).</li>
+</ul>
+<h3 id="Describing-Performance"><a href="#Describing-Performance" class="headerlink" title="Describing Performance"></a>Describing Performance</h3><p>当你已经描述了load on your system, you can investigate what happens when the load increases.</p>
+<ul>
+<li>When you increase a load parameter and keep the system resources (CPU, memory, network bandwidth, etc.) unchanged, how is the performance of your system affected?</li>
+<li>When you increase a load parameter, how much do you need to increase the resources if you want to keep performance unchanged?</li>
+</ul>
+<p>In a batch processing system such as Hadoop, we usually care about throughput. In online systems, what’s usually more important is the service’s response time.</p>
+<p>不是每次请求的响应时间都是一样的。We therefore need to think of response time not as single number, but as a distribution of values that you can measure.</p>
+<p>Usually it is better to use <em>percentiles</em> which 描述了有多少比例的responses不超过该响应时间。The median is also known as the 50th percentile, and sometimes abbreviated as p50.</p>
+<p>In order to figure out how bad your outliers are, you can look at higher percentiles: the 95th, 99th, 99.9th percentiles are common (abbribated p95, p99, and p999). They are the response time thresholds at which 95%, 99%, or 99.9% of requests are faster than that particular threshold. High percentiles of response times, also known as tail latencies, are important because they directly affect users’ experience of the service. </p>
+<p>Percentiles are often used in service level objectives (SLOs) and service level agreements (SLAs), contracts that define the expected performance and availability of a service. 比如Amazon就用p999来描述他们的服务。These metrics set expectations for clients of the service and allow customers to demand a refund if the SLA is not met.</p>
+<h3 id="Approaches-for-Coping-with-Load"><a href="#Approaches-for-Coping-with-Load" class="headerlink" title="Approaches for Coping with Load"></a>Approaches for Coping with Load</h3><p>To maintain good performance even when our load parameters increase by some amount, people often talk of a dichotomy between <em>scaling up</em> (vertical scaling, moving to a more powerful machine) and <em>scaling out</em> (horizontal scaling, distributing the load across multiple smaller machines).</p>
+<p>While distributing stateless services across multiple machines is fairly straightforward, taking stateful data systems from a single node to a distributed setup can introduce a lot of additional complexity. For this reason, common wisdom until recently was to keep your database on a single node (scala up) until scaling cost or high-availability requirements forced you to make it distributed.</p>
+<hr>
+<h2 id="Maintainability"><a href="#Maintainability" class="headerlink" title="Maintainability"></a>Maintainability</h2><p>software system三个设计原则：</p>
+<h3 id="Operability-Make-Lift-Easy-for-Operations"><a href="#Operability-Make-Lift-Easy-for-Operations" class="headerlink" title="Operability: Make Lift Easy for Operations"></a>Operability: Make Lift Easy for Operations</h3><p>Make it easy for operations teams to keep the system running smoothly.</p>
+<h3 id="Simplicity-Managing-Complexity"><a href="#Simplicity-Managing-Complexity" class="headerlink" title="Simplicity: Managing Complexity"></a>Simplicity: Managing Complexity</h3><p>Make it easy for new engineers to understand the system the system, by removing as much complexity as possible from the system. 利用抽象，消除额外复杂度。</p>
+<h3 id="Evolvability-Making-Change-Easy"><a href="#Evolvability-Making-Change-Easy" class="headerlink" title="Evolvability: Making Change Easy"></a>Evolvability: Making Change Easy</h3><p>Make it easy for engineers to make changes to the system in the future, adapting it for unanticipated use cases as requirements change. Also known as extensibility, modifiability, or plasticity. Agile working patterns provide a framework for adapting to change. 比如test-driven development (TDD) and refactoring.</p>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;开始读DDIA。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="读书笔记" scheme="http://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+      <category term="DDIA" scheme="http://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/DDIA/"/>
+    
+    
+      <category term="大数据" scheme="http://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="DDIA" scheme="http://gaufoo.com/tags/DDIA/"/>
+    
+      <category term="读书笔记" scheme="http://gaufoo.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>AWK常见用法</title>
+    <link href="http://gaufoo.com/awk/"/>
+    <id>http://gaufoo.com/awk/</id>
+    <published>2018-09-08T18:45:35.000Z</published>
+    <updated>2018-09-08T18:59:06.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>AWK是GUN/Linux下的其中一个文本处理工具，简洁又强大。</p>
+<a id="more"></a>
+<hr>
+<h1 id="程序结构"><a href="#程序结构" class="headerlink" title="程序结构"></a>程序结构</h1><h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">BEGIN &#123; ??? &#125;</div></pre></td></tr></table></figure>
+<p>可选，awk程序启动时执行一次。</p>
+<h2 id="循环块"><a href="#循环块" class="headerlink" title="循环块"></a>循环块</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/pattern/ &#123; ??? &#125;</div></pre></td></tr></table></figure>
+<p><code>pattern</code>为正则表达式</p>
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">END &#123; ??? &#125;</div></pre></td></tr></table></figure>
+<p>可选，结束时执行一次。</p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ cat &gt;&gt; marks.txt</div><div class="line">1)    Amit     Physics    80</div><div class="line">2)    Rahul    Maths      90</div><div class="line">3)    Shyam    Biology    87</div><div class="line">4)    Kedar    English    85</div><div class="line">5)    Hari     History    89</div><div class="line">$ awk &apos;BEGIN&#123;printf &quot;Sr No\tName\tSub\tMarks\n&quot;&#125; &#123;print&#125;&apos; marks.txt </div><div class="line">Sr No	Name	Sub	Marks</div><div class="line">1)    Amit     Physics    80</div><div class="line">2)    Rahul    Maths      90</div><div class="line">3)    Shyam    Biology    87</div><div class="line">4)    Kedar    English    85</div><div class="line">5)    Hari     History    89</div></pre></td></tr></table></figure>
+<hr>
+<h1 id="辅助选项"><a href="#辅助选项" class="headerlink" title="辅助选项"></a>辅助选项</h1><h2 id="加载脚本文件"><a href="#加载脚本文件" class="headerlink" title="加载脚本文件"></a>加载脚本文件</h2><p><code>-f ???</code> 或 <code>--file=???</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">$ cat &gt;&gt; command.awk</div><div class="line">BEGIN &#123;</div><div class="line">	printf &quot;Sr No\tName\tSub\tMarks\n&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">&#123;</div><div class="line">	print</div><div class="line">&#125;</div><div class="line">$ awk -f command.awk marks.txt </div><div class="line">Sr No	Name	Sub	Marks</div><div class="line">1)    Amit     Physics    80</div><div class="line">2)    Rahul    Maths      90</div><div class="line">3)    Shyam    Biology    87</div><div class="line">4)    Kedar    English    85</div><div class="line">5)    Hari     History    89</div></pre></td></tr></table></figure></p>
+<h2 id="预先分配变量"><a href="#预先分配变量" class="headerlink" title="预先分配变量"></a>预先分配变量</h2><p><code>-v var=???</code> 或 <code>--assign=var=???</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ awk -v name=Jerry &apos;BEGIN&#123;printf &quot;Name = %s\n&quot;, name&#125;&apos;</div><div class="line">Name = Jerry</div></pre></td></tr></table></figure></p>
+<h2 id="预先指定分隔符"><a href="#预先指定分隔符" class="headerlink" title="预先指定分隔符"></a>预先指定分隔符</h2><p><code>-F ???</code> 或 <code>--field-separator=???</code><br>指定多个分隔符： <code>-F &#39;[:,./]&#39;</code></p>
+<hr>
+<h1 id="简单实例"><a href="#简单实例" class="headerlink" title="简单实例"></a>简单实例</h1><h2 id="打印指定列"><a href="#打印指定列" class="headerlink" title="打印指定列"></a>打印指定列</h2><p>打印第3、4列<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;&#123;print $3 &quot;\t&quot; $4&#125;&apos; marks.txt </div><div class="line">Physics	80</div><div class="line">Maths	90</div><div class="line">Biology	87</div><div class="line">English	85</div><div class="line">History	89</div></pre></td></tr></table></figure></p>
+<h2 id="打印模式匹配行"><a href="#打印模式匹配行" class="headerlink" title="打印模式匹配行"></a>打印模式匹配行</h2><p>含<code>a</code>的所有行，正则表达式语法和bash一样。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;/a/ &#123;print $0&#125;&apos; marks.txt </div><div class="line">2)    Rahul    Maths      90</div><div class="line">3)    Shyam    Biology    87</div><div class="line">4)    Kedar    English    85</div><div class="line">5)    Hari     History    89</div><div class="line"></div><div class="line"># 或</div><div class="line"># $ awk &apos;/a/&apos; marks.txt</div></pre></td></tr></table></figure></p>
+<p>正则表达式语法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">/^abc/     表示以abc开头，其中^表示在行首位置进行匹配。</div><div class="line">/abc$/     表示以abc结尾，其中$表示在行尾位置进行匹配。</div><div class="line">/abc/      表示当前记录行中出现了abc串。</div><div class="line">/[a-d]/    表示与a-d中的任意一个字符匹配。即当前行中只要有a-d中的任意一个字符就匹配成功。</div><div class="line">/[acwy]/   表示与a、c、w、y中的任意一个字符匹配。即当前行中只要有a、c、w、y中的任意一个字符就匹配成功。</div><div class="line">/[^a-d]/   表示不与a-d中的任意一个字符做匹配。</div><div class="line">/cut|pot/  表示与cut匹配或与pot匹配。</div><div class="line">/[ABC]*/   表示与A、B、C中任意一个出现0次或多次的字符相匹配。</div><div class="line">/[ABC]+/   表示与A、B、C中任意一个出现1次或多次的字符相匹配。</div><div class="line">/./        表示任意一个字符，“.”表示任意一个字符。</div></pre></td></tr></table></figure></p>
+<h2 id="打印匹配行指定列"><a href="#打印匹配行指定列" class="headerlink" title="打印匹配行指定列"></a>打印匹配行指定列</h2><p>含<code>a</code>的所有行里，打印第3,4列。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;/a/ &#123;print $3 &quot;\t&quot; $4&#125;&apos; marks.txt </div><div class="line">Maths	90</div><div class="line">Biology	87</div><div class="line">English	85</div><div class="line">History	89</div></pre></td></tr></table></figure></p>
+<h2 id="打印符合条件行"><a href="#打印符合条件行" class="headerlink" title="打印符合条件行"></a>打印符合条件行</h2><p>长度大于18<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;length($0) &gt; 18 &#123;print&#125;&apos; marks.txt</div><div class="line"></div><div class="line"># 或</div><div class="line"># $ awk &apos;length($0) &gt; 18&apos; marks.txt</div></pre></td></tr></table></figure></p>
+<h2 id="不止打印"><a href="#不止打印" class="headerlink" title="不止打印"></a>不止打印</h2><p>统计含<code>a</code>的行数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ awk -v cnt=0 &apos;/a/ &#123; ++cnt &#125; END &#123; print &quot;Count = &quot; cnt&#125;&apos; marks.txt </div><div class="line">Count = 4</div></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="内置变量"><a href="#内置变量" class="headerlink" title="内置变量"></a>内置变量</h1><h2 id="FILENAME"><a href="#FILENAME" class="headerlink" title="FILENAME"></a>FILENAME</h2><p>当前文件名<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;END &#123;print FILENAME&#125;&apos; marks.txt </div><div class="line">marks.txt</div></pre></td></tr></table></figure></p>
+<p>在<code>BEGIN</code>块未定义</p>
+<h2 id="FS-OFS"><a href="#FS-OFS" class="headerlink" title="FS OFS"></a>FS OFS</h2><p>域分隔符：读取输入时分割<br>输出域分隔符：输出时分割<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ awk -F; &apos;END &#123;print &quot;FS = &quot; FS&#125;&apos; marks.txt </div><div class="line">FS = ;</div></pre></td></tr></table></figure></p>
+<h2 id="RS-ORS"><a href="#RS-ORS" class="headerlink" title="RS ORS"></a>RS ORS</h2><p>行分隔符<br>输出行分隔符</p>
+<h2 id="NF"><a href="#NF" class="headerlink" title="NF"></a>NF</h2><p>number of field，当前行总域数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;&#123;print NF&#125;&apos; marks.txt </div><div class="line">4</div><div class="line">4</div><div class="line">4</div><div class="line">4</div><div class="line">4</div></pre></td></tr></table></figure></p>
+<p>只打印一次：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;END &#123;print NF&#125;&apos; marks.txt </div><div class="line">4</div></pre></td></tr></table></figure></p>
+<h2 id="NR"><a href="#NR" class="headerlink" title="NR"></a>NR</h2><p>number of input records，当前行数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;&#123;print NR&#125;&apos; marks.txt </div><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td></tr></table></figure></p>
+<p>总行数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;END &#123;print NR&#125;&apos; marks.txt </div><div class="line">5</div></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="运算"><a href="#运算" class="headerlink" title="运算"></a>运算</h1><h2 id="算数运算"><a href="#算数运算" class="headerlink" title="算数运算"></a>算数运算</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;BEGIN &#123; a = 10; b = 20.1; print (a + b) &#125;&apos;</div><div class="line">30.1</div></pre></td></tr></table></figure>
+<h2 id="逻辑运算"><a href="#逻辑运算" class="headerlink" title="逻辑运算"></a>逻辑运算</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;BEGIN &#123; a = 10; b = 20.1; print (a != b)&#125;&apos; </div><div class="line">1</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;BEGIN &#123; a = 10; b = 20; (a &gt; b) ? max = a : max = b; print &quot;Max =&quot;, max&#125;&apos;</div><div class="line">Max = 20</div></pre></td></tr></table></figure>
+<h2 id="字符串拼接"><a href="#字符串拼接" class="headerlink" title="字符串拼接"></a>字符串拼接</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;BEGIN &#123; str1=&quot;Hello, &quot;; str2=&quot;World&quot;; str3 = str1 str2; print str3 &#125;&apos;</div><div class="line">Hello, World</div></pre></td></tr></table></figure>
+<h2 id="模式匹配符"><a href="#模式匹配符" class="headerlink" title="模式匹配符"></a>模式匹配符</h2><p>匹配：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;$0 ~ 9&apos; marks.txt </div><div class="line">2)    Rahul    Maths      90</div><div class="line">5)    Hari     History    89</div><div class="line"></div><div class="line"># 等价于</div><div class="line"># awk &apos;/9/&apos; marks.txt</div></pre></td></tr></table></figure></p>
+<p>不匹配：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;$0 !~ 9&apos; marks.txt </div><div class="line">1)    Amit     Physics    80</div><div class="line">3)    Shyam    Biology    87</div><div class="line">4)    Kedar    English    85</div></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="控制语句"><a href="#控制语句" class="headerlink" title="控制语句"></a>控制语句</h1><p><code>if-elseif-else</code>，<code>while</code>，<code>for</code>，<code>do-while</code>等，和C语言类似。<br><code>for (i in array)</code>用于遍历数组。</p>
+<hr>
+<h1 id="内置函数"><a href="#内置函数" class="headerlink" title="内置函数"></a>内置函数</h1><h2 id="length-str"><a href="#length-str" class="headerlink" title="length(str)"></a>length(str)</h2><p>字符串长度</p>
+<h2 id="rand"><a href="#rand" class="headerlink" title="rand()"></a>rand()</h2><p>返回[0, 1)之间的随机数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;BEGIN &#123; print rand() &#125;&apos;</div><div class="line">0.757217</div></pre></td></tr></table></figure></p>
+<h2 id="gsub-regex-sub-str-0"><a href="#gsub-regex-sub-str-0" class="headerlink" title="gsub(regex, sub, str=$0)"></a>gsub(regex, sub, str=$0)</h2><p>全局替换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;&#123; gsub(&quot;a&quot;, &quot;A&quot;); print &#125;&apos; marks.txt </div><div class="line">1)    Amit     Physics    80</div><div class="line">2)    RAhul    MAths      90</div><div class="line">3)    ShyAm    Biology    87</div><div class="line">4)    KedAr    English    85</div><div class="line">5)    HAri     History    89</div></pre></td></tr></table></figure></p>
+<h2 id="sub-regex-sub-str-0"><a href="#sub-regex-sub-str-0" class="headerlink" title="sub(regex, sub, str=$0)"></a>sub(regex, sub, str=$0)</h2><p>替换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ awk &apos;&#123; sub(&quot;a&quot;, &quot;A&quot;); print &#125;&apos; marks.txt </div><div class="line">1)    Amit     Physics    80</div><div class="line">2)    RAhul    Maths      90</div><div class="line">3)    ShyAm    Biology    87</div><div class="line">4)    KedAr    English    85</div><div class="line">5)    HAri     History    89</div></pre></td></tr></table></figure></p>
+<h2 id="index-str-sub"><a href="#index-str-sub" class="headerlink" title="index(str, sub)"></a>index(str, sub)</h2><p>子串首次匹配位置，从1开始计数，匹配不到返回0。</p>
+<h2 id="match-str-regex"><a href="#match-str-regex" class="headerlink" title="match(str, regex)"></a>match(str, regex)</h2><p>和<code>index</code>类似，但是匹配正则表达式。</p>
+<h2 id="substr-str-start-length"><a href="#substr-str-start-length" class="headerlink" title="substr(str, start, length)"></a>substr(str, start, length)</h2><p>按位置和长度截取字符串。</p>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;AWK是GUN/Linux下的其中一个文本处理工具，简洁又强大。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://gaufoo.com/categories/Linux/"/>
+    
+      <category term="awk" scheme="http://gaufoo.com/categories/Linux/awk/"/>
+    
+    
+      <category term="Linux" scheme="http://gaufoo.com/tags/Linux/"/>
+    
+      <category term="awk" scheme="http://gaufoo.com/tags/awk/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>采用Hibench在本地对Spark Streaming进行benchmark</title>
+    <link href="http://gaufoo.com/spark_bench/"/>
+    <id>http://gaufoo.com/spark_bench/</id>
+    <published>2018-07-23T20:16:12.000Z</published>
+    <updated>2018-07-23T21:08:24.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>谨以此文祭奠过去三天起起落落的辛酸经历。</p>
+<a id="more"></a>
+<hr>
+<h1 id="序"><a href="#序" class="headerlink" title="序"></a>序</h1><p>此间与无数Error碰面，奈何benchmark稍显冷门，任凭我历尽多种方法，于谷歌、百度、必应等知名搜索引擎也寻找无果。在翻阅<strong>HiBench</strong>的<a href="https://github.com/intel-hadoop/HiBench/issues" target="_blank" rel="external">Github Issues</a>时，甚至发现与我相同的问题存在数个月之久无人问津，乃至于后来我写邮件求助亦如石沉大海。幸而我时常有灵光乍现的时刻，总会在经历一遍又一遍的试错后，偶得正确解决方案，最终克服了所有的问题，解决掉所有的Error，成功运行Benchmark，作文以记之。</p>
+<hr>
+<h1 id="软件安装"><a href="#软件安装" class="headerlink" title="软件安装"></a>软件安装</h1><ul>
+<li><strong>java</strong> 1.8<br>终端运行<br><code>$ sudo apt update &amp;&amp; sudo apt install openjdk-8-jdk</code></li>
+<li><strong>scala</strong> 2.11.8<br><a href="https://downloads.lightbend.com/scala/2.11.8/scala-2.11.8.tgz" target="_blank" rel="external">https://downloads.lightbend.com/scala/2.11.8/scala-2.11.8.tgz</a><br>下载并解压二进制包</li>
+<li><strong>hadoop</strong> 2.8.3<br><a href="http://archive.apache.org/dist/hadoop/common/hadoop-2.8.3/hadoop-2.8.3.tar.gz" target="_blank" rel="external">http://archive.apache.org/dist/hadoop/common/hadoop-2.8.3/hadoop-2.8.3.tar.gz</a><br>下载并解压二进制包</li>
+<li><strong>spark</strong> 2.2.2<br><a href="https://www.apache.org/dyn/closer.lua/spark/spark-2.2.2/spark-2.2.2-bin-hadoop2.7.tgz" target="_blank" rel="external">https://www.apache.org/dyn/closer.lua/spark/spark-2.2.2/spark-2.2.2-bin-hadoop2.7.tgz</a><br>下载并解压二进制包</li>
+<li><strong>zookeeper</strong> 3.4.10<br><a href="https://archive.apache.org/dist/zookeeper/zookeeper-3.4.10/zookeeper-3.4.10.tar.gz" target="_blank" rel="external">https://archive.apache.org/dist/zookeeper/zookeeper-3.4.10/zookeeper-3.4.10.tar.gz</a><br>下载并解压二进制包</li>
+<li><strong>kafka</strong> 2.11-0.8.2.2<br><a href="https://archive.apache.org/dist/kafka/0.8.2.2/kafka_2.11-0.8.2.2.tgz" target="_blank" rel="external">https://archive.apache.org/dist/kafka/0.8.2.2/kafka_2.11-0.8.2.2.tgz</a><br>下载并解压二进制包</li>
+<li><strong>maven</strong>    3.3.9<br>终端运行<br><code>$ sudo apt update &amp;&amp; sudo apt install maven</code></li>
+<li>hibench 7.0<br><a href="https://github.com/intel-hadoop/HiBench" target="_blank" rel="external">https://github.com/intel-hadoop/HiBench</a><br>clone下来或者下载解压zip</li>
+</ul>
+<p>下载解压到某目录后，设置好路径：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gedit ~/.bashrc</div></pre></td></tr></table></figure></p>
+<p>添加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64</div><div class="line"></div><div class="line">export SCALA_HOME=/目录/scala-2.11.8</div><div class="line">export PATH=$PATH:$SCALA_HOME/bin</div><div class="line"></div><div class="line">export HADOOP_HOME=/目录/hadoop-2.8.3</div><div class="line"></div><div class="line">export SPARK_HOME=/目录/spark-2.2.2</div><div class="line">export PATH=$PATH:$SPARK_HOME/bin</div><div class="line"></div><div class="line">export ZOOKEEPER_HOME=/目录/zookeeper-3.4.10</div><div class="line"></div><div class="line">export KAFKA_HOME=/目录/kafka_2.11-0.8.2.2</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ source ~/.bashrc</div></pre></td></tr></table></figure>
+<p>生效</p>
+<hr>
+<h1 id="配置软件"><a href="#配置软件" class="headerlink" title="配置软件"></a>配置软件</h1><h2 id="Hadoop"><a href="#Hadoop" class="headerlink" title="Hadoop"></a>Hadoop</h2><h3 id="进入文件夹"><a href="#进入文件夹" class="headerlink" title="进入文件夹"></a>进入文件夹</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ cd $HADOOP_HOME</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="单机"><a href="#单机" class="headerlink" title="单机"></a>单机</h3><h4 id="配置hadoop-env-sh"><a href="#配置hadoop-env-sh" class="headerlink" title="配置hadoop-env.sh"></a>配置hadoop-env.sh</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gedit etc/hadoop/hadoop-env.sh</div></pre></td></tr></table></figure>
+<p>将<code>JAVA_HOME</code>改成正确目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># set to the root of your Java installation</div><div class="line">export JAVA_HOME=/Java的所在目录</div></pre></td></tr></table></figure></p>
+<h4 id="配置core-site-xml"><a href="#配置core-site-xml" class="headerlink" title="配置core-site.xml"></a>配置core-site.xml</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gedit etc/hadoop/core-site.xml</div></pre></td></tr></table></figure>
+<p>修改为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;configuration&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;fs.defaultFS&lt;/name&gt;</div><div class="line">        &lt;value&gt;hdfs://localhost:9000&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure></p>
+<h4 id="配置hdfs-site-xml"><a href="#配置hdfs-site-xml" class="headerlink" title="配置hdfs-site.xml"></a>配置hdfs-site.xml</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gedit etc/hadoop/hdfs-site.xml</div></pre></td></tr></table></figure>
+<p>修改为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;configuration&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;dfs.replication&lt;/name&gt;</div><div class="line">        &lt;value&gt;1&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure></p>
+<h4 id="确保ssh到localhost无需密码"><a href="#确保ssh到localhost无需密码" class="headerlink" title="确保ssh到localhost无需密码"></a>确保ssh到localhost无需密码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh localhost</div></pre></td></tr></table></figure>
+<p>否则执行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ ssh-keygen -t rsa -P &apos;&apos; -f ~/.ssh/id_rsa</div><div class="line">$ cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</div><div class="line">$ chmod 0600 ~/.ssh/authorized_keys</div></pre></td></tr></table></figure></p>
+<h4 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ bin/hdfs namenode -format</div><div class="line">$ sbin/start-dfs.sh</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="在yarn上运行"><a href="#在yarn上运行" class="headerlink" title="在yarn上运行"></a>在yarn上运行</h3><p>（这步是需要的，我之前没有执行，导致Hibench一直无法正确运行）</p>
+<h4 id="配置mapred-site-xml"><a href="#配置mapred-site-xml" class="headerlink" title="配置mapred-site.xml"></a>配置mapred-site.xml</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gedit etc/hadoop/mapred-site.xml</div></pre></td></tr></table></figure>
+<p>修改为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;configuration&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;mapreduce.framework.name&lt;/name&gt;</div><div class="line">        &lt;value&gt;yarn&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure></p>
+<h4 id="配置yarn-site-xml"><a href="#配置yarn-site-xml" class="headerlink" title="配置yarn-site.xml"></a>配置yarn-site.xml</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gedit etc/hadoop/yarn-site.xml</div></pre></td></tr></table></figure>
+<p>修改为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;configuration&gt;</div><div class="line">    &lt;property&gt;</div><div class="line">        &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</div><div class="line">        &lt;value&gt;mapreduce_shuffle&lt;/value&gt;</div><div class="line">    &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure></p>
+<h4 id="运行-1"><a href="#运行-1" class="headerlink" title="运行"></a>运行</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sbin/start-yarn.sh</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="Zookeeper"><a href="#Zookeeper" class="headerlink" title="Zookeeper"></a>Zookeeper</h2><h3 id="进入文件夹-1"><a href="#进入文件夹-1" class="headerlink" title="进入文件夹"></a>进入文件夹</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ cd $ZOOKEEPER_HOME</div></pre></td></tr></table></figure>
+<h3 id="创建配置文件"><a href="#创建配置文件" class="headerlink" title="创建配置文件"></a>创建配置文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ cp conf/zoo_sample.cfg conf/zoo.cfg</div></pre></td></tr></table></figure>
+<h3 id="创建数据存储目录"><a href="#创建数据存储目录" class="headerlink" title="创建数据存储目录"></a>创建数据存储目录</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ mkdir /数据存储目录</div></pre></td></tr></table></figure>
+<h3 id="配置数据存储目录"><a href="#配置数据存储目录" class="headerlink" title="配置数据存储目录"></a>配置数据存储目录</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gedit conf/zoo.cfg</div></pre></td></tr></table></figure>
+<p>修改<code>dataDir</code>项为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dataDir=/你创建的目录</div></pre></td></tr></table></figure></p>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ bin/zkServer.sh start</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="Kafka"><a href="#Kafka" class="headerlink" title="Kafka"></a>Kafka</h2><h3 id="进入文件夹-2"><a href="#进入文件夹-2" class="headerlink" title="进入文件夹"></a>进入文件夹</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ cd $KAFKA_HOME</div></pre></td></tr></table></figure>
+<h3 id="创建log目录"><a href="#创建log目录" class="headerlink" title="创建log目录"></a>创建log目录</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ mkdir /log目录</div></pre></td></tr></table></figure>
+<h3 id="配置server-properties"><a href="#配置server-properties" class="headerlink" title="配置server.properties"></a>配置server.properties</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gedit config/server.properties</div></pre></td></tr></table></figure>
+<p>修改以下项<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">log.dirs=/你创建的目录</div></pre></td></tr></table></figure></p>
+<h3 id="运行-2"><a href="#运行-2" class="headerlink" title="运行"></a>运行</h3><p>注意不要关闭终端<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ bin/kafka-server-start.sh config/server.properties</div></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="Hibench"><a href="#Hibench" class="headerlink" title="Hibench"></a>Hibench</h1><h2 id="Build-Hibench"><a href="#Build-Hibench" class="headerlink" title="Build Hibench"></a>Build Hibench</h2><p>进入Hibench源码目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ mvn -Phadoopbench -Psparkbench -Dspark=2.2 -Dscala=2.11 clean package</div></pre></td></tr></table></figure></p>
+<p>这里需要挺长一段时间</p>
+<hr>
+<h2 id="Hadoop-bench"><a href="#Hadoop-bench" class="headerlink" title="Hadoop bench"></a>Hadoop bench</h2><h3 id="配置hadoop-conf"><a href="#配置hadoop-conf" class="headerlink" title="配置hadoop.conf"></a>配置hadoop.conf</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cp conf/hadoop.conf.template conf/hadoop.conf</div><div class="line">$ gedit conf/hadoop.conf</div></pre></td></tr></table></figure>
+<p>修改<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hibench.hadoop.home           /Hadoop所在目录/hadoop-2.8.3</div><div class="line">hibench.hdfs.master           hdfs://localhost:9000</div></pre></td></tr></table></figure></p>
+<h3 id="尝试运行Hadoop负载测试"><a href="#尝试运行Hadoop负载测试" class="headerlink" title="尝试运行Hadoop负载测试"></a>尝试运行Hadoop负载测试</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ bin/workloads/micro/wordcount/prepare/prepare.sh</div><div class="line">$ bin/workloads/micro/wordcount/hadoop/run.sh</div></pre></td></tr></table></figure>
+<h3 id="查看报告"><a href="#查看报告" class="headerlink" title="查看报告"></a>查看报告</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ more report/hibench.report</div></pre></td></tr></table></figure>
+<p>更详细数据在<br><code>report/identity/hadoop/bench.log</code><br><code>report/identity/hadoop/monitor.html</code></p>
+<hr>
+<h2 id="Spark-bench"><a href="#Spark-bench" class="headerlink" title="Spark bench"></a>Spark bench</h2><h3 id="配置spark-conf"><a href="#配置spark-conf" class="headerlink" title="配置spark.conf"></a>配置spark.conf</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cp conf/spark.conf.template conf/spark.conf</div><div class="line">$ gedit conf/spark.conf</div></pre></td></tr></table></figure>
+<p>修改<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hibench.spark.home      /Spark所在目录/spark-2.2.2</div><div class="line">hibench.spark.master    local[*]</div></pre></td></tr></table></figure></p>
+<h3 id="尝试运行Spark负载测试"><a href="#尝试运行Spark负载测试" class="headerlink" title="尝试运行Spark负载测试"></a>尝试运行Spark负载测试</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ bin/workloads/micro/wordcount/prepare/prepare.sh</div><div class="line">$ bin/workloads/micro/wordcount/spark/run.sh</div></pre></td></tr></table></figure>
+<h3 id="查看报告-1"><a href="#查看报告-1" class="headerlink" title="查看报告"></a>查看报告</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ more report/hibench.report</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="Spark-Streaming-bench"><a href="#Spark-Streaming-bench" class="headerlink" title="Spark Streaming bench"></a>Spark Streaming bench</h2><h3 id="配置Kafka"><a href="#配置Kafka" class="headerlink" title="配置Kafka"></a>配置Kafka</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gedit conf/hibench.conf</div></pre></td></tr></table></figure>
+<p>修改为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">hibench.streambench.kafka.home          /Kafka所在目录/kafka_2.11-0.8.2.2</div><div class="line"># zookeeper host:port of kafka cluster, host1:port1,host2:port2...</div><div class="line">hibench.streambench.zkHost              localhost:2181</div><div class="line"># Kafka broker lists, written in mode host:port,host:port,..</div><div class="line">hibench.streambench.kafka.brokerList    localhost:9092</div></pre></td></tr></table></figure></p>
+<h3 id="运行-3"><a href="#运行-3" class="headerlink" title="运行"></a>运行</h3><h4 id="数据生成"><a href="#数据生成" class="headerlink" title="数据生成"></a>数据生成</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ bin/workloads/streaming/identity/prepare/genSeedDataset.sh</div></pre></td></tr></table></figure>
+<p>这里会跑Hadoop，会占资源<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ bin/workloads/streaming/identity/prepare/dataGen.sh</div></pre></td></tr></table></figure></p>
+<p>这里开始就会一直发送数据，不要关闭</p>
+<h4 id="运行测试"><a href="#运行测试" class="headerlink" title="运行测试"></a>运行测试</h4><p>这里注意把终端窗口拉长一些，以便找到Spark WebUI的URL<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ bin/workloads/streaming/identity/spark/run.sh</div></pre></td></tr></table></figure></p>
+<p>浏览器打开 <a href="http://某ip:4040" target="_blank" rel="external">http://某ip:4040</a> 即可查看实时负载数据</p>
+<p><img src="/images/180724/img.png"></p>
+<h4 id="生成报告"><a href="#生成报告" class="headerlink" title="生成报告"></a>生成报告</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ bin/workloads/streaming/identity/common/metrics_reader.sh</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="修改负载参数"><a href="#修改负载参数" class="headerlink" title="修改负载参数"></a>修改负载参数</h2><h3 id="修改数据量"><a href="#修改数据量" class="headerlink" title="修改数据量"></a>修改数据量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gedit conf/hibench.conf</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">hibench.streambench.datagen.intervalSpan	Interval span in millisecond (default: 50)</div><div class="line">hibench.streambench.datagen.recordsPerInterval	Number of records to generate per interval span (default: 5)</div><div class="line">hibench.streambench.datagen.recordLength	fixed length of record (default: 200)</div><div class="line">hibench.streambench.datagen.producerNumber	Number of KafkaProducer running on different thread (default: 1)</div><div class="line">hibench.streambench.datagen.totalRounds	Total round count of data send (default: -1 means infinity)</div><div class="line">hibench.streambench.datagen.totalRecords	Number of total records that will be generated (default: -1 means infinity)</div></pre></td></tr></table></figure>
+<h3 id="修改spark配置"><a href="#修改spark配置" class="headerlink" title="修改spark配置"></a>修改spark配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gedit conf/spark.conf</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"># Spark streaming Batchnterval in millisecond (default 100)</div><div class="line">hibench.streambench.spark.batchInterval          800</div><div class="line"></div><div class="line"># Number of nodes that will receive kafka input (default: 4)</div><div class="line">hibench.streambench.spark.receiverNumber        4</div><div class="line"></div><div class="line"># Indicate RDD storage level. (default: 2)</div><div class="line"># 0 = StorageLevel.MEMORY_ONLY</div><div class="line"># 1 = StorageLevel.MEMORY_AND_DISK_SER</div><div class="line"># other = StorageLevel.MEMORY_AND_DISK_SER_2</div><div class="line">hibench.streambench.spark.storageLevel 2</div><div class="line"></div><div class="line"># indicate whether to test the write ahead log new feature (default: false)</div><div class="line">hibench.streambench.spark.enableWAL false</div><div class="line"></div><div class="line"># if testWAL is true, this path to store stream context in hdfs shall be specified. If false, it can be empty (default: /var/tmp)</div><div class="line">hibench.streambench.spark.checkpointPath /var/tmp</div><div class="line"></div><div class="line"># whether to use direct approach or not (dafault: true)</div><div class="line">hibench.streambench.spark.useDirectMode true</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="温馨提示"><a href="#温馨提示" class="headerlink" title="温馨提示"></a>温馨提示</h2><p>为了避免磁盘被占满，应及时清理kafka和zookeeper产生的数据文件</p>
+<hr>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a href="https://github.com/intel-hadoop/HiBench/blob/master/docs/build-hibench.md" target="_blank" rel="external">https://github.com/intel-hadoop/HiBench/blob/master/docs/build-hibench.md</a></li>
+<li><a href="https://github.com/intel-hadoop/HiBench/blob/master/docs/run-sparkbench.md" target="_blank" rel="external">https://github.com/intel-hadoop/HiBench/blob/master/docs/run-sparkbench.md</a></li>
+<li><a href="https://github.com/intel-hadoop/HiBench/blob/master/docs/run-streamingbench.md" target="_blank" rel="external">https://github.com/intel-hadoop/HiBench/blob/master/docs/run-streamingbench.md</a></li>
+<li><a href="http://hadoop.apache.org/docs/r2.8.3/hadoop-project-dist/hadoop-common/SingleCluster.html" target="_blank" rel="external">http://hadoop.apache.org/docs/r2.8.3/hadoop-project-dist/hadoop-common/SingleCluster.html</a></li>
+<li><a href="https://zookeeper.apache.org/doc/current/zookeeperStarted.html" target="_blank" rel="external">https://zookeeper.apache.org/doc/current/zookeeperStarted.html</a></li>
+<li><a href="https://kafka.apache.org/quickstart" target="_blank" rel="external">https://kafka.apache.org/quickstart</a></li>
+</ol>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;谨以此文祭奠过去三天起起落落的辛酸经历。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="大数据" scheme="http://gaufoo.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+      <category term="大数据" scheme="http://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="spark" scheme="http://gaufoo.com/tags/spark/"/>
+    
+      <category term="benchmark" scheme="http://gaufoo.com/tags/benchmark/"/>
+    
+      <category term="hibench" scheme="http://gaufoo.com/tags/hibench/"/>
+    
+  </entry>
+  
+  <entry>
     <title>fold right与fold left的相互转化</title>
-    <link href="http://gaufoo.com/2018/05/19/foldl-and-foldr/"/>
-    <id>http://gaufoo.com/2018/05/19/foldl-and-foldr/</id>
+    <link href="http://gaufoo.com/foldl-and-foldr/"/>
+    <id>http://gaufoo.com/foldl-and-foldr/</id>
     <published>2018-05-19T04:58:51.000Z</published>
     <updated>2018-05-19T09:33:40.129Z</updated>
     
@@ -70,8 +373,8 @@
   
   <entry>
     <title>用Haskell构建Parser Combinator（二）</title>
-    <link href="http://gaufoo.com/2018/03/18/parser2/"/>
-    <id>http://gaufoo.com/2018/03/18/parser2/</id>
+    <link href="http://gaufoo.com/parser2/"/>
+    <id>http://gaufoo.com/parser2/</id>
     <published>2018-03-18T02:16:34.000Z</published>
     <updated>2018-03-18T05:59:25.000Z</updated>
     
@@ -141,18 +444,18 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
       <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
     
       <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
   <entry>
     <title>Continuation与Call/CC</title>
-    <link href="http://gaufoo.com/2018/03/12/continuation/"/>
-    <id>http://gaufoo.com/2018/03/12/continuation/</id>
+    <link href="http://gaufoo.com/continuation/"/>
+    <id>http://gaufoo.com/continuation/</id>
     <published>2018-03-12T01:50:13.000Z</published>
     <updated>2018-03-12T09:38:36.000Z</updated>
     
@@ -283,8 +586,8 @@
   
   <entry>
     <title>用Haskell构建Parser Combinator（一）</title>
-    <link href="http://gaufoo.com/2018/03/10/parser/"/>
-    <id>http://gaufoo.com/2018/03/10/parser/</id>
+    <link href="http://gaufoo.com/parser/"/>
+    <id>http://gaufoo.com/parser/</id>
     <published>2018-03-09T18:28:27.000Z</published>
     <updated>2018-03-12T01:53:28.000Z</updated>
     
@@ -441,18 +744,18 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
       <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
     
       <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
   <entry>
     <title>用C++写出伪LISP代码（三）</title>
-    <link href="http://gaufoo.com/2018/03/04/cppnlisp3/"/>
-    <id>http://gaufoo.com/2018/03/04/cppnlisp3/</id>
+    <link href="http://gaufoo.com/cppnlisp3/"/>
+    <id>http://gaufoo.com/cppnlisp3/</id>
     <published>2018-03-04T01:36:56.000Z</published>
     <updated>2018-03-04T04:22:54.000Z</updated>
     
@@ -519,8 +822,8 @@
   
   <entry>
     <title>用C++写出伪LISP代码（二）</title>
-    <link href="http://gaufoo.com/2018/03/03/cppnlisp2/"/>
-    <id>http://gaufoo.com/2018/03/03/cppnlisp2/</id>
+    <link href="http://gaufoo.com/cppnlisp2/"/>
+    <id>http://gaufoo.com/cppnlisp2/</id>
     <published>2018-03-03T12:28:29.000Z</published>
     <updated>2018-03-04T04:16:58.000Z</updated>
     
@@ -610,8 +913,8 @@
   
   <entry>
     <title>用C++写出伪LISP代码（一）</title>
-    <link href="http://gaufoo.com/2018/03/03/cppnlisp1/"/>
-    <id>http://gaufoo.com/2018/03/03/cppnlisp1/</id>
+    <link href="http://gaufoo.com/cppnlisp1/"/>
+    <id>http://gaufoo.com/cppnlisp1/</id>
     <published>2018-03-03T08:48:23.000Z</published>
     <updated>2018-03-04T04:16:35.000Z</updated>
     
@@ -691,8 +994,8 @@
   
   <entry>
     <title>中缀表达式转化前后缀引发的思考</title>
-    <link href="http://gaufoo.com/2018/01/02/ni_to_pre_post/"/>
-    <id>http://gaufoo.com/2018/01/02/ni_to_pre_post/</id>
+    <link href="http://gaufoo.com/ni_to_pre_post/"/>
+    <id>http://gaufoo.com/ni_to_pre_post/</id>
     <published>2018-01-02T06:22:22.000Z</published>
     <updated>2018-01-02T02:51:53.000Z</updated>
     
@@ -807,8 +1110,8 @@
   
   <entry>
     <title>利用C语言缺陷进行缓冲区溢出攻击</title>
-    <link href="http://gaufoo.com/2017/12/30/overflow/"/>
-    <id>http://gaufoo.com/2017/12/30/overflow/</id>
+    <link href="http://gaufoo.com/overflow/"/>
+    <id>http://gaufoo.com/overflow/</id>
     <published>2017-12-30T06:22:22.000Z</published>
     <updated>2017-12-30T06:54:04.000Z</updated>
     
@@ -993,8 +1296,8 @@
   
   <entry>
     <title>听说C语言也可以“泛型”</title>
-    <link href="http://gaufoo.com/2017/12/09/genericC/"/>
-    <id>http://gaufoo.com/2017/12/09/genericC/</id>
+    <link href="http://gaufoo.com/genericC/"/>
+    <id>http://gaufoo.com/genericC/</id>
     <published>2017-12-09T07:02:51.000Z</published>
     <updated>2017-12-09T10:09:04.000Z</updated>
     
@@ -1047,8 +1350,8 @@
   
   <entry>
     <title>AppInventor2复刻FlappyBird</title>
-    <link href="http://gaufoo.com/2017/12/08/appinventor/"/>
-    <id>http://gaufoo.com/2017/12/08/appinventor/</id>
+    <link href="http://gaufoo.com/appinventor/"/>
+    <id>http://gaufoo.com/appinventor/</id>
     <published>2017-12-08T08:13:19.000Z</published>
     <updated>2017-12-09T07:27:57.000Z</updated>
     
@@ -1149,8 +1452,8 @@
   
   <entry>
     <title>RE转NFA，NFA转DFA</title>
-    <link href="http://gaufoo.com/2017/10/29/REtoNFAtoDFA/"/>
-    <id>http://gaufoo.com/2017/10/29/REtoNFAtoDFA/</id>
+    <link href="http://gaufoo.com/REtoNFAtoDFA/"/>
+    <id>http://gaufoo.com/REtoNFAtoDFA/</id>
     <published>2017-10-29T12:09:54.000Z</published>
     <updated>2017-10-31T16:06:34.000Z</updated>
     
@@ -1199,8 +1502,8 @@
   
   <entry>
     <title>手工构造词法分析器</title>
-    <link href="http://gaufoo.com/2017/10/26/%E6%89%8B%E5%B7%A5%E6%9E%84%E9%80%A0%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E5%99%A8/"/>
-    <id>http://gaufoo.com/2017/10/26/手工构造词法分析器/</id>
+    <link href="http://gaufoo.com/%E6%89%8B%E5%B7%A5%E6%9E%84%E9%80%A0%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E5%99%A8/"/>
+    <id>http://gaufoo.com/手工构造词法分析器/</id>
     <published>2017-10-26T09:36:30.000Z</published>
     <updated>2017-10-30T00:45:51.000Z</updated>
     
@@ -1261,8 +1564,8 @@
   
   <entry>
     <title>C++中三种实现可变参数的方法</title>
-    <link href="http://gaufoo.com/2017/10/24/Cpp%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0/"/>
-    <id>http://gaufoo.com/2017/10/24/Cpp可变参数/</id>
+    <link href="http://gaufoo.com/Cpp%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0/"/>
+    <id>http://gaufoo.com/Cpp可变参数/</id>
     <published>2017-10-24T12:20:56.000Z</published>
     <updated>2017-10-24T17:23:09.000Z</updated>
     
@@ -1330,18 +1633,18 @@
       <category term="C++" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
-      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
-    
       <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
+    
+      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
     
   </entry>
   
   <entry>
     <title>C++11类型说明符：constexpr</title>
-    <link href="http://gaufoo.com/2017/10/24/CppConstexpr/"/>
-    <id>http://gaufoo.com/2017/10/24/CppConstexpr/</id>
+    <link href="http://gaufoo.com/CppConstexpr/"/>
+    <id>http://gaufoo.com/CppConstexpr/</id>
     <published>2017-10-24T08:00:59.000Z</published>
     <updated>2017-10-24T11:39:43.000Z</updated>
     
@@ -1425,8 +1728,8 @@
   
   <entry>
     <title>编译原理学习笔记（二）</title>
-    <link href="http://gaufoo.com/2017/09/16/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
-    <id>http://gaufoo.com/2017/09/16/编译原理学习笔记（二）/</id>
+    <link href="http://gaufoo.com/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
+    <id>http://gaufoo.com/编译原理学习笔记（二）/</id>
     <published>2017-09-16T09:46:00.000Z</published>
     <updated>2017-10-27T01:53:29.000Z</updated>
     
@@ -1608,8 +1911,8 @@
   
   <entry>
     <title>编译原理学习笔记（一）</title>
-    <link href="http://gaufoo.com/2017/09/10/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
-    <id>http://gaufoo.com/2017/09/10/编译原理学习笔记（一）/</id>
+    <link href="http://gaufoo.com/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+    <id>http://gaufoo.com/编译原理学习笔记（一）/</id>
     <published>2017-09-09T17:52:49.000Z</published>
     <updated>2017-09-16T10:05:05.000Z</updated>
     
@@ -1785,458 +2088,6 @@
       <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
       <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hexo下的NexT主题配置（下）</title>
-    <link href="http://gaufoo.com/2017/09/06/Hexo%E4%B8%8B%E7%9A%84NexT%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE%EF%BC%88%E4%B8%8B%EF%BC%89/"/>
-    <id>http://gaufoo.com/2017/09/06/Hexo下的NexT主题配置（下）/</id>
-    <published>2017-09-06T09:40:00.000Z</published>
-    <updated>2017-09-06T12:51:52.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>上期链接：<a href="http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（上）/">http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（上）/</a></p>
-<a id="more"></a>
-<hr>
-<h2 id="文章设置"><a href="#文章设置" class="headerlink" title="文章设置"></a>文章设置</h2><h3 id="直达余下全文"><a href="#直达余下全文" class="headerlink" title="直达余下全文"></a>直达余下全文</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">scroll_to_more:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
-<p>点击阅读全文后，是否直达 <code>&lt;!--more--&gt;</code> 后的余下全文位置。</p>
-<h3 id="保存页面位置"><a href="#保存页面位置" class="headerlink" title="保存页面位置"></a>保存页面位置</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">save_scroll:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
-<p>是否在cookies里为每个页面保存阅读位置。</p>
-<h3 id="自动序言"><a href="#自动序言" class="headerlink" title="自动序言"></a>自动序言</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">excerpt_description:</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
-<p>主页显示文章是否自动摘录描述作为序言。</p>
-<h3 id="截取序言"><a href="#截取序言" class="headerlink" title="截取序言"></a>截取序言</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">auto_excerpt:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  length:</span> <span class="number">150</span></div></pre></td></tr></table></figure>
-<p>不建议开启，推荐使用 <code>&lt;!--more--&gt;</code> 来精确控制序言。</p>
-<h3 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="attr">post_meta:</span></div><div class="line"><span class="attr">  item_text:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  created_at:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  updated_at:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  categories:</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
-<p><code>created_at</code>：是否显示创建时间，<code>updated_at</code>：是否显示更新时间， <code>categories</code>：是否显示分类目录。</p>
-<h3 id="字数统计信息"><a href="#字数统计信息" class="headerlink" title="字数统计信息"></a>字数统计信息</h3><p>启动功能需要下载插件：<a href="https://github.com/willin/hexo-wordcount" target="_blank" rel="external">https://github.com/willin/hexo-wordcount</a><br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="attr">post_wordcount:</span></div><div class="line"><span class="attr">  item_text:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  wordcount:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  min2read:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  totalcount:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  separated_meta:</span> <span class="literal">false</span></div></pre></td></tr></table></figure></p>
-<p><code>wordcount</code>：开启字数统计，<code>min2read</code>：开启大致阅读时间，<code>totalcount</code>：开启所有文章总字体显示，<code>separated_meta</code>：开启独占一行。</p>
-<h3 id="微信二维码"><a href="#微信二维码" class="headerlink" title="微信二维码"></a>微信二维码</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">wechat_subscriber:</span></div><div class="line"><span class="attr">  enabled:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  qcode:</span> <span class="string">/path/to/your/wechatqcode</span> <span class="string">ex.</span> <span class="string">/uploads/wechat-qcode.jpg</span></div><div class="line"><span class="attr">  description:</span> <span class="string">ex.</span> <span class="string">subscribe</span> <span class="string">to</span> <span class="string">my</span> <span class="string">blog</span> <span class="string">by</span> <span class="string">scanning</span> <span class="string">my</span> <span class="string">public</span> <span class="string">wechat</span> <span class="string">account</span></div></pre></td></tr></table></figure>
-<p><code>enabled</code>：文末是否开启微信二维码显示，<code>qcode</code>：二维码图片所在路径，示例: <code>/uploads/wechat-qcode.jpg</code>，<code>description</code>：二维码底下的简要描述文字。</p>
-<h3 id="打赏"><a href="#打赏" class="headerlink" title="打赏"></a>打赏</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">reward_comment:</span> <span class="string">您的支持将鼓励我继续创作！</span></div><div class="line"><span class="attr">wechatpay:</span> <span class="string">/images/wechatpay.jpg</span></div><div class="line"><span class="attr">alipay:</span> <span class="string">/images/alipay.jpg</span></div><div class="line"><span class="attr">bitcoin:</span> <span class="string">/images/bitcoin.png</span></div></pre></td></tr></table></figure>
-<p><code>reward_comment</code>：打赏提示性语句，<code>wechatpay</code>：微信支付二维码图片存储路径，<code>alipay</code>：支付宝二维码图片存储路径，<code>bitcoin</code>：比特币支付二维码图片存储路径。</p>
-<h3 id="文章版权声明"><a href="#文章版权声明" class="headerlink" title="文章版权声明"></a>文章版权声明</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">post_copyright:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  license:</span> <span class="string">CC</span> <span class="string">BY-NC-ND</span> <span class="number">3.0</span></div><div class="line"><span class="attr">  license_url:</span> <span class="attr">https://creativecommons.org/licenses/by-nc-nd/3.0/</span></div></pre></td></tr></table></figure>
-<p><code>enable</code>：开启版权声明提醒，<code>license</code>：版权声明类型，<code>license_url</code>：全球版权页</p>
-<hr>
-<h2 id="Misc-主题方案设置"><a href="#Misc-主题方案设置" class="headerlink" title="Misc 主题方案设置"></a>Misc 主题方案设置</h2><h3 id="移动设备减少边框"><a href="#移动设备减少边框" class="headerlink" title="移动设备减少边框"></a>移动设备减少边框</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">mobile_layout_economy:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
-<p>不建议true</p>
-<h3 id="安卓设备面板颜色"><a href="#安卓设备面板颜色" class="headerlink" title="安卓设备面板颜色"></a>安卓设备面板颜色</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">android_chrome_color:</span> <span class="string">"#222"</span></div></pre></td></tr></table></figure>
-<h3 id="代码高亮主题"><a href="#代码高亮主题" class="headerlink" title="代码高亮主题"></a>代码高亮主题</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">highlight_theme:</span> <span class="string">normal</span></div></pre></td></tr></table></figure>
-<p><code>highlight_theme</code>：可用值为：<code>normal</code>，<code>night</code>，<code>night eighties</code>，<code>night blue</code>，<code>night bright</code><br>效果示例： <a href="https://github.com/chriskempson/tomorrow-theme" target="_blank" rel="external">https://github.com/chriskempson/tomorrow-theme</a></p>
-<hr>
-<h2 id="字体设置"><a href="#字体设置" class="headerlink" title="字体设置"></a>字体设置</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">font:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  host:</span></div></pre></td></tr></table></figure>
-<p><code>host</code>：外链字体库地址，例如 //fonts.googleapis.com (默认值)</p>
-<h3 id="全局字体"><a href="#全局字体" class="headerlink" title="全局字体"></a>全局字体</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">global:</span></div><div class="line"><span class="attr">  external:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  family:</span> <span class="string">Lato</span></div></pre></td></tr></table></figure>
-<p>全局字体将应用在body元素上，<code>external</code>表示从<code>host</code>加载字体库，<code>family</code>：选择字体。</p>
-<h3 id="标题字体"><a href="#标题字体" class="headerlink" title="标题字体"></a>标题字体</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">headings:</span></div><div class="line"><span class="attr">  external:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  family:</span></div></pre></td></tr></table></figure>
-<p>标题字体将应用于h1,h2,h3,h4,h5,h6标题上，<code>external</code>同上，<code>family</code>：选择字体，空白则应用全局字体。</p>
-<h3 id="文章字体"><a href="#文章字体" class="headerlink" title="文章字体"></a>文章字体</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">posts:</span></div><div class="line"><span class="attr">  external:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  family:</span></div></pre></td></tr></table></figure>
-<p><code>external</code>、<code>family</code>同上。</p>
-<h3 id="LOGO-字体"><a href="#LOGO-字体" class="headerlink" title="LOGO 字体"></a>LOGO 字体</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">logo:</span></div><div class="line"><span class="attr">  external:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  family:</span></div><div class="line"><span class="attr">  size:</span></div></pre></td></tr></table></figure>
-<p><code>external</code>、<code>family</code>同上。<code>size</code>：字体大小单独设置。</p>
-<h3 id="代码块字体"><a href="#代码块字体" class="headerlink" title="代码块字体"></a>代码块字体</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">codes:</span></div><div class="line"><span class="attr">  external:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  family:</span></div><div class="line"><span class="attr">  size:</span></div></pre></td></tr></table></figure>
-<p><code>external</code>、<code>family</code>、<code>size</code>同上。</p>
-<hr>
-<h2 id="第三方服务设置"><a href="#第三方服务设置" class="headerlink" title="第三方服务设置"></a>第三方服务设置</h2><h3 id="MathJax"><a href="#MathJax" class="headerlink" title="MathJax"></a>MathJax</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">mathjax:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  per_page:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  cdn:</span> <span class="string">//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML</span></div></pre></td></tr></table></figure>
-<p><code>enable</code>：是否开启 MathJax 来显示数学公式，<code>cdn</code>：用于指定 MathJax 的脚本地址，默认是 MathJax 官方提供的 CDN 地址。</p>
-<h3 id="Han"><a href="#Han" class="headerlink" title="Han"></a>Han</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">han:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
-<p>文档：<a href="https://hanzi.pro/" target="_blank" rel="external">https://hanzi.pro/</a></p>
-<h3 id="Swiftype-站内搜索"><a href="#Swiftype-站内搜索" class="headerlink" title="Swiftype 站内搜索"></a>Swiftype 站内搜索</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">swiftype_key:</span></div></pre></td></tr></table></figure>
-<p>填写Swiftype Search API的值</p>
-<h3 id="百度分析"><a href="#百度分析" class="headerlink" title="百度分析"></a>百度分析</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">baidu_analytics:</span></div></pre></td></tr></table></figure>
-<p>填写百度分析ID</p>
-<h3 id="多说"><a href="#多说" class="headerlink" title="多说"></a>多说</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="attr">duoshuo_shortname:</span></div><div class="line"></div><div class="line"><span class="attr">duoshuo_share:</span> <span class="literal">true</span></div><div class="line"></div><div class="line"><span class="attr">duoshuo_info:</span></div><div class="line"><span class="attr">  ua_enable:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  admin_enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  user_id:</span> <span class="number">0</span></div><div class="line"><span class="attr">  admin_nickname:</span> <span class="string">Author</span></div></pre></td></tr></table></figure>
-<p>相关：<a href="http://dev.duoshuo.com" target="_blank" rel="external">http://dev.duoshuo.com</a></p>
-<h3 id="Disqus"><a href="#Disqus" class="headerlink" title="Disqus"></a>Disqus</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">disqus:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  shortname:</span></div><div class="line"><span class="attr">  count:</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
-<p><code>enable</code>：是否开启 Disqus 评论，<code>count</code>：是否显示评论数</p>
-<h3 id="Hypercomments"><a href="#Hypercomments" class="headerlink" title="Hypercomments"></a>Hypercomments</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">hypercomments_id:</span></div></pre></td></tr></table></figure>
-<h3 id="畅言"><a href="#畅言" class="headerlink" title="畅言"></a>畅言</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">changyan:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  appid:</span></div><div class="line"><span class="attr">  appkey:</span></div></pre></td></tr></table></figure>
-<h3 id="Valine"><a href="#Valine" class="headerlink" title="Valine"></a>Valine</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="attr">valine:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  appid:</span>  <span class="comment"># your leancloud application appid</span></div><div class="line"><span class="attr">  appkey:</span>  <span class="comment"># your leancloud application appkey</span></div><div class="line"><span class="attr">  notify:</span> <span class="literal">false</span> <span class="comment"># mail notifier , https://github.com/xCss/Valine/wiki</span></div><div class="line"><span class="attr">  verify:</span> <span class="literal">false</span> <span class="comment"># Verification code</span></div><div class="line"><span class="attr">  placeholder:</span> <span class="string">Comment</span> <span class="string">input</span> <span class="string">placeholder</span></div></pre></td></tr></table></figure>
-<p>相关：<a href="https://leancloud.cn" target="_blank" rel="external">https://leancloud.cn</a></p>
-<h3 id="友言"><a href="#友言" class="headerlink" title="友言"></a>友言</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">youyan_uid:</span> <span class="string">your</span> <span class="string">uid</span></div></pre></td></tr></table></figure>
-<h3 id="LiveRe"><a href="#LiveRe" class="headerlink" title="LiveRe"></a>LiveRe</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">livere_uid:</span> <span class="string">your</span> <span class="string">uid</span></div></pre></td></tr></table></figure>
-<p>相关：<a href="https://livere.com/insight/myCode" target="_blank" rel="external">https://livere.com/insight/myCode</a></p>
-<h3 id="百度分享"><a href="#百度分享" class="headerlink" title="百度分享"></a>百度分享</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attr">baidushare:</span></div><div class="line"><span class="attr">  type:</span> <span class="string">button</span></div></pre></td></tr></table></figure>
-<p>注意：百度分享不支持https。<code>type</code>可选项：<code>button</code>，<code>slice</code>。</p>
-<h3 id="JiaThis"><a href="#JiaThis" class="headerlink" title="JiaThis"></a>JiaThis</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">add_this_id:</span></div></pre></td></tr></table></figure>
-<p>相关：<a href="http://www.jiathis.com/" target="_blank" rel="external">http://www.jiathis.com/</a></p>
-<h3 id="Google"><a href="#Google" class="headerlink" title="Google"></a>Google</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">google_site_verification:</span></div></pre></td></tr></table></figure>
-<p>Google 验证码，相关：<a href="https://www.google.com/webmasters/" target="_blank" rel="external">https://www.google.com/webmasters/</a><br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">google_analytics:</span></div></pre></td></tr></table></figure></p>
-<p>Google 分析</p>
-<h3 id="Yandex"><a href="#Yandex" class="headerlink" title="Yandex"></a>Yandex</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">yandex_site_verification:</span></div></pre></td></tr></table></figure>
-<p>相关：<a href="https://webmaster.yandex.ru/" target="_blank" rel="external">https://webmaster.yandex.ru/</a></p>
-<h3 id="CNZZ-统计"><a href="#CNZZ-统计" class="headerlink" title="CNZZ 统计"></a>CNZZ 统计</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">cnzz_siteid:</span></div></pre></td></tr></table></figure>
-<h3 id="Application-Insights"><a href="#Application-Insights" class="headerlink" title="Application Insights"></a>Application Insights</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">application_insights:</span></div></pre></td></tr></table></figure>
-<p>相关：<a href="https://azure.microsoft.com/en-us/services/application-insights/" target="_blank" rel="external">https://azure.microsoft.com/en-us/services/application-insights/</a></p>
-<h3 id="Facebook-SDK"><a href="#Facebook-SDK" class="headerlink" title="Facebook SDK"></a>Facebook SDK</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="attr">facebook_sdk:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  app_id:</span>       <span class="comment">#&lt;app_id&gt;</span></div><div class="line"><span class="attr">  fb_admin:</span>     <span class="comment">#&lt;user_id&gt;</span></div><div class="line"><span class="attr">  like_button:</span>  <span class="comment">#true</span></div><div class="line"><span class="attr">  webmaster:</span>    <span class="comment">#true</span></div></pre></td></tr></table></figure>
-<p>相关：<a href="https://github.com/iissnan/hexo-theme-next/pull/410" target="_blank" rel="external">https://github.com/iissnan/hexo-theme-next/pull/410</a></p>
-<h3 id="Facebook-评论"><a href="#Facebook-评论" class="headerlink" title="Facebook 评论"></a>Facebook 评论</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="attr">facebook_comments_plugin:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  num_of_posts:</span> <span class="number">10</span>  <span class="comment"># min posts num is 1</span></div><div class="line"><span class="attr">  width:</span> <span class="number">100</span><span class="string">%</span>       <span class="comment"># default width is 550px</span></div><div class="line"><span class="attr">  scheme:</span> <span class="string">light</span>     <span class="comment"># default scheme is light (light or dark)</span></div></pre></td></tr></table></figure>
-<h3 id="VKontakte-API"><a href="#VKontakte-API" class="headerlink" title="VKontakte API"></a>VKontakte API</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="attr">vkontakte_api:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  app_id:</span>       <span class="comment">#&lt;app_id&gt;</span></div><div class="line"><span class="attr">  like:</span>         <span class="literal">true</span></div><div class="line"><span class="attr">  comments:</span>     <span class="literal">true</span></div><div class="line"><span class="attr">  num_of_posts:</span> <span class="number">10</span></div></pre></td></tr></table></figure>
-<p>相关：<a href="https://vk.com/editapp?act=create" target="_blank" rel="external">https://vk.com/editapp?act=create</a></p>
-<h3 id="星星评级"><a href="#星星评级" class="headerlink" title="星星评级"></a>星星评级</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">rating:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  id:</span>     <span class="comment">#&lt;app_id&gt;</span></div><div class="line"><span class="attr">  color:</span>  <span class="string">fc6423</span></div></pre></td></tr></table></figure>
-<p>相关：<a href="https://widgetpack.com" target="_blank" rel="external">https://widgetpack.com</a></p>
-<h3 id="阅读数统计"><a href="#阅读数统计" class="headerlink" title="阅读数统计"></a>阅读数统计</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">leancloud_visitors:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  app_id:</span> <span class="comment">#&lt;app_id&gt;</span></div><div class="line"><span class="attr">  app_key:</span> <span class="comment">#&lt;app_key&gt;</span></div></pre></td></tr></table></figure>
-<p>相关：<a href="https://leancloud.cn" target="_blank" rel="external">https://leancloud.cn</a></p>
-<h3 id="不蒜子统计"><a href="#不蒜子统计" class="headerlink" title="不蒜子统计"></a>不蒜子统计</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="attr">busuanzi_count:</span></div><div class="line">  <span class="comment"># count values only if the other configs are false</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line">  <span class="comment"># custom uv span for the whole site</span></div><div class="line"><span class="attr">  site_uv:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  site_uv_header:</span> <span class="string">&lt;i</span> <span class="string">class="fa</span> <span class="string">fa-user"&gt;&lt;/i&gt;</span></div><div class="line"><span class="attr">  site_uv_footer:</span></div><div class="line">  <span class="comment"># custom pv span for the whole site</span></div><div class="line"><span class="attr">  site_pv:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  site_pv_header:</span> <span class="string">&lt;i</span> <span class="string">class="fa</span> <span class="string">fa-eye"&gt;&lt;/i&gt;</span></div><div class="line"><span class="attr">  site_pv_footer:</span></div><div class="line">  <span class="comment"># custom pv span for one page only</span></div><div class="line"><span class="attr">  page_pv:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  page_pv_header:</span> <span class="string">&lt;i</span> <span class="string">class="fa</span> <span class="string">fa-file-o"&gt;&lt;/i&gt;</span></div><div class="line"><span class="attr">  page_pv_footer:</span></div></pre></td></tr></table></figure>
-<p>相关：<a href="http://ibruce.info/2015/04/04/busuanzi/" target="_blank" rel="external">http://ibruce.info/2015/04/04/busuanzi/</a><br>例：<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="attr">busuanzi_count:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  site_uv:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  site_uv_header:</span> <span class="string">本站访客数</span></div><div class="line"><span class="attr">  site_uv_footer:</span> <span class="string">人次</span></div><div class="line"><span class="attr">  site_pv:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  site_pv_header:</span> <span class="string">本站总访问量</span></div><div class="line"><span class="attr">  site_pv_footer:</span> <span class="string">次</span></div><div class="line"><span class="attr">  page_pv:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  page_pv_header:</span> <span class="string">本文总阅读量</span></div><div class="line"><span class="attr">  page_pv_footer:</span> <span class="string">次</span></div></pre></td></tr></table></figure></p>
-<h3 id="腾讯分析"><a href="#腾讯分析" class="headerlink" title="腾讯分析"></a>腾讯分析</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">tencent_analytics:</span></div></pre></td></tr></table></figure>
-<p>移动分析<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">tencent_mta:</span></div></pre></td></tr></table></figure></p>
-<h3 id="推送百度"><a href="#推送百度" class="headerlink" title="推送百度"></a>推送百度</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">baidu_push:</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
-<p>自动把博客推送到百度上，更容易被搜索。</p>
-<h3 id="Google-日历"><a href="#Google-日历" class="headerlink" title="Google 日历"></a>Google 日历</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="attr">calendar:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  calendar_id:</span> <span class="string">&lt;required&gt;</span></div><div class="line"><span class="attr">  api_key:</span> <span class="string">&lt;required&gt;</span></div><div class="line"><span class="attr">  orderBy:</span> <span class="string">startTime</span></div><div class="line"><span class="attr">  offsetMax:</span> <span class="number">24</span></div><div class="line"><span class="attr">  offsetMin:</span> <span class="number">4</span></div><div class="line"><span class="attr">  timeZone:</span></div><div class="line"><span class="attr">  showDeleted:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  singleEvents:</span> <span class="literal">true</span></div><div class="line"><span class="attr">  maxResults:</span> <span class="number">250</span></div></pre></td></tr></table></figure>
-<p>相关：<a href="https://developers.google.com/google-apps/calendar/v3/reference/events/list" target="_blank" rel="external">https://developers.google.com/google-apps/calendar/v3/reference/events/list</a></p>
-<h3 id="Algolia-搜索"><a href="#Algolia-搜索" class="headerlink" title="Algolia 搜索"></a>Algolia 搜索</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="attr">algolia_search:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  hits:</span></div><div class="line"><span class="attr">    per_page:</span> <span class="number">10</span></div><div class="line"><span class="attr">  labels:</span></div><div class="line"><span class="attr">    input_placeholder:</span> <span class="string">Search</span> <span class="string">for</span> <span class="string">Posts</span></div><div class="line"><span class="attr">    hits_empty:</span> <span class="string">"We didn't find any results for the search: $&#123;query&#125;"</span></div><div class="line"><span class="attr">    hits_stats:</span> <span class="string">"$&#123;hits&#125; results found in $&#123;time&#125; ms"</span></div></pre></td></tr></table></figure>
-<h3 id="Local-搜索"><a href="#Local-搜索" class="headerlink" title="Local 搜索"></a>Local 搜索</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">local_search:</span></div><div class="line"><span class="attr">  enable:</span> <span class="literal">false</span></div><div class="line"><span class="attr">  trigger:</span> <span class="string">aut</span></div><div class="line"><span class="attr">  top_n_per_article:</span> <span class="number">1</span></div></pre></td></tr></table></figure>
-<p>相关：<a href="https://github.com/flashlab/hexo-generator-search" target="_blank" rel="external">https://github.com/flashlab/hexo-generator-search</a></p>
-<hr>
-<h2 id="动画设置"><a href="#动画设置" class="headerlink" title="动画设置"></a>动画设置</h2><h3 id="加载动画"><a href="#加载动画" class="headerlink" title="加载动画"></a>加载动画</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">use_motion:</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
-<p>加载页面时的动画是否开启。</p>
-<h3 id="背景动画"><a href="#背景动画" class="headerlink" title="背景动画"></a>背景动画</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">canvas_nest:</span> <span class="literal">false</span></div><div class="line"><span class="attr">three_waves:</span> <span class="literal">false</span></div><div class="line"><span class="attr">canvas_lines:</span> <span class="literal">false</span></div><div class="line"><span class="attr">canvas_sphere:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
-<p>四种背景动画只能选一种改为true，不过不建议开启，影响注意力。</p>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;上期链接：&lt;a href=&quot;http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（上）/&quot;&gt;http://gaufoo.com/2017/08/23/Hexo下的NexT主题配置（上）/&lt;/a&gt;&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Hexo教程" scheme="http://gaufoo.com/categories/Hexo%E6%95%99%E7%A8%8B/"/>
-    
-    
-      <category term="Hexo" scheme="http://gaufoo.com/tags/Hexo/"/>
-    
-      <category term="配置" scheme="http://gaufoo.com/tags/%E9%85%8D%E7%BD%AE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C之32位二进制数内1的个数求法</title>
-    <link href="http://gaufoo.com/2017/09/05/C%E4%B9%8B32%E4%BD%8D%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%95%B0%E5%86%851%E7%9A%84%E4%B8%AA%E6%95%B0%E6%B1%82%E6%B3%95/"/>
-    <id>http://gaufoo.com/2017/09/05/C之32位二进制数内1的个数求法/</id>
-    <published>2017-09-05T13:43:00.000Z</published>
-    <updated>2017-09-07T09:54:13.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>《CSAPP》上的题目，略有难度。</p>
-<a id="more"></a>
-<hr>
-<h2 id="问题来源"><a href="#问题来源" class="headerlink" title="问题来源"></a>问题来源</h2><p><img src="/images/606816650151851360.jpg" width="360" alt="图片名称"></p>
-<hr>
-<h2 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h2><ol>
-<li>编程语言：C</li>
-<li>可用操作符：! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</li>
-<li>最大操作步数：40</li>
-<li>最大操作数：255</li>
-</ol>
-<hr>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><h3 id="获取2位二进制数内”1”个数"><a href="#获取2位二进制数内”1”个数" class="headerlink" title="获取2位二进制数内”1”个数"></a>获取2位二进制数内”1”个数</h3><p>设该数为<code>x</code>，则答案易得为<code>(x &amp; 01) + ((x &gt;&gt; 1) &amp; 01)</code></p>
-<h3 id="获取4位二进制数内”1”个数"><a href="#获取4位二进制数内”1”个数" class="headerlink" title="获取4位二进制数内”1”个数"></a>获取4位二进制数内”1”个数</h3><p>设该数为<code>x</code><br>可以先把每两位的”1”个数求出，再加起来。</p>
-<ol>
-<li><code>y = (x &amp; 0101) + ((x &gt;&gt; 1) &amp; 0101)</code></li>
-<li><code>count = (y &amp; 0011) + ((y &gt;&gt; 10) &amp; 0011)</code></li>
-</ol>
-<h3 id="获取8位二进制数内”1”个数"><a href="#获取8位二进制数内”1”个数" class="headerlink" title="获取8位二进制数内”1”个数"></a>获取8位二进制数内”1”个数</h3><p>设该数为<code>x</code><br>把每两位的”1”个数求出，存储在每两位中。再把每四位的”1”个数求出，存储在每四位中。最后加起来。</p>
-<ol>
-<li><code>y = (x &amp; 01010101) + ((x &gt;&gt; 1) &amp; 01010101)</code></li>
-<li><code>z = (y &amp; 00110011) + ((y &gt;&gt; 10) &amp; 00110011)</code></li>
-<li><code>count = (z &amp; 00001111) + ((z &gt;&gt; 1000) &amp; 00001111)</code></li>
-</ol>
-<blockquote>
-<p>···<br>···<br>···</p>
-</blockquote>
-<h3 id="获取32位二进制数内”1”个数"><a href="#获取32位二进制数内”1”个数" class="headerlink" title="获取32位二进制数内”1”个数"></a>获取32位二进制数内”1”个数</h3><ol>
-<li>每两位数存”1”的个数：<br><code>storePer2 = (0x???????? &amp; 0x55555555) + ((0x???????? &gt;&gt; 1) &amp; 0x55555555)</code></li>
-<li>每四位数存”1”的个数：<br><code>storePer4 = (storePer2 &amp; 0x33333333) + ((storePer2 &gt;&gt; 2) &amp; 0x33333333)</code></li>
-<li>每八位数存”1”的个数：<br><code>storePer8 = (storePer4 &amp; 0x0f0f0f0f) + ((storePer4 &gt;&gt; 4) &amp; 0x0f0f0f0f)</code></li>
-<li>每十六位数存”1”的个数：<br><code>storePer16 = (storePer8 &amp; 0x00ff00ff) + ((storePer8 &gt;&gt; 8) &amp; 0x00ff00ff)</code></li>
-<li>用32位数来存储结果：<br><code>count = (storePer16 &amp; 0x0000ffff) + ((storePer16 &gt;&gt; 16) &amp; 0x0000ffff)</code></li>
-</ol>
-<hr>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment"> * bitCount - returns count of number of 1's in word</span></div><div class="line"><span class="comment"> *   Examples: bitCount(5) = 2, bitCount(7) = 3</span></div><div class="line"><span class="comment"> *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</span></div><div class="line"><span class="comment"> *   Max ops: 40</span></div><div class="line"><span class="comment"> *   Rating: 4</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">bitCount</span><span class="params">(<span class="keyword">int</span> x)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">	<span class="keyword">int</span> tmpMask1 = (<span class="number">0x55</span>) | (<span class="number">0x55</span> &lt;&lt; <span class="number">8</span>);</div><div class="line">	<span class="keyword">int</span> mask1 = (tmpMask1) | (tmpMask1 &lt;&lt; <span class="number">16</span>);</div><div class="line">	<span class="keyword">int</span> tmpMask2 = (<span class="number">0x33</span>) | (<span class="number">0x33</span> &lt;&lt; <span class="number">8</span>);</div><div class="line">	<span class="keyword">int</span> mask2 = (tmpMask2) | (tmpMask2 &lt;&lt; <span class="number">16</span>);</div><div class="line">	<span class="keyword">int</span> tmpMask3 = (<span class="number">0x0f</span>) | (<span class="number">0x0f</span> &lt;&lt; <span class="number">8</span>);</div><div class="line">	<span class="keyword">int</span> mask3 = (tmpMask3) | (tmpMask3 &lt;&lt; <span class="number">16</span>);</div><div class="line">	<span class="keyword">int</span> mask4 = (<span class="number">0xff</span>) | (<span class="number">0xff</span> &lt;&lt; <span class="number">16</span>);</div><div class="line">	<span class="keyword">int</span> mask5 = (<span class="number">0xff</span>) | (<span class="number">0xff</span> &lt;&lt; <span class="number">8</span>);</div><div class="line">	<span class="keyword">int</span> count = x;</div><div class="line">	count = (count &amp; mask1) + ((count &gt;&gt; <span class="number">1</span>) &amp; mask1);</div><div class="line">	count = (count &amp; mask2) + ((count &gt;&gt; <span class="number">2</span>) &amp; mask2);</div><div class="line">	count = (count &amp; mask3) + ((count &gt;&gt; <span class="number">4</span>) &amp; mask3);</div><div class="line">	count = (count &amp; mask4) + ((count &gt;&gt; <span class="number">8</span>) &amp; mask4);</div><div class="line">	count = (count &amp; mask5) + ((count &gt;&gt; <span class="number">16</span>) &amp; mask5);</div><div class="line">	<span class="keyword">return</span> count;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"bitCount(5) = %d\nbitCount(7) = %d\n"</span>, bitCount(<span class="number">5</span>), bitCount(<span class="number">7</span>));</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;《CSAPP》上的题目，略有难度。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
-    
-      <category term="C" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
-    
-    
-      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python之Re库学习笔记</title>
-    <link href="http://gaufoo.com/2017/09/05/Python%E4%B9%8BRe%E5%BA%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    <id>http://gaufoo.com/2017/09/05/Python之Re库学习笔记/</id>
-    <published>2017-09-05T09:05:00.000Z</published>
-    <updated>2017-09-06T09:17:49.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>记录以备后用</p>
-<a id="more"></a>
-<hr>
-<h2 id="正则表达式的使用"><a href="#正则表达式的使用" class="headerlink" title="正则表达式的使用"></a>正则表达式的使用</h2><h3 id="常用操作符"><a href="#常用操作符" class="headerlink" title="常用操作符"></a>常用操作符</h3><table>
-<thead>
-<tr>
-<th>操作符</th>
-<th>说明</th>
-<th>实例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>.</td>
-<td>表示任何单个字符</td>
-<td>-</td>
-</tr>
-<tr>
-<td>[ ]</td>
-<td>字符集，对单个字符给出取值范围</td>
-<td>[abc]表示a、b、c，[a‐z]表示a到z单个字符</td>
-</tr>
-<tr>
-<td>[^ ]</td>
-<td>非字符集，对单个字符给出排除范围</td>
-<td>[^abc]表示非a或b或c的单个字符</td>
-</tr>
-<tr>
-<td>*</td>
-<td>前一个字符0次或无限次扩展</td>
-<td>abc* 表示 ab、abc、abcc、abccc等</td>
-</tr>
-<tr>
-<td>+</td>
-<td>前一个字符1次或无限次扩展</td>
-<td>abc+ 表示 abc、abcc、abccc等</td>
-</tr>
-<tr>
-<td>?</td>
-<td>前一个字符0次或1次扩展</td>
-<td>abc? 表示 ab、abc</td>
-</tr>
-<tr>
-<td>&#124;</td>
-<td>左右表达式任意一个</td>
-<td>abc&#124;def 表示 abc、def</td>
-</tr>
-<tr>
-<td>{m}</td>
-<td>扩展前一个字符m次</td>
-<td>ab{2}c表示abbc</td>
-</tr>
-<tr>
-<td>{m,n}</td>
-<td>扩展前一个字符m至n次（含n）</td>
-<td>ab{1,2}c表示abc、abbc</td>
-</tr>
-<tr>
-<td>^</td>
-<td>匹配字符串开头</td>
-<td>^abc表示abc且在一个字符串的开头</td>
-</tr>
-<tr>
-<td>$</td>
-<td>匹配字符串结尾</td>
-<td>abc$表示abc且在一个字符串的结尾</td>
-</tr>
-<tr>
-<td>( )</td>
-<td>分组标记，内部只能使用 &#124; 操作符</td>
-<td>(abc)表示abc，(abc&#124;def)表示abc、def</td>
-</tr>
-<tr>
-<td>\d</td>
-<td>数字，等价于[0-9]</td>
-<td>-</td>
-</tr>
-<tr>
-<td>\w</td>
-<td>单词字符，等价于[A-Za-z0-9_]</td>
-<td>-</td>
-</tr>
-</tbody>
-</table>
-<hr>
-<h3 id="经典正则表达式实例"><a href="#经典正则表达式实例" class="headerlink" title="经典正则表达式实例"></a>经典正则表达式实例</h3><ul>
-<li><code>^[A‐Za‐z]+$</code>：由26个字母组成的字符串</li>
-<li><code>^[A‐Za‐z0‐9]+$</code>：由26个字母和数字组成的字符串</li>
-<li><code>^‐?\d+$</code>：整数形式的字符串</li>
-<li><code>[1‐9]\d{5}</code>：中国境内邮政编码，6位</li>
-<li><code>[\u4e00‐\u9fa5]</code>：匹配中文字符、</li>
-<li><code>\d{3}‐\d{8}|\d{4}‐\d{7}</code>：国内电话号码，010‐68913536</li>
-<li>IP地址<ul>
-<li>0-99：<code>[1‐9]?\d</code></li>
-<li>100-199：<code>1\d{2}</code></li>
-<li>200-249：<code>2[0‐4]\d</code></li>
-<li>250-255：<code>25[0‐5]</code></li>
-<li>总：<code>(([1‐9]?\d|1\d{2}|2[0‐4]\d|25[0‐5]).){3}([1‐9]?\d|1\d{2}|2[0‐4]\d|25[0‐5])</code></li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2 id="Re库主要功能函数"><a href="#Re库主要功能函数" class="headerlink" title="Re库主要功能函数"></a>Re库主要功能函数</h2><h3 id="re-search-pattern-string-flags-0"><a href="#re-search-pattern-string-flags-0" class="headerlink" title="re.search(pattern, string, flags=0)"></a>re.search(pattern, string, flags=0)</h3><p>在一个字符串中搜索匹配正则表达式的第一个位置，返回match对象</p>
-<ul>
-<li><code>pattern</code>：正则表达式的字符串或原生字符串表示</li>
-<li><code>string</code>：待匹配字符串</li>
-<li><code>flags</code>：正则表达式使用时的控制标记<ul>
-<li><code>re.I</code> - re.IGNORECASE：忽略正则表达式的大小写，[A‐Z]能够匹配小写字符</li>
-<li><code>re.M</code> - re.MULTILINE：正则表达式中的^操作符能够将给定字符串的每行当作匹配开始</li>
-<li><code>re.S</code> - re.DOTALL：正则表达式中的.操作符能够匹配所有字符，默认匹配除换行外的所有字符</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h3 id="re-match-pattern-string-flags-0"><a href="#re-match-pattern-string-flags-0" class="headerlink" title="re.match(pattern, string, flags=0)"></a>re.match(pattern, string, flags=0)</h3><p>从一个字符串的开始位置起匹配正则表达式，返回match对象</p>
-<ul>
-<li><code>pattern</code>：正则表达式的字符串或原生字符串表示</li>
-<li><code>string</code>：待匹配字符串</li>
-<li><code>flags</code>：正则表达式使用时的控制标记<ul>
-<li><code>re.I</code> - re.IGNORECASE：忽略正则表达式的大小写，[A‐Z]能够匹配小写字符</li>
-<li><code>re.M</code> - re.MULTILINE：正则表达式中的^操作符能够将给定字符串的每行当作匹配开始</li>
-<li><code>re.S</code> - re.DOTALL：正则表达式中的.操作符能够匹配所有字符，默认匹配除换行外的所有字符</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h3 id="re-findall-pattern-string-flags-0"><a href="#re-findall-pattern-string-flags-0" class="headerlink" title="re.findall(pattern, string, flags=0)"></a>re.findall(pattern, string, flags=0)</h3><p>搜索字符串，以列表类型返回全部能匹配的子串</p>
-<ul>
-<li><code>pattern</code>：正则表达式的字符串或原生字符串表示</li>
-<li><code>string</code>：待匹配字符串</li>
-<li><code>flags</code>：正则表达式使用时的控制标记<ul>
-<li><code>re.I</code> - re.IGNORECASE：忽略正则表达式的大小写，[A‐Z]能够匹配小写字符</li>
-<li><code>re.M</code> - re.MULTILINE：正则表达式中的^操作符能够将给定字符串的每行当作匹配开始</li>
-<li><code>re.S</code> - re.DOTALL：正则表达式中的.操作符能够匹配所有字符，默认匹配除换行外的所有字符</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h3 id="re-split-pattern-string-maxsplit-0-flags-0"><a href="#re-split-pattern-string-maxsplit-0-flags-0" class="headerlink" title="re.split(pattern, string, maxsplit=0, flags=0)"></a>re.split(pattern, string, maxsplit=0, flags=0)</h3><p>将一个字符串按照正则表达式匹配结果进行分割，返回列表类型</p>
-<ul>
-<li><code>pattern</code>：正则表达式的字符串或原生字符串表示</li>
-<li><code>string</code>：待匹配字符串</li>
-<li><code>maxsplit</code>：最大分割数，剩余部分作为最后一个元素输出</li>
-<li><code>flags</code>：正则表达式使用时的控制标记<ul>
-<li><code>re.I</code> - re.IGNORECASE：忽略正则表达式的大小写，[A‐Z]能够匹配小写字符</li>
-<li><code>re.M</code> - re.MULTILINE：正则表达式中的^操作符能够将给定字符串的每行当作匹配开始</li>
-<li><code>re.S</code> - re.DOTALL：正则表达式中的.操作符能够匹配所有字符，默认匹配除换行外的所有字符</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h3 id="re-finditer-pattern-string-flags-0"><a href="#re-finditer-pattern-string-flags-0" class="headerlink" title="re.finditer(pattern, string, flags=0)"></a>re.finditer(pattern, string, flags=0)</h3><p>搜索字符串，返回一个匹配结果的迭代类型，每个迭代元素是match对象</p>
-<ul>
-<li><code>pattern</code>：正则表达式的字符串或原生字符串表示</li>
-<li><code>string</code>：待匹配字符串</li>
-<li><code>flags</code>：正则表达式使用时的控制标记<ul>
-<li><code>re.I</code> - re.IGNORECASE：忽略正则表达式的大小写，[A‐Z]能够匹配小写字符</li>
-<li><code>re.M</code> - re.MULTILINE：正则表达式中的^操作符能够将给定字符串的每行当作匹配开始</li>
-<li><code>re.S</code> - re.DOTALL：正则表达式中的.操作符能够匹配所有字符，默认匹配除换行外的所有字符</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h3 id="re-sub-pattern-repl-string-count-0-flags-0"><a href="#re-sub-pattern-repl-string-count-0-flags-0" class="headerlink" title="re.sub(pattern, repl, string, count=0, flags=0)"></a>re.sub(pattern, repl, string, count=0, flags=0)</h3><p>在一个字符串中替换所有匹配正则表达式的子串，返回替换后的字符串</p>
-<ul>
-<li><code>pattern</code>：正则表达式的字符串或原生字符串表示</li>
-<li><code>repl</code>：替换匹配字符串的字符串</li>
-<li><code>string</code>：待匹配字符串</li>
-<li><code>count</code>：匹配的最大替换次数</li>
-<li><code>flags</code>：正则表达式使用时的控制标记<ul>
-<li><code>re.I</code> - re.IGNORECASE：忽略正则表达式的大小写，[A‐Z]能够匹配小写字符</li>
-<li><code>re.M</code> - re.MULTILINE：正则表达式中的^操作符能够将给定字符串的每行当作匹配开始</li>
-<li><code>re.S</code> - re.DOTALL：正则表达式中的.操作符能够匹配所有字符，默认匹配除换行外的所有字符</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h3 id="Re库另一种等价用法"><a href="#Re库另一种等价用法" class="headerlink" title="Re库另一种等价用法"></a>Re库另一种等价用法</h3><p><strong>regex = re.compile(pattern, flags=0)</strong><br>将正则表达式的字符串形式编译成正则表达式对象</p>
-<ul>
-<li><code>pattern</code>：正则表达式的字符串或原生字符串表示</li>
-<li><code>flags</code>：正则表达式使用时的控制标记<ul>
-<li><code>re.I</code> - re.IGNORECASE：忽略正则表达式的大小写，[A‐Z]能够匹配小写字符</li>
-<li><code>re.M</code> - re.MULTILINE：正则表达式中的^操作符能够将给定字符串的每行当作匹配开始</li>
-<li><code>re.S</code> - re.DOTALL：正则表达式中的.操作符能够匹配所有字符，默认匹配除换行外的所有字符</li>
-</ul>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>函数</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>regex.search()</td>
-<td>在一个字符串中搜索匹配正则表达式的第一个位置，返回match对象</td>
-</tr>
-<tr>
-<td>regex.match()</td>
-<td>从一个字符串的开始位置起匹配正则表达式，返回match对象</td>
-</tr>
-<tr>
-<td>regex.findall()</td>
-<td>搜索字符串，以列表类型返回全部能匹配的子串</td>
-</tr>
-<tr>
-<td>regex.split()</td>
-<td>将一个字符串按照正则表达式匹配结果进行分割，返回列表类型</td>
-</tr>
-<tr>
-<td>regex.finditer()</td>
-<td>搜索字符串，返回一个匹配结果的迭代类型，每个迭代元素是match对象</td>
-</tr>
-<tr>
-<td>regex.sub()</td>
-<td>在一个字符串中替换所有匹配正则表达式的子串，返回替换后的字符串</td>
-</tr>
-</tbody>
-</table>
-<hr>
-<h2 id="Re库的Match对象"><a href="#Re库的Match对象" class="headerlink" title="Re库的Match对象"></a>Re库的Match对象</h2><h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><ul>
-<li><code>.string</code>：待匹配的文本</li>
-<li><code>.re</code>：匹配时使用的patter对象（正则表达式）</li>
-<li><code>.pos</code>：正则表达式搜索文本的开始位置</li>
-<li><code>.endpos</code>：正则表达式搜索文本的结束位置</li>
-</ul>
-<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><ul>
-<li><code>.group(0)</code>：获得匹配后的字符串</li>
-<li><code>.start()</code>：匹配字符串在原始字符串的开始位置</li>
-<li><code>.end()</code>：匹配字符串在原始字符串的结束位置</li>
-<li><code>.span()</code>：返回(.start(), .end())</li>
-</ul>
-<hr>
-<h2 id="Re库的贪婪匹配和最小匹配"><a href="#Re库的贪婪匹配和最小匹配" class="headerlink" title="Re库的贪婪匹配和最小匹配"></a>Re库的贪婪匹配和最小匹配</h2><p>Re库默认采用贪婪匹配，即输出匹配最长的子串<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>match = re.search(<span class="string">r'PY.*N'</span>, <span class="string">'PYANBNCNDN'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>match.group(<span class="number">0</span>)</div><div class="line"><span class="string">'PYANBNCNDN'</span></div></pre></td></tr></table></figure></p>
-<h3 id="最小匹配操作符"><a href="#最小匹配操作符" class="headerlink" title="最小匹配操作符"></a>最小匹配操作符</h3><p>只要长度输出可能不同的，都可以通过在操作符后增加?变成最小匹配</p>
-<ul>
-<li><code>*?</code>：前一个字符0次或无限次扩展，最小匹配</li>
-<li><code>+?</code>：前一个字符1次或无限次扩展，最小匹配</li>
-<li><code>??</code>：前一个字符0次或1次扩展，最小匹配</li>
-<li><code>{m,n}?</code>：扩展前一个字符m至n次（含n），最小匹配</li>
-</ul>
-<p>输出最短的子串<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>match = re.search(<span class="string">r'PY.*?N'</span>, <span class="string">'PYANBNCNDN'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>match.group(<span class="number">0</span>)</div><div class="line"><span class="string">'PYAN'</span></div></pre></td></tr></table></figure></p>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;记录以备后用&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
-    
-      <category term="Python" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/Python/"/>
-    
-    
-      <category term="Python" scheme="http://gaufoo.com/tags/Python/"/>
     
   </entry>
   
