@@ -365,9 +365,9 @@
       <category term="函数式编程" scheme="http://gaufoo.com/categories/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
     
-      <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
-    
       <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
     
   </entry>
   
@@ -444,11 +444,11 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
+      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
       <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+      <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
     
   </entry>
   
@@ -578,9 +578,9 @@
       <category term="计算原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
-    
       <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
     
   </entry>
   
@@ -744,11 +744,11 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
+      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
       <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+      <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
     
   </entry>
   
@@ -814,9 +814,9 @@
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
     
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
+    
+      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -905,9 +905,9 @@
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
     
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
+    
+      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -986,9 +986,9 @@
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
     
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
+    
+      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
