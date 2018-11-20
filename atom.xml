@@ -4,9 +4,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://gaufoo.com/"/>
+  <link href="https://gaufoo.com/"/>
   <updated>2018-11-20T14:18:32.317Z</updated>
-  <id>http://gaufoo.com/</id>
+  <id>https://gaufoo.com/</id>
   
   <author>
     <name>Gaufoo</name>
@@ -17,8 +17,8 @@
   
   <entry>
     <title>《DDIA》读与记（二）</title>
-    <link href="http://gaufoo.com/ddia-ii/"/>
-    <id>http://gaufoo.com/ddia-ii/</id>
+    <link href="https://gaufoo.com/ddia-ii/"/>
+    <id>https://gaufoo.com/ddia-ii/</id>
     <published>2018-11-20T12:26:00.000Z</published>
     <updated>2018-11-20T14:18:32.317Z</updated>
     
@@ -117,23 +117,23 @@
     
     </summary>
     
-      <category term="读书笔记" scheme="http://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+      <category term="读书笔记" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
     
-      <category term="DDIA" scheme="http://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/DDIA/"/>
+      <category term="DDIA" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/DDIA/"/>
     
     
-      <category term="大数据" scheme="http://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+      <category term="大数据" scheme="https://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
-      <category term="DDIA" scheme="http://gaufoo.com/tags/DDIA/"/>
+      <category term="DDIA" scheme="https://gaufoo.com/tags/DDIA/"/>
     
-      <category term="读书笔记" scheme="http://gaufoo.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+      <category term="读书笔记" scheme="https://gaufoo.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
   <entry>
     <title>《DDIA》读与记（一）</title>
-    <link href="http://gaufoo.com/ddia-i/"/>
-    <id>http://gaufoo.com/ddia-i/</id>
+    <link href="https://gaufoo.com/ddia-i/"/>
+    <id>https://gaufoo.com/ddia-i/</id>
     <published>2018-11-19T09:26:00.000Z</published>
     <updated>2018-11-19T09:30:57.545Z</updated>
     
@@ -226,23 +226,23 @@
     
     </summary>
     
-      <category term="读书笔记" scheme="http://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+      <category term="读书笔记" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
     
-      <category term="DDIA" scheme="http://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/DDIA/"/>
+      <category term="DDIA" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/DDIA/"/>
     
     
-      <category term="大数据" scheme="http://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+      <category term="大数据" scheme="https://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
-      <category term="DDIA" scheme="http://gaufoo.com/tags/DDIA/"/>
+      <category term="DDIA" scheme="https://gaufoo.com/tags/DDIA/"/>
     
-      <category term="读书笔记" scheme="http://gaufoo.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+      <category term="读书笔记" scheme="https://gaufoo.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
   <entry>
     <title>AWK常见用法</title>
-    <link href="http://gaufoo.com/awk/"/>
-    <id>http://gaufoo.com/awk/</id>
+    <link href="https://gaufoo.com/awk/"/>
+    <id>https://gaufoo.com/awk/</id>
     <published>2018-09-08T18:45:35.000Z</published>
     <updated>2018-09-08T18:59:06.000Z</updated>
     
@@ -302,21 +302,21 @@
     
     </summary>
     
-      <category term="Linux" scheme="http://gaufoo.com/categories/Linux/"/>
+      <category term="Linux" scheme="https://gaufoo.com/categories/Linux/"/>
     
-      <category term="awk" scheme="http://gaufoo.com/categories/Linux/awk/"/>
+      <category term="awk" scheme="https://gaufoo.com/categories/Linux/awk/"/>
     
     
-      <category term="Linux" scheme="http://gaufoo.com/tags/Linux/"/>
+      <category term="Linux" scheme="https://gaufoo.com/tags/Linux/"/>
     
-      <category term="awk" scheme="http://gaufoo.com/tags/awk/"/>
+      <category term="awk" scheme="https://gaufoo.com/tags/awk/"/>
     
   </entry>
   
   <entry>
     <title>采用Hibench在本地对Spark Streaming进行benchmark</title>
-    <link href="http://gaufoo.com/spark_bench/"/>
-    <id>http://gaufoo.com/spark_bench/</id>
+    <link href="https://gaufoo.com/spark_bench/"/>
+    <id>https://gaufoo.com/spark_bench/</id>
     <published>2018-07-23T20:16:12.000Z</published>
     <updated>2018-07-23T21:08:24.000Z</updated>
     
@@ -420,23 +420,23 @@
     
     </summary>
     
-      <category term="大数据" scheme="http://gaufoo.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+      <category term="大数据" scheme="https://gaufoo.com/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
     
-      <category term="大数据" scheme="http://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+      <category term="大数据" scheme="https://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
-      <category term="spark" scheme="http://gaufoo.com/tags/spark/"/>
+      <category term="spark" scheme="https://gaufoo.com/tags/spark/"/>
     
-      <category term="benchmark" scheme="http://gaufoo.com/tags/benchmark/"/>
+      <category term="benchmark" scheme="https://gaufoo.com/tags/benchmark/"/>
     
-      <category term="hibench" scheme="http://gaufoo.com/tags/hibench/"/>
+      <category term="hibench" scheme="https://gaufoo.com/tags/hibench/"/>
     
   </entry>
   
   <entry>
     <title>fold right与fold left的相互转化</title>
-    <link href="http://gaufoo.com/foldl-and-foldr/"/>
-    <id>http://gaufoo.com/foldl-and-foldr/</id>
+    <link href="https://gaufoo.com/foldl-and-foldr/"/>
+    <id>https://gaufoo.com/foldl-and-foldr/</id>
     <published>2018-05-19T04:58:51.000Z</published>
     <updated>2018-05-19T09:33:40.129Z</updated>
     
@@ -477,19 +477,19 @@
     
     </summary>
     
-      <category term="函数式编程" scheme="http://gaufoo.com/categories/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+      <category term="函数式编程" scheme="https://gaufoo.com/categories/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
     
-      <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
     
   </entry>
   
   <entry>
     <title>用Haskell构建Parser Combinator（二）</title>
-    <link href="http://gaufoo.com/parser2/"/>
-    <id>http://gaufoo.com/parser2/</id>
+    <link href="https://gaufoo.com/parser2/"/>
+    <id>https://gaufoo.com/parser2/</id>
     <published>2018-03-18T02:16:34.000Z</published>
     <updated>2018-03-18T05:59:25.000Z</updated>
     
@@ -554,23 +554,23 @@
     
     </summary>
     
-      <category term="原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
+      <category term="原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
     
-      <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+      <category term="编译原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+      <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
-      <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
     
   </entry>
   
   <entry>
     <title>Continuation与Call/CC</title>
-    <link href="http://gaufoo.com/continuation/"/>
-    <id>http://gaufoo.com/continuation/</id>
+    <link href="https://gaufoo.com/continuation/"/>
+    <id>https://gaufoo.com/continuation/</id>
     <published>2018-03-12T01:50:13.000Z</published>
     <updated>2018-03-12T09:38:36.000Z</updated>
     
@@ -688,21 +688,21 @@
     
     </summary>
     
-      <category term="原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
+      <category term="原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
     
-      <category term="计算原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E5%8E%9F%E7%90%86/"/>
+      <category term="计算原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
     
   </entry>
   
   <entry>
     <title>用Haskell构建Parser Combinator（一）</title>
-    <link href="http://gaufoo.com/parser/"/>
-    <id>http://gaufoo.com/parser/</id>
+    <link href="https://gaufoo.com/parser/"/>
+    <id>https://gaufoo.com/parser/</id>
     <published>2018-03-09T18:28:27.000Z</published>
     <updated>2018-03-12T01:53:28.000Z</updated>
     
@@ -854,23 +854,23 @@
     
     </summary>
     
-      <category term="原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
+      <category term="原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
     
-      <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+      <category term="编译原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+      <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
-      <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
     
   </entry>
   
   <entry>
     <title>用C++写出伪LISP代码（三）</title>
-    <link href="http://gaufoo.com/cppnlisp3/"/>
-    <id>http://gaufoo.com/cppnlisp3/</id>
+    <link href="https://gaufoo.com/cppnlisp3/"/>
+    <id>https://gaufoo.com/cppnlisp3/</id>
     <published>2018-03-04T01:36:56.000Z</published>
     <updated>2018-03-04T04:22:54.000Z</updated>
     
@@ -920,25 +920,25 @@
     
     </summary>
     
-      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
+      <category term="编程" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C++" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
+      <category term="C++" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
-      <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
+      <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
+      <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
     
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+      <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
     
-      <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
   <entry>
     <title>用C++写出伪LISP代码（二）</title>
-    <link href="http://gaufoo.com/cppnlisp2/"/>
-    <id>http://gaufoo.com/cppnlisp2/</id>
+    <link href="https://gaufoo.com/cppnlisp2/"/>
+    <id>https://gaufoo.com/cppnlisp2/</id>
     <published>2018-03-03T12:28:29.000Z</published>
     <updated>2018-03-04T04:16:58.000Z</updated>
     
@@ -1011,25 +1011,25 @@
     
     </summary>
     
-      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
+      <category term="编程" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C++" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
+      <category term="C++" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
-      <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
+      <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
+      <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
     
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+      <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
     
-      <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
   <entry>
     <title>用C++写出伪LISP代码（一）</title>
-    <link href="http://gaufoo.com/cppnlisp1/"/>
-    <id>http://gaufoo.com/cppnlisp1/</id>
+    <link href="https://gaufoo.com/cppnlisp1/"/>
+    <id>https://gaufoo.com/cppnlisp1/</id>
     <published>2018-03-03T08:48:23.000Z</published>
     <updated>2018-03-04T04:16:35.000Z</updated>
     
@@ -1092,25 +1092,25 @@
     
     </summary>
     
-      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
+      <category term="编程" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C++" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
+      <category term="C++" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
-      <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
+      <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
+      <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
     
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+      <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
     
-      <category term="LISP" scheme="http://gaufoo.com/tags/LISP/"/>
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
   <entry>
     <title>中缀表达式转化前后缀引发的思考</title>
-    <link href="http://gaufoo.com/ni_to_pre_post/"/>
-    <id>http://gaufoo.com/ni_to_pre_post/</id>
+    <link href="https://gaufoo.com/ni_to_pre_post/"/>
+    <id>https://gaufoo.com/ni_to_pre_post/</id>
     <published>2018-01-02T06:22:22.000Z</published>
     <updated>2018-01-02T02:51:53.000Z</updated>
     
@@ -1212,21 +1212,21 @@
     
     </summary>
     
-      <category term="原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
+      <category term="原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
     
-      <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+      <category term="编译原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+      <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
-      <category term="C++11" scheme="http://gaufoo.com/tags/C-11/"/>
+      <category term="C++11" scheme="https://gaufoo.com/tags/C-11/"/>
     
   </entry>
   
   <entry>
     <title>利用C语言缺陷进行缓冲区溢出攻击</title>
-    <link href="http://gaufoo.com/overflow/"/>
-    <id>http://gaufoo.com/overflow/</id>
+    <link href="https://gaufoo.com/overflow/"/>
+    <id>https://gaufoo.com/overflow/</id>
     <published>2017-12-30T06:22:22.000Z</published>
     <updated>2017-12-30T06:54:04.000Z</updated>
     
@@ -1282,7 +1282,7 @@
 </ol>
 <hr>
 <ul>
-<li>反汇编：  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> objdump -d ./bufbomb &gt; disas.txt</span></div></pre></td></tr></table></figure>
+<li>反汇编：  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> objdump -d ./bufbomb &gt; disas.txt</div></pre></td></tr></table></figure>
 </li>
 </ul>
 <ul>
@@ -1321,18 +1321,18 @@
 <li><p>查看反汇编代码：<br>  <img src="/images/overflow/2.png"><br>  得到返回地址：<code>0x08048dbe</code></p>
 </li>
 <li><p>用<code>gdb</code>查看原bp：</p>
-  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> gdb ./bufbomb</span></div><div class="line">  </div><div class="line">(gdb) b getbuf</div><div class="line">(gdb) run -u gaufoo</div><div class="line">(gdb) p /x *(int *)$ebp</div></pre></td></tr></table></figure>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> gdb ./bufbomb</div><div class="line">  </div><div class="line">(gdb) b getbuf</div><div class="line">(gdb) run -u gaufoo</div><div class="line">(gdb) p /x *(int *)$ebp</div></pre></td></tr></table></figure>
 <p>  <img src="/images/overflow/5.png"></p>
 <p>  得到原bp：<code>0x55683d20</code></p>
 </li>
 <li><p>用<code>gdb</code>查看字符串首地址，就把代码注入到那：</p>
-  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> gdb ./bufbomb</span></div><div class="line">  </div><div class="line">(gdb) b getbuf</div><div class="line">(gdb) run -u gaufoo</div><div class="line">(gdb) p /x ($ebp-0x28)</div></pre></td></tr></table></figure>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> gdb ./bufbomb</div><div class="line">  </div><div class="line">(gdb) b getbuf</div><div class="line">(gdb) run -u gaufoo</div><div class="line">(gdb) p /x ($ebp-0x28)</div></pre></td></tr></table></figure>
 <p>  <img src="/images/overflow/7.png"></p>
 <p>  得到字符串首地址：<code>0x55683cc8</code></p>
 </li>
 <li><p>编写汇编代码，并译成机器码：</p>
   <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// sc.s</div><div class="line">mov $0x4a3e65c1,%eax</div><div class="line">push $0x08048dbe</div><div class="line">ret</div></pre></td></tr></table></figure>
-  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> gcc -m32 -c sc.s</span></div><div class="line"><span class="meta">$</span><span class="bash"> objdump -d sc.o</span></div></pre></td></tr></table></figure>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> gcc -m32 -c sc.s</div><div class="line"><span class="meta">$</span> objdump -d sc.o</div></pre></td></tr></table></figure>
 <p>  <img src="/images/overflow/6.png"></p>
 </li>
 <li><p>编写注入的16进制机器码：</p>
@@ -1398,21 +1398,21 @@
     
     </summary>
     
-      <category term="汇编" scheme="http://gaufoo.com/categories/%E6%B1%87%E7%BC%96/"/>
+      <category term="汇编" scheme="https://gaufoo.com/categories/%E6%B1%87%E7%BC%96/"/>
     
     
-      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+      <category term="C" scheme="https://gaufoo.com/tags/C/"/>
     
-      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
+      <category term="原理" scheme="https://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
-      <category term="汇编" scheme="http://gaufoo.com/tags/%E6%B1%87%E7%BC%96/"/>
+      <category term="汇编" scheme="https://gaufoo.com/tags/%E6%B1%87%E7%BC%96/"/>
     
   </entry>
   
   <entry>
     <title>听说C语言也可以“泛型”</title>
-    <link href="http://gaufoo.com/genericC/"/>
-    <id>http://gaufoo.com/genericC/</id>
+    <link href="https://gaufoo.com/genericC/"/>
+    <id>https://gaufoo.com/genericC/</id>
     <published>2017-12-09T07:02:51.000Z</published>
     <updated>2017-12-09T10:09:04.000Z</updated>
     
@@ -1454,19 +1454,19 @@
     
     </summary>
     
-      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
+      <category term="编程" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
+      <category term="C" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
-      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
+      <category term="C" scheme="https://gaufoo.com/tags/C/"/>
     
   </entry>
   
   <entry>
     <title>AppInventor2复刻FlappyBird</title>
-    <link href="http://gaufoo.com/appinventor/"/>
-    <id>http://gaufoo.com/appinventor/</id>
+    <link href="https://gaufoo.com/appinventor/"/>
+    <id>https://gaufoo.com/appinventor/</id>
     <published>2017-12-08T08:13:19.000Z</published>
     <updated>2017-12-09T07:27:57.000Z</updated>
     
@@ -1554,21 +1554,21 @@
     
     </summary>
     
-      <category term="Android" scheme="http://gaufoo.com/categories/Android/"/>
+      <category term="Android" scheme="https://gaufoo.com/categories/Android/"/>
     
-      <category term="AppInventor2" scheme="http://gaufoo.com/categories/Android/AppInventor2/"/>
+      <category term="AppInventor2" scheme="https://gaufoo.com/categories/Android/AppInventor2/"/>
     
     
-      <category term="Android" scheme="http://gaufoo.com/tags/Android/"/>
+      <category term="Android" scheme="https://gaufoo.com/tags/Android/"/>
     
-      <category term="AppInventor2" scheme="http://gaufoo.com/tags/AppInventor2/"/>
+      <category term="AppInventor2" scheme="https://gaufoo.com/tags/AppInventor2/"/>
     
   </entry>
   
   <entry>
     <title>RE转NFA，NFA转DFA</title>
-    <link href="http://gaufoo.com/REtoNFAtoDFA/"/>
-    <id>http://gaufoo.com/REtoNFAtoDFA/</id>
+    <link href="https://gaufoo.com/REtoNFAtoDFA/"/>
+    <id>https://gaufoo.com/REtoNFAtoDFA/</id>
     <published>2017-10-29T12:09:54.000Z</published>
     <updated>2017-10-31T16:06:34.000Z</updated>
     
@@ -1604,21 +1604,21 @@
     
     </summary>
     
-      <category term="原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
+      <category term="原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
     
-      <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+      <category term="编译原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+      <category term="原理" scheme="https://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+      <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
   <entry>
     <title>手工构造词法分析器</title>
-    <link href="http://gaufoo.com/%E6%89%8B%E5%B7%A5%E6%9E%84%E9%80%A0%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E5%99%A8/"/>
-    <id>http://gaufoo.com/手工构造词法分析器/</id>
+    <link href="https://gaufoo.com/%E6%89%8B%E5%B7%A5%E6%9E%84%E9%80%A0%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E5%99%A8/"/>
+    <id>https://gaufoo.com/手工构造词法分析器/</id>
     <published>2017-10-26T09:36:30.000Z</published>
     <updated>2017-10-30T00:45:51.000Z</updated>
     
@@ -1666,21 +1666,21 @@
     
     </summary>
     
-      <category term="原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
+      <category term="原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
     
-      <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+      <category term="编译原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+      <category term="原理" scheme="https://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+      <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
   <entry>
     <title>C++中三种实现可变参数的方法</title>
-    <link href="http://gaufoo.com/Cpp%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0/"/>
-    <id>http://gaufoo.com/Cpp可变参数/</id>
+    <link href="https://gaufoo.com/Cpp%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0/"/>
+    <id>https://gaufoo.com/Cpp可变参数/</id>
     <published>2017-10-24T12:20:56.000Z</published>
     <updated>2017-10-24T17:23:09.000Z</updated>
     
@@ -1743,23 +1743,23 @@
     
     </summary>
     
-      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
+      <category term="编程" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C++" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
+      <category term="C++" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
-      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
+      <category term="C" scheme="https://gaufoo.com/tags/C/"/>
     
-      <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
+      <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
+      <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
     
   </entry>
   
   <entry>
     <title>C++11类型说明符：constexpr</title>
-    <link href="http://gaufoo.com/CppConstexpr/"/>
-    <id>http://gaufoo.com/CppConstexpr/</id>
+    <link href="https://gaufoo.com/CppConstexpr/"/>
+    <id>https://gaufoo.com/CppConstexpr/</id>
     <published>2017-10-24T08:00:59.000Z</published>
     <updated>2017-10-24T11:39:43.000Z</updated>
     
@@ -1830,21 +1830,21 @@
     
     </summary>
     
-      <category term="编程" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
+      <category term="编程" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C++" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
+      <category term="C++" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
-      <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
+      <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
+      <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
     
   </entry>
   
   <entry>
     <title>编译原理学习笔记（二）</title>
-    <link href="http://gaufoo.com/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
-    <id>http://gaufoo.com/编译原理学习笔记（二）/</id>
+    <link href="https://gaufoo.com/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
+    <id>https://gaufoo.com/编译原理学习笔记（二）/</id>
     <published>2017-09-16T09:46:00.000Z</published>
     <updated>2017-10-27T01:53:29.000Z</updated>
     
@@ -2013,14 +2013,14 @@
     
     </summary>
     
-      <category term="原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
+      <category term="原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
     
-      <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+      <category term="编译原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+      <category term="原理" scheme="https://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+      <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
