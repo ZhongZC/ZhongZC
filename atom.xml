@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2018-11-20T14:00:26.211Z</updated>
+  <updated>2018-11-20T14:14:10.270Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://gaufoo.com/ddia-ii/"/>
     <id>http://gaufoo.com/ddia-ii/</id>
     <published>2018-11-20T12:26:00.000Z</published>
-    <updated>2018-11-20T14:00:26.211Z</updated>
+    <updated>2018-11-20T14:14:10.270Z</updated>
     
     <content type="html"><![CDATA[<p>Data Models and Query Languages</p>
 <a id="more"></a>
@@ -49,10 +49,9 @@
 <p>关于存储ID还是存储text string，实际是关于duplication的问题。如果存储ID，那么对于人类有意义的信息（text string），最终只会存储在一个地方。而如果直接用text string存储，则会duplicate在every record that uses it.</p>
 <p>ID对于人类来说没意义，所以可以不变。但它所代指的information则有可能发生变化。如果information发生变化，且information是duplicated的，则所有redundant copies都要update。而消除这些duplication，is the key idea behind <em>normalization</em> in databases.</p>
 <p>要描述Many-to-One关系，在relational databases中，it’s normal to refer to rows in other tables by ID, because joins are easy. 而在document databases中，对join的支持就很弱了。</p>
-<h3 id="Comparison"><a href="#Comparison" class="headerlink" title="Comparison"></a>Comparison</h3><ul>
+<h3 id="Comparison"><a href="#Comparison" class="headerlink" title="Comparison"></a>Comparison</h3><p>The document data model are schema flexibility, better performance due to locality, and that for some applications it is closer to the data structures used by the application.<br>The relational technique of shredding—splitting a document-like structure into multiple tables can lead to cumbersome schemas and unnecessarily complicated application code.</p>
+<ul>
 <li>The relation model provides better support for joins, and many-to-one and many-to-many relationships.</li>
-<li>The document data model are schema flexibility, better performance due to locality, and that for some applications it is closer to the data structures used by the application.</li>
-<li>The relational technique of shredding—splitting a document-like structure into multiple tables can lead to cumbersome schemas and unnecessarily complicated application code.</li>
 <li>document databases对joins的poor support，Joins can be emulated in application code by making requests to the database.</li>
 <li>relational databases采用schema-on-write，类似静态类型语言，编译时进行类型检查.</li>
 <li>document databases采用schema-on-read，类似动态类型语言，运行时才检查.</li>
@@ -559,9 +558,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
       <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
     
@@ -859,9 +858,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
       <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
     
@@ -1401,9 +1400,9 @@
       <category term="汇编" scheme="http://gaufoo.com/categories/%E6%B1%87%E7%BC%96/"/>
     
     
-      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
-    
       <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
     
       <category term="汇编" scheme="http://gaufoo.com/tags/%E6%B1%87%E7%BC%96/"/>
     
@@ -1748,11 +1747,11 @@
       <category term="C++" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
-      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
-    
       <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
+    
+      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
     
   </entry>
   
