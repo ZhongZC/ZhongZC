@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="大数据,DDIA,读书笔记," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Data Models and Query Languages">
+<meta name="keywords" content="大数据,DDIA,读书笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《DDIA》读与记（二）">
+<meta property="og:url" content="http://gaufoo.com/ddia-ii/index.html">
+<meta property="og:site_name" content="苟富">
+<meta property="og:description" content="Data Models and Query Languages">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://gaufoo.com/images/181120/resume.png">
+<meta property="og:image" content="http://gaufoo.com/images/181120/fig2-5.png">
+<meta property="og:updated_time" content="2018-11-20T14:00:26.211Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《DDIA》读与记（二）">
+<meta name="twitter:description" content="Data Models and Query Languages">
+<meta name="twitter:image" content="http://gaufoo.com/images/181120/resume.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://gaufoo.com/ddia-ii/"/>
+
+
+
+
+
+  <title>《DDIA》读与记（二） | 苟富</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?918a16b20170b5642d2b55b0793aab3a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">苟富</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-notes">
+          <a href="/notes/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sticky-note"></i> <br />
+            
+            便签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://gaufoo.com/ddia-ii/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gaufoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="苟富">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">《DDIA》读与记（二）</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-20T20:26:00+08:00">
+                2018-11-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/DDIA/" itemprop="url" rel="index">
+                    <span itemprop="name">DDIA</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,638 字
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Data Models and Query Languages</p>
+<a id="more"></a>
+<hr>
+<p>对于每个应用的数据层，都可能需要考虑以下问题：</p>
+<ul>
+<li>观察现实中的实体，并用object或者data structure来model它。</li>
+<li>如何store这些data structure，用JSON、XML文档，还是relational数据库中的table，还是graph。</li>
+<li>如何将JSON、XML文档、table、graph等存在形式，在memory、disk、network中表示，并且支持查找、修改、处理等等操作。</li>
+<li>最底层硬件如何处理electrical currents、pulses of light等等。</li>
+</ul>
+<hr>
+<h2 id="Relational-Model-Versus-Document-Model"><a href="#Relational-Model-Versus-Document-Model" class="headerlink" title="Relational Model Versus Document Model"></a>Relational Model Versus Document Model</h2><h3 id="Relation-Model"><a href="#Relation-Model" class="headerlink" title="Relation Model"></a>Relation Model</h3><p>数据在relations中（在SQL中也叫tables）被组织，每个relation包含一系列unordered的tuples（在SQL中也叫rows）。</p>
+<h3 id="NoSQL"><a href="#NoSQL" class="headerlink" title="NoSQL"></a>NoSQL</h3><p>原来的NoSQL只是一个会议中一句口号，代指open source, distributed, nonrelational的databases。现在被重新解释为Not Only SQL，其语义中，包含以下特点：</p>
+<ul>
+<li>比传统relational数据库更具伸缩性，能处理巨大的数据集或very high write throughput.</li>
+<li>免费、开源</li>
+<li>支持relational model中不能很好完成的特殊操作</li>
+<li>更具动态性和表达力的数据模型</li>
+</ul>
+<h3 id="One-to-Many型"><a href="#One-to-Many型" class="headerlink" title="One-to-Many型"></a>One-to-Many型</h3><p>以简历作为例子<br><img src="/images/181120/resume.png" width="600/"></p>
+<p>relational数据库可以把position、education、contact information等等分成多个table，用foreign key引用。</p>
+<p>也可以用self-contained document来表示，比如JSON document。Document-oriented databases like MongoDB, RethinkDB, CouchDB and Espresso support this data model.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"user_id"</span>: <span class="number">251</span>,</div><div class="line">    <span class="attr">"first_name"</span>: <span class="string">"Bill"</span>,</div><div class="line">    <span class="attr">"last_name"</span>: <span class="string">"Gates"</span>,</div><div class="line">    <span class="attr">"summary"</span>: <span class="string">"Co-chair of the Bill &amp; Melinda Gates... Active blogger."</span>,</div><div class="line">    <span class="attr">"region_id"</span>: <span class="string">"us:91"</span>,</div><div class="line">    <span class="attr">"industry_id"</span>: <span class="number">131</span>,</div><div class="line">    <span class="attr">"photo_url"</span>: <span class="string">"/p/7/000/253/05b/308dd6e.jpg"</span>,</div><div class="line">    <span class="attr">"positions"</span>: [</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"job_title"</span>: <span class="string">"Co-chair"</span>,</div><div class="line">            <span class="attr">"organization"</span>: <span class="string">"Bill &amp; Melinda Gates Foundation"</span></div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"job_title"</span>: <span class="string">"Co-founder, Chairman"</span>,</div><div class="line">            <span class="attr">"organization"</span>: <span class="string">"Microsoft"</span></div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">    <span class="attr">"education"</span>: [</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"school_name"</span>: <span class="string">"Harvard University"</span>,</div><div class="line">            <span class="attr">"start"</span>: <span class="number">1973</span>,</div><div class="line">            <span class="attr">"end"</span>: <span class="number">1975</span></div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"school_name"</span>: <span class="string">"Lakeside School, Seattle"</span>,</div><div class="line">            <span class="attr">"start"</span>: <span class="literal">null</span>,</div><div class="line">            <span class="attr">"end"</span>: <span class="literal">null</span></div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">    <span class="attr">"contact_info"</span>: &#123;</div><div class="line">        <span class="attr">"blog"</span>: <span class="string">"http://thegatesnotes.com"</span>,</div><div class="line">        <span class="attr">"twitter"</span>: <span class="string">"http://twitter.com/BillGates"</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="Many-to-One-and-Many-to-Many-Relationships"><a href="#Many-to-One-and-Many-to-Many-Relationships" class="headerlink" title="Many-to-One and Many-to-Many Relationships"></a>Many-to-One and Many-to-Many Relationships</h3><p>在上面JSON的例子中，有很多plain-text strings，而有时我们又会觉得应该存储成ID。</p>
+<p>关于存储ID还是存储text string，实际是关于duplication的问题。如果存储ID，那么对于人类有意义的信息（text string），最终只会存储在一个地方。而如果直接用text string存储，则会duplicate在every record that uses it.</p>
+<p>ID对于人类来说没意义，所以可以不变。但它所代指的information则有可能发生变化。如果information发生变化，且information是duplicated的，则所有redundant copies都要update。而消除这些duplication，is the key idea behind <em>normalization</em> in databases.</p>
+<p>要描述Many-to-One关系，在relational databases中，it’s normal to refer to rows in other tables by ID, because joins are easy. 而在document databases中，对join的支持就很弱了。</p>
+<h3 id="Comparison"><a href="#Comparison" class="headerlink" title="Comparison"></a>Comparison</h3><ul>
+<li>The relation model provides better support for joins, and many-to-one and many-to-many relationships.</li>
+<li>The document data model are schema flexibility, better performance due to locality, and that for some applications it is closer to the data structures used by the application.</li>
+<li>The relational technique of shredding—splitting a document-like structure into multiple tables can lead to cumbersome schemas and unnecessarily complicated application code.</li>
+<li>document databases对joins的poor support，Joins can be emulated in application code by making requests to the database.</li>
+<li>relational databases采用schema-on-write，类似静态类型语言，编译时进行类型检查.</li>
+<li>document databases采用schema-on-read，类似动态类型语言，运行时才检查.</li>
+<li>document databases的schema-on-read，对修改fields处理很简单，而relational databases则需要ALTER TABLE.</li>
+<li>document databases常常受益于storage locality，一次查找完相应的数据. relational databases则需要从多个table中获取.</li>
+</ul>
+<p>不过现在有relational databases越来越像document databases，document databases越来越像relational databases的趋势，relational databases的locality, support for XML and JSON, document databases的relaitonal-like joins等等.</p>
+<hr>
+<h2 id="Query-Languages-for-Data"><a href="#Query-Languages-for-Data" class="headerlink" title="Query Languages for Data"></a>Query Languages for Data</h2><h3 id="imperative-language-vs-declarative-query-language"><a href="#imperative-language-vs-declarative-query-language" class="headerlink" title="imperative language vs declarative query language"></a>imperative language vs declarative query language</h3><p>It is typically more concise and easier to work with declarative query language. It also hides implementation details of the database engine, which makes it possible for the database system to introduce performance improvements without requiring any changes to queries.</p>
+<p>用imperative language写的语句太底层，很难有优化的空间。底层的representation要改，写的语句也要跟着改。</p>
+<h3 id="查询鲨鱼列表"><a href="#查询鲨鱼列表" class="headerlink" title="查询鲨鱼列表"></a>查询鲨鱼列表</h3><p>imperative language:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">function getSharks() &#123;</div><div class="line">    var sharks = [];</div><div class="line">    for (var i = 0; i &lt; animals.length; i++) &#123;</div><div class="line">        if (animals[i].family === &quot;Sharks&quot;) &#123;</div><div class="line">            sharks.push(animals[i]);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return sharks;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>relational algebra:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sharks = σ_&#123;family = &quot;sharks&quot;&#125;(animals)</div></pre></td></tr></table></figure></p>
+<p>SQL:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SELECT * FROM animals WHERE family =&apos;Sharks&apos;;</div></pre></td></tr></table></figure></p>
+<h3 id="MapReduce型"><a href="#MapReduce型" class="headerlink" title="MapReduce型"></a>MapReduce型</h3><p>生成一个报告，说明每月看到多少鲨鱼。</p>
+<p>PostgreSQL:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">SELECT</div><div class="line">    date_trunc(&apos;month&apos;, observation_timestamp) AS observation_month,</div><div class="line">    sum(num_animals)                           AS total_animals</div><div class="line">FROM observations</div><div class="line">WHERE family = &apos;Sharks&apos;</div><div class="line">GROUP BY observation_month;</div></pre></td></tr></table></figure></p>
+<p>MongoDB的MapReduce:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">db.observations.mapReduce(function map() &#123;</div><div class="line">        var year = this.observationTimestamp.getFullYear();</div><div class="line">        var month = this.observationTimestamp.getMonth() + 1;</div><div class="line">        emit(year + &quot;-&quot; + month, this.numAnimals);</div><div class="line">    &#125;,</div><div class="line">    function reduce(key, values) &#123;</div><div class="line">        return Array.sum(values);</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        query: &#123;</div><div class="line">          family: &quot;Sharks&quot;</div><div class="line">        &#125;,</div><div class="line">        out: &quot;monthlySharkReport&quot;</div><div class="line">    &#125;);</div></pre></td></tr></table></figure></p>
+<p>MongoDB 2.2的aggregation pipleline:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">db.observations.aggregate([</div><div class="line">  &#123; $match: &#123; family: &quot;Sharks&quot; &#125; &#125;,</div><div class="line">  &#123; $group: &#123;</div><div class="line">    _id: &#123;</div><div class="line">      year:  &#123; $year:  &quot;$observationTimestamp&quot; &#125;,</div><div class="line">      month: &#123; $month: &quot;$observationTimestamp&quot; &#125;</div><div class="line">    &#125;,</div><div class="line">    totalAnimals: &#123; $sum: &quot;$numAnimals&quot; &#125; &#125;&#125;</div><div class="line">]);</div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="Graph-Like-Data-Models"><a href="#Graph-Like-Data-Models" class="headerlink" title="Graph-Like Data Models"></a>Graph-Like Data Models</h2><p>The relational model can handle simple cases of many-to-many relationships, but as the connections within your data become more complex, it becomes more natural to start modeling your data as a graph.</p>
+<p><img src="/images/181120/fig2-5.png" width="600/"></p>
+<h3 id="Property-Graphs"><a href="#Property-Graphs" class="headerlink" title="Property Graphs"></a>Property Graphs</h3><p>Each vertex consists of:</p>
+<ul>
+<li>A unique identifier</li>
+<li>A set of outgoing edges</li>
+<li>A set of incoming edges</li>
+<li>A collection of properties (key-value pairs)</li>
+</ul>
+<p>Each edge consists of:</p>
+<ul>
+<li>A unique identifier</li>
+<li>The vertex at which the edge starts (the tail vertex)</li>
+<li>The vertex at which the edge ends (the head vertex)</li>
+<li>A label to describe the kind of relationship between the two vertices</li>
+<li>A collection of properties (key-value pairs)</li>
+</ul>
+<p>Create Graph Example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE vertices (</div><div class="line">  vertex_id  INTEGER PRIMARY KEY,</div><div class="line">  properties JSON</div><div class="line">);</div><div class="line"></div><div class="line">CREATE TABLE edges (</div><div class="line">  edge_id     INTEGER PRIMARY KEY,</div><div class="line">  tail_vertex INTEGER REFERENCES vertices (vertex_id),</div><div class="line">  head_vertex INTEGER REFERENCES vertices (vertex_id),</div><div class="line">  label       TEXT,</div><div class="line">  properties  JSON</div><div class="line">);</div><div class="line"></div><div class="line">CREATE INDEX edges_tails ON edges (tail_vertex);</div><div class="line">CREATE INDEX edges_heads ON edges (head_vertex);</div></pre></td></tr></table></figure></p>
+<h3 id="The-Cypher-Query-Language"><a href="#The-Cypher-Query-Language" class="headerlink" title="The Cypher Query Language"></a>The Cypher Query Language</h3><p>Create Graph Example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">CREATE</div><div class="line">    (NAmerica:Location &#123;name:&apos;North America&apos;, type:&apos;continent&apos;&#125;),</div><div class="line">    (USA:Location      &#123;name:&apos;United States&apos;, type:&apos;country&apos;  &#125;),</div><div class="line">    (Idaho:Location    &#123;name:&apos;Idaho&apos;,         type:&apos;state&apos;    &#125;),</div><div class="line">    (Lucy:Person       &#123;name:&apos;Lucy&apos; &#125;),</div><div class="line">    (Idaho) -[:WITHIN]-&gt;  (USA)  -[:WITHIN]-&gt; (NAmerica),</div><div class="line">    (Lucy)  -[:BORN_IN]-&gt; (Idaho)</div></pre></td></tr></table></figure></p>
+<p>查找所有从美国移民到欧洲的人的Cypher Query:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">MATCH</div><div class="line">    (person) -[:BORN_IN]-&gt;  () -[:WITHIN*0..]-&gt; (us:Location &#123;name:&apos;United States&apos;&#125;),</div><div class="line">    (person) -[:LIVES_IN]-&gt; () -[:WITHIN*0..]-&gt; (eu:Location &#123;name:&apos;Europe&apos;&#125;)</div><div class="line">RETURN person.name</div></pre></td></tr></table></figure></p>
+<p>There are several possible ways of executing the query. 可以正着查，也可以从Location开始往回查。</p>
+<h3 id="Triple-Stores"><a href="#Triple-Stores" class="headerlink" title="Triple-Stores"></a>Triple-Stores</h3><p>In a triple-store, all information is stored in the form of very simple three-part statements: (subject, predicate, object).</p>
+<p>Create Graph Example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">@prefix : &lt;urn:example:&gt;.</div><div class="line">_:lucy     a       :Person.</div><div class="line">_:lucy     :name   &quot;Lucy&quot;.</div><div class="line">_:lucy     :bornIn _:idaho.</div><div class="line">_:idaho    a       :Location.</div><div class="line">_:idaho    :name   &quot;Idaho&quot;.</div><div class="line">_:idaho    :type   &quot;state&quot;.</div><div class="line">_:idaho    :within _:usa.</div><div class="line">_:usa      a       :Location</div><div class="line">_:usa      :name   &quot;United States&quot;</div><div class="line">_:usa      :type   &quot;country&quot;.</div><div class="line">_:usa      :within _:namerica.</div><div class="line">_:namerica a       :Location</div><div class="line">_:namerica :name   &quot;North America&quot;</div><div class="line">_:namerica :type   :&quot;continent&quot;</div></pre></td></tr></table></figure></p>
+<p>or </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@prefix : &lt;urn:example:&gt;.</div><div class="line">_:lucy      a :Person;   :name &quot;Lucy&quot;;          :bornIn _:idaho.</div><div class="line">_:idaho     a :Location; :name &quot;Idaho&quot;;         :type &quot;state&quot;;   :within _:usa</div><div class="line">_:usa       a :Loaction; :name &quot;United States&quot;; :type &quot;country&quot;; :within _:namerica.</div><div class="line">_:namerica  a :Location; :name &quot;North America&quot;; :type &quot;continent&quot;.</div></pre></td></tr></table></figure>
+<h3 id="The-SPARQL-query-language"><a href="#The-SPARQL-query-language" class="headerlink" title="The SPARQL query language"></a>The SPARQL query language</h3><p>查找所有从美国移民到欧洲的人的SPARQL Query:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">PREFIX : &lt;urn:example:&gt;</div><div class="line">SELECT ?personName WHERE &#123;</div><div class="line">  ?person :name ?personName.</div><div class="line">  ?person :bornIn  / :within* / :name &quot;United States&quot;.</div><div class="line">  ?person :livesIn / :within* / :name &quot;Europe&quot;.</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="The-Foundation-Datalog"><a href="#The-Foundation-Datalog" class="headerlink" title="The Foundation: Datalog"></a>The Foundation: Datalog</h3><p>Datalog is a much older language than SPARQL or Cypher.</p>
+<p>Create Graph Example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">name(namerica, &apos;North America&apos;).</div><div class="line">type(namerica, continent).</div><div class="line"></div><div class="line">name(usa, &apos;United States&apos;).</div><div class="line">type(usa, country).</div><div class="line">within(usa, namerica).</div><div class="line"></div><div class="line">name(idaho, &apos;Idaho&apos;).</div><div class="line">type(idaho, state).</div><div class="line">within(idaho, usa).</div><div class="line"></div><div class="line">name(lucy, &apos;Lucy&apos;).</div><div class="line">born_in(lucy, idaho).</div></pre></td></tr></table></figure></p>
+<p>The Query:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">within_recursive(Location, Name) :- name(Location, Name). /* Rule 1 */</div><div class="line"></div><div class="line">within_recursive(Location, Name) :- within(Location, Via), /* Rule 2 */</div><div class="line">                                    within_recursive(Via, Name).</div><div class="line"></div><div class="line">migrated(Name, BornIn, LivingIn) :- name(Person, Name), /* Rule 3 */</div><div class="line">                                    born_in(Person, BornLoc),</div><div class="line">                                    within_recursive(BornLoc, BornIn),</div><div class="line">                                    lives_in(Person, LivingLoc),</div><div class="line">                                    within_recursive(LivingLoc, LivingIn).</div><div class="line"></div><div class="line">?- migrated(Who, &apos;United States&apos;, &apos;Europe&apos;). /* Who = &apos;Lucy&apos;. */</div></pre></td></tr></table></figure></p>
+<p>采用类似函数引用透明的方式进行代换匹配，One possible way of applying the rules is thus:</p>
+<ol>
+<li>name(namerica, ‘North America’) – Rule 1 –&gt; within_recursive(namerica, ‘North America’)</li>
+<li>within(usa, namerica) &amp; within_recursive(namerica, ‘North America’) – Rule 2 –&gt; within_recursive(usa, ‘North America’)</li>
+<li>within(idaho, usa) &amp; within_recursive(usa, ‘North America’) – Rule 2 –&gt; within_recursive(idaho, ‘North America’) </li>
+<li>…</li>
+</ol>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Gaufoo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://gaufoo.com/ddia-ii/" title="《DDIA》读与记（二）">http://gaufoo.com/ddia-ii/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/" rel="external nofollow" target="_blank">CC BY-NC-ND 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/大数据/" rel="tag"># 大数据</a>
+          
+            <a href="/tags/DDIA/" rel="tag"># DDIA</a>
+          
+            <a href="/tags/读书笔记/" rel="tag"># 读书笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/ddia-i/" rel="next" title="《DDIA》读与记（一）">
+                <i class="fa fa-chevron-left"></i> 《DDIA》读与记（一）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="Gaufoo" />
+          <p class="site-author-name" itemprop="name">Gaufoo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhongzc/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhong-zhen-chi/activities" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-mortar-board"></i>
+                  
+                    
+                      知乎
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-nd.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              看看他们
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://lyfoon.com/" title="lyfoon" target="_blank">lyfoon</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://passer-by.com/" title="passer-by" target="_blank">passer-by</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Relational-Model-Versus-Document-Model"><span class="nav-number">1.</span> <span class="nav-text">Relational Model Versus Document Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Relation-Model"><span class="nav-number">1.1.</span> <span class="nav-text">Relation Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NoSQL"><span class="nav-number">1.2.</span> <span class="nav-text">NoSQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#One-to-Many型"><span class="nav-number">1.3.</span> <span class="nav-text">One-to-Many型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Many-to-One-and-Many-to-Many-Relationships"><span class="nav-number">1.4.</span> <span class="nav-text">Many-to-One and Many-to-Many Relationships</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Comparison"><span class="nav-number">1.5.</span> <span class="nav-text">Comparison</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Query-Languages-for-Data"><span class="nav-number">2.</span> <span class="nav-text">Query Languages for Data</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#imperative-language-vs-declarative-query-language"><span class="nav-number">2.1.</span> <span class="nav-text">imperative language vs declarative query language</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查询鲨鱼列表"><span class="nav-number">2.2.</span> <span class="nav-text">查询鲨鱼列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapReduce型"><span class="nav-number">2.3.</span> <span class="nav-text">MapReduce型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Graph-Like-Data-Models"><span class="nav-number">3.</span> <span class="nav-text">Graph-Like Data Models</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Property-Graphs"><span class="nav-number">3.1.</span> <span class="nav-text">Property Graphs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Cypher-Query-Language"><span class="nav-number">3.2.</span> <span class="nav-text">The Cypher Query Language</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Triple-Stores"><span class="nav-number">3.3.</span> <span class="nav-text">Triple-Stores</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-SPARQL-query-language"><span class="nav-number">3.4.</span> <span class="nav-text">The SPARQL query language</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Foundation-Datalog"><span class="nav-number">3.5.</span> <span class="nav-text">The Foundation: Datalog</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 &mdash; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gaufoo</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

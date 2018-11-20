@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gaufoo.com/"/>
-  <updated>2018-11-19T09:30:57.545Z</updated>
+  <updated>2018-11-20T14:00:26.211Z</updated>
   <id>http://gaufoo.com/</id>
   
   <author>
@@ -14,6 +14,121 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>《DDIA》读与记（二）</title>
+    <link href="http://gaufoo.com/ddia-ii/"/>
+    <id>http://gaufoo.com/ddia-ii/</id>
+    <published>2018-11-20T12:26:00.000Z</published>
+    <updated>2018-11-20T14:00:26.211Z</updated>
+    
+    <content type="html"><![CDATA[<p>Data Models and Query Languages</p>
+<a id="more"></a>
+<hr>
+<p>对于每个应用的数据层，都可能需要考虑以下问题：</p>
+<ul>
+<li>观察现实中的实体，并用object或者data structure来model它。</li>
+<li>如何store这些data structure，用JSON、XML文档，还是relational数据库中的table，还是graph。</li>
+<li>如何将JSON、XML文档、table、graph等存在形式，在memory、disk、network中表示，并且支持查找、修改、处理等等操作。</li>
+<li>最底层硬件如何处理electrical currents、pulses of light等等。</li>
+</ul>
+<hr>
+<h2 id="Relational-Model-Versus-Document-Model"><a href="#Relational-Model-Versus-Document-Model" class="headerlink" title="Relational Model Versus Document Model"></a>Relational Model Versus Document Model</h2><h3 id="Relation-Model"><a href="#Relation-Model" class="headerlink" title="Relation Model"></a>Relation Model</h3><p>数据在relations中（在SQL中也叫tables）被组织，每个relation包含一系列unordered的tuples（在SQL中也叫rows）。</p>
+<h3 id="NoSQL"><a href="#NoSQL" class="headerlink" title="NoSQL"></a>NoSQL</h3><p>原来的NoSQL只是一个会议中一句口号，代指open source, distributed, nonrelational的databases。现在被重新解释为Not Only SQL，其语义中，包含以下特点：</p>
+<ul>
+<li>比传统relational数据库更具伸缩性，能处理巨大的数据集或very high write throughput.</li>
+<li>免费、开源</li>
+<li>支持relational model中不能很好完成的特殊操作</li>
+<li>更具动态性和表达力的数据模型</li>
+</ul>
+<h3 id="One-to-Many型"><a href="#One-to-Many型" class="headerlink" title="One-to-Many型"></a>One-to-Many型</h3><p>以简历作为例子<br><img src="/images/181120/resume.png" width="600/"></p>
+<p>relational数据库可以把position、education、contact information等等分成多个table，用foreign key引用。</p>
+<p>也可以用self-contained document来表示，比如JSON document。Document-oriented databases like MongoDB, RethinkDB, CouchDB and Espresso support this data model.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"user_id"</span>: <span class="number">251</span>,</div><div class="line">    <span class="attr">"first_name"</span>: <span class="string">"Bill"</span>,</div><div class="line">    <span class="attr">"last_name"</span>: <span class="string">"Gates"</span>,</div><div class="line">    <span class="attr">"summary"</span>: <span class="string">"Co-chair of the Bill &amp; Melinda Gates... Active blogger."</span>,</div><div class="line">    <span class="attr">"region_id"</span>: <span class="string">"us:91"</span>,</div><div class="line">    <span class="attr">"industry_id"</span>: <span class="number">131</span>,</div><div class="line">    <span class="attr">"photo_url"</span>: <span class="string">"/p/7/000/253/05b/308dd6e.jpg"</span>,</div><div class="line">    <span class="attr">"positions"</span>: [</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"job_title"</span>: <span class="string">"Co-chair"</span>,</div><div class="line">            <span class="attr">"organization"</span>: <span class="string">"Bill &amp; Melinda Gates Foundation"</span></div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"job_title"</span>: <span class="string">"Co-founder, Chairman"</span>,</div><div class="line">            <span class="attr">"organization"</span>: <span class="string">"Microsoft"</span></div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">    <span class="attr">"education"</span>: [</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"school_name"</span>: <span class="string">"Harvard University"</span>,</div><div class="line">            <span class="attr">"start"</span>: <span class="number">1973</span>,</div><div class="line">            <span class="attr">"end"</span>: <span class="number">1975</span></div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"school_name"</span>: <span class="string">"Lakeside School, Seattle"</span>,</div><div class="line">            <span class="attr">"start"</span>: <span class="literal">null</span>,</div><div class="line">            <span class="attr">"end"</span>: <span class="literal">null</span></div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">    <span class="attr">"contact_info"</span>: &#123;</div><div class="line">        <span class="attr">"blog"</span>: <span class="string">"http://thegatesnotes.com"</span>,</div><div class="line">        <span class="attr">"twitter"</span>: <span class="string">"http://twitter.com/BillGates"</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="Many-to-One-and-Many-to-Many-Relationships"><a href="#Many-to-One-and-Many-to-Many-Relationships" class="headerlink" title="Many-to-One and Many-to-Many Relationships"></a>Many-to-One and Many-to-Many Relationships</h3><p>在上面JSON的例子中，有很多plain-text strings，而有时我们又会觉得应该存储成ID。</p>
+<p>关于存储ID还是存储text string，实际是关于duplication的问题。如果存储ID，那么对于人类有意义的信息（text string），最终只会存储在一个地方。而如果直接用text string存储，则会duplicate在every record that uses it.</p>
+<p>ID对于人类来说没意义，所以可以不变。但它所代指的information则有可能发生变化。如果information发生变化，且information是duplicated的，则所有redundant copies都要update。而消除这些duplication，is the key idea behind <em>normalization</em> in databases.</p>
+<p>要描述Many-to-One关系，在relational databases中，it’s normal to refer to rows in other tables by ID, because joins are easy. 而在document databases中，对join的支持就很弱了。</p>
+<h3 id="Comparison"><a href="#Comparison" class="headerlink" title="Comparison"></a>Comparison</h3><ul>
+<li>The relation model provides better support for joins, and many-to-one and many-to-many relationships.</li>
+<li>The document data model are schema flexibility, better performance due to locality, and that for some applications it is closer to the data structures used by the application.</li>
+<li>The relational technique of shredding—splitting a document-like structure into multiple tables can lead to cumbersome schemas and unnecessarily complicated application code.</li>
+<li>document databases对joins的poor support，Joins can be emulated in application code by making requests to the database.</li>
+<li>relational databases采用schema-on-write，类似静态类型语言，编译时进行类型检查.</li>
+<li>document databases采用schema-on-read，类似动态类型语言，运行时才检查.</li>
+<li>document databases的schema-on-read，对修改fields处理很简单，而relational databases则需要ALTER TABLE.</li>
+<li>document databases常常受益于storage locality，一次查找完相应的数据. relational databases则需要从多个table中获取.</li>
+</ul>
+<p>不过现在有relational databases越来越像document databases，document databases越来越像relational databases的趋势，relational databases的locality, support for XML and JSON, document databases的relaitonal-like joins等等.</p>
+<hr>
+<h2 id="Query-Languages-for-Data"><a href="#Query-Languages-for-Data" class="headerlink" title="Query Languages for Data"></a>Query Languages for Data</h2><h3 id="imperative-language-vs-declarative-query-language"><a href="#imperative-language-vs-declarative-query-language" class="headerlink" title="imperative language vs declarative query language"></a>imperative language vs declarative query language</h3><p>It is typically more concise and easier to work with declarative query language. It also hides implementation details of the database engine, which makes it possible for the database system to introduce performance improvements without requiring any changes to queries.</p>
+<p>用imperative language写的语句太底层，很难有优化的空间。底层的representation要改，写的语句也要跟着改。</p>
+<h3 id="查询鲨鱼列表"><a href="#查询鲨鱼列表" class="headerlink" title="查询鲨鱼列表"></a>查询鲨鱼列表</h3><p>imperative language:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">function getSharks() &#123;</div><div class="line">    var sharks = [];</div><div class="line">    for (var i = 0; i &lt; animals.length; i++) &#123;</div><div class="line">        if (animals[i].family === &quot;Sharks&quot;) &#123;</div><div class="line">            sharks.push(animals[i]);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return sharks;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>relational algebra:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sharks = σ_&#123;family = &quot;sharks&quot;&#125;(animals)</div></pre></td></tr></table></figure></p>
+<p>SQL:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SELECT * FROM animals WHERE family =&apos;Sharks&apos;;</div></pre></td></tr></table></figure></p>
+<h3 id="MapReduce型"><a href="#MapReduce型" class="headerlink" title="MapReduce型"></a>MapReduce型</h3><p>生成一个报告，说明每月看到多少鲨鱼。</p>
+<p>PostgreSQL:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">SELECT</div><div class="line">    date_trunc(&apos;month&apos;, observation_timestamp) AS observation_month,</div><div class="line">    sum(num_animals)                           AS total_animals</div><div class="line">FROM observations</div><div class="line">WHERE family = &apos;Sharks&apos;</div><div class="line">GROUP BY observation_month;</div></pre></td></tr></table></figure></p>
+<p>MongoDB的MapReduce:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">db.observations.mapReduce(function map() &#123;</div><div class="line">        var year = this.observationTimestamp.getFullYear();</div><div class="line">        var month = this.observationTimestamp.getMonth() + 1;</div><div class="line">        emit(year + &quot;-&quot; + month, this.numAnimals);</div><div class="line">    &#125;,</div><div class="line">    function reduce(key, values) &#123;</div><div class="line">        return Array.sum(values);</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        query: &#123;</div><div class="line">          family: &quot;Sharks&quot;</div><div class="line">        &#125;,</div><div class="line">        out: &quot;monthlySharkReport&quot;</div><div class="line">    &#125;);</div></pre></td></tr></table></figure></p>
+<p>MongoDB 2.2的aggregation pipleline:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">db.observations.aggregate([</div><div class="line">  &#123; $match: &#123; family: &quot;Sharks&quot; &#125; &#125;,</div><div class="line">  &#123; $group: &#123;</div><div class="line">    _id: &#123;</div><div class="line">      year:  &#123; $year:  &quot;$observationTimestamp&quot; &#125;,</div><div class="line">      month: &#123; $month: &quot;$observationTimestamp&quot; &#125;</div><div class="line">    &#125;,</div><div class="line">    totalAnimals: &#123; $sum: &quot;$numAnimals&quot; &#125; &#125;&#125;</div><div class="line">]);</div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="Graph-Like-Data-Models"><a href="#Graph-Like-Data-Models" class="headerlink" title="Graph-Like Data Models"></a>Graph-Like Data Models</h2><p>The relational model can handle simple cases of many-to-many relationships, but as the connections within your data become more complex, it becomes more natural to start modeling your data as a graph.</p>
+<p><img src="/images/181120/fig2-5.png" width="600/"></p>
+<h3 id="Property-Graphs"><a href="#Property-Graphs" class="headerlink" title="Property Graphs"></a>Property Graphs</h3><p>Each vertex consists of:</p>
+<ul>
+<li>A unique identifier</li>
+<li>A set of outgoing edges</li>
+<li>A set of incoming edges</li>
+<li>A collection of properties (key-value pairs)</li>
+</ul>
+<p>Each edge consists of:</p>
+<ul>
+<li>A unique identifier</li>
+<li>The vertex at which the edge starts (the tail vertex)</li>
+<li>The vertex at which the edge ends (the head vertex)</li>
+<li>A label to describe the kind of relationship between the two vertices</li>
+<li>A collection of properties (key-value pairs)</li>
+</ul>
+<p>Create Graph Example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE vertices (</div><div class="line">  vertex_id  INTEGER PRIMARY KEY,</div><div class="line">  properties JSON</div><div class="line">);</div><div class="line"></div><div class="line">CREATE TABLE edges (</div><div class="line">  edge_id     INTEGER PRIMARY KEY,</div><div class="line">  tail_vertex INTEGER REFERENCES vertices (vertex_id),</div><div class="line">  head_vertex INTEGER REFERENCES vertices (vertex_id),</div><div class="line">  label       TEXT,</div><div class="line">  properties  JSON</div><div class="line">);</div><div class="line"></div><div class="line">CREATE INDEX edges_tails ON edges (tail_vertex);</div><div class="line">CREATE INDEX edges_heads ON edges (head_vertex);</div></pre></td></tr></table></figure></p>
+<h3 id="The-Cypher-Query-Language"><a href="#The-Cypher-Query-Language" class="headerlink" title="The Cypher Query Language"></a>The Cypher Query Language</h3><p>Create Graph Example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">CREATE</div><div class="line">    (NAmerica:Location &#123;name:&apos;North America&apos;, type:&apos;continent&apos;&#125;),</div><div class="line">    (USA:Location      &#123;name:&apos;United States&apos;, type:&apos;country&apos;  &#125;),</div><div class="line">    (Idaho:Location    &#123;name:&apos;Idaho&apos;,         type:&apos;state&apos;    &#125;),</div><div class="line">    (Lucy:Person       &#123;name:&apos;Lucy&apos; &#125;),</div><div class="line">    (Idaho) -[:WITHIN]-&gt;  (USA)  -[:WITHIN]-&gt; (NAmerica),</div><div class="line">    (Lucy)  -[:BORN_IN]-&gt; (Idaho)</div></pre></td></tr></table></figure></p>
+<p>查找所有从美国移民到欧洲的人的Cypher Query:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">MATCH</div><div class="line">    (person) -[:BORN_IN]-&gt;  () -[:WITHIN*0..]-&gt; (us:Location &#123;name:&apos;United States&apos;&#125;),</div><div class="line">    (person) -[:LIVES_IN]-&gt; () -[:WITHIN*0..]-&gt; (eu:Location &#123;name:&apos;Europe&apos;&#125;)</div><div class="line">RETURN person.name</div></pre></td></tr></table></figure></p>
+<p>There are several possible ways of executing the query. 可以正着查，也可以从Location开始往回查。</p>
+<h3 id="Triple-Stores"><a href="#Triple-Stores" class="headerlink" title="Triple-Stores"></a>Triple-Stores</h3><p>In a triple-store, all information is stored in the form of very simple three-part statements: (subject, predicate, object).</p>
+<p>Create Graph Example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">@prefix : &lt;urn:example:&gt;.</div><div class="line">_:lucy     a       :Person.</div><div class="line">_:lucy     :name   &quot;Lucy&quot;.</div><div class="line">_:lucy     :bornIn _:idaho.</div><div class="line">_:idaho    a       :Location.</div><div class="line">_:idaho    :name   &quot;Idaho&quot;.</div><div class="line">_:idaho    :type   &quot;state&quot;.</div><div class="line">_:idaho    :within _:usa.</div><div class="line">_:usa      a       :Location</div><div class="line">_:usa      :name   &quot;United States&quot;</div><div class="line">_:usa      :type   &quot;country&quot;.</div><div class="line">_:usa      :within _:namerica.</div><div class="line">_:namerica a       :Location</div><div class="line">_:namerica :name   &quot;North America&quot;</div><div class="line">_:namerica :type   :&quot;continent&quot;</div></pre></td></tr></table></figure></p>
+<p>or </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@prefix : &lt;urn:example:&gt;.</div><div class="line">_:lucy      a :Person;   :name &quot;Lucy&quot;;          :bornIn _:idaho.</div><div class="line">_:idaho     a :Location; :name &quot;Idaho&quot;;         :type &quot;state&quot;;   :within _:usa</div><div class="line">_:usa       a :Loaction; :name &quot;United States&quot;; :type &quot;country&quot;; :within _:namerica.</div><div class="line">_:namerica  a :Location; :name &quot;North America&quot;; :type &quot;continent&quot;.</div></pre></td></tr></table></figure>
+<h3 id="The-SPARQL-query-language"><a href="#The-SPARQL-query-language" class="headerlink" title="The SPARQL query language"></a>The SPARQL query language</h3><p>查找所有从美国移民到欧洲的人的SPARQL Query:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">PREFIX : &lt;urn:example:&gt;</div><div class="line">SELECT ?personName WHERE &#123;</div><div class="line">  ?person :name ?personName.</div><div class="line">  ?person :bornIn  / :within* / :name &quot;United States&quot;.</div><div class="line">  ?person :livesIn / :within* / :name &quot;Europe&quot;.</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="The-Foundation-Datalog"><a href="#The-Foundation-Datalog" class="headerlink" title="The Foundation: Datalog"></a>The Foundation: Datalog</h3><p>Datalog is a much older language than SPARQL or Cypher.</p>
+<p>Create Graph Example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">name(namerica, &apos;North America&apos;).</div><div class="line">type(namerica, continent).</div><div class="line"></div><div class="line">name(usa, &apos;United States&apos;).</div><div class="line">type(usa, country).</div><div class="line">within(usa, namerica).</div><div class="line"></div><div class="line">name(idaho, &apos;Idaho&apos;).</div><div class="line">type(idaho, state).</div><div class="line">within(idaho, usa).</div><div class="line"></div><div class="line">name(lucy, &apos;Lucy&apos;).</div><div class="line">born_in(lucy, idaho).</div></pre></td></tr></table></figure></p>
+<p>The Query:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">within_recursive(Location, Name) :- name(Location, Name). /* Rule 1 */</div><div class="line"></div><div class="line">within_recursive(Location, Name) :- within(Location, Via), /* Rule 2 */</div><div class="line">                                    within_recursive(Via, Name).</div><div class="line"></div><div class="line">migrated(Name, BornIn, LivingIn) :- name(Person, Name), /* Rule 3 */</div><div class="line">                                    born_in(Person, BornLoc),</div><div class="line">                                    within_recursive(BornLoc, BornIn),</div><div class="line">                                    lives_in(Person, LivingLoc),</div><div class="line">                                    within_recursive(LivingLoc, LivingIn).</div><div class="line"></div><div class="line">?- migrated(Who, &apos;United States&apos;, &apos;Europe&apos;). /* Who = &apos;Lucy&apos;. */</div></pre></td></tr></table></figure></p>
+<p>采用类似函数引用透明的方式进行代换匹配，One possible way of applying the rules is thus:</p>
+<ol>
+<li>name(namerica, ‘North America’) – Rule 1 –&gt; within_recursive(namerica, ‘North America’)</li>
+<li>within(usa, namerica) &amp; within_recursive(namerica, ‘North America’) – Rule 2 –&gt; within_recursive(usa, ‘North America’)</li>
+<li>within(idaho, usa) &amp; within_recursive(usa, ‘North America’) – Rule 2 –&gt; within_recursive(idaho, ‘North America’) </li>
+<li>…</li>
+</ol>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Data Models and Query Languages&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="读书笔记" scheme="http://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+      <category term="DDIA" scheme="http://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/DDIA/"/>
+    
+    
+      <category term="大数据" scheme="http://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="DDIA" scheme="http://gaufoo.com/tags/DDIA/"/>
+    
+      <category term="读书笔记" scheme="http://gaufoo.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
   
   <entry>
     <title>《DDIA》读与记（一）</title>
@@ -444,9 +559,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
       <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
       <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
     
@@ -744,9 +859,9 @@
       <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
       <category term="函数式编程" scheme="http://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
       <category term="Haskell" scheme="http://gaufoo.com/tags/Haskell/"/>
     
@@ -1633,11 +1748,11 @@
       <category term="C++" scheme="http://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
+      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
+    
       <category term="编程" scheme="http://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
       <category term="C++" scheme="http://gaufoo.com/tags/C/"/>
-    
-      <category term="C" scheme="http://gaufoo.com/tags/C/"/>
     
   </entry>
   
@@ -1889,188 +2004,6 @@
 <p>r=(a|b)*abb 对应的NFA</p>
 </blockquote>
 <p><img src="/images/20171024150046.png" width="500"></p>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;记录&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
-    
-      <category term="编译原理" scheme="http://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
-    
-      <category term="原理" scheme="http://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
-    
-      <category term="编译原理" scheme="http://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>编译原理学习笔记（一）</title>
-    <link href="http://gaufoo.com/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
-    <id>http://gaufoo.com/编译原理学习笔记（一）/</id>
-    <published>2017-09-09T17:52:49.000Z</published>
-    <updated>2017-09-16T10:05:05.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>记录</p>
-<a id="more"></a>
-<hr>
-<h2 id="文法的形式化定义"><a href="#文法的形式化定义" class="headerlink" title="文法的形式化定义"></a>文法的形式化定义</h2><p><strong>G = (V<sub>T</sub>, V<sub>N</sub>, P , S )</strong></p>
-<h3 id="各成分含义"><a href="#各成分含义" class="headerlink" title="各成分含义"></a>各成分含义</h3><ul>
-<li>V<sub>T</sub>：终结符集合<ul>
-<li>终结符（terminal symbol）是文法所定义的语言的<strong>基本符号</strong>，有时也称为token</li>
-<li>例：V<sub>T</sub> = { apple, boy, eat, little }</li>
-</ul>
-</li>
-<li><p>V<sub>N</sub>：非终结符集合</p>
-<ul>
-<li>非终结符 ( nonterminal ) 是用来表示<strong>语法成分</strong>的符号，有时也称为“语法变量”</li>
-<li><p>例: V<sub>N</sub> = { &lt;句子&gt;, &lt;名词短语&gt;, &lt;动词短语&gt;, &lt;名词&gt;, … }</p>
-<blockquote>
-<p>V<sub>T</sub> ∩ V<sub>N</sub> = Φ<br>V<sub>T</sub> ∪ V<sub>N</sub> = 文法符号集</p>
-</blockquote>
-</li>
-</ul>
-</li>
-<li><p>P：产生式集合</p>
-<ul>
-<li>产生式 ( production ) 描述了将终结符和非终结符组合成串的方法</li>
-<li>产生式的一般形式： <strong>α→β</strong> ，读作：α定义为β<ul>
-<li>α∈(V<sub>T</sub> ∪ V<sub>N</sub> )<sup>+</sup>，且α中至少包含V<sub>N</sub>中的一个元素：称为产生式的头 ( head ) 或左部 ( left side )</li>
-<li>β∈(V<sub>T</sub> ∪ V<sub>N</sub> )<sup>*</sup>：称为产生式的体(body)或右部(right side)</li>
-</ul>
-</li>
-<li>例：{&lt;句子&gt;→&lt;名词短语&gt;&lt;动词短语&gt;,&lt;名词短语&gt;→&lt;形容词&gt;&lt;名词短语&gt;,……}</li>
-</ul>
-</li>
-<li>S：开始符号<ul>
-<li>S∈V<sub>N</sub> 。开始符号 ( start symbol ) 表示的是该文法中<strong>最大</strong>的语法成分</li>
-<li>例：S = &lt;句子&gt;</li>
-</ul>
-</li>
-</ul>
-<hr>
-<ul>
-<li><p>例子：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">G = (&#123;id, +, *, (, )&#125;, &#123;E&#125;, P, E)</div><div class="line">P = &#123;	E → E + E,</div><div class="line">	E → E * E,</div><div class="line">	E → ( E ),</div><div class="line">	E → id&#125;</div></pre></td></tr></table></figure>
-<p>  约定：不引起歧义的前提下，可以只写产生式</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">G : 	E → E + E</div><div class="line">	E → E * E</div><div class="line">	E → ( E )</div><div class="line">	E → id</div></pre></td></tr></table></figure>
-<p>  简写：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">G : E → E + E | E * E | ( E ) | id</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<hr>
-<h3 id="符号约定"><a href="#符号约定" class="headerlink" title="符号约定"></a>符号约定</h3><ul>
-<li>终结符<ul>
-<li>字母表中排在前面的小写字母，如 a、b、c</li>
-<li>运算符，如 +、*等</li>
-<li>标点符号，如括号、逗号等</li>
-<li>数字 0、1、… 、9</li>
-<li>粗体字符串，如<strong>id</strong>、<strong>if</strong>等</li>
-</ul>
-</li>
-<li>非终结符<ul>
-<li>字母表中排在前面的大写字母，如A、B、C</li>
-<li>字母S。通常表示开始符号</li>
-<li>小写、斜体的名字，如 <em>expr</em>、<em>stmt</em>等</li>
-<li>代表程序构造的大写字母。如E(表达式)、T(项)和F(因子)</li>
-</ul>
-</li>
-<li>文法符号（即终结符或非终结符）<ul>
-<li>字母表中排在后面的大写字母（如X、Y、Z）</li>
-</ul>
-</li>
-<li>终结符号串<ul>
-<li>字母表中排在后面的小写字母（主要是u、v、… 、z）</li>
-</ul>
-</li>
-<li>文法符号串<ul>
-<li>小写希腊字母，如α、β、γ</li>
-</ul>
-</li>
-<li>除非特别说明，第一个产生式的左部就是开始符号</li>
-</ul>
-<hr>
-<h2 id="语言的定义"><a href="#语言的定义" class="headerlink" title="语言的定义"></a>语言的定义</h2><h3 id="推导和归约"><a href="#推导和归约" class="headerlink" title="推导和归约"></a>推导和归约</h3><p>用产生式的右部替换产生式的左部，称为推导 (Derivations) </p>
-<blockquote>
-<p>如果α0=&gt;α1，α1=&gt;α2，α2=&gt;α3，…，α n-1=&gt;αn，则可以记作α0=&gt;α1=&gt;α2=&gt;α3=&gt; …=&gt; α n-1=&gt;αn，称符号串 α0经过n步推导出αn，可简记为α0=&gt;<sup>n</sup>αn</p>
-</blockquote>
-<p>用产生式的左部替换产生式的右部，称为归约 (Reductions)<br>例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;句子&gt; =&gt; &lt;名词短语&gt;&lt;动词短语&gt;</div><div class="line">       =&gt; &lt;形容词&gt;&lt;名词短语&gt;&lt;动词短语&gt;</div><div class="line">       =&gt; little &lt;名词短语&gt;&lt;动词短语&gt;</div><div class="line">       =&gt; little &lt;名词&gt;&lt;动词短语&gt;</div><div class="line">       =&gt; little boy &lt;动词短语&gt;</div><div class="line">       =&gt; little boy &lt;动词&gt;&lt;名词短语&gt;</div><div class="line">       =&gt; little boy eats &lt;名词短语&gt;</div><div class="line">       =&gt; little boy eats &lt;名词&gt;</div><div class="line">       =&gt; little boy eats apple</div></pre></td></tr></table></figure></p>
-<p>由上往下是推导，由下往上是归约</p>
-<hr>
-<h3 id="句型和句子"><a href="#句型和句子" class="headerlink" title="句型和句子"></a>句型和句子</h3><ul>
-<li>如果 S=&gt;*α, α∈(V<sub>T</sub>∪V<sub>N</sub>)*，则称α是G的一个句型(sentential form)</li>
-<li>如果 S=&gt;*w，w∈V<sub>T</sub>*，则称w是G的一个句子(sentence)</li>
-</ul>
-<blockquote>
-<p>句子是不包含<strong>非终结符</strong>的句型</p>
-</blockquote>
-<ul>
-<li>由文法G的开始符号S推导出的所有<strong>句子</strong>构成的集合称为文法G生成的<strong>语言</strong>，记为L(G)。</li>
-</ul>
-<hr>
-<h2 id="Chomsky-文法分类体系"><a href="#Chomsky-文法分类体系" class="headerlink" title="Chomsky 文法分类体系"></a>Chomsky 文法分类体系</h2><h3 id="0型文法-Type-0-Grammar"><a href="#0型文法-Type-0-Grammar" class="headerlink" title="0型文法 (Type-0 Grammar)"></a>0型文法 (Type-0 Grammar)</h3><ul>
-<li>无限制文法(Unrestricted Grammar) / 短语结构文法(Phrase Structure Grammar, PSG )<ul>
-<li>∀α → β∈P， α中至少包含1个非终结符</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>PSG中可包含ε-产生式</p>
-</blockquote>
-<hr>
-<h3 id="1型文法-Type-1-Grammar"><a href="#1型文法-Type-1-Grammar" class="headerlink" title="1型文法 (Type-1 Grammar)"></a>1型文法 (Type-1 Grammar)</h3><ul>
-<li>上下文有关文法(Context-Sensitive Grammar , CSG )<ul>
-<li>∀α → β∈P，｜α｜≤｜β｜</li>
-<li>产生式的一般形式： α1Aα2 → α1βα2 ( β≠ε )</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>CSG中不包含ε-产生式</p>
-</blockquote>
-<hr>
-<h3 id="2型文法-Type-2-Grammar"><a href="#2型文法-Type-2-Grammar" class="headerlink" title="2型文法 (Type-2 Grammar)"></a>2型文法 (Type-2 Grammar)</h3><ul>
-<li>上下文无关文法 (Context-Free Grammar, CFG )<ul>
-<li>∀α → β∈P，α ∈ V<sub>N</sub></li>
-<li>产生式的一般形式：A→β</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h3 id="3型文法-Type-3-Grammar"><a href="#3型文法-Type-3-Grammar" class="headerlink" title="3型文法 (Type-3 Grammar)"></a>3型文法 (Type-3 Grammar)</h3><ul>
-<li>正则文法 (Regular Grammar, RG )<ul>
-<li>右线性(Right Linear)文法： A→wB 或 A→w</li>
-<li>左线性(Left Linear) 文法： A→Bw 或 A→w</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h3 id="四种文法之间的关系"><a href="#四种文法之间的关系" class="headerlink" title="四种文法之间的关系"></a>四种文法之间的关系</h3><p>逐级限制：</p>
-<ul>
-<li>0型文法：α中至少包含1个非终结符</li>
-<li>1型文法（CSG） ：｜α｜≤｜β｜</li>
-<li>2型文法（CFG） ：α ∈ V<sub>N</sub></li>
-<li>3型文法（RG）：A→wB 或 A→w (A→Bw 或A→w)</li>
-</ul>
-<hr>
-<h2 id="CFG的分析树"><a href="#CFG的分析树" class="headerlink" title="CFG的分析树"></a>CFG的分析树</h2><h3 id="分析树举例"><a href="#分析树举例" class="headerlink" title="分析树举例"></a>分析树举例</h3><p><img src="/images/229534388000563683.jpg" width="500"></p>
-<ul>
-<li>分析树是推导的图形化表示<br>  推导过程：E =&gt; -E =&gt; - ( E ) =&gt; - ( E+E ) =&gt; - ( id+E ) =&gt; - ( id+id )</li>
-<li>结构<ul>
-<li><strong>根节点</strong>的标号为<strong>文法开始符号</strong></li>
-<li><strong>内部结点</strong>表示对一个产生式A→β的应用，该结点的标号是此产生式左部<strong>A</strong>。该结点的子结点的标号从左到右构成了产生式的右部<strong>β</strong></li>
-<li><strong>叶结点</strong>的标号既可以是非终结符，也可以是终结符。从左到右排列叶节点得到的符号串称为是这棵树的产出(yield)或边缘(frontier)</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h3 id="二义性文法"><a href="#二义性文法" class="headerlink" title="二义性文法"></a>二义性文法</h3><p>如果一个文法可以为某个句子生成多棵分析树，则称这个文法是二义性的</p>
-<p>例：<br>文法：S → <strong>if</strong> E <strong>then</strong> S | <strong>if</strong> E <strong>then</strong> S <strong>else</strong> S | <strong>other</strong><br>句型：<strong>if</strong> E1 <strong>then</strong> <strong>if</strong> E2 <strong>then</strong> S1 <strong>else</strong> S2<br>    可生成的分析树有：<br><img src="/images/728669562437023693.jpg" width="500"></p>
 <hr>
 ]]></content>
     
