@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://gaufoo.com/"/>
-  <updated>2018-11-20T14:18:32.317Z</updated>
+  <updated>2018-11-20T14:18:32.000Z</updated>
   <id>https://gaufoo.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://gaufoo.com/ddia-ii/"/>
     <id>https://gaufoo.com/ddia-ii/</id>
     <published>2018-11-20T12:26:00.000Z</published>
-    <updated>2018-11-20T14:18:32.317Z</updated>
+    <updated>2018-11-20T14:18:32.000Z</updated>
     
     <content type="html"><![CDATA[<p>Data Models and Query Languages</p>
 <a id="more"></a>
@@ -135,7 +135,7 @@
     <link href="https://gaufoo.com/ddia-i/"/>
     <id>https://gaufoo.com/ddia-i/</id>
     <published>2018-11-19T09:26:00.000Z</published>
-    <updated>2018-11-19T09:30:57.545Z</updated>
+    <updated>2018-11-19T09:30:57.000Z</updated>
     
     <content type="html"><![CDATA[<p>开始读DDIA。</p>
 <a id="more"></a>
@@ -438,7 +438,7 @@
     <link href="https://gaufoo.com/foldl-and-foldr/"/>
     <id>https://gaufoo.com/foldl-and-foldr/</id>
     <published>2018-05-19T04:58:51.000Z</published>
-    <updated>2018-05-19T09:33:40.129Z</updated>
+    <updated>2018-05-19T09:33:40.000Z</updated>
     
     <content type="html"><![CDATA[<p>阅读本文请自备纸、笔、头痛药。</p>
 <a id="more"></a>
@@ -480,9 +480,9 @@
       <category term="函数式编程" scheme="https://gaufoo.com/categories/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
     
-      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
-    
       <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
     
   </entry>
   
@@ -559,11 +559,11 @@
       <category term="编译原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
+      <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
       <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
     
   </entry>
   
@@ -693,9 +693,9 @@
       <category term="计算原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
-    
       <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
     
   </entry>
   
@@ -859,11 +859,11 @@
       <category term="编译原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
+      <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
       <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
     
   </entry>
   
@@ -929,9 +929,9 @@
     
       <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
     
-      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
+    
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -1020,9 +1020,9 @@
     
       <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
     
-      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
+    
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -1101,9 +1101,9 @@
     
       <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
     
-      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
+    
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -1748,11 +1748,11 @@
       <category term="C++" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
+      <category term="C" scheme="https://gaufoo.com/tags/C/"/>
+    
       <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
       <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
-    
-      <category term="C" scheme="https://gaufoo.com/tags/C/"/>
     
   </entry>
   
