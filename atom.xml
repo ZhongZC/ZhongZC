@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://gaufoo.com/"/>
-  <updated>2018-11-23T08:42:24.398Z</updated>
+  <updated>2018-11-23T05:16:20.275Z</updated>
   <id>https://gaufoo.com/</id>
   
   <author>
@@ -16,11 +16,114 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>《DDIA》读与记（三）#下</title>
+    <link href="https://gaufoo.com/ddia-iii-ii/"/>
+    <id>https://gaufoo.com/ddia-iii-ii/</id>
+    <published>2018-11-23T11:28:00.000Z</published>
+    <updated>2018-11-23T05:16:20.275Z</updated>
+    
+    <content type="html"><![CDATA[<p>Storage and Retrieval - Transaction Processing or Analytics?</p>
+<a id="more"></a>
+<hr>
+<p>在古老的从前，database的write一般是和commercial transaction有关。到现在，transaction这个名号保留了下来，用于form一个logical unit，里面包含一系列read、write操作。</p>
+<p>有一些应用很像处理business transaction，根据key来取一些record，根据和用户的交互来插入或更新一些record，这种模式被称为<em>online transaction processing</em>（OLTP）。</p>
+<p>有一些database专注于数据分析，通常需要scan大量的数据，每条record读取少量的column，计算一些aggregate statistic（比如count、sum或者average），这种模式被称为<em>online analytic processing</em>（OLAP）。</p>
+<p>它们之间有以下差别：</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>OLTP</th>
+<th>OLAP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Main read pattern</td>
+<td>Small number of records per query, fetched by key</td>
+<td>Aggregate over large number of records</td>
+</tr>
+<tr>
+<td>Main write pattern</td>
+<td>Random-access, low-latency writes from user input</td>
+<td>Bulk import (ETL) or event stream</td>
+</tr>
+<tr>
+<td>Primarily used by</td>
+<td>End user/customer, via web application</td>
+<td>Internal analyst, for decision support</td>
+</tr>
+<tr>
+<td>What data represents</td>
+<td>Latest state of data (current point in time)</td>
+<td>History of events that happened over time</td>
+</tr>
+<tr>
+<td>Dataset size</td>
+<td>Gigabytes to terabytes</td>
+<td>Terabytes to petabytes</td>
+</tr>
+</tbody>
+</table>
+<p>以前处理OLTP和OLAP都是用同样的database，后来OLAP采用另外（separate）的database，称为<em>data warehouse</em>。</p>
+<hr>
+<h1 id="Data-Warehousing"><a href="#Data-Warehousing" class="headerlink" title="Data Warehousing"></a>Data Warehousing</h1><p>Data warehouse是不会影响到应用的OLTP的分离出去的database。它需要从所有可用的OLTP里读取数据的read-only copy。过程是：</p>
+<ul>
+<li>数据先从OLTP database中extract。</li>
+<li>transform到analysis-friendly schema。</li>
+<li>clean up并load到data warehouse中。</li>
+</ul>
+<p>整个过程被称为<em>Extract-Transform-Load</em>（ETL）。</p>
+<p><img src="/images/181123/fig3-8.png" width="800"></p>
+<h2 id="Stars-and-Snowflakes-Schemas-for-Analytics"><a href="#Stars-and-Snowflakes-Schemas-for-Analytics" class="headerlink" title="Stars and Snowflakes: Schemas for Analytics"></a>Stars and Snowflakes: Schemas for Analytics</h2><p>Analysis过程的data model不如transaction processing的那么丰富，大多数data warehouse都采用<em>star schema</em>（也叫作<em>dimensional modeling</em>）。</p>
+<p><img src="/images/181123/fig3-9.png" width="800"></p>
+<p>最中间的schema叫做<em>fact table</em>，每一行代表一件在过去特定时间里发生过的事情。fact table中有一些column是attribute，有一些则是foreign key reference。fact table中的每一row都代表一个event，而dimension则代表event的who, what, where, when, how, 和why。</p>
+<p>这种模式还有一种变体，称为<em>snowflake schema</em>，即每一dimension还会进行further broke down到subdimension，像雪花一样。Snowflake schema比star schema更normalized，但star schema对于analyst来说更加简单。</p>
+<p>Fact table在实际中通常会有超过100个column，因为每条fact需要记录非常多的细节。</p>
+<hr>
+<h1 id="Column-Oriented-Storage"><a href="#Column-Oriented-Storage" class="headerlink" title="Column-Oriented Storage"></a>Column-Oriented Storage</h1><p>尽管fact table的column非常多，但是query通常只获取4 ~ 5个column，例如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span></div><div class="line">  dim_date.weekday,</div><div class="line">  dim_product.category,</div><div class="line">  <span class="keyword">SUM</span>(fact_sales.quantity) <span class="keyword">AS</span> quantity_sold</div><div class="line"><span class="keyword">FROM</span> fact_sales</div><div class="line">  <span class="keyword">JOIN</span> dim_date <span class="keyword">ON</span> fact_sales.date_key = dim_date.date_key</div><div class="line">  <span class="keyword">JOIN</span> dim_product <span class="keyword">ON</span> fact_sales.product_sk = dim_product.product_sk</div><div class="line"><span class="keyword">WHERE</span></div><div class="line">  dim_date.year = <span class="number">2013</span> <span class="keyword">AND</span></div><div class="line">  dim_product.category <span class="keyword">IN</span> (<span class="string">'Fresh fruit'</span>, <span class="string">'Candy'</span>)</div><div class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span></div><div class="line">  dim_date.weekday, dim_product.category;</div></pre></td></tr></table></figure>
+<p>在OLTP中，通常是按row-oriented来进行存储的，一行接着一行。如果上面这块SQL从这样的存储中获取记录，storage engine仍需要将100多column加载到memory中，parse them，然后filter out不需要的column。</p>
+<p>而为了加速这个过程，有一种思想是<em>column-oriented storage</em>。不要按一行行地存储，而是每个column都保存到一起，这样使得对于特定column的query相当有效。</p>
+<p><img src="/images/181123/fig3-10.png" width="800"></p>
+<h2 id="Column-Compression"><a href="#Column-Compression" class="headerlink" title="Column Compression"></a>Column Compression</h2><p>按column来存储数据，则有机会根据column数据的同质性进行compress。以下是利用bitmap进行compress的一个例子，这种组织方式非常适合data warehouse中的这类查询：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">WHERE product_sk IN (30，68，69)</div><div class="line"></div><div class="line">WHERE product_sk = 31 AND store_sk = 3</div></pre></td></tr></table></figure></p>
+<p>只需要将bitmap进行bitwise OR或者bitwise AND即可。</p>
+<p><img src="/images/181123/fig3-11.png" width="800"></p>
+<h2 id="Sort-Order-in-Column-Storage"><a href="#Sort-Order-in-Column-Storage" class="headerlink" title="Sort Order in Column Storage"></a>Sort Order in Column Storage</h2><p>The advantage of sorted order is that it can help with compression of columns if the primary sort column does not have many distinct values. 不过对于second和third sort key将没有那么好的compress效果了。</p>
+<h3 id="Several-different-sort-orders"><a href="#Several-different-sort-orders" class="headerlink" title="Several different sort orders"></a>Several different sort orders</h3><p>由于不同的query过程受益于不同的sort order，有些厂商则同时提供按多种sort order排序好的多份replicate data。</p>
+<h2 id="Writing-to-Column-Oriented-Storage"><a href="#Writing-to-Column-Oriented-Storage" class="headerlink" title="Writing to Column-Oriented Storage"></a>Writing to Column-Oriented Storage</h2><p>Column-oriented storage, compression, and sorting all help to make those read queries faster. However, they have the downside of making writes more difficult.<br>但可以借鉴LSM-tree，所有的write先go to一个in-memory store，到差不多了再写到disk里，然后再进行merge。</p>
+<h2 id="Aggregation-Data-Cubes-and-Materialized-Views"><a href="#Aggregation-Data-Cubes-and-Materialized-Views" class="headerlink" title="Aggregation: Data Cubes and Materialized Views"></a>Aggregation: Data Cubes and Materialized Views</h2><p>Data warehouse的query经常包含aggregate function，比如SQL中的COUNT、SUM、AVG，MIN或者MAX。可以尝试cache一些aggregate值，来加速query。这种cache被称作<em>materialized view</em>。当底层数据改变，materialized view也跟着更新。</p>
+<p>Materialized的一种特例叫做<em>data cube</em>或者叫<em>OLAP cube</em>。它能将不同dimension的数据进行aggregate。</p>
+<p><img src="/images/181123/fig3-12.png" width="800"></p>
+<p>这个例子是2个dimension，aggregating data by summing。对于2个dimension的情况，人类尚能想象出来，3个dimension以上就比较困难了，但是和2个dimension的原理是一样的，都能cache一些aggregate值，从而加速query过程，而无需scan上百万行。</p>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Storage and Retrieval - Transaction Processing or Analytics?&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="读书笔记" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+      <category term="DDIA" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/DDIA/"/>
+    
+    
+      <category term="大数据" scheme="https://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="DDIA" scheme="https://gaufoo.com/tags/DDIA/"/>
+    
+      <category term="读书笔记" scheme="https://gaufoo.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
     <title>《DDIA》读与记（三）#上</title>
     <link href="https://gaufoo.com/ddia-iii-i/"/>
     <id>https://gaufoo.com/ddia-iii-i/</id>
     <published>2018-11-22T17:11:00.000Z</published>
-    <updated>2018-11-23T08:42:24.398Z</updated>
+    <updated>2018-11-23T08:42:24.000Z</updated>
     
     <content type="html"><![CDATA[<p>Storage and Retrieval - Data Structures That Power Your Database</p>
 <a id="more"></a>
@@ -148,7 +251,7 @@
     <link href="https://gaufoo.com/ddia-ii/"/>
     <id>https://gaufoo.com/ddia-ii/</id>
     <published>2018-11-20T12:26:00.000Z</published>
-    <updated>2018-11-20T14:18:32.317Z</updated>
+    <updated>2018-11-20T14:18:32.000Z</updated>
     
     <content type="html"><![CDATA[<p>Data Models and Query Languages</p>
 <a id="more"></a>
@@ -263,7 +366,7 @@
     <link href="https://gaufoo.com/ddia-i/"/>
     <id>https://gaufoo.com/ddia-i/</id>
     <published>2018-11-19T09:26:00.000Z</published>
-    <updated>2018-11-23T09:57:49.066Z</updated>
+    <updated>2018-11-23T09:57:49.000Z</updated>
     
     <content type="html"><![CDATA[<p>开始读DDIA。</p>
 <a id="more"></a>
@@ -566,7 +669,7 @@
     <link href="https://gaufoo.com/foldl-and-foldr/"/>
     <id>https://gaufoo.com/foldl-and-foldr/</id>
     <published>2018-05-19T04:58:51.000Z</published>
-    <updated>2018-05-19T09:33:40.129Z</updated>
+    <updated>2018-05-19T09:33:40.000Z</updated>
     
     <content type="html"><![CDATA[<p>阅读本文请自备纸、笔、头痛药。</p>
 <a id="more"></a>
@@ -1876,96 +1979,11 @@
       <category term="C++" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
+      <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
+    
       <category term="C" scheme="https://gaufoo.com/tags/C/"/>
-    
-      <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
-    
-      <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++11类型说明符：constexpr</title>
-    <link href="https://gaufoo.com/CppConstexpr/"/>
-    <id>https://gaufoo.com/CppConstexpr/</id>
-    <published>2017-10-24T08:00:59.000Z</published>
-    <updated>2017-10-24T11:39:43.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>关键字<code>constexpr</code>用于修饰常量表达式（const express），具体说明如下</p>
-<a id="more"></a>
-<hr>
-<h2 id="字面值常量（literal）"><a href="#字面值常量（literal）" class="headerlink" title="字面值常量（literal）"></a>字面值常量（literal）</h2><ul>
-<li>由形式和值来决定数据类型</li>
-<li>可手动指定类型<br>如：<ul>
-<li>常规<br>20 <em>—— 十进制数</em><br>0x8 <em>—— 十六进制数</em><br>“hello” <em>—— char[6]</em></li>
-<li>指定类型<br>3F <em>—— float</em><br>L’a’ <em>—— whar_t</em><br>u8”hi!” <em>—— utf-8</em><br>3.14159 <em>—— long double</em></li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2 id="常量表达式（const-express）"><a href="#常量表达式（const-express）" class="headerlink" title="常量表达式（const express）"></a>常量表达式（const express）</h2><blockquote>
-<p>The constexpr specifier declares that it is possible to evaluate the value of the function or variable at compile time. Such variables and functions can then be used where only compile time constant expressions are allowed (provided that appropriate function arguments are given). A <code>constexpr</code> specifier used in an <code>object</code> declaration implies <code>const</code>. A <code>constexpr</code> specifier used in a <code>function</code> or static member variable (since C++17) declaration implies <code>inline</code>.</p>
-</blockquote>
-<p>其中<code>literal</code>就是<code>const express</code>的一种。从文档可知，<code>const express</code>主要性质是可以在编译期间得到值。同时，<code>constexpr</code>修饰的对象自动获得<strong>常量</strong>属性，<code>constexpr</code>修饰的函数自动获得<strong>内联</strong>属性。</p>
-<hr>
-<h3 id="constexpr变量"><a href="#constexpr变量" class="headerlink" title="constexpr变量"></a>constexpr变量</h3><p>满足以下条件：</p>
-<ul>
-<li>其值必须为<code>literal</code>类型。</li>
-<li>必须能立即初始化，意味着所有的初始化方法，包括所有隐式转换、调用构造函数等，都必须为<code>const express</code>。</li>
-</ul>
-<p>特别需要说明的是指针变量，<code>constexpr</code>类型的指针变量有以下的几种存在方式：</p>
-<ul>
-<li><p>指向nullptr</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> *p = <span class="literal">nullptr</span>;</div></pre></td></tr></table></figure>
-</li>
-<li><p>指向全局变量、static变量，因其地址不会改变</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> i = <span class="number">0</span>;	<span class="comment">// i 定义在函数外部，是一个全局变量</span></div><div class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> *p = &amp;i;	<span class="comment">// 正确</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>另外：<br>虽然<code>constexpr</code>和<code>const</code>在某些方面有点相似，但<code>constexpr int *q = nullptr;</code>的含义却与<code>const int *q = nullptr;</code>的有些出入，前者<code>q</code>不能修改，后者<code>*q</code>不能修改。若需要指向常量的常量指针，可以这样定义：<code>constexpr const int *q = nullptr;</code>，这样<code>q</code>和<code>*q</code>就都是不可修改的常量了。</p>
-</li>
-</ul>
-<hr>
-<h3 id="constexpr函数"><a href="#constexpr函数" class="headerlink" title="constexpr函数"></a>constexpr函数</h3><p><code>constexpr</code>函数会被隐式地<code>inline</code>。<br>满足以下条件：</p>
-<ul>
-<li>形参和返回值都得为<code>literal</code>类型</li>
-<li>只能有一条<code>return</code>语句</li>
-</ul>
-<p>例：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">constexpr</span> <span class="keyword">int</span> <span class="title">new_sz</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> <span class="number">42</span>;&#125;</div><div class="line"><span class="function">cosntexpr size_t <span class="title">scale</span><span class="params">(<span class="keyword">size_t</span> cnt)</span> </span>&#123;<span class="keyword">return</span> new_sz() * cnt;&#125;</div><div class="line"><span class="keyword">int</span> arr[scale(<span class="number">2</span>)];	<span class="comment">// 正确，scale(2)是const express</span></div><div class="line"><span class="keyword">int</span> n = <span class="number">2</span>;</div><div class="line"><span class="keyword">int</span> arr2[scale(n)];	<span class="comment">// 错误，scale(n)不是const express</span></div></pre></td></tr></table></figure></p>
-<hr>
-<h3 id="constexpr类"><a href="#constexpr类" class="headerlink" title="constexpr类"></a>constexpr类</h3><p>满足以下条件：</p>
-<ul>
-<li>该类是聚合类，所谓聚合类：<ul>
-<li>所有成员都是public</li>
-<li>无显式定义的构造函数</li>
-<li>成员无初始值</li>
-<li>无基类，无virtual函数</li>
-</ul>
-</li>
-<li>若不是聚合类，需要满足<ul>
-<li>数据成员必须都为<code>literal</code>类型（函数成员无须是）</li>
-<li>至少含有一个<code>constexpr</code>构造函数</li>
-<li>只能使用默认的析构函数</li>
-</ul>
-</li>
-</ul>
-<p>例：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Debug</span></span></div><div class="line"><span class="class">&#123;</span></div><div class="line">  <span class="keyword">public</span>:</div><div class="line">    constexpr Debug(bool b = true) : hw(b), io(b), other(b) &#123;&#125;</div><div class="line">    constexpr Debug(bool h, bool i, bool o) : hw(h), io(i), other(o) &#123;&#125;</div><div class="line">    <span class="function"><span class="keyword">constexpr</span> <span class="keyword">bool</span> <span class="title">any</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> hw || io || other; &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">set_io</span><span class="params">(<span class="keyword">bool</span> b)</span> </span>&#123; io = b; &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">set_hw</span><span class="params">(<span class="keyword">bool</span> b)</span> </span>&#123; hw = b; &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">set_other</span><span class="params">(<span class="keyword">bool</span> b)</span> </span>&#123; other = b; &#125;</div><div class="line"></div><div class="line">  <span class="keyword">private</span>:</div><div class="line">    <span class="keyword">bool</span> hw;</div><div class="line">    <span class="keyword">bool</span> io;</div><div class="line">    <span class="keyword">bool</span> other;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">constexpr</span> Debug <span class="title">io_sub</span><span class="params">(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>)</span></span>;</div><div class="line">    <span class="keyword">if</span> (io_sub.any())</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cerr</span> &lt;&lt; <span class="string">"print appropriate error messages"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;关键字&lt;code&gt;constexpr&lt;/code&gt;用于修饰常量表达式（const express），具体说明如下&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="编程" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
-    
-      <category term="C++" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
-    
-    
-      <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
-    
-      <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
     
   </entry>
   

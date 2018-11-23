@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="函数式编程,Haskell," />
+  <meta name="keywords" content="大数据,DDIA,读书笔记," />
 
 
 
@@ -94,20 +94,24 @@
 
 
 
-<meta name="description" content="阅读本文请自备纸、笔、头痛药。">
-<meta name="keywords" content="函数式编程,Haskell">
+<meta name="description" content="Storage and Retrieval - Transaction Processing or Analytics?">
+<meta name="keywords" content="大数据,DDIA,读书笔记">
 <meta property="og:type" content="article">
-<meta property="og:title" content="fold right与fold left的相互转化">
-<meta property="og:url" content="https://gaufoo.com/foldl-and-foldr/index.html">
+<meta property="og:title" content="《DDIA》读与记（三）#下">
+<meta property="og:url" content="https://gaufoo.com/ddia-iii-ii/index.html">
 <meta property="og:site_name" content="苟富">
-<meta property="og:description" content="阅读本文请自备纸、笔、头痛药。">
+<meta property="og:description" content="Storage and Retrieval - Transaction Processing or Analytics?">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://gaufoo.com/images/180519/20180519131632.jpg">
-<meta property="og:updated_time" content="2018-05-19T09:33:40.000Z">
+<meta property="og:image" content="https://gaufoo.com/images/181123/fig3-8.png">
+<meta property="og:image" content="https://gaufoo.com/images/181123/fig3-9.png">
+<meta property="og:image" content="https://gaufoo.com/images/181123/fig3-10.png">
+<meta property="og:image" content="https://gaufoo.com/images/181123/fig3-11.png">
+<meta property="og:image" content="https://gaufoo.com/images/181123/fig3-12.png">
+<meta property="og:updated_time" content="2018-11-23T05:16:20.275Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="fold right与fold left的相互转化">
-<meta name="twitter:description" content="阅读本文请自备纸、笔、头痛药。">
-<meta name="twitter:image" content="https://gaufoo.com/images/180519/20180519131632.jpg">
+<meta name="twitter:title" content="《DDIA》读与记（三）#下">
+<meta name="twitter:description" content="Storage and Retrieval - Transaction Processing or Analytics?">
+<meta name="twitter:image" content="https://gaufoo.com/images/181123/fig3-8.png">
 
 
 
@@ -137,13 +141,13 @@
 
 
 
-  <link rel="canonical" href="https://gaufoo.com/foldl-and-foldr/"/>
+  <link rel="canonical" href="https://gaufoo.com/ddia-iii-ii/"/>
 
 
 
 
 
-  <title>fold right与fold left的相互转化 | 苟富</title>
+  <title>《DDIA》读与记（三）#下 | 苟富</title>
   
 
 
@@ -290,7 +294,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://gaufoo.com/foldl-and-foldr/">
+    <link itemprop="mainEntityOfPage" href="https://gaufoo.com/ddia-iii-ii/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Gaufoo">
@@ -307,7 +311,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">fold right与fold left的相互转化</h2>
+          <h2 class="post-title" itemprop="name headline">《DDIA》读与记（三）#下</h2>
         
 
         <div class="post-meta">
@@ -319,8 +323,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-19T12:58:51+08:00">
-                2018-05-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-23T19:28:00+08:00">
+                2018-11-23
               </time>
             
 
@@ -342,8 +346,19 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/函数式编程/" itemprop="url" rel="index">
-                    <span itemprop="name">函数式编程</span>
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/DDIA/" itemprop="url" rel="index">
+                    <span itemprop="name">DDIA</span>
                   </a>
                 </span>
 
@@ -373,7 +388,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  852 字
+                  1,046 字
                 </span>
               
 
@@ -398,34 +413,80 @@
       
 
       
-        <p>阅读本文请自备纸、笔、头痛药。</p>
+        <p>Storage and Retrieval - Transaction Processing or Analytics?</p>
 <a id="more"></a>
 <hr>
-<h1 id="序"><a href="#序" class="headerlink" title="序"></a>序</h1><p><code>fold left</code>和<code>fold right</code>是函数式编程里表达遍历求值的其中一种重要表达式。在此不过多介绍，本文假设读者熟悉并能熟练使用<code>fold left</code>与<code>fold right</code>进行遍历求值。<br>问题来源于Scala小红书里一个小习题。大致意思是，如何利用<code>fold left</code>来实现<code>fold right</code>。一般人，包括我，第一直觉就是反转list，然后flip一下二元函数。</p>
-<figure><img src="/images/180519/20180519131632.jpg" width="300"><figcaption>Fig.1 - 我和我的小伙伴都是这样想的</figcaption></figure>
-
-<p>但是原文中还说了一句：</p>
-<blockquote>
-<p>用fold left来实现fold right很有用，因为可以用尾递归的方式实现，意味着无论列表有多长都不会产生栈溢出。</p>
-</blockquote>
-<p>那用reverse显然是不符合题意的，因为会导致栈溢出。好奇心驱使着我去寻找这个问题的正确解答，果不其然，我又被惊艳到了。</p>
+<p>在古老的从前，database的write一般是和commercial transaction有关。到现在，transaction这个名号保留了下来，用于form一个logical unit，里面包含一系列read、write操作。</p>
+<p>有一些应用很像处理business transaction，根据key来取一些record，根据和用户的交互来插入或更新一些record，这种模式被称为<em>online transaction processing</em>（OLTP）。</p>
+<p>有一些database专注于数据分析，通常需要scan大量的数据，每条record读取少量的column，计算一些aggregate statistic（比如count、sum或者average），这种模式被称为<em>online analytic processing</em>（OLAP）。</p>
+<p>它们之间有以下差别：</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>OLTP</th>
+<th>OLAP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Main read pattern</td>
+<td>Small number of records per query, fetched by key</td>
+<td>Aggregate over large number of records</td>
+</tr>
+<tr>
+<td>Main write pattern</td>
+<td>Random-access, low-latency writes from user input</td>
+<td>Bulk import (ETL) or event stream</td>
+</tr>
+<tr>
+<td>Primarily used by</td>
+<td>End user/customer, via web application</td>
+<td>Internal analyst, for decision support</td>
+</tr>
+<tr>
+<td>What data represents</td>
+<td>Latest state of data (current point in time)</td>
+<td>History of events that happened over time</td>
+</tr>
+<tr>
+<td>Dataset size</td>
+<td>Gigabytes to terabytes</td>
+<td>Terabytes to petabytes</td>
+</tr>
+</tbody>
+</table>
+<p>以前处理OLTP和OLAP都是用同样的database，后来OLAP采用另外（separate）的database，称为<em>data warehouse</em>。</p>
 <hr>
-<h1 id="解"><a href="#解" class="headerlink" title="解"></a>解</h1><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// 用foldl实现foldr</div><div class="line"><span class="title">foldr</span> :: <span class="type">Foldable</span> t =&gt; (a -&gt; b -&gt; b) -&gt; b -&gt; t a -&gt; b</div><div class="line"><span class="title">foldr</span> f z xs = foldl (\g x -&gt; \z -&gt; g (f x z)) id xs z</div><div class="line"></div><div class="line">// 用foldr实现foldl</div><div class="line"><span class="title">foldl</span> :: <span class="type">Foldable</span> t =&gt; (b -&gt; a -&gt; b) -&gt; b -&gt; t a -&gt; b</div><div class="line"><span class="title">foldl</span> f z xs = foldr (\x g -&gt; \z -&gt; g (f z x)) id xs z</div></pre></td></tr></table></figure>
-<p>如果能一下子看懂并理解，敬你是个天才。一开始看不懂、被绕晕也是正常的。欢迎参考我接下来的解析。</p>
+<h1 id="Data-Warehousing"><a href="#Data-Warehousing" class="headerlink" title="Data Warehousing"></a>Data Warehousing</h1><p>Data warehouse是不会影响到应用的OLTP的分离出去的database。它需要从所有可用的OLTP里读取数据的read-only copy。过程是：</p>
+<ul>
+<li>数据先从OLTP database中extract。</li>
+<li>transform到analysis-friendly schema。</li>
+<li>clean up并load到data warehouse中。</li>
+</ul>
+<p>整个过程被称为<em>Extract-Transform-Load</em>（ETL）。</p>
+<p><img src="/images/181123/fig3-8.png" width="800"></p>
+<h2 id="Stars-and-Snowflakes-Schemas-for-Analytics"><a href="#Stars-and-Snowflakes-Schemas-for-Analytics" class="headerlink" title="Stars and Snowflakes: Schemas for Analytics"></a>Stars and Snowflakes: Schemas for Analytics</h2><p>Analysis过程的data model不如transaction processing的那么丰富，大多数data warehouse都采用<em>star schema</em>（也叫作<em>dimensional modeling</em>）。</p>
+<p><img src="/images/181123/fig3-9.png" width="800"></p>
+<p>最中间的schema叫做<em>fact table</em>，每一行代表一件在过去特定时间里发生过的事情。fact table中有一些column是attribute，有一些则是foreign key reference。fact table中的每一row都代表一个event，而dimension则代表event的who, what, where, when, how, 和why。</p>
+<p>这种模式还有一种变体，称为<em>snowflake schema</em>，即每一dimension还会进行further broke down到subdimension，像雪花一样。Snowflake schema比star schema更normalized，但star schema对于analyst来说更加简单。</p>
+<p>Fact table在实际中通常会有超过100个column，因为每条fact需要记录非常多的细节。</p>
 <hr>
-<h1 id="形状"><a href="#形状" class="headerlink" title="形状"></a>形状</h1><h2 id="fold-left"><a href="#fold-left" class="headerlink" title="fold left"></a>fold left</h2><p><code>foldl f z [1..10]</code>的求值形状如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(f (f (f (f (f (f (f (f (f (f z 1) 2) 3) 4) 5) 6) 7) 8) 9) 10)</div></pre></td></tr></table></figure></p>
-<h2 id="fold-right"><a href="#fold-right" class="headerlink" title="fold right"></a>fold right</h2><p><code>foldr f z [1..10]</code>的求值形状如下；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(f 1 (f 2 (f 3 (f 4 (f 5 (f 6 (f 7 (f 8 (f 9 (f 10 z))))))))))</div></pre></td></tr></table></figure></p>
-<p>上述用<code>foldl</code>实现<code>foldr</code>本质上就是利用<code>foldl</code>生成<code>foldr</code>那样的一个求值形状（闭包），然后apply到初始值z上，求值那一长串得到最后结果，而用<code>foldr</code>实现<code>foldl</code>亦同理。</p>
-<p>以<code>foldl</code>实现<code>foldr</code>为例。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">    foldr f z xs = foldl (\g x -&gt; \z -&gt; g (f x z)) id xs z</div><div class="line">    foldr (:) [] [1..5] = </div><div class="line">    foldl (\g x -&gt; \z -&gt; g ((:) x z)) id                                         [1..5] []</div><div class="line">&lt;=&gt; foldl (\g x -&gt; \z -&gt; g ((:) x z)) (\z -&gt; id (1 : z))                         [2..5] []</div><div class="line">&lt;=&gt; foldl (\g x -&gt; \z -&gt; g ((:) x z)) (\z -&gt; id (1 : (2 : z)))                   [3..5] []</div><div class="line">&lt;=&gt; foldl (\g x -&gt; \z -&gt; g ((:) x z)) (\z -&gt; id (1 : (2 : (3 : z))))             [4..5] []</div><div class="line">&lt;=&gt; foldl (\g x -&gt; \z -&gt; g ((:) x z)) (\z -&gt; id (1 : (2 : (3 : (4 : z)))))       [5]    []</div><div class="line">&lt;=&gt; foldl (\g x -&gt; \z -&gt; g ((:) x z)) (\z -&gt; id (1 : (2 : (3 : (4 : (5 : z)))))) []     []</div><div class="line">&lt;=&gt; (\z -&gt; id (1 : (2 : (3 : (4 : (5 : z)))))) []</div><div class="line">&lt;=&gt; id (1 : (2 : (3 : (4 : (5 : [])))))</div><div class="line">&lt;=&gt; [1, 2, 3, 4, 5]</div></pre></td></tr></table></figure></p>
-<p>以上应该能够为你建立起一些intuition了，不过对于我来说其实还不够，更重要的是建立起对<code>fold</code>的求值结果是一个函数的直观感受。</p>
-<hr>
-<h1 id="重新审视"><a href="#重新审视" class="headerlink" title="重新审视"></a>重新审视</h1><h2 id="fold-right-to-fold-left"><a href="#fold-right-to-fold-left" class="headerlink" title="fold right to fold left"></a>fold right to fold left</h2><p>现在重新看<code>foldl</code>的正常递归实现：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="title">foldl</span> :: <span class="type">Foldable</span> t =&gt; (b -&gt; a -&gt; b) -&gt; b -&gt; t a -&gt; b</div><div class="line"><span class="title">foldl</span> f z [] = z</div><div class="line"><span class="title">foldl</span> f z (x:xs) = foldl f (f z x) xs</div></pre></td></tr></table></figure></p>
-<p>换一种等价写法（关键）<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="title">foldl</span> f z xs = g xs z</div><div class="line">  <span class="keyword">where</span> g []     z = z</div><div class="line">        g (x:xs) z = g xs (f z x)</div></pre></td></tr></table></figure></p>
-<p>再进一步<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="title">foldl</span> f z xs = g xs z</div><div class="line">  <span class="keyword">where</span> g []     = \z -&gt; z = id</div><div class="line">        g (x:xs) = \z -&gt; g xs (f z x)</div></pre></td></tr></table></figure></p>
-<p>假设我们有这样一个<code>cons</code>实现：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="title">cons</span> :: [a] -&gt; [a]</div><div class="line"><span class="title">cons</span> []     = []</div><div class="line"><span class="title">cons</span> (x:xs) = x : (cons xs)</div></pre></td></tr></table></figure></p>
-<p><code>cons</code>用<code>foldr</code>实现：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">cons</span> = foldr (\x r -&gt; x : r) []</div><div class="line">// 其中r替换原来的cons xs</div></pre></td></tr></table></figure></p>
-<p>经过对比，<code>g</code>一样可以用<code>foldr</code>实现：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">g</span> = foldr (\x r -&gt; \z -&gt; r (f z x)) id</div><div class="line">// 其中r替换原来的g xs</div></pre></td></tr></table></figure></p>
-<p>因此，将<code>g</code>代入<code>foldl f z xs = g xs z</code>，得到：<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">foldl</span> f z xs = foldr (\x r -&gt; \z -&gt; r (f z x)) id xs z</div></pre></td></tr></table></figure></p>
+<h1 id="Column-Oriented-Storage"><a href="#Column-Oriented-Storage" class="headerlink" title="Column-Oriented Storage"></a>Column-Oriented Storage</h1><p>尽管fact table的column非常多，但是query通常只获取4 ~ 5个column，例如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span></div><div class="line">  dim_date.weekday,</div><div class="line">  dim_product.category,</div><div class="line">  <span class="keyword">SUM</span>(fact_sales.quantity) <span class="keyword">AS</span> quantity_sold</div><div class="line"><span class="keyword">FROM</span> fact_sales</div><div class="line">  <span class="keyword">JOIN</span> dim_date <span class="keyword">ON</span> fact_sales.date_key = dim_date.date_key</div><div class="line">  <span class="keyword">JOIN</span> dim_product <span class="keyword">ON</span> fact_sales.product_sk = dim_product.product_sk</div><div class="line"><span class="keyword">WHERE</span></div><div class="line">  dim_date.year = <span class="number">2013</span> <span class="keyword">AND</span></div><div class="line">  dim_product.category <span class="keyword">IN</span> (<span class="string">'Fresh fruit'</span>, <span class="string">'Candy'</span>)</div><div class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span></div><div class="line">  dim_date.weekday, dim_product.category;</div></pre></td></tr></table></figure>
+<p>在OLTP中，通常是按row-oriented来进行存储的，一行接着一行。如果上面这块SQL从这样的存储中获取记录，storage engine仍需要将100多column加载到memory中，parse them，然后filter out不需要的column。</p>
+<p>而为了加速这个过程，有一种思想是<em>column-oriented storage</em>。不要按一行行地存储，而是每个column都保存到一起，这样使得对于特定column的query相当有效。</p>
+<p><img src="/images/181123/fig3-10.png" width="800"></p>
+<h2 id="Column-Compression"><a href="#Column-Compression" class="headerlink" title="Column Compression"></a>Column Compression</h2><p>按column来存储数据，则有机会根据column数据的同质性进行compress。以下是利用bitmap进行compress的一个例子，这种组织方式非常适合data warehouse中的这类查询：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">WHERE product_sk IN (30，68，69)</div><div class="line"></div><div class="line">WHERE product_sk = 31 AND store_sk = 3</div></pre></td></tr></table></figure></p>
+<p>只需要将bitmap进行bitwise OR或者bitwise AND即可。</p>
+<p><img src="/images/181123/fig3-11.png" width="800"></p>
+<h2 id="Sort-Order-in-Column-Storage"><a href="#Sort-Order-in-Column-Storage" class="headerlink" title="Sort Order in Column Storage"></a>Sort Order in Column Storage</h2><p>The advantage of sorted order is that it can help with compression of columns if the primary sort column does not have many distinct values. 不过对于second和third sort key将没有那么好的compress效果了。</p>
+<h3 id="Several-different-sort-orders"><a href="#Several-different-sort-orders" class="headerlink" title="Several different sort orders"></a>Several different sort orders</h3><p>由于不同的query过程受益于不同的sort order，有些厂商则同时提供按多种sort order排序好的多份replicate data。</p>
+<h2 id="Writing-to-Column-Oriented-Storage"><a href="#Writing-to-Column-Oriented-Storage" class="headerlink" title="Writing to Column-Oriented Storage"></a>Writing to Column-Oriented Storage</h2><p>Column-oriented storage, compression, and sorting all help to make those read queries faster. However, they have the downside of making writes more difficult.<br>但可以借鉴LSM-tree，所有的write先go to一个in-memory store，到差不多了再写到disk里，然后再进行merge。</p>
+<h2 id="Aggregation-Data-Cubes-and-Materialized-Views"><a href="#Aggregation-Data-Cubes-and-Materialized-Views" class="headerlink" title="Aggregation: Data Cubes and Materialized Views"></a>Aggregation: Data Cubes and Materialized Views</h2><p>Data warehouse的query经常包含aggregate function，比如SQL中的COUNT、SUM、AVG，MIN或者MAX。可以尝试cache一些aggregate值，来加速query。这种cache被称作<em>materialized view</em>。当底层数据改变，materialized view也跟着更新。</p>
+<p>Materialized的一种特例叫做<em>data cube</em>或者叫<em>OLAP cube</em>。它能将不同dimension的数据进行aggregate。</p>
+<p><img src="/images/181123/fig3-12.png" width="800"></p>
+<p>这个例子是2个dimension，aggregating data by summing。对于2个dimension的情况，人类尚能想象出来，3个dimension以上就比较困难了，但是和2个dimension的原理是一样的，都能cache一些aggregate值，从而加速query过程，而无需scan上百万行。</p>
 <hr>
 
       
@@ -447,7 +508,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://gaufoo.com/foldl-and-foldr/" title="fold right与fold left的相互转化">https://gaufoo.com/foldl-and-foldr/</a>
+    <a href="https://gaufoo.com/ddia-iii-ii/" title="《DDIA》读与记（三）#下">https://gaufoo.com/ddia-iii-ii/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -462,9 +523,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/函数式编程/" rel="tag"># 函数式编程</a>
+            <a href="/tags/大数据/" rel="tag"># 大数据</a>
           
-            <a href="/tags/Haskell/" rel="tag"># Haskell</a>
+            <a href="/tags/DDIA/" rel="tag"># DDIA</a>
+          
+            <a href="/tags/读书笔记/" rel="tag"># 读书笔记</a>
           
         </div>
       
@@ -477,8 +540,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/parser2/" rel="next" title="用Haskell构建Parser Combinator（二）">
-                <i class="fa fa-chevron-left"></i> 用Haskell构建Parser Combinator（二）
+              <a href="/ddia-iii-i/" rel="next" title="《DDIA》读与记（三）#上">
+                <i class="fa fa-chevron-left"></i> 《DDIA》读与记（三）#上
               </a>
             
           </div>
@@ -486,10 +549,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/spark_bench/" rel="prev" title="采用Hibench在本地对Spark Streaming进行benchmark">
-                采用Hibench在本地对Spark Streaming进行benchmark <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -675,7 +734,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#序"><span class="nav-number">1.</span> <span class="nav-text">序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解"><span class="nav-number">2.</span> <span class="nav-text">解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#形状"><span class="nav-number">3.</span> <span class="nav-text">形状</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#fold-left"><span class="nav-number">3.1.</span> <span class="nav-text">fold left</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fold-right"><span class="nav-number">3.2.</span> <span class="nav-text">fold right</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重新审视"><span class="nav-number">4.</span> <span class="nav-text">重新审视</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#fold-right-to-fold-left"><span class="nav-number">4.1.</span> <span class="nav-text">fold right to fold left</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Data-Warehousing"><span class="nav-number">1.</span> <span class="nav-text">Data Warehousing</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Stars-and-Snowflakes-Schemas-for-Analytics"><span class="nav-number">1.1.</span> <span class="nav-text">Stars and Snowflakes: Schemas for Analytics</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Column-Oriented-Storage"><span class="nav-number">2.</span> <span class="nav-text">Column-Oriented Storage</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Column-Compression"><span class="nav-number">2.1.</span> <span class="nav-text">Column Compression</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sort-Order-in-Column-Storage"><span class="nav-number">2.2.</span> <span class="nav-text">Sort Order in Column Storage</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Several-different-sort-orders"><span class="nav-number">2.2.1.</span> <span class="nav-text">Several different sort orders</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Writing-to-Column-Oriented-Storage"><span class="nav-number">2.3.</span> <span class="nav-text">Writing to Column-Oriented Storage</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Aggregation-Data-Cubes-and-Materialized-Views"><span class="nav-number">2.4.</span> <span class="nav-text">Aggregation: Data Cubes and Materialized Views</span></a></li></ol></li></ol></div>
             
 
           </div>
