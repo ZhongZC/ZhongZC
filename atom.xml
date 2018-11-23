@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://gaufoo.com/"/>
-  <updated>2018-11-23T08:27:00.171Z</updated>
+  <updated>2018-11-23T08:42:24.398Z</updated>
   <id>https://gaufoo.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://gaufoo.com/ddia-iii-i/"/>
     <id>https://gaufoo.com/ddia-iii-i/</id>
     <published>2018-11-22T17:11:00.000Z</published>
-    <updated>2018-11-23T08:27:00.171Z</updated>
+    <updated>2018-11-23T08:42:24.398Z</updated>
     
     <content type="html"><![CDATA[<p>Storage and Retrieval - Data Structures That Power Your Database</p>
 <a id="more"></a>
@@ -66,12 +66,15 @@
 <hr>
 <h3 id="SSTables-and-LSM-Trees"><a href="#SSTables-and-LSM-Trees" class="headerlink" title="SSTables and LSM-Trees"></a>SSTables and LSM-Trees</h3><p>通过改造segment file，使其sorted by key，就是Sorted String Table了，简称SSTable。有以下好处：</p>
 <ul>
-<li><p>Merging segments is simple and efficient. Merge过程很像mergesort。最终只需要保留最新的key-value。</p>
-</li>
-<li><p>无需保存所有的key在内存，只需要留一些key作为路标，找到区间后，再到相应的segment file里去scan。如果每条记录都是定长的，甚至可以用binary search。</p>
-</li>
-<li><p>一个范围内的记录可以组织成一个Block，然后进行compress，一能saving disk space，二能reduces the I/O bandwidth use.</p>
-</li>
+<li>Merging segments is simple and efficient. Merge过程很像mergesort。最终只需要保留最新的key-value。</li>
+</ul>
+<p><img src="/images/181123/fig3-4.png" width="600/"></p>
+<ul>
+<li>无需保存所有的key在内存，只需要留一些key作为路标，找到区间后，再到相应的segment file里去scan。如果每条记录都是定长的，甚至可以用binary search。</li>
+</ul>
+<p><img src="/images/181123/fig3-5.png" width="600/"></p>
+<ul>
+<li>一个范围内的记录可以组织成一个Block，然后进行compress，一能saving disk space，二能reduces the I/O bandwidth use.</li>
 </ul>
 <h4 id="Constucting-and-maintaining-SSTables"><a href="#Constucting-and-maintaining-SSTables" class="headerlink" title="Constucting and maintaining SSTables"></a>Constucting and maintaining SSTables</h4><p>首先在内存中构建sorted的记录，比如用red-black tress或AVL trees。用这种数据结构，插入key时可以保留sorted order。</p>
 <p>storage engine具体操作：</p>
@@ -145,7 +148,7 @@
     <link href="https://gaufoo.com/ddia-ii/"/>
     <id>https://gaufoo.com/ddia-ii/</id>
     <published>2018-11-20T12:26:00.000Z</published>
-    <updated>2018-11-20T14:18:32.000Z</updated>
+    <updated>2018-11-20T14:18:32.317Z</updated>
     
     <content type="html"><![CDATA[<p>Data Models and Query Languages</p>
 <a id="more"></a>
@@ -260,7 +263,7 @@
     <link href="https://gaufoo.com/ddia-i/"/>
     <id>https://gaufoo.com/ddia-i/</id>
     <published>2018-11-19T09:26:00.000Z</published>
-    <updated>2018-11-19T09:30:57.000Z</updated>
+    <updated>2018-11-19T09:30:57.545Z</updated>
     
     <content type="html"><![CDATA[<p>开始读DDIA。</p>
 <a id="more"></a>
@@ -563,7 +566,7 @@
     <link href="https://gaufoo.com/foldl-and-foldr/"/>
     <id>https://gaufoo.com/foldl-and-foldr/</id>
     <published>2018-05-19T04:58:51.000Z</published>
-    <updated>2018-05-19T09:33:40.000Z</updated>
+    <updated>2018-05-19T09:33:40.129Z</updated>
     
     <content type="html"><![CDATA[<p>阅读本文请自备纸、笔、头痛药。</p>
 <a id="more"></a>
@@ -1526,11 +1529,11 @@
       <category term="汇编" scheme="https://gaufoo.com/categories/%E6%B1%87%E7%BC%96/"/>
     
     
-      <category term="C" scheme="https://gaufoo.com/tags/C/"/>
-    
       <category term="原理" scheme="https://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
       <category term="汇编" scheme="https://gaufoo.com/tags/%E6%B1%87%E7%BC%96/"/>
+    
+      <category term="C" scheme="https://gaufoo.com/tags/C/"/>
     
   </entry>
   
@@ -1873,11 +1876,11 @@
       <category term="C++" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
     
     
-      <category term="C" scheme="https://gaufoo.com/tags/C/"/>
-    
       <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
       <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
+    
+      <category term="C" scheme="https://gaufoo.com/tags/C/"/>
     
   </entry>
   
