@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://gaufoo.com/"/>
-  <updated>2018-11-20T14:18:32.000Z</updated>
+  <updated>2018-11-23T08:27:00.171Z</updated>
   <id>https://gaufoo.com/</id>
   
   <author>
@@ -14,6 +14,131 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>《DDIA》读与记（三）#上</title>
+    <link href="https://gaufoo.com/ddia-iii-i/"/>
+    <id>https://gaufoo.com/ddia-iii-i/</id>
+    <published>2018-11-22T17:11:00.000Z</published>
+    <updated>2018-11-23T08:27:00.171Z</updated>
+    
+    <content type="html"><![CDATA[<p>Storage and Retrieval - Data Structures That Power Your Database</p>
+<a id="more"></a>
+<hr>
+<h2 id="Log"><a href="#Log" class="headerlink" title="Log"></a>Log</h2><p>最简单的数据库，用bash脚本写就：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="function"><span class="title">db_set</span></span> () &#123;</div><div class="line">    <span class="built_in">echo</span> <span class="string">"<span class="variable">$1</span>,<span class="variable">$2</span>"</span> &gt;&gt; database</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="title">db_get</span></span> () &#123;</div><div class="line">    grep <span class="string">"^<span class="variable">$1</span>,"</span> database | sed -e <span class="string">"s/^<span class="variable">$1</span>,//"</span> | tail -n 1</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>存取方式：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ db_set 123456 <span class="string">'&#123;"name":"London","attractions":["Big Ben","London Eye"]&#125;'</span></div><div class="line"></div><div class="line">$ db_set 42 <span class="string">'&#123;"name":"San Francisco","attractions":["Golden Gate Bridge"]&#125;'</span></div><div class="line"></div><div class="line">$ db_get 42</div><div class="line">&#123;<span class="string">"name"</span>:<span class="string">"San Francisco"</span>,<span class="string">"attractions"</span>:[<span class="string">"Golden Gate Bridge"</span>]&#125;</div></pre></td></tr></table></figure></p>
+<p>更新value，直接append，<code>db_get</code>函数只取最后一条：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ db_set 42 <span class="string">'&#123;"name":"San Francisco","attractions":["Exploratorium"]&#125;'</span> </div><div class="line"></div><div class="line">$ db_get 42</div><div class="line">&#123;<span class="string">"name"</span>:<span class="string">"San Francisco"</span>,<span class="string">"attractions"</span>:[<span class="string">"Exploratorium"</span>]&#125;</div><div class="line"></div><div class="line">$ cat database</div><div class="line">123456,&#123;<span class="string">"name"</span>:<span class="string">"London"</span>,<span class="string">"attractions"</span>:[<span class="string">"Big Ben"</span>,<span class="string">"London Eye"</span>]&#125;</div><div class="line">42,&#123;<span class="string">"name"</span>:<span class="string">"San Francisco"</span>,<span class="string">"attractions"</span>:[<span class="string">"Golden Gate Bridge"</span>]&#125;</div><div class="line">42,&#123;<span class="string">"name"</span>:<span class="string">"San Francisco"</span>,<span class="string">"attractions"</span>:[<span class="string">"Exploratorium"</span>]&#125;</div></pre></td></tr></table></figure></p>
+<p>记录是直接append到文件中去的，类似这样的database，我们称该文件为append-only data file，叫做<em>log</em>。<br>在上面的bash数据库中，<code>db_get</code>很慢，复杂度为O(n)，但优势在于文件的append很快，因此<code>db_set</code>非常efficient。</p>
+<hr>
+<h2 id="Index"><a href="#Index" class="headerlink" title="Index"></a>Index</h2><p>可以用额外的一种数据结构<em>index</em>，来帮助从database中有效地（efficiently）查找value。而这种额外的（additional）的结构会带来额外的开销，特别是在写入时。作为well-chosen的index可能会加速读查找（read queries），但index是必然会减慢读（write）的。所以database默认不会有index，需要用户手动选择使用index。</p>
+<h3 id="Hash-Indexes"><a href="#Hash-Indexes" class="headerlink" title="Hash Indexes"></a>Hash Indexes</h3><p>每条记录（data）都直接append到文件中，实际可以在内存中维护一个hash map，每个key映射到（map to）文件中记录（data）所处在的byte offset。</p>
+<p>当添加新纪录时，一边更新内存中的hash map，一边将key-value append到文件中。更新记录时，一边更新内存中该key的value，which is 最新记录的offset。</p>
+<p><img src="/images/181123/fig3-1.png" width="600/"></p>
+<p>不过用hash map的一个前提是，所有的key能够完全装进内存中，所以适用于经常用key来更新value，很多write操作的场景，而不同的（distinct）key不能太多，否则可能不能完全装进内存。</p>
+<p>由于所有的write都是append到文件中的，此时可以break the log into <em>segments</em> of a certain size，当segment file到达这个size以后，关闭该文件，然后再写入新的segment file。每个segment file对应内存中一个hash map。</p>
+<p>到了一个合适的时间点，就可以进行compact了。多个segment file compact到新的segment file，并构建新的hash map。compact的过程同一条记录保留最新的记录即可，旧的可以直接discard。并且这个compaction可以在后台线程（background thread）进行，不会影响正常的读写请求。</p>
+<p><img src="/images/181123/fig3-3.png" width="600/"></p>
+<p>当需要查找value时，首先check the most recent segment’s hash map，如果没有，则check the second-most-recent segment，and so on.</p>
+<p>有一些常见的实际做法in practice：</p>
+<ul>
+<li><p>File format<br>可以用binary format，而不是CSV。</p>
+</li>
+<li><p>Deleting records<br>删除记录时，需要append一个特殊的deletion record，merge的时候就可以直接discard掉记录。</p>
+</li>
+<li><p>Crash recovery<br>万一内存中的hash map不见了，可以通过segment重新构建，也可以为hash map存些snapshot。</p>
+</li>
+<li><p>Partially written records<br>添加checksums，识别因为crash而产生的halfway。</p>
+</li>
+<li><p>Concurrency control<br>虽然由于写有严格顺序，只能有一个写进程，但是读进程可以有很多个，因为segment都是immutable，并发很简单。</p>
+</li>
+</ul>
+<p>为什么不update the file in place：</p>
+<ul>
+<li>Append是sequential write operation，比random write要快得多。</li>
+<li>Concurrency和Crash recovery很轻松。</li>
+<li>合并旧段可以避免数据文件随着时间的推移而分散的问题。</li>
+</ul>
+<p>hash table index的缺点：</p>
+<ul>
+<li>必须在内存</li>
+<li>range queries太慢</li>
+</ul>
+<hr>
+<h3 id="SSTables-and-LSM-Trees"><a href="#SSTables-and-LSM-Trees" class="headerlink" title="SSTables and LSM-Trees"></a>SSTables and LSM-Trees</h3><p>通过改造segment file，使其sorted by key，就是Sorted String Table了，简称SSTable。有以下好处：</p>
+<ul>
+<li><p>Merging segments is simple and efficient. Merge过程很像mergesort。最终只需要保留最新的key-value。</p>
+</li>
+<li><p>无需保存所有的key在内存，只需要留一些key作为路标，找到区间后，再到相应的segment file里去scan。如果每条记录都是定长的，甚至可以用binary search。</p>
+</li>
+<li><p>一个范围内的记录可以组织成一个Block，然后进行compress，一能saving disk space，二能reduces the I/O bandwidth use.</p>
+</li>
+</ul>
+<h4 id="Constucting-and-maintaining-SSTables"><a href="#Constucting-and-maintaining-SSTables" class="headerlink" title="Constucting and maintaining SSTables"></a>Constucting and maintaining SSTables</h4><p>首先在内存中构建sorted的记录，比如用red-black tress或AVL trees。用这种数据结构，插入key时可以保留sorted order。</p>
+<p>storage engine具体操作：</p>
+<ul>
+<li>When a write comes in, 将key-value加到in-memory tree，也称memtable。</li>
+<li>当memtable大小达到threshold，将它写到SSTable中。</li>
+<li>查找记录时，先在memtable找，然后从most recent one-disk segment找，然后在next-older segment, etc.</li>
+<li>merging和compaction过程可以在background。</li>
+</ul>
+<h4 id="Makeing-an-LSM-tree-out-of-SSTables"><a href="#Makeing-an-LSM-tree-out-of-SSTables" class="headerlink" title="Makeing an LSM-tree out of SSTables"></a>Makeing an LSM-tree out of SSTables</h4><p>Originally this indexing structure was described by Patrick O’Neil et al. under the name <em>Log-Structured Merge-Tree</em> (or LSM-Tree), building on earlier work on log-structured filesystems. Storage engines that are based on this principle of merging and compacting sorted files often called LSM storage engines.</p>
+<h4 id="Performance-optimizations"><a href="#Performance-optimizations" class="headerlink" title="Performance optimizations"></a>Performance optimizations</h4><p>确定一个key不存在于database的过程，是比较慢的。需要先找memtable，再是所有segment，最后才能确定key不存在。可以采用额外的Bloom filters来优化这个过程。它能告诉你一个key保证不在database中，这样相比之前就节省了相当多的disk read。<br>而有关determine the order and timing of how SSTables are compacted and merged的策略，有两种最常见做法：</p>
+<ul>
+<li>size-tiered：新的和小的SSTables持续地合并到老的和大的SSTables。</li>
+<li>leveled compaction：the key range is split up into smaller SSTables and older data is moved into separate “levels,” which allows the compaction to proceed more incrementally and use less disk space.</li>
+</ul>
+<hr>
+<h3 id="B-Trees"><a href="#B-Trees" class="headerlink" title="B-Trees"></a>B-Trees</h3><p>B-Trees和SSTables一样，都能让key-value pairs根据sorted key来组织，都能高效地支持key value lookup和range queries。</p>
+<p>log-structured index是将database切分成多个variable-size的segment。相反，B-Trees将database切分成fixed-size的block或者page，一般是4KB大小，和底层硬件关联密切。</p>
+<p>每个page都可以由address或者location来identified，因此page直接可以相互refer to，on disk instead of in memory. </p>
+<p><img src="/images/181123/fig3-6.png" width="600/"></p>
+<p>查询从root page开始，每个page包含很多key和到child page的reference，每个child page代表一个连续范围内的key。名词branching factor代表一个page里包含的reference数，比如上图的branching factor是6，In practice，这个数字一般是几百。</p>
+<p>当需要更新一个value时，需要search到包含该key的leaf page，改变value，然后将page写回到disk。当需要add一个新的key，需要找到相应的range并加入到该page，如果空间不足以accommodate新的key，则需要split到两个half-full page，然后parent page需要跟着更新。此算法保证了整个tree的balanced。</p>
+<p><img src="/images/181123/fig3-7.png" width="600/"></p>
+<h4 id="Make-B-trees-reliable"><a href="#Make-B-trees-reliable" class="headerlink" title="Make B-trees reliable"></a>Make B-trees reliable</h4><p>和LSM-trees的append不同，B-trees modify files in place. 任何修改都要覆写之前的文件。当child page需要split时，还需要同时改写parent page，所有的这些覆写和重写，都存在crash的可能，这将导致严重的问题。</p>
+<p>为了解决这个问题，一般采用一个额外的在disk上的data structure，<em>write-ahead log</em>（WAL，也叫redo log），是一个append-only file，以供crash发生时的恢复。in place还带来concurrency问题，需要用<em>latches</em>（lightweight locks）来保证一致性。</p>
+<h4 id="B-tree-optimizations"><a href="#B-tree-optimizations" class="headerlink" title="B-tree optimizations"></a>B-tree optimizations</h4><ul>
+<li>不覆写，不维护WAL，而采用<em>copy-on-write scheme</em>，不再in place，全部写到新的page，连同parent page。</li>
+<li>B-tree可以重新组织，让leaf page在disk中相互靠近。但是在B-tree中维护这种结构比在LSM-Tree中难得多。</li>
+<li>额外的指针连接两个leaf page，这样有助于优化scan过程，而不用回到parent page。</li>
+<li>B-tree的变种借助一些log-structured的思想来减少disk seek。</li>
+</ul>
+<hr>
+<h3 id="Comparing-B-Trees-and-LSM-Trees"><a href="#Comparing-B-Trees-and-LSM-Trees" class="headerlink" title="Comparing B-Trees and LSM-Trees"></a>Comparing B-Trees and LSM-Trees</h3><ul>
+<li>LSM-trees的优势<br>LSM-trees由于SSTable file只需要sequential write，而拥有更低的write amplification。B-tree因为page中有很多fragmentation是未被使用的，而LSM-trees则紧凑得多。</li>
+<li>LSM-trees的缺点<br>compaction的过程占用了disk的bandwidth，which is稀缺资源。如果compaction配置得不好，还有可能compaction不充分而导致read过程需要寻找太多segment file，从而使得表现很差。B-tree其中一个优势是，对于transaction semantics有相当直接的实现：用lock就完事儿了。</li>
+</ul>
+<hr>
+<h3 id="Other-Indexing-Structures"><a href="#Other-Indexing-Structures" class="headerlink" title="Other Indexing Structures"></a>Other Indexing Structures</h3><h4 id="Storing-values-within-the-index"><a href="#Storing-values-within-the-index" class="headerlink" title="Storing values within the index"></a>Storing values within the index</h4><p>value可以直接存储，或者在别处的row的一个reference。对于后一种情况，存储row的地方叫做<em>heap file</em>。当更新值时，如果新row大小不超过原大小，可以直接覆写in place，如果超过了，要么重写reference到新的heap file，要么在原来的row处放上一个forwarding pointer。对于直接和index一起存储的row，称为<em>clustered index</em>。也有折衷的方案，某些column和index一起存，某些column则采用引用，称为<em>covering index</em>。</p>
+<h4 id="Multi-column-indexes"><a href="#Multi-column-indexes" class="headerlink" title="Multi-column indexes"></a>Multi-column indexes</h4><p>有一种Multi-dimensional indexes可以进行多维同时range queries：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> restaurants <span class="keyword">WHERE</span> latitude &gt; <span class="number">51.4946</span> <span class="keyword">AND</span> latitude &lt; <span class="number">51.5079</span> </div><div class="line">                           <span class="keyword">AND</span> longitude &gt; <span class="number">-0.1162</span> <span class="keyword">AND</span> longitude &lt; <span class="number">-0.1004</span>;</div></pre></td></tr></table></figure></p>
+<p>这样的查询对于B-tree或者LSM-tree都不是很efficient，需要多个步骤来查询。而有些index可以同时从多维narrow down。</p>
+<h4 id="Full-text-search-and-fuzzy-indexes"><a href="#Full-text-search-and-fuzzy-indexes" class="headerlink" title="Full-text search and fuzzy indexes"></a>Full-text search and fuzzy indexes</h4><p>上面提到的index都是精确的key来查找精确的value。现实中也有similar key，比如拼错的单词。需要用edit distance的offset来决定匹配值。</p>
+<h4 id="Keeping-everything-in-memory"><a href="#Keeping-everything-in-memory" class="headerlink" title="Keeping everything in memory"></a>Keeping everything in memory</h4><p>之前提到的data structure都是面向disk的，实际上也有面向RAM的结构。在RAM中的结构要比在disk中灵活得多，而且增删查改更快更有效。</p>
+<p>有关易失性，可以replicate到其他机器，可以在disk中保留snapshot，可以在disk写log以供恢复。</p>
+<p>比较反直觉的一件事是，disk-based存储比in-memory慢的原因不是因为需要从disk中获取，事实上只要RAM够大，cache能够帮助你完全不需要从disk中读写。实际情况是disk-based慢在了encoding过程。</p>
+<p>Redis为各种数据结构（如优先级队列和集合）提供了类似数据库的接口。因为它将所有数据保存在内存中，所以它的实现相对简单。</p>
+<p>利用anti-caching技术可以在memory不足时将data转到disk上，有非常多类似的研究in-memory databases，而不再用disk-centric architecture。</p>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Storage and Retrieval - Data Structures That Power Your Database&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="读书笔记" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+      <category term="DDIA" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/DDIA/"/>
+    
+    
+      <category term="大数据" scheme="https://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="DDIA" scheme="https://gaufoo.com/tags/DDIA/"/>
+    
+      <category term="读书笔记" scheme="https://gaufoo.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
   
   <entry>
     <title>《DDIA》读与记（二）</title>
@@ -480,9 +605,9 @@
       <category term="函数式编程" scheme="https://gaufoo.com/categories/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
     
-      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
+    
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -561,9 +686,9 @@
     
       <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
-      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
+    
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -693,9 +818,9 @@
       <category term="计算原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
+    
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -861,9 +986,9 @@
     
       <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
-      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
+    
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -929,9 +1054,9 @@
     
       <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
     
-      <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
-    
       <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
     
   </entry>
   
@@ -1020,9 +1145,9 @@
     
       <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
     
-      <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
-    
       <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
     
   </entry>
   
@@ -1101,9 +1226,9 @@
     
       <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
     
-      <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
-    
       <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
     
   </entry>
   
@@ -1838,189 +1963,6 @@
       <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
       <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>编译原理学习笔记（二）</title>
-    <link href="https://gaufoo.com/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
-    <id>https://gaufoo.com/编译原理学习笔记（二）/</id>
-    <published>2017-09-16T09:46:00.000Z</published>
-    <updated>2017-10-27T01:53:29.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>记录</p>
-<a id="more"></a>
-<hr>
-<h2 id="正则表达式-Regular-Expression，RE"><a href="#正则表达式-Regular-Expression，RE" class="headerlink" title="正则表达式 ( Regular Expression，RE )"></a>正则表达式 ( Regular Expression，RE )</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ul>
-<li>是一种用来描述正则语言的更紧凑的表示方法。</li>
-<li>正则表达式可以由较小的正则表达式按照特定规则<strong>递归</strong>地构建。</li>
-<li>每个正则表达式 <strong>r</strong> 定义(表示)一个语言，记为 <strong>L(r)</strong> 。</li>
-</ul>
-<hr>
-<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><ul>
-<li>ε是一个RE，L(ε) = {ε}</li>
-<li>如果 a∈∑，则a是一个RE，L(a) = {a}</li>
-<li>假设 <strong>r</strong> 和 <strong>s</strong> 都是RE，表示的语言分别是 <strong>L(r)</strong> 和 <strong>L(s)</strong> ，则<ul>
-<li>r|s 是一个RE，L( r|s ) = L(r)∪L(s)</li>
-<li>rs 是一个RE，L( rs ) = L(r) L(s)</li>
-<li>r* 是一个RE，L( r* )= (L(r))*</li>
-<li>(r) 是一个RE，L( (r) ) = L(r)</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p>C语言无符号整数的RE</p>
-<ul>
-<li>十进制整数的RE - (1|…|9)(0|…|9)*|0</li>
-<li>八进制整数的RE - 0(0|1|2|3|4|5|6|7)(0|1|2|3|4|5|6|7)*</li>
-<li>十六进制整数的RE - 0x(0|1|…|9|a|…| f |A|…|F)(0|…|9|a|…| f |A|…|F )*</li>
-</ul>
-<hr>
-<h3 id="代数定律"><a href="#代数定律" class="headerlink" title="代数定律"></a>代数定律</h3><table>
-<thead>
-<tr>
-<th>定律</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>r｜s = s｜r</td>
-<td>｜是可以交换的</td>
-</tr>
-<tr>
-<td>r｜( s｜t )=( r｜s )｜t</td>
-<td>｜是可结合的</td>
-</tr>
-<tr>
-<td>r(s t)=( r s)t</td>
-<td>连接是可结合的</td>
-</tr>
-<tr>
-<td>r ( s｜t )= r s｜r t ; &nbsp;&nbsp;&nbsp; ( s｜t ) r = sr｜t r</td>
-<td>连接对｜是可分配的</td>
-</tr>
-<tr>
-<td>εr = rε = r</td>
-<td>ε 是连接的单位元</td>
-</tr>
-<tr>
-<td>r* = ( r｜ε )*</td>
-<td>闭包中一定包含 ε</td>
-</tr>
-<tr>
-<td>r* * = r*</td>
-<td>* 具有幂等性</td>
-</tr>
-</tbody>
-</table>
-<hr>
-<h2 id="单词的识别"><a href="#单词的识别" class="headerlink" title="单词的识别"></a>单词的识别</h2><h3 id="有穷自动机-Finite-Automata，FA"><a href="#有穷自动机-Finite-Automata，FA" class="headerlink" title="有穷自动机 ( Finite Automata，FA )"></a>有穷自动机 ( Finite Automata，FA )</h3><ul>
-<li>具有一系列<strong>离散的输入输出信息</strong>和<strong>有穷数目的内部状态</strong>。</li>
-<li>系统只需要根据<strong>当前所处的状态</strong>和<strong>当前面临的输入信息</strong>就可以决定系统的<strong>后继行为</strong>。</li>
-<li>每当系统处理了当前的输入后，系统的内部状态也将<strong>发生改变</strong>。</li>
-</ul>
-<h4 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h4><p><img src="/images/20170916182343.jpg" width="500"></p>
-<ul>
-<li>输入带(input tape)：用来存放输入符号串。</li>
-<li>读头(head )：从左向右逐个读取输入符号，不能修改（只读）、不能往返移动。</li>
-<li>有穷控制器( finite control )：具有有穷个状态数，根据<strong>当前的状态</strong>和<strong>当前输入符号</strong>控制转入<strong>下一状态</strong>。</li>
-</ul>
-<h4 id="表示：转换图-Transition-Graph"><a href="#表示：转换图-Transition-Graph" class="headerlink" title="表示：转换图 ( Transition Graph )"></a>表示：转换图 ( Transition Graph )</h4><p><img src="/images/20170916183203.jpg" width="500"></p>
-<ul>
-<li>结点：FA的状态<ul>
-<li>初始状态（开始状态）：<strong>只有一个</strong>，由start箭头指向。</li>
-<li>终止状态（接收状态）：可以有多个，用<strong>双圈</strong>表示。</li>
-</ul>
-</li>
-<li>带标记的有向边：如果对于输入 <strong>a</strong> ，存在一个从状态 <strong>p</strong> 到状态 <strong>q</strong> 的转换，就在 <strong>p</strong> 、 <strong>q</strong> 之间画一条有向边，并标记上 <strong>a</strong> 。</li>
-</ul>
-<h4 id="接收的语言"><a href="#接收的语言" class="headerlink" title="接收的语言"></a>接收的语言</h4><ul>
-<li>给定输入串 <strong>x</strong> ，如果存在一个对应于串 <strong>x</strong> 的从初始状态到某个终止状态的转换序列，则称串 <strong>x</strong> 被该FA接收。</li>
-<li>由一个有穷自动机M接收的所有串构成的集合称为是该<strong>FA定义（或接收）的语言</strong>，记为 <strong>L( M )</strong>。</li>
-</ul>
-<p><img src="/images/20170916183203.jpg" width="500"></p>
-<blockquote>
-<p>L(M) = 所有以abb结尾的字母表{a, b}上的串的集合</p>
-</blockquote>
-<h4 id="最长子串匹配原则"><a href="#最长子串匹配原则" class="headerlink" title="最长子串匹配原则"></a>最长子串匹配原则</h4><p>当输入串的多个前缀与一个或多个模式匹配时，总是选择最长的前缀进行匹配。</p>
-<hr>
-<h3 id="有穷自动机的分类"><a href="#有穷自动机的分类" class="headerlink" title="有穷自动机的分类"></a>有穷自动机的分类</h3><ul>
-<li>确定的FA (Deterministic finite automata, DFA)</li>
-<li>非确定的FA (Nondeterministic finite automata, NFA)</li>
-</ul>
-<h4 id="DFA"><a href="#DFA" class="headerlink" title="DFA"></a>DFA</h4><p>对任意的字符，最多有一个状态可以转移。</p>
-<p><strong>M = ( S，Σ ，δ，s0，F )</strong></p>
-<ul>
-<li>S：有穷状态集。</li>
-<li>Σ：输入字母表，即输入符号集合。假设 <strong>ε</strong> 不是 Σ 中的元素。</li>
-<li>δ：将S×Σ映射到S的<strong>转换函数</strong>。∀s∈S, a∈Σ, <strong>δ(s,a)</strong> 表示从状态s出发，沿着标记为a的边所能到达的状态。</li>
-<li>s0：开始状态 (或初始状态)，s0∈ S。</li>
-<li>F：接收状态（或终止状态）集合，F⊆ S。</li>
-</ul>
-<p><img src="/images/DFA.png" width="500"></p>
-<blockquote>
-<p>r = (a|b)*abb</p>
-</blockquote>
-<hr>
-<h4 id="NFA"><a href="#NFA" class="headerlink" title="NFA"></a>NFA</h4><p>对任意的字符，有多于一个状态可以转移。</p>
-<p><strong>M = ( S，Σ ，δ，s0，F )</strong></p>
-<ul>
-<li>S：有穷状态集。</li>
-<li>Σ：输入字母表，即输入字母表。假设 <strong>ε</strong> 不是 Σ 中的元素。</li>
-<li>δ：将S×Σ映射到2^S的<strong>转换函数</strong>。s∈S, a∈Σ, <strong>δ(s,a)</strong>表示从状态s出发，沿着标记为a的边所能到达的状态集合。</li>
-<li>s0：开始状态 (或初始状态)，s0∈ S。</li>
-<li>F：接收状态（或终止状态）集合，F⊆ S。</li>
-</ul>
-<p><img src="/images/NFA.png" width="500"></p>
-<blockquote>
-<p>r = (a|b)*abb</p>
-</blockquote>
-<hr>
-<h4 id="等价性"><a href="#等价性" class="headerlink" title="等价性"></a>等价性</h4><blockquote>
-<p>对任何非确定的有穷自动机N ，存在定义同一语言的确定的有穷自动机D<br>对任何确定的有穷自动机D ，存在定义同一语言的非确定的有穷自动机N</p>
-</blockquote>
-<hr>
-<h4 id="主要区别"><a href="#主要区别" class="headerlink" title="主要区别"></a>主要区别</h4><ul>
-<li>对于DFA，一个特定的符号输入，有且只能得到一个状态，而NFA就有可能得到一个状态集。因此NFA引擎必须记录所有的可能路径。</li>
-<li>DFA比较快，但不提供Backtrack（回溯）功能，NFA比较慢，但提供了Backtrack功能。</li>
-</ul>
-<hr>
-<h4 id="DFA的算法实现"><a href="#DFA的算法实现" class="headerlink" title="DFA的算法实现"></a>DFA的算法实现</h4><p>由于DFA对于特定输入，状态是确定的，因此实现起来很方便。</p>
-<ul>
-<li>输入：以文件结束符<strong>eof</strong>结尾的字符串<strong>x</strong>。DFA <strong>D</strong>的开始状态<strong>s0</strong>，接收状态集<strong>F</strong>，转换函数<strong>move</strong>。</li>
-<li>输出：如果<strong>D</strong>接收<strong>x</strong>，则回答“yes”，否则回答“no”。</li>
-<li>方法：将下述算法应用于输入串<strong>x</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">s = s0;</div><div class="line">c = next_char();</div><div class="line">while (c != eof) &#123;</div><div class="line">	s = move(s, c);</div><div class="line">	c = next_char();</div><div class="line">&#125;</div><div class="line">if (s is in F)</div><div class="line">	return &quot;yes&quot;;</div><div class="line">else</div><div class="line">	return &quot;no&quot;;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<hr>
-<h3 id="RE转换成NFA"><a href="#RE转换成NFA" class="headerlink" title="RE转换成NFA"></a>RE转换成NFA</h3><h4 id="ε"><a href="#ε" class="headerlink" title="ε"></a>ε</h4><p><img src="/images/20171024144829.png" width="400"></p>
-<h4 id="字母表Σ中符号a"><a href="#字母表Σ中符号a" class="headerlink" title="字母表Σ中符号a"></a>字母表Σ中符号a</h4><p><img src="/images/20171024144915.png" width="400"></p>
-<h4 id="r-r1r2"><a href="#r-r1r2" class="headerlink" title="r = r1r2"></a>r = r1r2</h4><p><img src="/images/20171024145410.png" width="500"></p>
-<h4 id="r-r1-r2"><a href="#r-r1-r2" class="headerlink" title="r = r1|r2"></a>r = r1|r2</h4><p><img src="/images/20171024145504.png" width="400"></p>
-<h4 id="r-r1"><a href="#r-r1" class="headerlink" title="r = (r1)*"></a>r = (r1)*</h4><p><img src="/images/20171024145520.png" width="200"></p>
-<hr>
-<blockquote>
-<p>r=(a|b)*abb 对应的NFA</p>
-</blockquote>
-<p><img src="/images/20171024150046.png" width="500"></p>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;记录&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
-    
-      <category term="编译原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
-    
-      <category term="原理" scheme="https://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
-    
-      <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
