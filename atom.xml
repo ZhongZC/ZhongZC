@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://gaufoo.com/"/>
-  <updated>2018-11-23T05:16:20.275Z</updated>
+  <updated>2018-11-26T16:01:42.491Z</updated>
   <id>https://gaufoo.com/</id>
   
   <author>
@@ -16,11 +16,127 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>《DDIA》读与记（四）#上</title>
+    <link href="https://gaufoo.com/ddia-iv-i/"/>
+    <id>https://gaufoo.com/ddia-iv-i/</id>
+    <published>2018-11-25T13:32:00.000Z</published>
+    <updated>2018-11-26T16:01:42.491Z</updated>
+    
+    <content type="html"><![CDATA[<p>Encoding and Evolution - Formats for Encoding Data</p>
+<a id="more"></a>
+<hr>
+<p>在前面已经讨论过如何处理变化，但是对于relational database来说，通常所有data都用一个schema，很难处理变化。相反，<em>schema-on-read</em>的database不会强制schema，从而可以容纳不同时间点写入的format不同的新老数据。</p>
+<p>在format变更了以后，application code通常也需要跟着改变。但现实情况是，不是所有的application code能够立马跟着变化。这就意味着一个app中，会存在新老版本的code，和新老版本format的data，从而引出两个概念：</p>
+<ul>
+<li><p>Backward compatibility：newer code能够读取older code写下的data。</p>
+</li>
+<li><p>Forward compatibility：older code能够读取newer code写下的data。</p>
+</li>
+</ul>
+<p>Backward compatibility通常比较容易实现，通常只需要explicitly处理older format。但Forward compatibility要求更高，需要older code能够忽略newer format相较于older format的额外添加的东西。</p>
+<hr>
+<p>数据的representation通常有两种情况：</p>
+<ul>
+<li>在memory中的object, struct, list, array, hash table, tree等等。</li>
+<li>需要写入file或者用network传输的数据，需要encode成some kind of self-contained sequence of bytes。</li>
+</ul>
+<p>The translation from the in-memory representation to a byte sequence is called <em>encoding</em>，and the reverse is called <em>decoding</em>。</p>
+<h2 id="Language-Specific-Formats"><a href="#Language-Specific-Formats" class="headerlink" title="Language-Specific Formats"></a>Language-Specific Formats</h2><p>Many programming languages come with built-in support for encoding in-memory objects into byte sequences. 比如臭名昭著的java.io.Serializable，Ruby的Marshal，Python的pickle，Java第三方库Kryo。</p>
+<p>虽然这些库很方便，但问题是：</p>
+<ul>
+<li>只能绑定到特定编程语言</li>
+<li>通常decoding的过程有初始化任意类的对象的能力，attacker可以利用这个特性，构造特定的sequence byte来破坏app，很不安全</li>
+<li>一般不考虑Forward compatibility和Backward compatibility</li>
+<li>有的库encode和decode性能很差</li>
+</ul>
+<hr>
+<h2 id="JSON-XML-and-Binary-Variants"><a href="#JSON-XML-and-Binary-Variants" class="headerlink" title="JSON, XML, and Binary Variants"></a>JSON, XML, and Binary Variants</h2><p>JSON，XML，CSV等都是textual format，因此是human-readable的，而它们的问题是：</p>
+<ul>
+<li>Encoding of numbers有许多的问题，比如对64位数字的支持，对浮点数的支持</li>
+<li>JSON、XML支持Unicode字符串，但不支持binary string</li>
+<li>尽管XML、JSON的schema是opinional support的，但是很难掌握</li>
+<li>CSV的转义语义比较模糊</li>
+</ul>
+<h3 id="Binary-encoding"><a href="#Binary-encoding" class="headerlink" title="Binary encoding"></a>Binary encoding</h3><p>举例record如下：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"userName"</span>: <span class="string">"Martin"</span>,</div><div class="line">    <span class="attr">"favoriteNumber"</span>: <span class="number">1337</span>,</div><div class="line">    <span class="attr">"interests"</span>: [<span class="string">"daydreaming"</span>, <span class="string">"hacking"</span>]</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>JSON的其中一种binary encoding例子为MessagePack，其长度为66个byte，比原始JSON的81个bytes占用空间小一些。从下图可以看出编码了field的type，保留了field name。</p>
+<p><img src="/images/181125/fig4-1.png" width="800"></p>
+<hr>
+<h2 id="Thrift-and-Protocol-Buffers"><a href="#Thrift-and-Protocol-Buffers" class="headerlink" title="Thrift and Protocol Buffers"></a>Thrift and Protocol Buffers</h2><p>Apache Thrift和Protocol Buffers是类似原理的binary encoding库。</p>
+<p>Thrift和Protocol Buffer都需要指定一个schema。比如Thrift interface definition language（IDL）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">struct Person &#123;</div><div class="line">    1: required string       userName,</div><div class="line">    2: optional i64          favoriteNumber,</div><div class="line">    3: optional list&lt;string&gt; interests</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Protocal Buffers的schema定义如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">message Person &#123;</div><div class="line">    required string user_name       = 1;</div><div class="line">    optional int64  favorite_number = 2;</div><div class="line">    repeated string interests       = 3;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Thrift和Protocol Buffer都有代码生成工具，能够利用schema生成不同编程语言的应用代码，供用户直接encode和decode记录（records）。</p>
+<p>Thrift的其中一种encoding format为<em>BinaryProtocol</em>，需要59个byte：</p>
+<p><img src="/images/181125/fig4-2.png" width="800"></p>
+<p>Thrift的另一种encoding format为<em>CompactProtocol</em>，需要34个byte：</p>
+<p><img src="/images/181125/fig4-3.png" width="800"></p>
+<p>Protocol Buffers的encoding format，需要33个byte：</p>
+<p><img src="/images/181125/fig4-4.png" width="800"></p>
+<p>CompactProtocol和Protocol Buffers的相似之处：</p>
+<ul>
+<li>它们都采用field tag</li>
+<li>都对数字有压缩处理</li>
+<li>都有编码datatype</li>
+</ul>
+<p>对于schema里的<em>required</em>或者<em>optional</em>，在encoded byte中并没有指示出来，可以进行runtime check。</p>
+<h3 id="Field-tags-and-schema-evolution"><a href="#Field-tags-and-schema-evolution" class="headerlink" title="Field tags and schema evolution"></a>Field tags and schema evolution</h3><p>Each field is identifed by its tag number and annotated with a datatype. 它们是这样保证compatibility的：</p>
+<ul>
+<li>当旧的代码读取新的record时，可以直接忽略不需要的tag number，datatype annotation提示需要跳过多少个byte。</li>
+<li>新的代码可以很简单地读取旧的record，唯一的细节是：if you add a new field, you cannot make it required.</li>
+<li>当删除一个field时，只能删除optional的field，而且这个field的tag number不能再使用，因为旧代码有可能还用这个tag number，会导致冲突。</li>
+</ul>
+<h3 id="Datatypes-and-schema-evolution"><a href="#Datatypes-and-schema-evolution" class="headerlink" title="Datatypes and schema evolution"></a>Datatypes and schema evolution</h3><p>当改变field的datatype时，有可能会损失精度和get truncated。</p>
+<p>Protocol Buffers没有list和array类的datatype，而是用repeated表示list，这样有利于optional更换成repeated。新代码读取旧record时，该list field的长度为0或1。旧代码读取新record时，会读取list field中的最后一条。</p>
+<p>Thrift中有list datatype，所以没有Protocol Buffers对evolution的良好支持，但是它能够支持nested lists。</p>
+<hr>
+<h2 id="Avro"><a href="#Avro" class="headerlink" title="Avro"></a>Avro</h2><p>Apache Avro是另一种binary encoding format，是由于Thrift不适用于Hadoop的场景而发明的。</p>
+<p>Avro同样也需要schema，Avro IDL：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">record Person &#123;</div><div class="line">    string                userName;</div><div class="line">    union &#123; null, long &#125;  favoriteNumber = null;</div><div class="line">    array&lt;string&gt;         interests;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>等价的JSON表示：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"type"</span>: <span class="string">"record"</span>,</div><div class="line">    <span class="attr">"name"</span>: <span class="string">"Person"</span>,</div><div class="line">    <span class="attr">"fields"</span>: [</div><div class="line">        &#123;<span class="attr">"name"</span>: <span class="string">"userName"</span>, <span class="attr">"type"</span>: <span class="string">"string"</span>&#125;,</div><div class="line">        &#123;<span class="attr">"name"</span>: <span class="string">"favoriteNumber"</span>, <span class="attr">"type"</span>: [<span class="string">"null"</span>, <span class="string">"long"</span>], <span class="attr">"default"</span>: <span class="literal">null</span>&#125;,</div><div class="line">        &#123;<span class="attr">"name"</span>: <span class="string">"interests"</span>, <span class="attr">"type"</span>: &#123;<span class="attr">"type"</span>: <span class="string">"array"</span>, <span class="attr">"items"</span>: <span class="string">"string"</span>&#125;</div><div class="line">    ] </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Encoded byte，需要32个byte：</p>
+<p><img src="/images/181125/fig4-5.png" width="800"></p>
+<p>和Apache Thrift和Protocol Buffers最大的不同就是这里不再用tag number，没有编码datatype annotation。为了Parse这个binary data，需要有schema，然后按顺序go through the fields. This means that the binary data can only be decoded correctly if the code reading the data is using the <em>exact same schema</em> as the code that wrote the data.</p>
+<h3 id="The-writer’s-schema-and-the-reader’s-schema"><a href="#The-writer’s-schema-and-the-reader’s-schema" class="headerlink" title="The writer’s schema and the reader’s schema"></a>The writer’s schema and the reader’s schema</h3><p>With Avro，encode data需要<em>writer’s schema</em>，decode data需要<em>reader’s schema</em>. The key idea with Avro is that the writer’s schema and the reader’s schema don’t have to be the same – they only need to be compatible.</p>
+<p>只要同时有两个schema，schema resolutin matches up the field by field name. 应用会resolve这些不同：</p>
+<p><img src="/images/181125/fig4-6.png" width="800"></p>
+<h3 id="Schema-evolution-rules"><a href="#Schema-evolution-rules" class="headerlink" title="Schema evolution rules"></a>Schema evolution rules</h3><p>Only add or remove a field that has a default value. To use <code>null</code>, you have to use a <em>union type</em>. For example, <code>union {null, long, string} field;</code>. You can only use <code>null</code> as a default value if it is one of the braches of the union.</p>
+<p>Changing the datatype of a field is possible, provided that Avro can convert the type.</p>
+<h3 id="But-what-is-the-writer’s-schema"><a href="#But-what-is-the-writer’s-schema" class="headerlink" title="But what is the writer’s schema?"></a>But what is the writer’s schema?</h3><p>Reader该如何知道writer’s schema：</p>
+<ul>
+<li>Large file with lots of records:<br>include the writer’s schema once at the beginning of the file.</li>
+<li>Database with individually written records:<br>include a version number at the beginning of every encoded record &amp;<br>fetch the writer’s schema for that for that version number for the database</li>
+<li>Sending records over a network connection<br>negotiate the schema version on connection setup</li>
+</ul>
+<h3 id="Dynamically-generated-schemas"><a href="#Dynamically-generated-schemas" class="headerlink" title="Dynamically generated schemas"></a>Dynamically generated schemas</h3><p>Avro可以通过relational databasede field来dynamically generated schemas. 反观Apache Thrift和Protocol Buffers，则需要手动更新，而且还需要非常小心地处理field tag number的冲突问题。</p>
+<h3 id="Code-generation-and-dynamically-typed-languages"><a href="#Code-generation-and-dynamically-typed-languages" class="headerlink" title="Code generation and dynamically typed languages"></a>Code generation and dynamically typed languages</h3><p>Avro can be used just as well without any code generation. If you have an object container file (which embeds the writer’s schema), you can simply open it using the Avro library and look at the data in the same way as you could look at a JSON file. The file is self-describing since it includes all the necessary metadata.</p>
+<hr>
+<h2 id="The-Merits-of-Schemas"><a href="#The-Merits-of-Schemas" class="headerlink" title="The Merits of Schemas"></a>The Merits of Schemas</h2><p>Protocol Buffers, Thrift, and Avro都使用schema去描述binary encoding format。实现简单，使用简单，所以使用很广泛。Schema evolution既可以带来如同schema-on-read JSON databases般的灵活性，又能保证数据的准确。</p>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Encoding and Evolution - Formats for Encoding Data&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="读书笔记" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+      <category term="DDIA" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/DDIA/"/>
+    
+    
+      <category term="大数据" scheme="https://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="DDIA" scheme="https://gaufoo.com/tags/DDIA/"/>
+    
+      <category term="读书笔记" scheme="https://gaufoo.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
     <title>《DDIA》读与记（三）#下</title>
     <link href="https://gaufoo.com/ddia-iii-ii/"/>
     <id>https://gaufoo.com/ddia-iii-ii/</id>
     <published>2018-11-23T11:28:00.000Z</published>
-    <updated>2018-11-23T05:16:20.275Z</updated>
+    <updated>2018-11-23T05:16:20.000Z</updated>
     
     <content type="html"><![CDATA[<p>Storage and Retrieval - Transaction Processing or Analytics?</p>
 <a id="more"></a>
@@ -123,7 +239,7 @@
     <link href="https://gaufoo.com/ddia-iii-i/"/>
     <id>https://gaufoo.com/ddia-iii-i/</id>
     <published>2018-11-22T17:11:00.000Z</published>
-    <updated>2018-11-23T08:42:24.000Z</updated>
+    <updated>2018-11-23T08:42:24.399Z</updated>
     
     <content type="html"><![CDATA[<p>Storage and Retrieval - Data Structures That Power Your Database</p>
 <a id="more"></a>
@@ -251,7 +367,7 @@
     <link href="https://gaufoo.com/ddia-ii/"/>
     <id>https://gaufoo.com/ddia-ii/</id>
     <published>2018-11-20T12:26:00.000Z</published>
-    <updated>2018-11-20T14:18:32.000Z</updated>
+    <updated>2018-11-20T14:18:32.317Z</updated>
     
     <content type="html"><![CDATA[<p>Data Models and Query Languages</p>
 <a id="more"></a>
@@ -366,7 +482,7 @@
     <link href="https://gaufoo.com/ddia-i/"/>
     <id>https://gaufoo.com/ddia-i/</id>
     <published>2018-11-19T09:26:00.000Z</published>
-    <updated>2018-11-23T09:57:49.000Z</updated>
+    <updated>2018-11-23T09:57:49.066Z</updated>
     
     <content type="html"><![CDATA[<p>开始读DDIA。</p>
 <a id="more"></a>
@@ -669,7 +785,7 @@
     <link href="https://gaufoo.com/foldl-and-foldr/"/>
     <id>https://gaufoo.com/foldl-and-foldr/</id>
     <published>2018-05-19T04:58:51.000Z</published>
-    <updated>2018-05-19T09:33:40.000Z</updated>
+    <updated>2018-05-19T09:33:40.129Z</updated>
     
     <content type="html"><![CDATA[<p>阅读本文请自备纸、笔、头痛药。</p>
 <a id="more"></a>
@@ -711,9 +827,9 @@
       <category term="函数式编程" scheme="https://gaufoo.com/categories/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
     
-      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
+    
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -792,9 +908,9 @@
     
       <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
-      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
+    
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -924,9 +1040,9 @@
       <category term="计算原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
+    
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -1092,9 +1208,9 @@
     
       <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
-      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
-    
       <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
+    
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -1160,9 +1276,9 @@
     
       <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
     
-      <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
-    
       <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
     
   </entry>
   
@@ -1251,9 +1367,9 @@
     
       <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
     
-      <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
-    
       <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
     
   </entry>
   
@@ -1332,9 +1448,9 @@
     
       <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
     
-      <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
-    
       <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
     
   </entry>
   
@@ -1905,85 +2021,6 @@
       <category term="原理" scheme="https://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
     
       <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++中三种实现可变参数的方法</title>
-    <link href="https://gaufoo.com/Cpp%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0/"/>
-    <id>https://gaufoo.com/Cpp可变参数/</id>
-    <published>2017-10-24T12:20:56.000Z</published>
-    <updated>2017-10-24T17:23:09.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>我真的只是想写一个log函数而已。</p>
-<a id="more"></a>
-<hr>
-<h2 id="可变参数宏（C实现）"><a href="#可变参数宏（C实现）" class="headerlink" title="可变参数宏（C实现）"></a>可变参数宏（C实现）</h2><p>利用头文件<code>stdarg.h</code>中的宏定义：<code>va_list</code>、<code>va_start(va_list, arg)</code>、<code>va_arg(va_list, type)</code>、<code>va_end(va_list)</code>。可以实现可变参数且参数类型不同的函数。</p>
-<p>过程：</p>
-<ul>
-<li>函数声明中，可变参数用省略号表示。</li>
-<li>创建<code>va_list</code>变量，通过<code>va_start</code>访问参数列表并承接第一个参数。</li>
-<li>使用<code>va_arg</code>继续获取参数的值。</li>
-<li>使用<code>va_end</code>完成清理工作。</li>
-</ul>
-<p>以可变参数版本的sum作为例子：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdarg.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="keyword">int</span> count, ...)</span> <span class="comment">//count 表示可变参数个数</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    va_list ap;          <span class="comment">//声明一个va_list变量</span></div><div class="line">    va_start(ap, count); <span class="comment">//初始化，第二个参数为最后一个确定的形参（不能另开局部变量）</span></div><div class="line"></div><div class="line">    <span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++)</div><div class="line">        sum += va_arg(ap, <span class="keyword">int</span>); <span class="comment">//读取可变参数，第二个参数为可变参数的类型</span></div><div class="line"></div><div class="line">    va_end(ap); <span class="comment">//清理工作</span></div><div class="line">    <span class="keyword">return</span> sum;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, sum(<span class="number">5</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>));</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>局限性：</p>
-<blockquote>
-<ul>
-<li>可变参数宏只能实现<strong>顺序访问</strong>可变参数，无法后退访问。但可以重复使用<code>va_start</code>来初始化<code>va_list</code>变量。</li>
-<li>运行时，函数必须能够根据已有信息（既有约定，或确定实参）确定可变参数的具体个数与类型：函数定义需要知道可变参数的具体类型、个数，这些信息是在运行时确定的，那么显然应该由实参来确定。在上面的例子中count传递了可变参数的个数，而参数类型则是既有约定（整型）； </li>
-<li>该方法是<strong>极不安全</strong>的，宏本身无法提供任何安全性保证，他总是按照既定代码“自作多情”的认为实参就应该是那么多，即使实参并不是那么多。这就要求所有安全性必须由程序员来保证。例如，在以上的示例代码中，如果调用时指定count为10，但实际上只给出9个可变形参，那么函数还是会读取10个参数，显然第十次读取是多余的，多余的操作一般不会有什么好结果，当然如果实参过多，多余的实参也不会被读取而是被忽略。</li>
-</ul>
-</blockquote>
-<hr>
-<h2 id="initializer-list标准库类型（C-11）"><a href="#initializer-list标准库类型（C-11）" class="headerlink" title="initializer_list标准库类型（C++11）"></a>initializer_list标准库类型（C++11）</h2><p>过程：</p>
-<ul>
-<li>函数声明中使用<code>initializer_list</code>模板代表可变参数列表</li>
-<li>使用迭代器访问<code>initializer_list</code>中的参数</li>
-<li>传入参数时需要使用<code>{}</code>把多个参数括起来</li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;initializer_list&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">initializer_list</span>&lt;<span class="keyword">int</span>&gt; il)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> p : il)   <span class="comment">// 使用范围for</span></div><div class="line">        sum += p;</div><div class="line">    <span class="comment">// for (auto p = il.begin(); p != il.end(); p++) //使用迭代器访问参数</span></div><div class="line">    <span class="comment">//     sum += *p;</span></div><div class="line">    <span class="keyword">return</span> sum;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; sum(&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>局限性：</p>
-<ul>
-<li>可变参数类型必须<strong>一致</strong></li>
-</ul>
-<hr>
-<h2 id="可变参数模板（C-11）"><a href="#可变参数模板（C-11）" class="headerlink" title="可变参数模板（C++11）"></a>可变参数模板（C++11）</h2><p>更方便安全有效地实现可变参数且参数类型不同的函数。</p>
-<p>过程：</p>
-<ul>
-<li>编写含有模板参数包和函数参数包的模板函数</li>
-<li>函数定义<strong>递归</strong>调用自己</li>
-<li>利用函数重载（参数包含有零个参数）来处理<strong>边界情况</strong>，编写处理边界情况的模板</li>
-</ul>
-<p>C++ primer 第五版中的例子：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 用来终止递归并打印最后一个元素的函数</span></div><div class="line"><span class="comment">// 此函数必须在可变参数版本的print定义之前声明（否则将出现neither visible nor found by argument-dependent lookup错误）</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="built_in">std</span>::<span class="function">ostream &amp;<span class="title">print</span><span class="params">(<span class="built_in">std</span>::ostream &amp;os, <span class="keyword">const</span> T &amp;t)</span></span>&#123;</div><div class="line">    <span class="keyword">return</span> os &lt;&lt; t;                <span class="comment">// 包中最后一个元素</span></div><div class="line">&#125;</div><div class="line"><span class="comment">//包中除最后一个元素之外的其他元素都会调用这个版本的pirnt</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</div><div class="line"><span class="built_in">std</span>::<span class="function">ostream &amp;<span class="title">print</span><span class="params">(<span class="built_in">std</span>::ostream &amp;os, <span class="keyword">const</span> T &amp;t, cosnt Args &amp;... rest)</span></span>&#123;</div><div class="line">    os &lt;&lt; t &lt;&lt; <span class="string">","</span>;               <span class="comment">// 打印第一个实参，包中元素减一</span></div><div class="line">    <span class="keyword">return</span> print(os, rest...);    <span class="comment">// 递归调用，打印剩余实参</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>局限性：</p>
-<ul>
-<li>由于只能递归实现，导致需要定义重载函数来处理边界情况，代码不够清晰自然。</li>
-<li>模板会为每一个不同的实例生成代码，函数的实例过多可能会使代码体积庞大。</li>
-<li>依靠递归使得功能具有局限性，并且效率也会受到影响。</li>
-</ul>
-<hr>
-<h2 id="log函数实现"><a href="#log函数实现" class="headerlink" title="log函数实现"></a>log函数实现</h2><p>头文件：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* log.h */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> LOG_H_</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> LOG_H_</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="built_in">std</span>::<span class="function">ostream &amp;<span class="title">log</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="built_in">std</span>::<span class="built_in">cout</span>; &#125;</div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</div><div class="line"><span class="built_in">std</span>::<span class="function">ostream &amp;<span class="title">log</span><span class="params">(T <span class="keyword">const</span> &amp;p, Args <span class="keyword">const</span> &amp;... rest)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; p;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">log</span>(rest...);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure></p>
-<p>测试代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* test.cpp */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"log.h"</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">int</span> n = <span class="number">2</span>;</div><div class="line">    <span class="built_in">log</span>(n, <span class="string">" hello "</span>, <span class="number">10086</span>) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>; <span class="comment">// std::cout &lt;&lt; "2 hello 10086" &lt;&lt; std::endl;</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我真的只是想写一个log函数而已。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="编程" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
-    
-      <category term="C++" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
-    
-    
-      <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
-    
-      <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
-    
-      <category term="C" scheme="https://gaufoo.com/tags/C/"/>
     
   </entry>
   
