@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="编译原理,函数式编程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Python Final Project">
+<meta name="keywords" content="编译原理,函数式编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GParser 文档">
+<meta property="og:url" content="https://gaufoo.com/gparser/index.html">
+<meta property="og:site_name" content="苟富">
+<meta property="og:description" content="Python Final Project">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-12-14T16:38:31.347Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GParser 文档">
+<meta name="twitter:description" content="Python Final Project">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://gaufoo.com/gparser/"/>
+
+
+
+
+
+  <title>GParser 文档 | 苟富</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?918a16b20170b5642d2b55b0793aab3a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">苟富</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-notes">
+          <a href="/notes/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sticky-note"></i> <br />
+            
+            便签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gaufoo.com/gparser/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gaufoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="苟富">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">GParser 文档</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-15T00:27:00+08:00">
+                2018-12-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4,486 字
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Python Final Project</p>
+<a id="more"></a>
+<hr>
+<h2 id="Parser-Combinator-Library"><a href="#Parser-Combinator-Library" class="headerlink" title="Parser Combinator Library"></a>Parser Combinator Library</h2><p>关于Python课程的Final Project，本人综合考虑了个人兴趣、项目难度等多个方面，并结合自身水平，最终决定用Python编写<a href="https://en.wikipedia.org/wiki/Parser_combinator" target="_blank" rel="external">Parser Combinator</a>库。希望通过编写这一Python Parser Combinator库，能够将自己心中对于易用性、简洁性、上手容易程度都颇为合理的Parser库的理解，用Python版API较好地呈现出来。</p>
+<p>基于以上的目标，此Parser库会以用户最简单的上手程度、最少的心智负担为主要争取目标，同时提供更为强大的、更富表现力的表达式，来完成对任何字符组合的解析任务。因此，尽管此库运用了许多<a href="https://en.wikipedia.org/wiki/Functional_programming" target="_blank" rel="external">函数式编程</a>的概念，但是用户并不需要补充任何相关知识，也可较好地运用此库完成任务。</p>
+<p>目前该库取名Gparser，是属于<a href="https://gaufoo.com/">Gaufoo</a>的个人项目，并开源于<a href="https://github.com/zhongzc/gparser" target="_blank" rel="external">Github</a>，欢迎各位指正批评。接下来的文档，将详细讲解如何使用Gparser库。</p>
+<hr>
+<h2 id="Parser-Combinator-概念"><a href="#Parser-Combinator-概念" class="headerlink" title="Parser Combinator 概念"></a>Parser Combinator 概念</h2><h3 id="什么是Parser"><a href="#什么是Parser" class="headerlink" title="什么是Parser"></a>什么是Parser</h3><p>简单地说：给定一个字符流，比如一个字符串、一段代码、一篇文章等，输入到Parser，会把原本平坦的文本改造成有层次有内涵的结构。</p>
+<h3 id="什么是Parser-Combinator"><a href="#什么是Parser-Combinator" class="headerlink" title="什么是Parser Combinator"></a>什么是Parser Combinator</h3><p>由于函数式语言里函数是头等公民，可以把一个函数作为另一个函数的参数，一个函数可以产生出另外一个函数。基于这样的特点，我们可以把一个Parser作为参数传给另外一个Parser，一个Parser也可以产生另外一个新的Parser。有了这样的结合性，我们就可以实现Parser Combinator。<br>它是一种基于递归下降原理的非常简洁的Parser实现方法。</p>
+<h3 id="为什么是Parser-Combinator"><a href="#为什么是Parser-Combinator" class="headerlink" title="为什么是Parser Combinator"></a>为什么是Parser Combinator</h3><p>Parser Combinator在模块化、可读性、易维护等方面有着无可比拟的优势。<br>举个简单的例子：就像小孩子读文章，一开始他只认识一个一个字，拿着手指一个字一个字地点着读。接着他学会了把字结合起来变成词，认识词后又学会如何识别句子（很可能是因为学会了标点符号），慢慢长大后他便一目十行，脑中自然形成了文章的概念。Parser Combinator就很像这样一步一步组合的过程，非常符合人类直觉，所以编写起来相当容易。</p>
+<hr>
+<h2 id="Get-Started"><a href="#Get-Started" class="headerlink" title="Get Started"></a>Get Started</h2><ul>
+<li>下载</li>
+</ul>
+<p>首先把项目下载下来，*nix下使用命令行：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git <span class="built_in">clone</span> https://github.com/zhongzc/gparser.git</div></pre></td></tr></table></figure></p>
+<p>Windows用户可自行前往Github下载。</p>
+<ul>
+<li>安装</li>
+</ul>
+<p>*nix下使用命令行：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo python3 setup.py install</div></pre></td></tr></table></figure></p>
+<ul>
+<li>使用</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ python3                                </div><div class="line">Python 3.6.7 (default, Oct 25 2018, 09:16:13) </div><div class="line">[GCC 5.4.0 20160609] on linux</div><div class="line">Type <span class="string">"help"</span>, <span class="string">"copyright"</span>, <span class="string">"credits"</span> or <span class="string">"license"</span> <span class="keyword">for</span> more information.</div><div class="line">&gt;&gt;&gt; import gparser as gp</div><div class="line">...</div></pre></td></tr></table></figure>
+<ul>
+<li>删除</li>
+</ul>
+<p>要删除egg文件：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo rm -rf /usr/<span class="built_in">local</span>/lib/pythonX.X/site-packages/[PACKAGE].egg</div></pre></td></tr></table></figure></p>
+<p>然后修改<code>site-packages/easy-install.pth</code>，删除相应行。</p>
+<hr>
+<h2 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h2><p>编写最简单的Parser：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> gparser <span class="keyword">as</span> gp             <span class="comment"># (1)</span></div><div class="line"></div><div class="line">dot = gp.char(<span class="string">'.'</span>)               <span class="comment"># (2)</span></div><div class="line">result, restTxt = dot.run(<span class="string">'./'</span>)  <span class="comment"># (3)</span></div><div class="line">print(result)</div><div class="line">print(restTxt)                   <span class="comment"># (4)</span></div></pre></td></tr></table></figure></p>
+<ol>
+<li>将Gparser库引入到环境内，并取别名为<code>gp</code></li>
+<li><code>char</code>函数能够解析一个字符，此处解析一个<code>.</code>字符，并返回一个<code>Parser</code>对象</li>
+<li><code>Parser</code>对象中的<code>run</code>方法可以应用于待解析的字符串，返回<code>State</code>对象。<code>State</code>包含解析结果（<code>Success | ParseError</code>）对象和剩余字符串（<code>LocatedText</code>）对象，可以用Python中的多值匹配语法进行赋值。此处<code>result</code>即为解析结果对象，<code>restTxt</code>即为剩余字符串对象</li>
+<li>打印解析结果和剩余字符串</li>
+</ol>
+<p>输出如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># print(result)</span></div><div class="line">Success(value=Result(<span class="string">'.'</span>))   <span class="comment"># (1)</span></div><div class="line"></div><div class="line"><span class="comment"># print(restTxt)</span></div><div class="line">(<span class="number">1</span>,<span class="number">2</span>)                        <span class="comment"># (2)</span></div><div class="line">./</div><div class="line"> ^                           <span class="comment"># (3)</span></div></pre></td></tr></table></figure></p>
+<ol>
+<li>解析成功，返回<code>Success</code>对象，里面包含<code>Result</code>对象，可供提取或者进一步的处理，如何进行进一步处理会在文档后面进行介绍</li>
+<li>表明解析到的位置坐标，这里表示解析到第1行第2列的<code>/</code>处</li>
+<li>用用户友好的方式展示解析到的行以及待解析字符所在位置</li>
+</ol>
+<p><code>Result</code>是一个可迭代对象，可以通过<code>for</code>语法进行提取，或者与其他高阶函数如<code>map</code>等进行组合：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> result.value:</div><div class="line">    print(i)</div><div class="line">    </div><div class="line"><span class="comment"># 输出：</span></div><div class="line"><span class="comment"># .</span></div></pre></td></tr></table></figure></p>
+<p>要想运行<code>Parser</code>对象进行解析，还有另外一个函数<code>run_strict</code>，和<code>run</code>最大的区别是：<code>run</code>不进行字符串结尾（即<code>EOF</code>）进行检测，而<code>run_strict</code>如果解析到最后没有消耗完整个字符串，则视为解析错误。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">result, restTxt = dot.run_strict(<span class="string">'.foo'</span>)</div><div class="line">print(result)</div><div class="line">print(restTxt)</div></pre></td></tr></table></figure></p>
+<p>输出结果如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># print(result)</span></div><div class="line">ParseError(msg=<span class="string">'Excepted: &lt;EOF&gt;'</span>) <span class="comment"># (1)</span></div><div class="line"></div><div class="line"><span class="comment"># print(restTxt)</span></div><div class="line">(<span class="number">1</span>,<span class="number">2</span>)</div><div class="line">.foo</div><div class="line"> ^</div></pre></td></tr></table></figure></p>
+<ol>
+<li>解析错误返回<code>ParseError</code>对象，里面包含错误信息<code>Excepted: &lt;EOF&gt;</code>，向用户提示解析错误的原因</li>
+</ol>
+<hr>
+<h2 id="编写Parser"><a href="#编写Parser" class="headerlink" title="编写Parser"></a>编写Parser</h2><h3 id="字符串参数"><a href="#字符串参数" class="headerlink" title="字符串参数"></a>字符串参数</h3><h4 id="String"><a href="#String" class="headerlink" title="String"></a><em>String</em></h4><p><code>string</code>函数与<code>char</code>函数类似，只不过从解析一个字符变成解析一个字符串，例子（接下来的例子都将省略<code>import</code>等语句，均用<code>...</code>代指）：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pStr = gp.string(<span class="string">'abc'</span>)</div><div class="line">result, restTxt = pStr.run(<span class="string">'abc'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result('abc'))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,4)</span></div><div class="line"><span class="comment"># abc</span></div><div class="line"><span class="comment">#    ^</span></div></pre></td></tr></table></figure></p>
+<p>假如给定的待解析字符串不能成功解析，结果如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">result, restTxt = pStr.run(<span class="string">'defgh'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># ParseError(msg='Excepted: a')</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,1)</span></div><div class="line"><span class="comment"># defgh</span></div><div class="line"><span class="comment"># ^</span></div></pre></td></tr></table></figure></p>
+<hr>
+<h4 id="One-Of"><a href="#One-Of" class="headerlink" title="One Of"></a><em>One Of</em></h4><p><code>one_of</code>函数能够接收一个字符串参数，并能成功解析字符串中的其中一个字符：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pOneOf = gp.one_of(<span class="string">'1234'</span>)</div><div class="line">result, restTxt = pOneOf.run(<span class="string">'1k'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result('1'))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,2)</span></div><div class="line"><span class="comment"># 1k</span></div><div class="line"><span class="comment">#  ^</span></div></pre></td></tr></table></figure></p>
+<hr>
+<h4 id="None-Of"><a href="#None-Of" class="headerlink" title="None Of"></a><em>None Of</em></h4><p><code>none_of</code>函数解析字符串参数中不包含的字符：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pNoneOf = gp.none_of(<span class="string">'1234'</span>)</div><div class="line">result, restTxt = pOneOf.run(<span class="string">'1k'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># ParseError(msg='Excepted: none of 1, 2, 3, 4')</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,1)</span></div><div class="line"><span class="comment"># 1k</span></div><div class="line"><span class="comment"># ^</span></div></pre></td></tr></table></figure></p>
+<hr>
+<h4 id="Regex"><a href="#Regex" class="headerlink" title="Regex"></a><em>Regex</em></h4><p>接受一个<code>r</code>正则表达式，若从待解析字符串头开始匹配成功，则返回成功的结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pReg = gp.regex(<span class="string">r'[A-Za-z_][A-Za-z0-9_]*'</span>)</div><div class="line">result, restTxt = pReg.run(<span class="string">'_hey1'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result('_hey1'))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,6)</span></div><div class="line"><span class="comment"># _hey1</span></div><div class="line"><span class="comment">#      ^</span></div></pre></td></tr></table></figure>
+<hr>
+<h3 id="组合子"><a href="#组合子" class="headerlink" title="组合子"></a>组合子</h3><h4 id="Many"><a href="#Many" class="headerlink" title="Many"></a><em>Many</em></h4><p><code>many</code>函数是一个解析组合子（Parser Combinator）。它能够接受一个<code>Parser</code>对象参数，并能进行<strong>0次或多次</strong>的应用此<code>Parser</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pManyDot = gp.many(dot)</div><div class="line">result, restTxt = pManyDot.run(<span class="string">'.......!'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result(['.', '.', '.', '.', '.', '.', '.']))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,8)</span></div><div class="line"><span class="comment"># .......!</span></div><div class="line"><span class="comment">#        ^</span></div></pre></td></tr></table></figure>
+<p>函数库里还有另一个类似的函数：<code>many1</code>，和<code>many</code>的主要区别是：<code>many1</code>里的<code>Parser</code>能够应用<strong>1次或以上</strong>，<code>many</code>则应用<strong>0次或以上</strong>。</p>
+<hr>
+<h4 id="Skip"><a href="#Skip" class="headerlink" title="Skip"></a><em>Skip</em></h4><p><code>skip</code>函数同样是一个组合子，它接受一个<code>Parser</code>对象参数，如果成功解析，则将结果直接抛弃：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pSkip = gp.skip(dot)</div><div class="line">result, restTxt = pSkip.run(<span class="string">'.......!'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result())</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,2)</span></div><div class="line"><span class="comment"># .......!</span></div><div class="line"><span class="comment">#  ^</span></div></pre></td></tr></table></figure></p>
+<p>函数库中还有<code>skip_many</code>、<code>skip_many1</code>，他们的效果和<code>skip(many(SOME_PARSER))</code>或<code>skip(many1(SOME_PARSER))</code>相同：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pSkipMany = gp.skip_many(dot)</div><div class="line">result, restTxt = pSkipMany.run(<span class="string">'.......!'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result())</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,8)</span></div><div class="line"><span class="comment"># .......!</span></div><div class="line"><span class="comment">#        ^</span></div></pre></td></tr></table></figure></p>
+<p><code>skip</code>和<code>many</code>的组合：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pSkipManyy = gp.skip(gp.many(dot))</div><div class="line">result, restTxt = pSkipManyy.run(<span class="string">'.......!'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result())</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,8)</span></div><div class="line"><span class="comment"># .......!</span></div><div class="line"><span class="comment">#        ^</span></div></pre></td></tr></table></figure></p>
+<hr>
+<h4 id="Next"><a href="#Next" class="headerlink" title="Next"></a><em>Next</em></h4><p>Next组合子组合两个<code>Parser</code>，当第一个<code>Parser</code>成功解析后，抛弃结果，然后继续解析箭头指向的第二个<code>Parser</code>。左Next语法为<code>L_PARSER &gt;&gt; R_PARSER</code>，右Next语法为<code>L_PARSER &lt;&lt; R_PARSER</code>：</p>
+<p>当Next的方向为<code>&gt;&gt;</code>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pABC = gp.string(<span class="string">'abc'</span>)</div><div class="line">pDEF = gp.string(<span class="string">'def'</span>)</div><div class="line">comb = pABC &gt;&gt; pDEF</div><div class="line">result, restTxt = comb.run(<span class="string">'abcdef'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result('def'))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,7)</span></div><div class="line"><span class="comment"># abcdef</span></div><div class="line"><span class="comment">#       ^</span></div></pre></td></tr></table></figure></p>
+<p>当Next的方向为<code>&lt;&lt;</code>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">comb = pABC &lt;&lt; pDEF</div><div class="line">result, restTxt = comb.run(<span class="string">'abcdef'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result('abc'))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,7)</span></div><div class="line"><span class="comment"># abcdef</span></div><div class="line"><span class="comment">#       ^</span></div></pre></td></tr></table></figure></p>
+<p>实际上不止可以组合两个<code>Parser</code>，对于任意数量的<code>Parser</code>，都可以通过Next来进行组合，取最终流向的<code>Parser</code>的应用结果为解析结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">comb = pDEF &gt;&gt; pABC &lt;&lt; pDEF</div><div class="line">result, restTxt = comb.run(<span class="string">'defabcdef'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result('abc'))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment">#　(1,10)</span></div><div class="line"><span class="comment"># defabcdef</span></div><div class="line"><span class="comment">#          ^</span></div></pre></td></tr></table></figure></p>
+<p>有时候大量组合过于繁杂，建议用括号保持可读性。另一例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">comb = pABC &lt;&lt; pDEF &gt;&gt; pDEF &gt;&gt; pABC</div><div class="line"><span class="comment"># 实际上的组合方向为：</span></div><div class="line">comb = ((pABC &lt;&lt; pDEF) &gt;&gt; pDEF) &gt;&gt; pABC</div><div class="line"><span class="comment"># 最终解析结果为最后一个pABC的应用结果</span></div><div class="line">result, restTxt = comb.run(<span class="string">'abcdefdefabc'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result('abc'))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,13)</span></div><div class="line"><span class="comment"># abcdefdefabc</span></div><div class="line"><span class="comment">#　            ^</span></div></pre></td></tr></table></figure></p>
+<hr>
+<h4 id="Just"><a href="#Just" class="headerlink" title="Just"></a><em>Just</em></h4><p>在介绍了Next组合子后，<code>just</code>函数的出现才有了更加明显的意义。<code>just</code>函数产生的<code>Parser</code>实际上不进行任何的字符消耗，但是能将自身接受的参数当做成功解析的结果返回，和Next组合起来能够共同发挥巨大的作用：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">aObj = (<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</div><div class="line">pOTT = gp.string(<span class="string">'123'</span>) &gt;&gt; gp.just(aObj)</div><div class="line"></div><div class="line">result, restTxt = pOTT.run(<span class="string">'123'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result((1, 2, 3)))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,4)</span></div><div class="line"><span class="comment"># 123</span></div><div class="line"><span class="comment">#    ^</span></div></pre></td></tr></table></figure></p>
+<hr>
+<h4 id="Or"><a href="#Or" class="headerlink" title="Or"></a><em>Or</em></h4><p>Or组合子能够组合两个<code>Parser</code>对象，当第一个<code>Parser</code>解析失败后不会直接报告失败，而是会尝试接着第二个<code>Parser</code>。Or组合子语法为<code>L_PARSER | R_PARSER</code>。Or原则上不进行回溯，即第一个<code>Parser</code>失败后，第二个<code>Parser</code>会从第一个<code>Parser</code>的失败处继续解析。<br>可以结合Maybe组合子将Or组合子改造成回溯版本，Maybe组合子接受一个<code>Parser</code>对象作为参数，当解析失败时会回退待解析字符串。</p>
+<ul>
+<li>不回溯</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pABC = gp.string(<span class="string">'abc'</span>)</div><div class="line">pDEF = gp.string(<span class="string">'def'</span>)</div><div class="line">pOr = pABC | pDEF</div><div class="line">result, restTxt = pOr.run(<span class="string">'abdefg'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result('def'))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,6)</span></div><div class="line"><span class="comment"># abdefg</span></div><div class="line"><span class="comment">#      ^</span></div></pre></td></tr></table></figure>
+<ul>
+<li>回溯</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pOrBack = gp.maybe(pABC) | pDEF</div><div class="line">result, restTxt = pOrBack.run(<span class="string">'abdefg'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># ParseError(msg='Excepted: d')</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,1)</span></div><div class="line"><span class="comment"># abdefg</span></div><div class="line"><span class="comment"># ^</span></div></pre></td></tr></table></figure>
+<hr>
+<h4 id="Between"><a href="#Between" class="headerlink" title="Between"></a><em>Between</em></h4><p><code>between</code>组合接收三个<code>Parser</code>对象参数，忽略第一个和最后一个参数的解析结果，取中间的应用结果为解析结果，即<code>between(p1, p2, p3)</code>的效果实际上与<code>p1 &gt;&gt; p2 &lt;&lt; p3</code>效果一致。取函数别名仅为了更明确组合后的<code>Parser</code>的作用，常用于解析被括弧包围的中间值，实际可以用Next组合子替代。</p>
+<hr>
+<h4 id="Separate-By"><a href="#Separate-By" class="headerlink" title="Separate By"></a><em>Separate By</em></h4><p><code>sep_by</code>组合子接受两个<code>Parser</code>对象作为参数，其中第二个<code>Parser</code>作为第一个<code>Parser</code>的分隔符，组合后的<code>Parser</code>将多次解析被分割开的字符串，最终返回解析成功后的列表：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pABC = gp.string(<span class="string">'abc'</span>)</div><div class="line">pSep = gp.sep_by(pABC, gp.char(<span class="string">','</span>))</div><div class="line">result, restTxt = pSep.run(<span class="string">'abc,abc,abc'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result(['abc', 'abc', 'abc']))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,12)</span></div><div class="line"><span class="comment"># abc,abc,abc</span></div><div class="line"><span class="comment">#            ^</span></div></pre></td></tr></table></figure>
+<p>与其余组合子的命名习惯相同，<code>sep_by</code>有可能返回空列表，<code>sep_by1</code>则会解析至少一个结果。</p>
+<hr>
+<h4 id="Chain"><a href="#Chain" class="headerlink" title="Chain"></a><em>Chain</em></h4><p>Chain组合子分为<code>chain_left</code>和<code>chain_right</code>，均接受两个<code>Parser</code>作为参数，第一个为<code>node</code>，第二个为<code>op</code>。类似<code>sep_by</code>，<code>op</code>将分割多个<code>node</code>，不过<code>op</code>解析成功需要返回一个函数，能够将<code>op</code>两边的<code>node</code>组合起来。<code>chain_left</code>是从左向右组合，<code>chain_right</code>则为从右向左组合。</p>
+<p>用<code>.</code>来连接字符串：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pABC = gp.string(<span class="string">'abc'</span>)</div><div class="line">pCat = gp.chain_left(pABC, gp.char(<span class="string">'.'</span>) &gt;&gt; gp.just(<span class="keyword">lambda</span> x, y: x + y))</div><div class="line">result, restTxt = pCat.run(<span class="string">'abc.abc.abc'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result('abcabcabc'))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,12)</span></div><div class="line"><span class="comment"># abc.abc.abc</span></div><div class="line"><span class="comment">#            ^</span></div></pre></td></tr></table></figure></p>
+<p>实际上，现在看不懂Chain组合子的用法无大碍，在特定情况下它的精简和方便一定会让你印象深刻。</p>
+<hr>
+<h4 id="Token"><a href="#Token" class="headerlink" title="Token"></a><em>Token</em></h4><p>Token是一个非常方便的组合子，能够忽略待解析字符串的前后空白符，既可以用<code>token</code>函数组合出来，也可以用<code>Parser</code>自带的<code>tk</code>方法达到同等效果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pABC = gp.string(<span class="string">'abc'</span>)</div><div class="line">pTok = gp.token(pABC)</div><div class="line">result, restTxt = pTok.run(<span class="string">'  \n abc  \t '</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result('abc'))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (2,9)</span></div><div class="line"><span class="comment">#  abc  	 </span></div><div class="line"><span class="comment">#         ^</span></div><div class="line"></div><div class="line">pTk = pABC.tk()</div><div class="line">result, restTxt = pTk.run(<span class="string">'  \n abc  \t '</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Result('abc'))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (2,9)</span></div><div class="line"><span class="comment">#  abc  	 </span></div><div class="line"><span class="comment">#         ^</span></div></pre></td></tr></table></figure>
+<hr>
+<h3 id="内置解析函数"><a href="#内置解析函数" class="headerlink" title="内置解析函数"></a>内置解析函数</h3><p>函数库中提供少量简便的解析函数，列举如下：</p>
+<table>
+<thead>
+<tr>
+<th>函数名</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>space</td>
+<td>解析空白符</td>
+</tr>
+<tr>
+<td>spaces</td>
+<td>解析多个空白符</td>
+</tr>
+<tr>
+<td>digit</td>
+<td>解析数字字符</td>
+</tr>
+<tr>
+<td>alpha</td>
+<td>解析大小写字母字符</td>
+</tr>
+<tr>
+<td>number</td>
+<td>解析正负整数</td>
+</tr>
+<tr>
+<td>eof</td>
+<td>解析字符串结束</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="错误信息"><a href="#错误信息" class="headerlink" title="错误信息"></a>错误信息</h3><p><code>label</code>函数或者<code>Parser</code>对象中的<code>label</code>方法能够修改解析错误后显示的错误原因，能以更清晰明了的方式让<code>Parser</code>的使用者明白解析错误原因：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pABC = gp.string(<span class="string">'abc'</span>)</div><div class="line">pL = pABC.label(<span class="string">'I need "abc"!'</span>)</div><div class="line">result, restTxt = pL.run(<span class="string">'hello'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># ParseError(msg='I need "abc"!')</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,1)</span></div><div class="line"><span class="comment"># hello</span></div><div class="line"><span class="comment"># ^</span></div></pre></td></tr></table></figure>
+<hr>
+<h2 id="Map组合（核心）"><a href="#Map组合（核心）" class="headerlink" title="Map组合（核心）"></a>Map组合（核心）</h2><p>接下来将介绍Gparser库最为核心的API：Map组合表达式。</p>
+<h3 id="连接组合子"><a href="#连接组合子" class="headerlink" title="连接组合子"></a>连接组合子</h3><p>在GParser库中，有一个很方便的组合子：<code>+</code>，可以连接多个<code>Parser</code>，从而获得一组解析结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pABC = gp.string(<span class="string">'abc'</span>)</div><div class="line">pDEF = gp.string(<span class="string">'def'</span>)</div><div class="line">pDot = gp.string(<span class="string">'.'</span>)</div><div class="line">pCat = pABC + pDEF + pDot</div><div class="line">result, restTxt = pCat.run(<span class="string">'abcdef.'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=('abc', 'def', '.'))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,8)</span></div><div class="line"><span class="comment"># abcdef.</span></div><div class="line"><span class="comment">#        ^</span></div></pre></td></tr></table></figure></p>
+<p>有时候希望忽略某个<code>Parser</code>的解析结果，可以在该<code>Parser</code>对象前加上<code>~</code>符，这里忽略<code>pDEF</code>的解析结果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pCat2 = pABC + ~pDEF + pDot</div><div class="line">result, restTxt = pCat2.run(<span class="string">'abcdef.'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=('abc', '.'))</span></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,8)</span></div><div class="line"><span class="comment"># abcdef.</span></div><div class="line"><span class="comment">#        ^</span></div></pre></td></tr></table></figure></p>
+<h3 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h3><p>GParser带来的不仅仅是<code>+</code>所具备的强大组合性，更重要的是组合后的<code>Parser</code>的<code>map</code>方法，为多个解析结果提供了组合的可能。合理使用<code>+</code>和<code>map</code>，能够非常轻易地编写出简洁易懂却又强大健壮的Parser。</p>
+<p>对于未使用<code>+</code>连接的<code>Parser</code>，<code>map</code>为其提供了转化的能力。<code>Parser</code>的<code>map</code>方法接受一个函数作为参数，在未使用<code>+</code>连接的情况下，该函数参数接受一个参数，转化该参数并返回。当<code>Parser</code>成功解析完原始的结果，<code>map</code>方法将让函数参数应用此原始结果，转化成最终结果。值得注意的是，这里的原始结果是相对的，一个应用过<code>map</code>的<code>Parser</code>的解析结果，可以作为下一个<code>map</code>的原始结果，即，<code>Parser</code>可以组合多个<code>map</code>。简单例子如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pABC = gp.string(<span class="string">'abc'</span>)</div><div class="line">pM1 = pABC.map(<span class="keyword">lambda</span> x: len(x))</div><div class="line">result, restTxt = pM1.run(<span class="string">'abc'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Results(3))</span></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,4)</span></div><div class="line"><span class="comment"># abc</span></div><div class="line"><span class="comment">#    ^</span></div><div class="line"></div><div class="line">pM2 = pM1.map(<span class="keyword">lambda</span> x: x * <span class="number">2</span>)</div><div class="line">result, restTxt = pM2.run(<span class="string">'abc'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Results(6))</span></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,4)</span></div><div class="line"><span class="comment"># abc</span></div><div class="line"><span class="comment">#    ^</span></div></pre></td></tr></table></figure></p>
+<p>当<code>map</code>结合上<code>+</code>，<code>map</code>接受的函数参数的参数数量将发生变化。假设<code>+</code>连接了3个无前置<code>~</code>的<code>Parser</code>，则组合后的整个<code>Parser</code>的<code>map</code>方法接受的函数参数应该是一个三参函数，且顺序与<code>+</code>连接的<code>Parser</code>顺序一一对应。例子如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pABC = gp.string(<span class="string">'abc'</span>)</div><div class="line">pDEF = gp.string(<span class="string">'def'</span>)</div><div class="line">pDot = gp.string(<span class="string">'.'</span>)</div><div class="line">pMulMap = (pABC + pDEF + pDot).map(<span class="keyword">lambda</span> x, y, z: x[<span class="number">2</span>] + z + y[<span class="number">1</span>])</div><div class="line">result, restTxt = pMulMap.run(<span class="string">'abcdef.'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Results('c.e'))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,8)</span></div><div class="line"><span class="comment"># abcdef.</span></div><div class="line"><span class="comment">#        ^</span></div></pre></td></tr></table></figure></p>
+<p>大部分情况下，只是需要把所有用<code>+</code>连接的<code>string</code>结果拼接起来，Gparser库提供了简便的<code>concat</code>函数，使用如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">pABC = gp.string(<span class="string">'abc'</span>)</div><div class="line">pDEF = gp.string(<span class="string">'def'</span>)</div><div class="line">pDot = gp.string(<span class="string">'.'</span>)</div><div class="line">pMulMapCon = (pABC + pDEF + pDot).map(gp.concat)</div><div class="line">result, restTxt = pMulMapCon.run(<span class="string">'abcdef.'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Results('abcdef.'))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,8)</span></div><div class="line"><span class="comment"># abcdef.</span></div><div class="line"><span class="comment">#        ^</span></div></pre></td></tr></table></figure></p>
+<p>对于带有<code>~</code>的<code>+</code>组合表达式，<code>~</code>所连接的<code>Parser</code>将不占用<code>map</code>函数参数的参数位：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pMulSkipMap = (pABC + ~pDEF + pDot).map(<span class="keyword">lambda</span> abc, dot: dot * len(abc))</div><div class="line">result, restTxt = pMulSkipMap.run(<span class="string">'abcdef.'</span>)</div><div class="line"></div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Results('...'))</span></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,8)</span></div><div class="line"><span class="comment"># abcdef.</span></div><div class="line"><span class="comment">#        ^</span></div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="Parser实战"><a href="#Parser实战" class="headerlink" title="Parser实战"></a>Parser实战</h2><h3 id="四则运算表达式"><a href="#四则运算表达式" class="headerlink" title="四则运算表达式"></a>四则运算表达式</h3><p>有关详细的四则运算表达式形式化表达可以看我以前写的<a href="https://gaufoo.com/ni_to_pre_post/#优雅实现之语法分析器">这篇文章</a>，这里只进行简单的回顾。</p>
+<p>四则运算表达式有三个抽象组合而成，分别是<code>Exp</code>、<code>Factor</code>、<code>Term</code>：</p>
+<ul>
+<li>Exp = Factor (( ‘+’ | ‘-‘ ) Factor)*</li>
+<li>Factor = Term (( ‘*‘ | ‘/‘ ) Term)*</li>
+<li>Term = &lt;数字&gt; | ‘(‘ Exp ‘)’</li>
+</ul>
+<p>从以上表达式中可以看出，四则运算表达式是递归表达的，那么GParser能不能胜任这种递归表达呢？答案是肯定的。</p>
+<h4 id="Number"><a href="#Number" class="headerlink" title="Number"></a><em>Number</em></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> gparser <span class="keyword">as</span> gp</div><div class="line"></div><div class="line">pNum = gp.many1(gp.digit()).map(<span class="keyword">lambda</span> ds: int(<span class="string">''</span>.join(ds)))</div></pre></td></tr></table></figure>
+<h4 id="Operator"><a href="#Operator" class="headerlink" title="Operator"></a><em>Operator</em></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pAdd = gp.char(<span class="string">'+'</span>) &gt;&gt; gp.just(<span class="keyword">lambda</span> x, y: x + y)</div><div class="line">pSub = gp.char(<span class="string">'-'</span>) &gt;&gt; gp.just(<span class="keyword">lambda</span> x, y: x - y)</div><div class="line">pMul = gp.char(<span class="string">'*'</span>) &gt;&gt; gp.just(<span class="keyword">lambda</span> x, y: x * y)</div><div class="line">pDiv = gp.char(<span class="string">'/'</span>) &gt;&gt; gp.just(<span class="keyword">lambda</span> x, y: x / y)</div></pre></td></tr></table></figure>
+<h4 id="Abstraction"><a href="#Abstraction" class="headerlink" title="Abstraction"></a><em>Abstraction</em></h4><p>由于Python不能够直接引用未在之前出现过的参数，这样使得编写递归定义的<code>Parser</code>比较棘手。GParser提供了<code>undef</code>函数作为解决方案，它能够提前声明<code>Parser</code>以占位变量，可在后续中利用<code>assign</code>方法进行赋值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">pExp = gp.undef()</div><div class="line">pFactor = gp.undef()</div><div class="line">pTerm = gp.undef()</div><div class="line"></div><div class="line"><span class="comment"># Exp = Factor (( '+' | '-' ) Factor)*</span></div><div class="line">pExp.assign(gp.chain_left(pFactor, pAdd | pSub))</div><div class="line"></div><div class="line"><span class="comment"># Factor = Term (( '*' | '/' ) Term)*</span></div><div class="line">pFactor.assign(gp.chain_left(pTerm, pMul | pDiv))</div><div class="line"></div><div class="line"><span class="comment"># Term = &lt;数字&gt; | '(' Exp ')'</span></div><div class="line">pTerm.assign(pNum | gp.between(gp.char(<span class="string">'('</span>), pExp, gp.char(<span class="string">')'</span>)))</div></pre></td></tr></table></figure>
+<p>这样就完成了<code>pExp</code>这一四则运算表达式的<code>Parser</code>，下面尝试运行：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">result, restTxt = pExp.run(<span class="string">'(85+31)*5'</span>)</div><div class="line">print(result)</div><div class="line"><span class="comment"># Success(value=Results(580))</span></div><div class="line"></div><div class="line">print(restTxt)</div><div class="line"><span class="comment"># (1,10)</span></div><div class="line"><span class="comment"># (85+31)*5</span></div><div class="line"><span class="comment">#          ^</span></div><div class="line"></div><div class="line">print((<span class="number">85</span>+<span class="number">31</span>)*<span class="number">5</span>)</div><div class="line"><span class="comment"># 580</span></div></pre></td></tr></table></figure></p>
+<h4 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> gparser <span class="keyword">as</span> gp</div><div class="line"></div><div class="line">pNum = gp.many1(gp.digit()).map(<span class="keyword">lambda</span> ds: int(<span class="string">''</span>.join(ds)))</div><div class="line">pAdd = gp.char(<span class="string">'+'</span>) &gt;&gt; gp.just(<span class="keyword">lambda</span> x, y: x + y)</div><div class="line">pSub = gp.char(<span class="string">'-'</span>) &gt;&gt; gp.just(<span class="keyword">lambda</span> x, y: x - y)</div><div class="line">pMul = gp.char(<span class="string">'*'</span>) &gt;&gt; gp.just(<span class="keyword">lambda</span> x, y: x * y)</div><div class="line">pDiv = gp.char(<span class="string">'/'</span>) &gt;&gt; gp.just(<span class="keyword">lambda</span> x, y: x / y)</div><div class="line"></div><div class="line">pExp = gp.undef()</div><div class="line">pFactor = gp.undef()</div><div class="line">pTerm = gp.undef()</div><div class="line"></div><div class="line"><span class="comment"># Exp = Factor (( '+' | '-' ) Factor)*</span></div><div class="line">pExp.assign(gp.chain_left(pFactor, pAdd | pSub))</div><div class="line"></div><div class="line"><span class="comment"># Factor = Term (( '*' | '/' ) Term)*</span></div><div class="line">pFactor.assign(gp.chain_left(pTerm, pMul | pDiv))</div><div class="line"></div><div class="line"><span class="comment"># Term = &lt;数字&gt; | '(' Exp ')'</span></div><div class="line">pTerm.assign(pNum | gp.between(gp.char(<span class="string">'('</span>), pExp, gp.char(<span class="string">')'</span>)))</div></pre></td></tr></table></figure>
+<h3 id="JSON"><a href="#JSON" class="headerlink" title="JSON"></a>JSON</h3><h4 id="ADT"><a href="#ADT" class="headerlink" title="ADT"></a><em>ADT</em></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</div><div class="line"></div><div class="line">JNull = namedtuple(<span class="string">'JNull'</span>, [])</div><div class="line">JTrue = namedtuple(<span class="string">'JTrue'</span>, [])</div><div class="line">JFalse = namedtuple(<span class="string">'JFalse'</span>, [])</div><div class="line">JNum = namedtuple(<span class="string">'JNum'</span>, [<span class="string">'value'</span>])</div><div class="line">JStr = namedtuple(<span class="string">'JStr'</span>, [<span class="string">'value'</span>])</div><div class="line">JObj = namedtuple(<span class="string">'JObj'</span>, [<span class="string">'value'</span>])</div><div class="line">JPair = namedtuple(<span class="string">'JPair'</span>, [<span class="string">'key'</span>, <span class="string">'value'</span>])</div><div class="line">JArr = namedtuple(<span class="string">'JArr'</span>, [<span class="string">'value'</span>])</div></pre></td></tr></table></figure>
+<h4 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line"><span class="keyword">import</span> gparser <span class="keyword">as</span> gp</div><div class="line"></div><div class="line"><span class="comment"># 数字</span></div><div class="line">digits = gp.regex(<span class="string">r'[0-9]+'</span>)</div><div class="line">exponent = (gp.one_of(<span class="string">'eE'</span>) + gp.one_of(<span class="string">'-+'</span>).or_not() + digits).map(gp.concat)</div><div class="line">fractional = (gp.char(<span class="string">'.'</span>) + digits).map(gp.concat)</div><div class="line">integral = gp.char(<span class="string">'0'</span>) | gp.regex(<span class="string">r'[1-9][0-9]*'</span>)</div><div class="line">number = (gp.one_of(<span class="string">'-+'</span>).or_not() + integral + fractional.or_not() + exponent.or_not()) \</div><div class="line">    .map(gp.concat).map(<span class="keyword">lambda</span> n: JNum(float(n))).tk()</div><div class="line">    </div><div class="line">    </div><div class="line"><span class="comment"># null, true, false</span></div><div class="line">null = gp.string(<span class="string">'null'</span>) &gt;&gt; gp.just(JNull()).tk()</div><div class="line">false = gp.string(<span class="string">'false'</span>) &gt;&gt; gp.just(JFalse()).tk()</div><div class="line">true = gp.string(<span class="string">'true'</span>) &gt;&gt; gp.just(JTrue()).tk()</div><div class="line"></div><div class="line"><span class="comment"># string</span></div><div class="line">string = gp.between(gp.char(<span class="string">'"'</span>), gp.many(gp.none_of(<span class="string">'"'</span>)), gp.char(<span class="string">'"'</span>)) \</div><div class="line">    .map(<span class="keyword">lambda</span> cs: <span class="string">''</span>.join(cs)).map(JStr).tk()</div></pre></td></tr></table></figure>
+<h4 id="json对象"><a href="#json对象" class="headerlink" title="json对象"></a><em>json</em>对象</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">jExp = gp.undef()</div><div class="line"></div><div class="line">array = gp.between(gp.char(<span class="string">'['</span>), jExp.sep_by(gp.char(<span class="string">','</span>).tk()), gp.char(<span class="string">']'</span>)).map(JArr).tk()</div><div class="line">pair = (string + ~gp.char(<span class="string">':'</span>) + jExp).map(<span class="keyword">lambda</span> k, v: JPair(k, v)).tk()</div><div class="line">obj = gp.between(gp.char(<span class="string">'&#123;'</span>), pair.sep_by(gp.char(<span class="string">','</span>).tk()), gp.char(<span class="string">'&#125;'</span>)).map(JObj).tk()</div><div class="line"></div><div class="line">jExp.assign((obj | array | string | true | false | null | number).tk())</div></pre></td></tr></table></figure>
+<p>运行：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">str = <span class="string">"""&#123;</span></div><div class="line"><span class="string">    "firstName": "John",</span></div><div class="line"><span class="string">    "lastName": "Smith",</span></div><div class="line"><span class="string">    "age": 25,</span></div><div class="line"><span class="string">    "address": &#123;</span></div><div class="line"><span class="string">        "streetAddress": "21 2nd Street",</span></div><div class="line"><span class="string">        "city": "New York",</span></div><div class="line"><span class="string">        "state": "NY",</span></div><div class="line"><span class="string">        "postalCode": 10021</span></div><div class="line"><span class="string">    &#125;,</span></div><div class="line"><span class="string">    "phoneNumbers": [</span></div><div class="line"><span class="string">        &#123;</span></div><div class="line"><span class="string">            "type": "home",</span></div><div class="line"><span class="string">            "number": "212 555-1234"</span></div><div class="line"><span class="string">        &#125;,</span></div><div class="line"><span class="string">        &#123;</span></div><div class="line"><span class="string">            "type": "fax",</span></div><div class="line"><span class="string">            "number": "646 555-4567"</span></div><div class="line"><span class="string">        &#125;</span></div><div class="line"><span class="string">    ]</span></div><div class="line"><span class="string">&#125;"""</span></div><div class="line"></div><div class="line">res, t = jExp.run(str)</div><div class="line">print(res)</div></pre></td></tr></table></figure></p>
+<h4 id="完整代码-1"><a href="#完整代码-1" class="headerlink" title="完整代码"></a>完整代码</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> gparser <span class="keyword">as</span> gp</div><div class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</div><div class="line"></div><div class="line">JNull = namedtuple(<span class="string">'JNull'</span>, [])</div><div class="line">JTrue = namedtuple(<span class="string">'JTrue'</span>, [])</div><div class="line">JFalse = namedtuple(<span class="string">'JFalse'</span>, [])</div><div class="line">JNum = namedtuple(<span class="string">'JNum'</span>, [<span class="string">'value'</span>])</div><div class="line">JStr = namedtuple(<span class="string">'JStr'</span>, [<span class="string">'value'</span>])</div><div class="line">JObj = namedtuple(<span class="string">'JObj'</span>, [<span class="string">'value'</span>])</div><div class="line">JPair = namedtuple(<span class="string">'JPair'</span>, [<span class="string">'key'</span>, <span class="string">'value'</span>])</div><div class="line">JArr = namedtuple(<span class="string">'JArr'</span>, [<span class="string">'value'</span>])</div><div class="line"></div><div class="line"></div><div class="line">digits = gp.regex(<span class="string">r'[0-9]+'</span>)</div><div class="line">exponent = (gp.one_of(<span class="string">'eE'</span>) + gp.one_of(<span class="string">'-+'</span>).or_not() + digits).map(gp.concat)</div><div class="line">fractional = (gp.char(<span class="string">'.'</span>) + digits).map(gp.concat)</div><div class="line">integral = gp.char(<span class="string">'0'</span>) | gp.regex(<span class="string">r'[1-9][0-9]*'</span>)</div><div class="line">number = (gp.one_of(<span class="string">'-+'</span>).or_not() + integral + fractional.or_not() + exponent.or_not()) \</div><div class="line">    .map(gp.concat).map(<span class="keyword">lambda</span> n: JNum(float(n))).tk()</div><div class="line">null = gp.string(<span class="string">'null'</span>) &gt;&gt; gp.just(JNull()).tk()</div><div class="line">false = gp.string(<span class="string">'false'</span>) &gt;&gt; gp.just(JFalse()).tk()</div><div class="line">true = gp.string(<span class="string">'true'</span>) &gt;&gt; gp.just(JTrue()).tk()</div><div class="line">string = gp.between(gp.char(<span class="string">'"'</span>), gp.many(gp.none_of(<span class="string">'"'</span>)), gp.char(<span class="string">'"'</span>)) \</div><div class="line">    .map(<span class="keyword">lambda</span> cs: <span class="string">''</span>.join(cs)).map(JStr).tk()</div><div class="line"></div><div class="line">jExp = gp.undef()</div><div class="line"></div><div class="line">array = gp.between(gp.char(<span class="string">'['</span>), jExp.sep_by(gp.char(<span class="string">','</span>).tk()), gp.char(<span class="string">']'</span>)).map(JArr).tk()</div><div class="line">pair = (string + ~gp.char(<span class="string">':'</span>) + jExp).map(<span class="keyword">lambda</span> k, v: JPair(k, v)).tk()</div><div class="line">obj = gp.between(gp.char(<span class="string">'&#123;'</span>), pair.sep_by(gp.char(<span class="string">','</span>).tk()), gp.char(<span class="string">'&#125;'</span>)).map(JObj).tk()</div><div class="line"></div><div class="line">jExp.assign((obj | array | string | true | false | null | number).tk())</div></pre></td></tr></table></figure>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Gaufoo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://gaufoo.com/gparser/" title="GParser 文档">https://gaufoo.com/gparser/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/" rel="external nofollow" target="_blank">CC BY-NC-ND 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编译原理/" rel="tag"># 编译原理</a>
+          
+            <a href="/tags/函数式编程/" rel="tag"># 函数式编程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/ddia-iv-i/" rel="next" title="《DDIA》读与记（四）#上">
+                <i class="fa fa-chevron-left"></i> 《DDIA》读与记（四）#上
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="Gaufoo" />
+          <p class="site-author-name" itemprop="name">Gaufoo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhongzc/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhong-zhen-chi/activities" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-mortar-board"></i>
+                  
+                    
+                      知乎
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-nd.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              看看他们
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://lyfoon.com/" title="lyfoon" target="_blank">lyfoon</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://passer-by.com/" title="passer-by" target="_blank">passer-by</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Parser-Combinator-Library"><span class="nav-number">1.</span> <span class="nav-text">Parser Combinator Library</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Parser-Combinator-概念"><span class="nav-number">2.</span> <span class="nav-text">Parser Combinator 概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是Parser"><span class="nav-number">2.1.</span> <span class="nav-text">什么是Parser</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是Parser-Combinator"><span class="nav-number">2.2.</span> <span class="nav-text">什么是Parser Combinator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么是Parser-Combinator"><span class="nav-number">2.3.</span> <span class="nav-text">为什么是Parser Combinator</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Get-Started"><span class="nav-number">3.</span> <span class="nav-text">Get Started</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hello-World"><span class="nav-number">4.</span> <span class="nav-text">Hello World</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编写Parser"><span class="nav-number">5.</span> <span class="nav-text">编写Parser</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串参数"><span class="nav-number">5.1.</span> <span class="nav-text">字符串参数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#String"><span class="nav-number">5.1.1.</span> <span class="nav-text">String</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#One-Of"><span class="nav-number">5.1.2.</span> <span class="nav-text">One Of</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#None-Of"><span class="nav-number">5.1.3.</span> <span class="nav-text">None Of</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Regex"><span class="nav-number">5.1.4.</span> <span class="nav-text">Regex</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合子"><span class="nav-number">5.2.</span> <span class="nav-text">组合子</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Many"><span class="nav-number">5.2.1.</span> <span class="nav-text">Many</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Skip"><span class="nav-number">5.2.2.</span> <span class="nav-text">Skip</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Next"><span class="nav-number">5.2.3.</span> <span class="nav-text">Next</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Just"><span class="nav-number">5.2.4.</span> <span class="nav-text">Just</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Or"><span class="nav-number">5.2.5.</span> <span class="nav-text">Or</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Between"><span class="nav-number">5.2.6.</span> <span class="nav-text">Between</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Separate-By"><span class="nav-number">5.2.7.</span> <span class="nav-text">Separate By</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chain"><span class="nav-number">5.2.8.</span> <span class="nav-text">Chain</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Token"><span class="nav-number">5.2.9.</span> <span class="nav-text">Token</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内置解析函数"><span class="nav-number">5.3.</span> <span class="nav-text">内置解析函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#错误信息"><span class="nav-number">5.4.</span> <span class="nav-text">错误信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Map组合（核心）"><span class="nav-number">6.</span> <span class="nav-text">Map组合（核心）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#连接组合子"><span class="nav-number">6.1.</span> <span class="nav-text">连接组合子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Map"><span class="nav-number">6.2.</span> <span class="nav-text">Map</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Parser实战"><span class="nav-number">7.</span> <span class="nav-text">Parser实战</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#四则运算表达式"><span class="nav-number">7.1.</span> <span class="nav-text">四则运算表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Number"><span class="nav-number">7.1.1.</span> <span class="nav-text">Number</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Operator"><span class="nav-number">7.1.2.</span> <span class="nav-text">Operator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Abstraction"><span class="nav-number">7.1.3.</span> <span class="nav-text">Abstraction</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#完整代码"><span class="nav-number">7.1.4.</span> <span class="nav-text">完整代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSON"><span class="nav-number">7.2.</span> <span class="nav-text">JSON</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ADT"><span class="nav-number">7.2.1.</span> <span class="nav-text">ADT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常量"><span class="nav-number">7.2.2.</span> <span class="nav-text">常量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#json对象"><span class="nav-number">7.2.3.</span> <span class="nav-text">json对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#完整代码-1"><span class="nav-number">7.2.4.</span> <span class="nav-text">完整代码</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 &mdash; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gaufoo</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
