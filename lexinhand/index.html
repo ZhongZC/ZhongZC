@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="原理,编译原理," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="简单笔记">
+<meta name="keywords" content="原理,编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手工构造词法分析器">
+<meta property="og:url" content="https://gaufoo.com/lexinhand/index.html">
+<meta property="og:site_name" content="苟富">
+<meta property="og:description" content="简单笔记">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://gaufoo.com/images/cffx/20171026163706.png">
+<meta property="og:image" content="https://gaufoo.com/images/cffx/20171026165653.png">
+<meta property="og:image" content="https://gaufoo.com/images/cffx/2017102617.png">
+<meta property="og:image" content="https://gaufoo.com/images/cffx/20171030084516.png">
+<meta property="og:updated_time" content="2019-01-23T08:04:55.505Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="手工构造词法分析器">
+<meta name="twitter:description" content="简单笔记">
+<meta name="twitter:image" content="https://gaufoo.com/images/cffx/20171026163706.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://gaufoo.com/lexinhand/"/>
+
+
+
+
+
+  <title>手工构造词法分析器 | 苟富</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?918a16b20170b5642d2b55b0793aab3a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">苟富</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-notes">
+          <a href="/notes/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sticky-note"></i> <br />
+            
+            便签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gaufoo.com/lexinhand/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gaufoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="苟富">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">手工构造词法分析器</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-26T17:36:30+08:00">
+                2017-10-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/原理/" itemprop="url" rel="index">
+                    <span itemprop="name">原理</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/原理/编译原理/" itemprop="url" rel="index">
+                    <span itemprop="name">编译原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  660 字
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>简单笔记</p>
+<a id="more"></a>
+<hr>
+<h2 id="记号数据结构"><a href="#记号数据结构" class="headerlink" title="记号数据结构"></a>记号数据结构</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Token的数据结构</span></div><div class="line"><span class="comment">// 将字符流转化成Token流</span></div><div class="line"></div><div class="line"><span class="keyword">enum</span> kind &#123;IF, LPAREN, ID, INTLIT, ...&#125;;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">token</span> &#123;</span></div><div class="line">	<span class="keyword">enum</span> kind k;</div><div class="line">	<span class="keyword">char</span> lexeme[]; <span class="comment">// 单词</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>例：</p>
+<blockquote>
+<p>“if (x &gt; 5)”</p>
+</blockquote>
+<p>=&gt;<br>token {k = IF, lexeme = NULL};<br>// IF 和 “if” 一一对应，没必要记录单词<br>token {k = LPAREN, lexeme = NULL};<br>token {k = ID, lexeme = “x”};<br>…</p>
+<hr>
+<h2 id="转移图法"><a href="#转移图法" class="headerlink" title="转移图法"></a>转移图法</h2><h3 id="识别比较符"><a href="#识别比较符" class="headerlink" title="识别比较符"></a>识别比较符</h3><h4 id="转移图"><a href="#转移图" class="headerlink" title="转移图"></a>转移图</h4><p><img src="/images/cffx/20171026163706.png"></p>
+<h4 id="算法伪代码"><a href="#算法伪代码" class="headerlink" title="算法伪代码"></a>算法伪代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">// 上图的转换算法</div><div class="line"></div><div class="line">token nextToken()</div><div class="line">&#123;</div><div class="line">	c = getChar();</div><div class="line">	switch (c)</div><div class="line">	&#123;</div><div class="line">		case &apos;&lt;&apos;:</div><div class="line">			c = getChar();</div><div class="line">			switch(c)</div><div class="line">			&#123;</div><div class="line">				case &apos;=&apos;: return LE;</div><div class="line">				case &apos;&gt;&apos;: return NE;</div><div class="line">				default: rollback(); return LT;</div><div class="line">			&#125;</div><div class="line">		case &apos;=&apos;: return EQ;</div><div class="line">		case &apos;&gt;&apos;:</div><div class="line">			c = getChar();</div><div class="line">			switch(c)</div><div class="line">			&#123;</div><div class="line">				case &apos;=&apos;: return GE;</div><div class="line">				default: rollback(); return GT;</div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="识别标识符"><a href="#识别标识符" class="headerlink" title="识别标识符"></a>识别标识符</h3><h4 id="转移图-1"><a href="#转移图-1" class="headerlink" title="转移图"></a>转移图</h4><p><img src="/images/cffx/20171026165653.png"></p>
+<h4 id="算法伪代码-1"><a href="#算法伪代码-1" class="headerlink" title="算法伪代码"></a>算法伪代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">token nextToken()</div><div class="line">&#123;</div><div class="line">	c = getChar();</div><div class="line">	switch (c)</div><div class="line">	&#123;</div><div class="line">	/*</div><div class="line">	...</div><div class="line">	...</div><div class="line">	...</div><div class="line">	*/</div><div class="line">	case &apos;a&apos;, ..., &apos;z&apos;, &apos;A&apos;, ..., &apos;Z&apos;, &apos;_&apos;:</div><div class="line">		c = getChar();</div><div class="line">		while (c == &apos;a&apos; || ... || c == &apos;z&apos; </div><div class="line">			|| c == &apos;A&apos; || ... || c == &apos;Z&apos;</div><div class="line">			|| c == &apos;0&apos; || ... || c == &apos;9&apos;</div><div class="line">			|| c == &apos;_&apos;)</div><div class="line">			c = getChar();</div><div class="line">		rollback();</div><div class="line">		return ID;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h4 id="识别IF"><a href="#识别IF" class="headerlink" title="识别IF"></a>识别IF</h4><p>在识别标识符的基础上，进一步实现识别特定的关键字。</p>
+<h5 id="转移图-2"><a href="#转移图-2" class="headerlink" title="转移图"></a>转移图</h5><p><img src="/images/cffx/2017102617.png"></p>
+<h5 id="算法伪代码-2"><a href="#算法伪代码-2" class="headerlink" title="算法伪代码"></a>算法伪代码</h5><p>代码太长太麻烦，我不想写。<br>如果对所有关键字都要写这样特定的代码，工作量显然是相当巨大的，于是便有了关键字表算法。</p>
+<h4 id="关键字表算法"><a href="#关键字表算法" class="headerlink" title="关键字表算法"></a>关键字表算法</h4><ul>
+<li>对所有关键字构造哈希表H</li>
+<li>先统一按标识符的转移图来识别标识符</li>
+<li>识别完成后，进一步查表H是否为关键字<br>通过合理的构造哈希表H（完美哈希），可以在O(1)时间完成。</li>
+</ul>
+<hr>
+<h2 id="课后作业"><a href="#课后作业" class="headerlink" title="课后作业"></a>课后作业</h2><blockquote>
+<p>在这部分中，你将使用图转移算法手工实现一个小型的词法分析器。</p>
+<ul>
+<li>分析器的输入：存储在文本文件中的字符序列，字符取自ASCII字符集。文件中可能包括四种记号：关键字if、符合C语言标准的标识符、空格符、回车符\n。</li>
+<li>分析器的输出：打印出所识别的标识符的种类、及行号、列号信息。</li>
+</ul>
+<p>【示例】对于下面的文本文件：<br>ifx if iif       if<br>iff     if<br>你的输出应该是：<br>ID(ifx) (1, 1)<br>IF        (1, 4)<br>ID(iif)  (1, 8)<br>IF       (1, 13)<br>ID(iff) (2, 1)<br>IF       (2, 8)</p>
+</blockquote>
+<p>我的代码（很恶心，但是不想改了）：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iomanip&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iterator&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cctype&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Token</span></span></div><div class="line"><span class="class">&#123;</span></div><div class="line">  <span class="keyword">public</span>:</div><div class="line">    Token(<span class="keyword">const</span> <span class="built_in">string</span> &amp;s, <span class="keyword">int</span> row, <span class="built_in">string</span>::size_type loc) : s(s), row(row), col(loc - s.size() + <span class="number">1</span>) &#123;&#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> <span class="keyword">const</span></span></div><div class="line"><span class="function">    </span>&#123;</div><div class="line">        <span class="built_in">string</span> str;</div><div class="line">        <span class="keyword">if</span> (s != <span class="string">"if"</span>)</div><div class="line">            str = <span class="string">"ID("</span> + s + <span class="string">")"</span>;</div><div class="line">        <span class="keyword">else</span></div><div class="line">            str = <span class="string">"IF"</span>;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; setw(<span class="number">10</span>) &lt;&lt; left &lt;&lt; str &lt;&lt; <span class="string">"\t("</span> &lt;&lt; row &lt;&lt; <span class="string">", "</span> &lt;&lt; col &lt;&lt; <span class="string">')'</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">  <span class="keyword">private</span>:</div><div class="line">    <span class="built_in">string</span> s;</div><div class="line">    <span class="keyword">int</span> row;</div><div class="line">    <span class="built_in">string</span>::size_type col;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="built_in">string</span> line;</div><div class="line">    <span class="keyword">int</span> cnt_line = <span class="number">0</span>;</div><div class="line">    <span class="built_in">vector</span>&lt;Token&gt; tokens;</div><div class="line">    <span class="keyword">while</span> (getline(<span class="built_in">cin</span>, line))</div><div class="line">    &#123;</div><div class="line">        ++cnt_line;</div><div class="line">        <span class="built_in">string</span>::iterator cur = line.begin(), end = line.end();</div><div class="line">        <span class="keyword">while</span> (cur != end)</div><div class="line">        &#123;</div><div class="line">            <span class="built_in">string</span> id;</div><div class="line">            <span class="keyword">if</span> (<span class="built_in">isalpha</span>(*cur) || *cur == <span class="string">'_'</span>)</div><div class="line">            &#123;</div><div class="line">                id += *cur++;</div><div class="line">                <span class="keyword">while</span> (<span class="built_in">isalnum</span>(*cur) || *cur == <span class="string">'_'</span>)</div><div class="line">                    id += *cur++;</div><div class="line">            &#125;</div><div class="line">            tokens.push_back(Token(id, cnt_line, cur - line.begin()));</div><div class="line">            <span class="keyword">while</span> (<span class="built_in">isspace</span>(*cur))</div><div class="line">                ++cur;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="built_in">vector</span>&lt;Token&gt;::iterator i = tokens.begin(); i != tokens.end(); ++i)</div><div class="line">        (*i).print();</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>输出效果：<br><img src="/images/cffx/20171030084516.png"></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Gaufoo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://gaufoo.com/lexinhand/" title="手工构造词法分析器">https://gaufoo.com/lexinhand/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/" rel="external nofollow" target="_blank">CC BY-NC-ND 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/原理/" rel="tag"># 原理</a>
+          
+            <a href="/tags/编译原理/" rel="tag"># 编译原理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/cppvararg/" rel="next" title="C++中三种实现可变参数的方法">
+                <i class="fa fa-chevron-left"></i> C++中三种实现可变参数的方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/REtoNFAtoDFA/" rel="prev" title="RE转NFA，NFA转DFA">
+                RE转NFA，NFA转DFA <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="Gaufoo" />
+          <p class="site-author-name" itemprop="name">Gaufoo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhongzc/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhong-zhen-chi/activities" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-mortar-board"></i>
+                  
+                    
+                      知乎
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-nd.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              看看他们
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://lyfoon.com/" title="lyfoon" target="_blank">lyfoon</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://passer-by.com/" title="passer-by" target="_blank">passer-by</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#记号数据结构"><span class="nav-number">1.</span> <span class="nav-text">记号数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#转移图法"><span class="nav-number">2.</span> <span class="nav-text">转移图法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#识别比较符"><span class="nav-number">2.1.</span> <span class="nav-text">识别比较符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#转移图"><span class="nav-number">2.1.1.</span> <span class="nav-text">转移图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#算法伪代码"><span class="nav-number">2.1.2.</span> <span class="nav-text">算法伪代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#识别标识符"><span class="nav-number">2.2.</span> <span class="nav-text">识别标识符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#转移图-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">转移图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#算法伪代码-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">算法伪代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#识别IF"><span class="nav-number">2.2.3.</span> <span class="nav-text">识别IF</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#转移图-2"><span class="nav-number">2.2.3.1.</span> <span class="nav-text">转移图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#算法伪代码-2"><span class="nav-number">2.2.3.2.</span> <span class="nav-text">算法伪代码</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关键字表算法"><span class="nav-number">2.2.4.</span> <span class="nav-text">关键字表算法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#课后作业"><span class="nav-number">3.</span> <span class="nav-text">课后作业</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 &mdash; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gaufoo</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

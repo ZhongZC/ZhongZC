@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="原理,编译原理," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="记录">
+<meta name="keywords" content="原理,编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译原理学习笔记（二）">
+<meta property="og:url" content="https://gaufoo.com/compilenote-ii/index.html">
+<meta property="og:site_name" content="苟富">
+<meta property="og:description" content="记录">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://gaufoo.com/images/20170916182343.jpg">
+<meta property="og:image" content="https://gaufoo.com/images/20170916183203.jpg">
+<meta property="og:image" content="https://gaufoo.com/images/20170916183203.jpg">
+<meta property="og:image" content="https://gaufoo.com/images/DFA.png">
+<meta property="og:image" content="https://gaufoo.com/images/NFA.png">
+<meta property="og:image" content="https://gaufoo.com/images/20171024144829.png">
+<meta property="og:image" content="https://gaufoo.com/images/20171024144915.png">
+<meta property="og:image" content="https://gaufoo.com/images/20171024145410.png">
+<meta property="og:image" content="https://gaufoo.com/images/20171024145504.png">
+<meta property="og:image" content="https://gaufoo.com/images/20171024145520.png">
+<meta property="og:image" content="https://gaufoo.com/images/20171024150046.png">
+<meta property="og:updated_time" content="2019-01-23T08:05:55.795Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编译原理学习笔记（二）">
+<meta name="twitter:description" content="记录">
+<meta name="twitter:image" content="https://gaufoo.com/images/20170916182343.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://gaufoo.com/compilenote-ii/"/>
+
+
+
+
+
+  <title>编译原理学习笔记（二） | 苟富</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?918a16b20170b5642d2b55b0793aab3a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">苟富</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-notes">
+          <a href="/notes/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sticky-note"></i> <br />
+            
+            便签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gaufoo.com/compilenote-ii/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gaufoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="苟富">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">编译原理学习笔记（二）</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-16T17:46:00+08:00">
+                2017-09-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/原理/" itemprop="url" rel="index">
+                    <span itemprop="name">原理</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/原理/编译原理/" itemprop="url" rel="index">
+                    <span itemprop="name">编译原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,305 字
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>记录</p>
+<a id="more"></a>
+<hr>
+<h2 id="正则表达式-Regular-Expression，RE"><a href="#正则表达式-Regular-Expression，RE" class="headerlink" title="正则表达式 ( Regular Expression，RE )"></a>正则表达式 ( Regular Expression，RE )</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ul>
+<li>是一种用来描述正则语言的更紧凑的表示方法。</li>
+<li>正则表达式可以由较小的正则表达式按照特定规则<strong>递归</strong>地构建。</li>
+<li>每个正则表达式 <strong>r</strong> 定义(表示)一个语言，记为 <strong>L(r)</strong> 。</li>
+</ul>
+<hr>
+<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><ul>
+<li>ε是一个RE，L(ε) = {ε}</li>
+<li>如果 a∈∑，则a是一个RE，L(a) = {a}</li>
+<li>假设 <strong>r</strong> 和 <strong>s</strong> 都是RE，表示的语言分别是 <strong>L(r)</strong> 和 <strong>L(s)</strong> ，则<ul>
+<li>r|s 是一个RE，L( r|s ) = L(r)∪L(s)</li>
+<li>rs 是一个RE，L( rs ) = L(r) L(s)</li>
+<li>r* 是一个RE，L( r* )= (L(r))*</li>
+<li>(r) 是一个RE，L( (r) ) = L(r)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p>C语言无符号整数的RE</p>
+<ul>
+<li>十进制整数的RE - (1|…|9)(0|…|9)*|0</li>
+<li>八进制整数的RE - 0(0|1|2|3|4|5|6|7)(0|1|2|3|4|5|6|7)*</li>
+<li>十六进制整数的RE - 0x(0|1|…|9|a|…| f |A|…|F)(0|…|9|a|…| f |A|…|F )*</li>
+</ul>
+<hr>
+<h3 id="代数定律"><a href="#代数定律" class="headerlink" title="代数定律"></a>代数定律</h3><table>
+<thead>
+<tr>
+<th>定律</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>r｜s = s｜r</td>
+<td>｜是可以交换的</td>
+</tr>
+<tr>
+<td>r｜( s｜t )=( r｜s )｜t</td>
+<td>｜是可结合的</td>
+</tr>
+<tr>
+<td>r(s t)=( r s)t</td>
+<td>连接是可结合的</td>
+</tr>
+<tr>
+<td>r ( s｜t )= r s｜r t ; &nbsp;&nbsp;&nbsp; ( s｜t ) r = sr｜t r</td>
+<td>连接对｜是可分配的</td>
+</tr>
+<tr>
+<td>εr = rε = r</td>
+<td>ε 是连接的单位元</td>
+</tr>
+<tr>
+<td>r* = ( r｜ε )*</td>
+<td>闭包中一定包含 ε</td>
+</tr>
+<tr>
+<td>r* * = r*</td>
+<td>* 具有幂等性</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="单词的识别"><a href="#单词的识别" class="headerlink" title="单词的识别"></a>单词的识别</h2><h3 id="有穷自动机-Finite-Automata，FA"><a href="#有穷自动机-Finite-Automata，FA" class="headerlink" title="有穷自动机 ( Finite Automata，FA )"></a>有穷自动机 ( Finite Automata，FA )</h3><ul>
+<li>具有一系列<strong>离散的输入输出信息</strong>和<strong>有穷数目的内部状态</strong>。</li>
+<li>系统只需要根据<strong>当前所处的状态</strong>和<strong>当前面临的输入信息</strong>就可以决定系统的<strong>后继行为</strong>。</li>
+<li>每当系统处理了当前的输入后，系统的内部状态也将<strong>发生改变</strong>。</li>
+</ul>
+<h4 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h4><p><img src="/images/20170916182343.jpg" width="500"></p>
+<ul>
+<li>输入带(input tape)：用来存放输入符号串。</li>
+<li>读头(head )：从左向右逐个读取输入符号，不能修改（只读）、不能往返移动。</li>
+<li>有穷控制器( finite control )：具有有穷个状态数，根据<strong>当前的状态</strong>和<strong>当前输入符号</strong>控制转入<strong>下一状态</strong>。</li>
+</ul>
+<h4 id="表示：转换图-Transition-Graph"><a href="#表示：转换图-Transition-Graph" class="headerlink" title="表示：转换图 ( Transition Graph )"></a>表示：转换图 ( Transition Graph )</h4><p><img src="/images/20170916183203.jpg" width="500"></p>
+<ul>
+<li>结点：FA的状态<ul>
+<li>初始状态（开始状态）：<strong>只有一个</strong>，由start箭头指向。</li>
+<li>终止状态（接收状态）：可以有多个，用<strong>双圈</strong>表示。</li>
+</ul>
+</li>
+<li>带标记的有向边：如果对于输入 <strong>a</strong> ，存在一个从状态 <strong>p</strong> 到状态 <strong>q</strong> 的转换，就在 <strong>p</strong> 、 <strong>q</strong> 之间画一条有向边，并标记上 <strong>a</strong> 。</li>
+</ul>
+<h4 id="接收的语言"><a href="#接收的语言" class="headerlink" title="接收的语言"></a>接收的语言</h4><ul>
+<li>给定输入串 <strong>x</strong> ，如果存在一个对应于串 <strong>x</strong> 的从初始状态到某个终止状态的转换序列，则称串 <strong>x</strong> 被该FA接收。</li>
+<li>由一个有穷自动机M接收的所有串构成的集合称为是该<strong>FA定义（或接收）的语言</strong>，记为 <strong>L( M )</strong>。</li>
+</ul>
+<p><img src="/images/20170916183203.jpg" width="500"></p>
+<blockquote>
+<p>L(M) = 所有以abb结尾的字母表{a, b}上的串的集合</p>
+</blockquote>
+<h4 id="最长子串匹配原则"><a href="#最长子串匹配原则" class="headerlink" title="最长子串匹配原则"></a>最长子串匹配原则</h4><p>当输入串的多个前缀与一个或多个模式匹配时，总是选择最长的前缀进行匹配。</p>
+<hr>
+<h3 id="有穷自动机的分类"><a href="#有穷自动机的分类" class="headerlink" title="有穷自动机的分类"></a>有穷自动机的分类</h3><ul>
+<li>确定的FA (Deterministic finite automata, DFA)</li>
+<li>非确定的FA (Nondeterministic finite automata, NFA)</li>
+</ul>
+<h4 id="DFA"><a href="#DFA" class="headerlink" title="DFA"></a>DFA</h4><p>对任意的字符，最多有一个状态可以转移。</p>
+<p><strong>M = ( S，Σ ，δ，s0，F )</strong></p>
+<ul>
+<li>S：有穷状态集。</li>
+<li>Σ：输入字母表，即输入符号集合。假设 <strong>ε</strong> 不是 Σ 中的元素。</li>
+<li>δ：将S×Σ映射到S的<strong>转换函数</strong>。∀s∈S, a∈Σ, <strong>δ(s,a)</strong> 表示从状态s出发，沿着标记为a的边所能到达的状态。</li>
+<li>s0：开始状态 (或初始状态)，s0∈ S。</li>
+<li>F：接收状态（或终止状态）集合，F⊆ S。</li>
+</ul>
+<p><img src="/images/DFA.png" width="500"></p>
+<blockquote>
+<p>r = (a|b)*abb</p>
+</blockquote>
+<hr>
+<h4 id="NFA"><a href="#NFA" class="headerlink" title="NFA"></a>NFA</h4><p>对任意的字符，有多于一个状态可以转移。</p>
+<p><strong>M = ( S，Σ ，δ，s0，F )</strong></p>
+<ul>
+<li>S：有穷状态集。</li>
+<li>Σ：输入字母表，即输入字母表。假设 <strong>ε</strong> 不是 Σ 中的元素。</li>
+<li>δ：将S×Σ映射到2^S的<strong>转换函数</strong>。s∈S, a∈Σ, <strong>δ(s,a)</strong>表示从状态s出发，沿着标记为a的边所能到达的状态集合。</li>
+<li>s0：开始状态 (或初始状态)，s0∈ S。</li>
+<li>F：接收状态（或终止状态）集合，F⊆ S。</li>
+</ul>
+<p><img src="/images/NFA.png" width="500"></p>
+<blockquote>
+<p>r = (a|b)*abb</p>
+</blockquote>
+<hr>
+<h4 id="等价性"><a href="#等价性" class="headerlink" title="等价性"></a>等价性</h4><blockquote>
+<p>对任何非确定的有穷自动机N ，存在定义同一语言的确定的有穷自动机D<br>对任何确定的有穷自动机D ，存在定义同一语言的非确定的有穷自动机N</p>
+</blockquote>
+<hr>
+<h4 id="主要区别"><a href="#主要区别" class="headerlink" title="主要区别"></a>主要区别</h4><ul>
+<li>对于DFA，一个特定的符号输入，有且只能得到一个状态，而NFA就有可能得到一个状态集。因此NFA引擎必须记录所有的可能路径。</li>
+<li>DFA比较快，但不提供Backtrack（回溯）功能，NFA比较慢，但提供了Backtrack功能。</li>
+</ul>
+<hr>
+<h4 id="DFA的算法实现"><a href="#DFA的算法实现" class="headerlink" title="DFA的算法实现"></a>DFA的算法实现</h4><p>由于DFA对于特定输入，状态是确定的，因此实现起来很方便。</p>
+<ul>
+<li>输入：以文件结束符<strong>eof</strong>结尾的字符串<strong>x</strong>。DFA <strong>D</strong>的开始状态<strong>s0</strong>，接收状态集<strong>F</strong>，转换函数<strong>move</strong>。</li>
+<li>输出：如果<strong>D</strong>接收<strong>x</strong>，则回答“yes”，否则回答“no”。</li>
+<li>方法：将下述算法应用于输入串<strong>x</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">s = s0;</div><div class="line">c = next_char();</div><div class="line">while (c != eof) &#123;</div><div class="line">	s = move(s, c);</div><div class="line">	c = next_char();</div><div class="line">&#125;</div><div class="line">if (s is in F)</div><div class="line">	return &quot;yes&quot;;</div><div class="line">else</div><div class="line">	return &quot;no&quot;;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h3 id="RE转换成NFA"><a href="#RE转换成NFA" class="headerlink" title="RE转换成NFA"></a>RE转换成NFA</h3><h4 id="ε"><a href="#ε" class="headerlink" title="ε"></a>ε</h4><p><img src="/images/20171024144829.png" width="400"></p>
+<h4 id="字母表Σ中符号a"><a href="#字母表Σ中符号a" class="headerlink" title="字母表Σ中符号a"></a>字母表Σ中符号a</h4><p><img src="/images/20171024144915.png" width="400"></p>
+<h4 id="r-r1r2"><a href="#r-r1r2" class="headerlink" title="r = r1r2"></a>r = r1r2</h4><p><img src="/images/20171024145410.png" width="500"></p>
+<h4 id="r-r1-r2"><a href="#r-r1-r2" class="headerlink" title="r = r1|r2"></a>r = r1|r2</h4><p><img src="/images/20171024145504.png" width="400"></p>
+<h4 id="r-r1"><a href="#r-r1" class="headerlink" title="r = (r1)*"></a>r = (r1)*</h4><p><img src="/images/20171024145520.png" width="200"></p>
+<hr>
+<blockquote>
+<p>r=(a|b)*abb 对应的NFA</p>
+</blockquote>
+<p><img src="/images/20171024150046.png" width="500"></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Gaufoo
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://gaufoo.com/compilenote-ii/" title="编译原理学习笔记（二）">https://gaufoo.com/compilenote-ii/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/" rel="external nofollow" target="_blank">CC BY-NC-ND 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/原理/" rel="tag"># 原理</a>
+          
+            <a href="/tags/编译原理/" rel="tag"># 编译原理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/compilenote-i/" rel="next" title="编译原理学习笔记（一）">
+                <i class="fa fa-chevron-left"></i> 编译原理学习笔记（一）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/cppconstexpr/" rel="prev" title="C++11类型说明符：constexpr">
+                C++11类型说明符：constexpr <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="Gaufoo" />
+          <p class="site-author-name" itemprop="name">Gaufoo</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhongzc/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zhong-zhen-chi/activities" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-mortar-board"></i>
+                  
+                    
+                      知乎
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-nd.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              看看他们
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://lyfoon.com/" title="lyfoon" target="_blank">lyfoon</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://passer-by.com/" title="passer-by" target="_blank">passer-by</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#正则表达式-Regular-Expression，RE"><span class="nav-number">1.</span> <span class="nav-text">正则表达式 ( Regular Expression，RE )</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义"><span class="nav-number">1.2.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#举例"><span class="nav-number">1.3.</span> <span class="nav-text">举例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代数定律"><span class="nav-number">1.4.</span> <span class="nav-text">代数定律</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单词的识别"><span class="nav-number">2.</span> <span class="nav-text">单词的识别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#有穷自动机-Finite-Automata，FA"><span class="nav-number">2.1.</span> <span class="nav-text">有穷自动机 ( Finite Automata，FA )</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#模型"><span class="nav-number">2.1.1.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#表示：转换图-Transition-Graph"><span class="nav-number">2.1.2.</span> <span class="nav-text">表示：转换图 ( Transition Graph )</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#接收的语言"><span class="nav-number">2.1.3.</span> <span class="nav-text">接收的语言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最长子串匹配原则"><span class="nav-number">2.1.4.</span> <span class="nav-text">最长子串匹配原则</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有穷自动机的分类"><span class="nav-number">2.2.</span> <span class="nav-text">有穷自动机的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DFA"><span class="nav-number">2.2.1.</span> <span class="nav-text">DFA</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NFA"><span class="nav-number">2.2.2.</span> <span class="nav-text">NFA</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#等价性"><span class="nav-number">2.2.3.</span> <span class="nav-text">等价性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#主要区别"><span class="nav-number">2.2.4.</span> <span class="nav-text">主要区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DFA的算法实现"><span class="nav-number">2.2.5.</span> <span class="nav-text">DFA的算法实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RE转换成NFA"><span class="nav-number">2.3.</span> <span class="nav-text">RE转换成NFA</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ε"><span class="nav-number">2.3.1.</span> <span class="nav-text">ε</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#字母表Σ中符号a"><span class="nav-number">2.3.2.</span> <span class="nav-text">字母表Σ中符号a</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#r-r1r2"><span class="nav-number">2.3.3.</span> <span class="nav-text">r = r1r2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#r-r1-r2"><span class="nav-number">2.3.4.</span> <span class="nav-text">r = r1|r2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#r-r1"><span class="nav-number">2.3.5.</span> <span class="nav-text">r = (r1)*</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 &mdash; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gaufoo</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

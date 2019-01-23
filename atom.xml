@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://gaufoo.com/"/>
-  <updated>2018-12-15T09:00:22.324Z</updated>
+  <updated>2018-12-15T09:00:22.000Z</updated>
   <id>https://gaufoo.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://gaufoo.com/gparser/"/>
     <id>https://gaufoo.com/gparser/</id>
     <published>2018-12-14T16:27:00.000Z</published>
-    <updated>2018-12-15T09:00:22.324Z</updated>
+    <updated>2018-12-15T09:00:22.000Z</updated>
     
     <content type="html"><![CDATA[<p>Python Final Project</p>
 <a id="more"></a>
@@ -1024,9 +1024,9 @@
       <category term="函数式编程" scheme="https://gaufoo.com/categories/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
     
-      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
-    
       <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
     
   </entry>
   
@@ -1105,9 +1105,9 @@
     
       <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
-      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
-    
       <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
     
   </entry>
   
@@ -1237,9 +1237,9 @@
       <category term="计算原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
-    
       <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
     
   </entry>
   
@@ -1405,9 +1405,9 @@
     
       <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
-      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
-    
       <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="Haskell" scheme="https://gaufoo.com/tags/Haskell/"/>
     
   </entry>
   
@@ -1416,7 +1416,7 @@
     <link href="https://gaufoo.com/cppnlisp3/"/>
     <id>https://gaufoo.com/cppnlisp3/</id>
     <published>2018-03-04T01:36:56.000Z</published>
-    <updated>2018-03-04T04:22:54.000Z</updated>
+    <updated>2019-01-23T08:01:26.765Z</updated>
     
     <content type="html"><![CDATA[<p>迷。</p>
 <a id="more"></a>
@@ -1466,16 +1466,16 @@
     
       <category term="编程" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C++" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
+      <category term="Cpp" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/Cpp/"/>
     
     
       <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
-    
-      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+      <category term="Cpp" scheme="https://gaufoo.com/tags/Cpp/"/>
     
       <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
+    
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -1484,7 +1484,7 @@
     <link href="https://gaufoo.com/cppnlisp2/"/>
     <id>https://gaufoo.com/cppnlisp2/</id>
     <published>2018-03-03T12:28:29.000Z</published>
-    <updated>2018-03-04T04:16:58.000Z</updated>
+    <updated>2019-01-23T08:01:13.461Z</updated>
     
     <content type="html"><![CDATA[<p>既已有基础材料，撸起袖子做作业。</p>
 <a id="more"></a>
@@ -1557,16 +1557,16 @@
     
       <category term="编程" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C++" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
+      <category term="Cpp" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/Cpp/"/>
     
     
       <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
-    
-      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+      <category term="Cpp" scheme="https://gaufoo.com/tags/Cpp/"/>
     
       <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
+    
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
@@ -1575,7 +1575,7 @@
     <link href="https://gaufoo.com/cppnlisp1/"/>
     <id>https://gaufoo.com/cppnlisp1/</id>
     <published>2018-03-03T08:48:23.000Z</published>
-    <updated>2018-03-04T04:16:35.000Z</updated>
+    <updated>2019-01-23T08:01:07.461Z</updated>
     
     <content type="html"><![CDATA[<p>LISP赐予我力量。</p>
 <a id="more"></a>
@@ -1638,25 +1638,25 @@
     
       <category term="编程" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C++" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/C/"/>
+      <category term="Cpp" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/Cpp/"/>
     
     
       <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
-      <category term="C++" scheme="https://gaufoo.com/tags/C/"/>
-    
-      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
+      <category term="Cpp" scheme="https://gaufoo.com/tags/Cpp/"/>
     
       <category term="LISP" scheme="https://gaufoo.com/tags/LISP/"/>
+    
+      <category term="函数式编程" scheme="https://gaufoo.com/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
   <entry>
     <title>中缀表达式转化前后缀引发的思考</title>
-    <link href="https://gaufoo.com/ni_to_pre_post/"/>
-    <id>https://gaufoo.com/ni_to_pre_post/</id>
+    <link href="https://gaufoo.com/ni-to-pre-post/"/>
+    <id>https://gaufoo.com/ni-to-pre-post/</id>
     <published>2018-01-02T06:22:22.000Z</published>
-    <updated>2018-01-02T02:51:53.000Z</updated>
+    <updated>2019-01-23T08:07:25.127Z</updated>
     
     <content type="html"><![CDATA[<p>纠结星人的胜利。</p>
 <a id="more"></a>
