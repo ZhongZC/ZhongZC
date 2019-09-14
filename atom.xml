@@ -213,577 +213,6 @@
   </entry>
   
   <entry>
-    <title>《DDIA》读与记（四）#上</title>
-    <link href="https://gaufoo.com/ddia-iv-i/"/>
-    <id>https://gaufoo.com/ddia-iv-i/</id>
-    <published>2018-11-25T13:32:00.000Z</published>
-    <updated>2018-11-26T16:01:42.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Encoding and Evolution - Formats for Encoding Data</p>
-<a id="more"></a>
-<hr>
-<p>在前面已经讨论过如何处理变化，但是对于relational database来说，通常所有data都用一个schema，很难处理变化。相反，<em>schema-on-read</em>的database不会强制schema，从而可以容纳不同时间点写入的format不同的新老数据。</p>
-<p>在format变更了以后，application code通常也需要跟着改变。但现实情况是，不是所有的application code能够立马跟着变化。这就意味着一个app中，会存在新老版本的code，和新老版本format的data，从而引出两个概念：</p>
-<ul>
-<li><p>Backward compatibility：newer code能够读取older code写下的data。</p>
-</li>
-<li><p>Forward compatibility：older code能够读取newer code写下的data。</p>
-</li>
-</ul>
-<p>Backward compatibility通常比较容易实现，通常只需要explicitly处理older format。但Forward compatibility要求更高，需要older code能够忽略newer format相较于older format的额外添加的东西。</p>
-<hr>
-<p>数据的representation通常有两种情况：</p>
-<ul>
-<li>在memory中的object, struct, list, array, hash table, tree等等。</li>
-<li>需要写入file或者用network传输的数据，需要encode成some kind of self-contained sequence of bytes。</li>
-</ul>
-<p>The translation from the in-memory representation to a byte sequence is called <em>encoding</em>，and the reverse is called <em>decoding</em>。</p>
-<h2 id="Language-Specific-Formats"><a href="#Language-Specific-Formats" class="headerlink" title="Language-Specific Formats"></a>Language-Specific Formats</h2><p>Many programming languages come with built-in support for encoding in-memory objects into byte sequences. 比如臭名昭著的java.io.Serializable，Ruby的Marshal，Python的pickle，Java第三方库Kryo。</p>
-<p>虽然这些库很方便，但问题是：</p>
-<ul>
-<li>只能绑定到特定编程语言</li>
-<li>通常decoding的过程有初始化任意类的对象的能力，attacker可以利用这个特性，构造特定的sequence byte来破坏app，很不安全</li>
-<li>一般不考虑Forward compatibility和Backward compatibility</li>
-<li>有的库encode和decode性能很差</li>
-</ul>
-<hr>
-<h2 id="JSON-XML-and-Binary-Variants"><a href="#JSON-XML-and-Binary-Variants" class="headerlink" title="JSON, XML, and Binary Variants"></a>JSON, XML, and Binary Variants</h2><p>JSON，XML，CSV等都是textual format，因此是human-readable的，而它们的问题是：</p>
-<ul>
-<li>Encoding of numbers有许多的问题，比如对64位数字的支持，对浮点数的支持</li>
-<li>JSON、XML支持Unicode字符串，但不支持binary string</li>
-<li>尽管XML、JSON的schema是opinional support的，但是很难掌握</li>
-<li>CSV的转义语义比较模糊</li>
-</ul>
-<h3 id="Binary-encoding"><a href="#Binary-encoding" class="headerlink" title="Binary encoding"></a>Binary encoding</h3><p>举例record如下：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"userName"</span>: <span class="string">"Martin"</span>,</div><div class="line">    <span class="attr">"favoriteNumber"</span>: <span class="number">1337</span>,</div><div class="line">    <span class="attr">"interests"</span>: [<span class="string">"daydreaming"</span>, <span class="string">"hacking"</span>]</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>JSON的其中一种binary encoding例子为MessagePack，其长度为66个byte，比原始JSON的81个bytes占用空间小一些。从下图可以看出编码了field的type，保留了field name。</p>
-<p><img src="/images/181125/fig4-1.png" width="800"></p>
-<hr>
-<h2 id="Thrift-and-Protocol-Buffers"><a href="#Thrift-and-Protocol-Buffers" class="headerlink" title="Thrift and Protocol Buffers"></a>Thrift and Protocol Buffers</h2><p>Apache Thrift和Protocol Buffers是类似原理的binary encoding库。</p>
-<p>Thrift和Protocol Buffer都需要指定一个schema。比如Thrift interface definition language（IDL）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">struct Person &#123;</div><div class="line">    1: required string       userName,</div><div class="line">    2: optional i64          favoriteNumber,</div><div class="line">    3: optional list&lt;string&gt; interests</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>Protocal Buffers的schema定义如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">message Person &#123;</div><div class="line">    required string user_name       = 1;</div><div class="line">    optional int64  favorite_number = 2;</div><div class="line">    repeated string interests       = 3;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>Thrift和Protocol Buffer都有代码生成工具，能够利用schema生成不同编程语言的应用代码，供用户直接encode和decode记录（records）。</p>
-<p>Thrift的其中一种encoding format为<em>BinaryProtocol</em>，需要59个byte：</p>
-<p><img src="/images/181125/fig4-2.png" width="800"></p>
-<p>Thrift的另一种encoding format为<em>CompactProtocol</em>，需要34个byte：</p>
-<p><img src="/images/181125/fig4-3.png" width="800"></p>
-<p>Protocol Buffers的encoding format，需要33个byte：</p>
-<p><img src="/images/181125/fig4-4.png" width="800"></p>
-<p>CompactProtocol和Protocol Buffers的相似之处：</p>
-<ul>
-<li>它们都采用field tag</li>
-<li>都对数字有压缩处理</li>
-<li>都有编码datatype</li>
-</ul>
-<p>对于schema里的<em>required</em>或者<em>optional</em>，在encoded byte中并没有指示出来，可以进行runtime check。</p>
-<h3 id="Field-tags-and-schema-evolution"><a href="#Field-tags-and-schema-evolution" class="headerlink" title="Field tags and schema evolution"></a>Field tags and schema evolution</h3><p>Each field is identifed by its tag number and annotated with a datatype. 它们是这样保证compatibility的：</p>
-<ul>
-<li>当旧的代码读取新的record时，可以直接忽略不需要的tag number，datatype annotation提示需要跳过多少个byte。</li>
-<li>新的代码可以很简单地读取旧的record，唯一的细节是：if you add a new field, you cannot make it required.</li>
-<li>当删除一个field时，只能删除optional的field，而且这个field的tag number不能再使用，因为旧代码有可能还用这个tag number，会导致冲突。</li>
-</ul>
-<h3 id="Datatypes-and-schema-evolution"><a href="#Datatypes-and-schema-evolution" class="headerlink" title="Datatypes and schema evolution"></a>Datatypes and schema evolution</h3><p>当改变field的datatype时，有可能会损失精度和get truncated。</p>
-<p>Protocol Buffers没有list和array类的datatype，而是用repeated表示list，这样有利于optional更换成repeated。新代码读取旧record时，该list field的长度为0或1。旧代码读取新record时，会读取list field中的最后一条。</p>
-<p>Thrift中有list datatype，所以没有Protocol Buffers对evolution的良好支持，但是它能够支持nested lists。</p>
-<hr>
-<h2 id="Avro"><a href="#Avro" class="headerlink" title="Avro"></a>Avro</h2><p>Apache Avro是另一种binary encoding format，是由于Thrift不适用于Hadoop的场景而发明的。</p>
-<p>Avro同样也需要schema，Avro IDL：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">record Person &#123;</div><div class="line">    string                userName;</div><div class="line">    union &#123; null, long &#125;  favoriteNumber = null;</div><div class="line">    array&lt;string&gt;         interests;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>等价的JSON表示：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"type"</span>: <span class="string">"record"</span>,</div><div class="line">    <span class="attr">"name"</span>: <span class="string">"Person"</span>,</div><div class="line">    <span class="attr">"fields"</span>: [</div><div class="line">        &#123;<span class="attr">"name"</span>: <span class="string">"userName"</span>, <span class="attr">"type"</span>: <span class="string">"string"</span>&#125;,</div><div class="line">        &#123;<span class="attr">"name"</span>: <span class="string">"favoriteNumber"</span>, <span class="attr">"type"</span>: [<span class="string">"null"</span>, <span class="string">"long"</span>], <span class="attr">"default"</span>: <span class="literal">null</span>&#125;,</div><div class="line">        &#123;<span class="attr">"name"</span>: <span class="string">"interests"</span>, <span class="attr">"type"</span>: &#123;<span class="attr">"type"</span>: <span class="string">"array"</span>, <span class="attr">"items"</span>: <span class="string">"string"</span>&#125;</div><div class="line">    ] </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>Encoded byte，需要32个byte：</p>
-<p><img src="/images/181125/fig4-5.png" width="800"></p>
-<p>和Apache Thrift和Protocol Buffers最大的不同就是这里不再用tag number，没有编码datatype annotation。为了Parse这个binary data，需要有schema，然后按顺序go through the fields. This means that the binary data can only be decoded correctly if the code reading the data is using the <em>exact same schema</em> as the code that wrote the data.</p>
-<h3 id="The-writer’s-schema-and-the-reader’s-schema"><a href="#The-writer’s-schema-and-the-reader’s-schema" class="headerlink" title="The writer’s schema and the reader’s schema"></a>The writer’s schema and the reader’s schema</h3><p>With Avro，encode data需要<em>writer’s schema</em>，decode data需要<em>reader’s schema</em>. The key idea with Avro is that the writer’s schema and the reader’s schema don’t have to be the same – they only need to be compatible.</p>
-<p>只要同时有两个schema，schema resolutin matches up the field by field name. 应用会resolve这些不同：</p>
-<p><img src="/images/181125/fig4-6.png" width="800"></p>
-<h3 id="Schema-evolution-rules"><a href="#Schema-evolution-rules" class="headerlink" title="Schema evolution rules"></a>Schema evolution rules</h3><p>Only add or remove a field that has a default value. To use <code>null</code>, you have to use a <em>union type</em>. For example, <code>union {null, long, string} field;</code>. You can only use <code>null</code> as a default value if it is one of the braches of the union.</p>
-<p>Changing the datatype of a field is possible, provided that Avro can convert the type.</p>
-<h3 id="But-what-is-the-writer’s-schema"><a href="#But-what-is-the-writer’s-schema" class="headerlink" title="But what is the writer’s schema?"></a>But what is the writer’s schema?</h3><p>Reader该如何知道writer’s schema：</p>
-<ul>
-<li>Large file with lots of records:<br>include the writer’s schema once at the beginning of the file.</li>
-<li>Database with individually written records:<br>include a version number at the beginning of every encoded record &amp;<br>fetch the writer’s schema for that for that version number for the database</li>
-<li>Sending records over a network connection<br>negotiate the schema version on connection setup</li>
-</ul>
-<h3 id="Dynamically-generated-schemas"><a href="#Dynamically-generated-schemas" class="headerlink" title="Dynamically generated schemas"></a>Dynamically generated schemas</h3><p>Avro可以通过relational databasede field来dynamically generated schemas. 反观Apache Thrift和Protocol Buffers，则需要手动更新，而且还需要非常小心地处理field tag number的冲突问题。</p>
-<h3 id="Code-generation-and-dynamically-typed-languages"><a href="#Code-generation-and-dynamically-typed-languages" class="headerlink" title="Code generation and dynamically typed languages"></a>Code generation and dynamically typed languages</h3><p>Avro can be used just as well without any code generation. If you have an object container file (which embeds the writer’s schema), you can simply open it using the Avro library and look at the data in the same way as you could look at a JSON file. The file is self-describing since it includes all the necessary metadata.</p>
-<hr>
-<h2 id="The-Merits-of-Schemas"><a href="#The-Merits-of-Schemas" class="headerlink" title="The Merits of Schemas"></a>The Merits of Schemas</h2><p>Protocol Buffers, Thrift, and Avro都使用schema去描述binary encoding format。实现简单，使用简单，所以使用很广泛。Schema evolution既可以带来如同schema-on-read JSON databases般的灵活性，又能保证数据的准确。</p>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Encoding and Evolution - Formats for Encoding Data&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="读书笔记" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-    
-      <category term="DDIA" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/DDIA/"/>
-    
-    
-      <category term="大数据" scheme="https://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
-      <category term="DDIA" scheme="https://gaufoo.com/tags/DDIA/"/>
-    
-      <category term="读书笔记" scheme="https://gaufoo.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>《DDIA》读与记（三）#下</title>
-    <link href="https://gaufoo.com/ddia-iii-ii/"/>
-    <id>https://gaufoo.com/ddia-iii-ii/</id>
-    <published>2018-11-23T11:28:00.000Z</published>
-    <updated>2018-11-23T05:16:20.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Storage and Retrieval - Transaction Processing or Analytics?</p>
-<a id="more"></a>
-<hr>
-<p>在古老的从前，database的write一般是和commercial transaction有关。到现在，transaction这个名号保留了下来，用于form一个logical unit，里面包含一系列read、write操作。</p>
-<p>有一些应用很像处理business transaction，根据key来取一些record，根据和用户的交互来插入或更新一些record，这种模式被称为<em>online transaction processing</em>（OLTP）。</p>
-<p>有一些database专注于数据分析，通常需要scan大量的数据，每条record读取少量的column，计算一些aggregate statistic（比如count、sum或者average），这种模式被称为<em>online analytic processing</em>（OLAP）。</p>
-<p>它们之间有以下差别：</p>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>OLTP</th>
-<th>OLAP</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Main read pattern</td>
-<td>Small number of records per query, fetched by key</td>
-<td>Aggregate over large number of records</td>
-</tr>
-<tr>
-<td>Main write pattern</td>
-<td>Random-access, low-latency writes from user input</td>
-<td>Bulk import (ETL) or event stream</td>
-</tr>
-<tr>
-<td>Primarily used by</td>
-<td>End user/customer, via web application</td>
-<td>Internal analyst, for decision support</td>
-</tr>
-<tr>
-<td>What data represents</td>
-<td>Latest state of data (current point in time)</td>
-<td>History of events that happened over time</td>
-</tr>
-<tr>
-<td>Dataset size</td>
-<td>Gigabytes to terabytes</td>
-<td>Terabytes to petabytes</td>
-</tr>
-</tbody>
-</table>
-<p>以前处理OLTP和OLAP都是用同样的database，后来OLAP采用另外（separate）的database，称为<em>data warehouse</em>。</p>
-<hr>
-<h1 id="Data-Warehousing"><a href="#Data-Warehousing" class="headerlink" title="Data Warehousing"></a>Data Warehousing</h1><p>Data warehouse是不会影响到应用的OLTP的分离出去的database。它需要从所有可用的OLTP里读取数据的read-only copy。过程是：</p>
-<ul>
-<li>数据先从OLTP database中extract。</li>
-<li>transform到analysis-friendly schema。</li>
-<li>clean up并load到data warehouse中。</li>
-</ul>
-<p>整个过程被称为<em>Extract-Transform-Load</em>（ETL）。</p>
-<p><img src="/images/181123/fig3-8.png" width="800"></p>
-<h2 id="Stars-and-Snowflakes-Schemas-for-Analytics"><a href="#Stars-and-Snowflakes-Schemas-for-Analytics" class="headerlink" title="Stars and Snowflakes: Schemas for Analytics"></a>Stars and Snowflakes: Schemas for Analytics</h2><p>Analysis过程的data model不如transaction processing的那么丰富，大多数data warehouse都采用<em>star schema</em>（也叫作<em>dimensional modeling</em>）。</p>
-<p><img src="/images/181123/fig3-9.png" width="800"></p>
-<p>最中间的schema叫做<em>fact table</em>，每一行代表一件在过去特定时间里发生过的事情。fact table中有一些column是attribute，有一些则是foreign key reference。fact table中的每一row都代表一个event，而dimension则代表event的who, what, where, when, how, 和why。</p>
-<p>这种模式还有一种变体，称为<em>snowflake schema</em>，即每一dimension还会进行further broke down到subdimension，像雪花一样。Snowflake schema比star schema更normalized，但star schema对于analyst来说更加简单。</p>
-<p>Fact table在实际中通常会有超过100个column，因为每条fact需要记录非常多的细节。</p>
-<hr>
-<h1 id="Column-Oriented-Storage"><a href="#Column-Oriented-Storage" class="headerlink" title="Column-Oriented Storage"></a>Column-Oriented Storage</h1><p>尽管fact table的column非常多，但是query通常只获取4 ~ 5个column，例如：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span></div><div class="line">  dim_date.weekday,</div><div class="line">  dim_product.category,</div><div class="line">  <span class="keyword">SUM</span>(fact_sales.quantity) <span class="keyword">AS</span> quantity_sold</div><div class="line"><span class="keyword">FROM</span> fact_sales</div><div class="line">  <span class="keyword">JOIN</span> dim_date <span class="keyword">ON</span> fact_sales.date_key = dim_date.date_key</div><div class="line">  <span class="keyword">JOIN</span> dim_product <span class="keyword">ON</span> fact_sales.product_sk = dim_product.product_sk</div><div class="line"><span class="keyword">WHERE</span></div><div class="line">  dim_date.year = <span class="number">2013</span> <span class="keyword">AND</span></div><div class="line">  dim_product.category <span class="keyword">IN</span> (<span class="string">'Fresh fruit'</span>, <span class="string">'Candy'</span>)</div><div class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span></div><div class="line">  dim_date.weekday, dim_product.category;</div></pre></td></tr></table></figure>
-<p>在OLTP中，通常是按row-oriented来进行存储的，一行接着一行。如果上面这块SQL从这样的存储中获取记录，storage engine仍需要将100多column加载到memory中，parse them，然后filter out不需要的column。</p>
-<p>而为了加速这个过程，有一种思想是<em>column-oriented storage</em>。不要按一行行地存储，而是每个column都保存到一起，这样使得对于特定column的query相当有效。</p>
-<p><img src="/images/181123/fig3-10.png" width="800"></p>
-<h2 id="Column-Compression"><a href="#Column-Compression" class="headerlink" title="Column Compression"></a>Column Compression</h2><p>按column来存储数据，则有机会根据column数据的同质性进行compress。以下是利用bitmap进行compress的一个例子，这种组织方式非常适合data warehouse中的这类查询：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">WHERE product_sk IN (30，68，69)</div><div class="line"></div><div class="line">WHERE product_sk = 31 AND store_sk = 3</div></pre></td></tr></table></figure></p>
-<p>只需要将bitmap进行bitwise OR或者bitwise AND即可。</p>
-<p><img src="/images/181123/fig3-11.png" width="800"></p>
-<h2 id="Sort-Order-in-Column-Storage"><a href="#Sort-Order-in-Column-Storage" class="headerlink" title="Sort Order in Column Storage"></a>Sort Order in Column Storage</h2><p>The advantage of sorted order is that it can help with compression of columns if the primary sort column does not have many distinct values. 不过对于second和third sort key将没有那么好的compress效果了。</p>
-<h3 id="Several-different-sort-orders"><a href="#Several-different-sort-orders" class="headerlink" title="Several different sort orders"></a>Several different sort orders</h3><p>由于不同的query过程受益于不同的sort order，有些厂商则同时提供按多种sort order排序好的多份replicate data。</p>
-<h2 id="Writing-to-Column-Oriented-Storage"><a href="#Writing-to-Column-Oriented-Storage" class="headerlink" title="Writing to Column-Oriented Storage"></a>Writing to Column-Oriented Storage</h2><p>Column-oriented storage, compression, and sorting all help to make those read queries faster. However, they have the downside of making writes more difficult.<br>但可以借鉴LSM-tree，所有的write先go to一个in-memory store，到差不多了再写到disk里，然后再进行merge。</p>
-<h2 id="Aggregation-Data-Cubes-and-Materialized-Views"><a href="#Aggregation-Data-Cubes-and-Materialized-Views" class="headerlink" title="Aggregation: Data Cubes and Materialized Views"></a>Aggregation: Data Cubes and Materialized Views</h2><p>Data warehouse的query经常包含aggregate function，比如SQL中的COUNT、SUM、AVG，MIN或者MAX。可以尝试cache一些aggregate值，来加速query。这种cache被称作<em>materialized view</em>。当底层数据改变，materialized view也跟着更新。</p>
-<p>Materialized的一种特例叫做<em>data cube</em>或者叫<em>OLAP cube</em>。它能将不同dimension的数据进行aggregate。</p>
-<p><img src="/images/181123/fig3-12.png" width="800"></p>
-<p>这个例子是2个dimension，aggregating data by summing。对于2个dimension的情况，人类尚能想象出来，3个dimension以上就比较困难了，但是和2个dimension的原理是一样的，都能cache一些aggregate值，从而加速query过程，而无需scan上百万行。</p>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Storage and Retrieval - Transaction Processing or Analytics?&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="读书笔记" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-    
-      <category term="DDIA" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/DDIA/"/>
-    
-    
-      <category term="大数据" scheme="https://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
-      <category term="DDIA" scheme="https://gaufoo.com/tags/DDIA/"/>
-    
-      <category term="读书笔记" scheme="https://gaufoo.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>《DDIA》读与记（三）#上</title>
-    <link href="https://gaufoo.com/ddia-iii-i/"/>
-    <id>https://gaufoo.com/ddia-iii-i/</id>
-    <published>2018-11-22T17:11:00.000Z</published>
-    <updated>2018-11-23T08:42:24.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Storage and Retrieval - Data Structures That Power Your Database</p>
-<a id="more"></a>
-<hr>
-<h2 id="Log"><a href="#Log" class="headerlink" title="Log"></a>Log</h2><p>最简单的数据库，用bash脚本写就：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="function"><span class="title">db_set</span></span> () &#123;</div><div class="line">    <span class="built_in">echo</span> <span class="string">"<span class="variable">$1</span>,<span class="variable">$2</span>"</span> &gt;&gt; database</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="title">db_get</span></span> () &#123;</div><div class="line">    grep <span class="string">"^<span class="variable">$1</span>,"</span> database | sed -e <span class="string">"s/^<span class="variable">$1</span>,//"</span> | tail -n 1</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>存取方式：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ db_set 123456 <span class="string">'&#123;"name":"London","attractions":["Big Ben","London Eye"]&#125;'</span></div><div class="line"></div><div class="line">$ db_set 42 <span class="string">'&#123;"name":"San Francisco","attractions":["Golden Gate Bridge"]&#125;'</span></div><div class="line"></div><div class="line">$ db_get 42</div><div class="line">&#123;<span class="string">"name"</span>:<span class="string">"San Francisco"</span>,<span class="string">"attractions"</span>:[<span class="string">"Golden Gate Bridge"</span>]&#125;</div></pre></td></tr></table></figure></p>
-<p>更新value，直接append，<code>db_get</code>函数只取最后一条：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ db_set 42 <span class="string">'&#123;"name":"San Francisco","attractions":["Exploratorium"]&#125;'</span> </div><div class="line"></div><div class="line">$ db_get 42</div><div class="line">&#123;<span class="string">"name"</span>:<span class="string">"San Francisco"</span>,<span class="string">"attractions"</span>:[<span class="string">"Exploratorium"</span>]&#125;</div><div class="line"></div><div class="line">$ cat database</div><div class="line">123456,&#123;<span class="string">"name"</span>:<span class="string">"London"</span>,<span class="string">"attractions"</span>:[<span class="string">"Big Ben"</span>,<span class="string">"London Eye"</span>]&#125;</div><div class="line">42,&#123;<span class="string">"name"</span>:<span class="string">"San Francisco"</span>,<span class="string">"attractions"</span>:[<span class="string">"Golden Gate Bridge"</span>]&#125;</div><div class="line">42,&#123;<span class="string">"name"</span>:<span class="string">"San Francisco"</span>,<span class="string">"attractions"</span>:[<span class="string">"Exploratorium"</span>]&#125;</div></pre></td></tr></table></figure></p>
-<p>记录是直接append到文件中去的，类似这样的database，我们称该文件为append-only data file，叫做<em>log</em>。<br>在上面的bash数据库中，<code>db_get</code>很慢，复杂度为O(n)，但优势在于文件的append很快，因此<code>db_set</code>非常efficient。</p>
-<hr>
-<h2 id="Index"><a href="#Index" class="headerlink" title="Index"></a>Index</h2><p>可以用额外的一种数据结构<em>index</em>，来帮助从database中有效地（efficiently）查找value。而这种额外的（additional）的结构会带来额外的开销，特别是在写入时。作为well-chosen的index可能会加速读查找（read queries），但index是必然会减慢读（write）的。所以database默认不会有index，需要用户手动选择使用index。</p>
-<h3 id="Hash-Indexes"><a href="#Hash-Indexes" class="headerlink" title="Hash Indexes"></a>Hash Indexes</h3><p>每条记录（data）都直接append到文件中，实际可以在内存中维护一个hash map，每个key映射到（map to）文件中记录（data）所处在的byte offset。</p>
-<p>当添加新纪录时，一边更新内存中的hash map，一边将key-value append到文件中。更新记录时，一边更新内存中该key的value，which is 最新记录的offset。</p>
-<p><img src="/images/181123/fig3-1.png" width="600/"></p>
-<p>不过用hash map的一个前提是，所有的key能够完全装进内存中，所以适用于经常用key来更新value，很多write操作的场景，而不同的（distinct）key不能太多，否则可能不能完全装进内存。</p>
-<p>由于所有的write都是append到文件中的，此时可以break the log into <em>segments</em> of a certain size，当segment file到达这个size以后，关闭该文件，然后再写入新的segment file。每个segment file对应内存中一个hash map。</p>
-<p>到了一个合适的时间点，就可以进行compact了。多个segment file compact到新的segment file，并构建新的hash map。compact的过程同一条记录保留最新的记录即可，旧的可以直接discard。并且这个compaction可以在后台线程（background thread）进行，不会影响正常的读写请求。</p>
-<p><img src="/images/181123/fig3-3.png" width="600/"></p>
-<p>当需要查找value时，首先check the most recent segment’s hash map，如果没有，则check the second-most-recent segment，and so on.</p>
-<p>有一些常见的实际做法in practice：</p>
-<ul>
-<li><p>File format<br>可以用binary format，而不是CSV。</p>
-</li>
-<li><p>Deleting records<br>删除记录时，需要append一个特殊的deletion record，merge的时候就可以直接discard掉记录。</p>
-</li>
-<li><p>Crash recovery<br>万一内存中的hash map不见了，可以通过segment重新构建，也可以为hash map存些snapshot。</p>
-</li>
-<li><p>Partially written records<br>添加checksums，识别因为crash而产生的halfway。</p>
-</li>
-<li><p>Concurrency control<br>虽然由于写有严格顺序，只能有一个写进程，但是读进程可以有很多个，因为segment都是immutable，并发很简单。</p>
-</li>
-</ul>
-<p>为什么不update the file in place：</p>
-<ul>
-<li>Append是sequential write operation，比random write要快得多。</li>
-<li>Concurrency和Crash recovery很轻松。</li>
-<li>合并旧段可以避免数据文件随着时间的推移而分散的问题。</li>
-</ul>
-<p>hash table index的缺点：</p>
-<ul>
-<li>必须在内存</li>
-<li>range queries太慢</li>
-</ul>
-<hr>
-<h3 id="SSTables-and-LSM-Trees"><a href="#SSTables-and-LSM-Trees" class="headerlink" title="SSTables and LSM-Trees"></a>SSTables and LSM-Trees</h3><p>通过改造segment file，使其sorted by key，就是Sorted String Table了，简称SSTable。有以下好处：</p>
-<ul>
-<li>Merging segments is simple and efficient. Merge过程很像mergesort。最终只需要保留最新的key-value。</li>
-</ul>
-<p><img src="/images/181123/fig3-4.png" width="600/"></p>
-<ul>
-<li>无需保存所有的key在内存，只需要留一些key作为路标，找到区间后，再到相应的segment file里去scan。如果每条记录都是定长的，甚至可以用binary search。</li>
-</ul>
-<p><img src="/images/181123/fig3-5.png" width="600/"></p>
-<ul>
-<li>一个范围内的记录可以组织成一个Block，然后进行compress，一能saving disk space，二能reduces the I/O bandwidth use.</li>
-</ul>
-<h4 id="Constucting-and-maintaining-SSTables"><a href="#Constucting-and-maintaining-SSTables" class="headerlink" title="Constucting and maintaining SSTables"></a>Constucting and maintaining SSTables</h4><p>首先在内存中构建sorted的记录，比如用red-black tress或AVL trees。用这种数据结构，插入key时可以保留sorted order。</p>
-<p>storage engine具体操作：</p>
-<ul>
-<li>When a write comes in, 将key-value加到in-memory tree，也称memtable。</li>
-<li>当memtable大小达到threshold，将它写到SSTable中。</li>
-<li>查找记录时，先在memtable找，然后从most recent one-disk segment找，然后在next-older segment, etc.</li>
-<li>merging和compaction过程可以在background。</li>
-</ul>
-<h4 id="Makeing-an-LSM-tree-out-of-SSTables"><a href="#Makeing-an-LSM-tree-out-of-SSTables" class="headerlink" title="Makeing an LSM-tree out of SSTables"></a>Makeing an LSM-tree out of SSTables</h4><p>Originally this indexing structure was described by Patrick O’Neil et al. under the name <em>Log-Structured Merge-Tree</em> (or LSM-Tree), building on earlier work on log-structured filesystems. Storage engines that are based on this principle of merging and compacting sorted files often called LSM storage engines.</p>
-<h4 id="Performance-optimizations"><a href="#Performance-optimizations" class="headerlink" title="Performance optimizations"></a>Performance optimizations</h4><p>确定一个key不存在于database的过程，是比较慢的。需要先找memtable，再是所有segment，最后才能确定key不存在。可以采用额外的Bloom filters来优化这个过程。它能告诉你一个key保证不在database中，这样相比之前就节省了相当多的disk read。<br>而有关determine the order and timing of how SSTables are compacted and merged的策略，有两种最常见做法：</p>
-<ul>
-<li>size-tiered：新的和小的SSTables持续地合并到老的和大的SSTables。</li>
-<li>leveled compaction：the key range is split up into smaller SSTables and older data is moved into separate “levels,” which allows the compaction to proceed more incrementally and use less disk space.</li>
-</ul>
-<hr>
-<h3 id="B-Trees"><a href="#B-Trees" class="headerlink" title="B-Trees"></a>B-Trees</h3><p>B-Trees和SSTables一样，都能让key-value pairs根据sorted key来组织，都能高效地支持key value lookup和range queries。</p>
-<p>log-structured index是将database切分成多个variable-size的segment。相反，B-Trees将database切分成fixed-size的block或者page，一般是4KB大小，和底层硬件关联密切。</p>
-<p>每个page都可以由address或者location来identified，因此page直接可以相互refer to，on disk instead of in memory. </p>
-<p><img src="/images/181123/fig3-6.png" width="600/"></p>
-<p>查询从root page开始，每个page包含很多key和到child page的reference，每个child page代表一个连续范围内的key。名词branching factor代表一个page里包含的reference数，比如上图的branching factor是6，In practice，这个数字一般是几百。</p>
-<p>当需要更新一个value时，需要search到包含该key的leaf page，改变value，然后将page写回到disk。当需要add一个新的key，需要找到相应的range并加入到该page，如果空间不足以accommodate新的key，则需要split到两个half-full page，然后parent page需要跟着更新。此算法保证了整个tree的balanced。</p>
-<p><img src="/images/181123/fig3-7.png" width="600/"></p>
-<h4 id="Make-B-trees-reliable"><a href="#Make-B-trees-reliable" class="headerlink" title="Make B-trees reliable"></a>Make B-trees reliable</h4><p>和LSM-trees的append不同，B-trees modify files in place. 任何修改都要覆写之前的文件。当child page需要split时，还需要同时改写parent page，所有的这些覆写和重写，都存在crash的可能，这将导致严重的问题。</p>
-<p>为了解决这个问题，一般采用一个额外的在disk上的data structure，<em>write-ahead log</em>（WAL，也叫redo log），是一个append-only file，以供crash发生时的恢复。in place还带来concurrency问题，需要用<em>latches</em>（lightweight locks）来保证一致性。</p>
-<h4 id="B-tree-optimizations"><a href="#B-tree-optimizations" class="headerlink" title="B-tree optimizations"></a>B-tree optimizations</h4><ul>
-<li>不覆写，不维护WAL，而采用<em>copy-on-write scheme</em>，不再in place，全部写到新的page，连同parent page。</li>
-<li>B-tree可以重新组织，让leaf page在disk中相互靠近。但是在B-tree中维护这种结构比在LSM-Tree中难得多。</li>
-<li>额外的指针连接两个leaf page，这样有助于优化scan过程，而不用回到parent page。</li>
-<li>B-tree的变种借助一些log-structured的思想来减少disk seek。</li>
-</ul>
-<hr>
-<h3 id="Comparing-B-Trees-and-LSM-Trees"><a href="#Comparing-B-Trees-and-LSM-Trees" class="headerlink" title="Comparing B-Trees and LSM-Trees"></a>Comparing B-Trees and LSM-Trees</h3><ul>
-<li>LSM-trees的优势<br>LSM-trees由于SSTable file只需要sequential write，而拥有更低的write amplification。B-tree因为page中有很多fragmentation是未被使用的，而LSM-trees则紧凑得多。</li>
-<li>LSM-trees的缺点<br>compaction的过程占用了disk的bandwidth，which is稀缺资源。如果compaction配置得不好，还有可能compaction不充分而导致read过程需要寻找太多segment file，从而使得表现很差。B-tree其中一个优势是，对于transaction semantics有相当直接的实现：用lock就完事儿了。</li>
-</ul>
-<hr>
-<h3 id="Other-Indexing-Structures"><a href="#Other-Indexing-Structures" class="headerlink" title="Other Indexing Structures"></a>Other Indexing Structures</h3><h4 id="Storing-values-within-the-index"><a href="#Storing-values-within-the-index" class="headerlink" title="Storing values within the index"></a>Storing values within the index</h4><p>value可以直接存储，或者在别处的row的一个reference。对于后一种情况，存储row的地方叫做<em>heap file</em>。当更新值时，如果新row大小不超过原大小，可以直接覆写in place，如果超过了，要么重写reference到新的heap file，要么在原来的row处放上一个forwarding pointer。对于直接和index一起存储的row，称为<em>clustered index</em>。也有折衷的方案，某些column和index一起存，某些column则采用引用，称为<em>covering index</em>。</p>
-<h4 id="Multi-column-indexes"><a href="#Multi-column-indexes" class="headerlink" title="Multi-column indexes"></a>Multi-column indexes</h4><p>有一种Multi-dimensional indexes可以进行多维同时range queries：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> restaurants <span class="keyword">WHERE</span> latitude &gt; <span class="number">51.4946</span> <span class="keyword">AND</span> latitude &lt; <span class="number">51.5079</span> </div><div class="line">                           <span class="keyword">AND</span> longitude &gt; <span class="number">-0.1162</span> <span class="keyword">AND</span> longitude &lt; <span class="number">-0.1004</span>;</div></pre></td></tr></table></figure></p>
-<p>这样的查询对于B-tree或者LSM-tree都不是很efficient，需要多个步骤来查询。而有些index可以同时从多维narrow down。</p>
-<h4 id="Full-text-search-and-fuzzy-indexes"><a href="#Full-text-search-and-fuzzy-indexes" class="headerlink" title="Full-text search and fuzzy indexes"></a>Full-text search and fuzzy indexes</h4><p>上面提到的index都是精确的key来查找精确的value。现实中也有similar key，比如拼错的单词。需要用edit distance的offset来决定匹配值。</p>
-<h4 id="Keeping-everything-in-memory"><a href="#Keeping-everything-in-memory" class="headerlink" title="Keeping everything in memory"></a>Keeping everything in memory</h4><p>之前提到的data structure都是面向disk的，实际上也有面向RAM的结构。在RAM中的结构要比在disk中灵活得多，而且增删查改更快更有效。</p>
-<p>有关易失性，可以replicate到其他机器，可以在disk中保留snapshot，可以在disk写log以供恢复。</p>
-<p>比较反直觉的一件事是，disk-based存储比in-memory慢的原因不是因为需要从disk中获取，事实上只要RAM够大，cache能够帮助你完全不需要从disk中读写。实际情况是disk-based慢在了encoding过程。</p>
-<p>Redis为各种数据结构（如优先级队列和集合）提供了类似数据库的接口。因为它将所有数据保存在内存中，所以它的实现相对简单。</p>
-<p>利用anti-caching技术可以在memory不足时将data转到disk上，有非常多类似的研究in-memory databases，而不再用disk-centric architecture。</p>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Storage and Retrieval - Data Structures That Power Your Database&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="读书笔记" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-    
-      <category term="DDIA" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/DDIA/"/>
-    
-    
-      <category term="大数据" scheme="https://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
-      <category term="DDIA" scheme="https://gaufoo.com/tags/DDIA/"/>
-    
-      <category term="读书笔记" scheme="https://gaufoo.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>《DDIA》读与记（二）</title>
-    <link href="https://gaufoo.com/ddia-ii/"/>
-    <id>https://gaufoo.com/ddia-ii/</id>
-    <published>2018-11-20T12:26:00.000Z</published>
-    <updated>2018-11-20T14:18:32.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Data Models and Query Languages</p>
-<a id="more"></a>
-<hr>
-<p>对于每个应用的数据层，都可能需要考虑以下问题：</p>
-<ul>
-<li>观察现实中的实体，并用object或者data structure来model它。</li>
-<li>如何store这些data structure，用JSON、XML文档，还是relational数据库中的table，还是graph。</li>
-<li>如何将JSON、XML文档、table、graph等存在形式，在memory、disk、network中表示，并且支持查找、修改、处理等等操作。</li>
-<li>最底层硬件如何处理electrical currents、pulses of light等等。</li>
-</ul>
-<hr>
-<h2 id="Relational-Model-Versus-Document-Model"><a href="#Relational-Model-Versus-Document-Model" class="headerlink" title="Relational Model Versus Document Model"></a>Relational Model Versus Document Model</h2><h3 id="Relation-Model"><a href="#Relation-Model" class="headerlink" title="Relation Model"></a>Relation Model</h3><p>数据在relations中（在SQL中也叫tables）被组织，每个relation包含一系列unordered的tuples（在SQL中也叫rows）。</p>
-<h3 id="NoSQL"><a href="#NoSQL" class="headerlink" title="NoSQL"></a>NoSQL</h3><p>原来的NoSQL只是一个会议中一句口号，代指open source, distributed, nonrelational的databases。现在被重新解释为Not Only SQL，其语义中，包含以下特点：</p>
-<ul>
-<li>比传统relational数据库更具伸缩性，能处理巨大的数据集或very high write throughput.</li>
-<li>免费、开源</li>
-<li>支持relational model中不能很好完成的特殊操作</li>
-<li>更具动态性和表达力的数据模型</li>
-</ul>
-<h3 id="One-to-Many型"><a href="#One-to-Many型" class="headerlink" title="One-to-Many型"></a>One-to-Many型</h3><p>以简历作为例子<br><img src="/images/181120/resume.png" width="600/"></p>
-<p>relational数据库可以把position、education、contact information等等分成多个table，用foreign key引用。</p>
-<p>也可以用self-contained document来表示，比如JSON document。Document-oriented databases like MongoDB, RethinkDB, CouchDB and Espresso support this data model.</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"user_id"</span>: <span class="number">251</span>,</div><div class="line">    <span class="attr">"first_name"</span>: <span class="string">"Bill"</span>,</div><div class="line">    <span class="attr">"last_name"</span>: <span class="string">"Gates"</span>,</div><div class="line">    <span class="attr">"summary"</span>: <span class="string">"Co-chair of the Bill &amp; Melinda Gates... Active blogger."</span>,</div><div class="line">    <span class="attr">"region_id"</span>: <span class="string">"us:91"</span>,</div><div class="line">    <span class="attr">"industry_id"</span>: <span class="number">131</span>,</div><div class="line">    <span class="attr">"photo_url"</span>: <span class="string">"/p/7/000/253/05b/308dd6e.jpg"</span>,</div><div class="line">    <span class="attr">"positions"</span>: [</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"job_title"</span>: <span class="string">"Co-chair"</span>,</div><div class="line">            <span class="attr">"organization"</span>: <span class="string">"Bill &amp; Melinda Gates Foundation"</span></div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"job_title"</span>: <span class="string">"Co-founder, Chairman"</span>,</div><div class="line">            <span class="attr">"organization"</span>: <span class="string">"Microsoft"</span></div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">    <span class="attr">"education"</span>: [</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"school_name"</span>: <span class="string">"Harvard University"</span>,</div><div class="line">            <span class="attr">"start"</span>: <span class="number">1973</span>,</div><div class="line">            <span class="attr">"end"</span>: <span class="number">1975</span></div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"school_name"</span>: <span class="string">"Lakeside School, Seattle"</span>,</div><div class="line">            <span class="attr">"start"</span>: <span class="literal">null</span>,</div><div class="line">            <span class="attr">"end"</span>: <span class="literal">null</span></div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">    <span class="attr">"contact_info"</span>: &#123;</div><div class="line">        <span class="attr">"blog"</span>: <span class="string">"http://thegatesnotes.com"</span>,</div><div class="line">        <span class="attr">"twitter"</span>: <span class="string">"http://twitter.com/BillGates"</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="Many-to-One-and-Many-to-Many-Relationships"><a href="#Many-to-One-and-Many-to-Many-Relationships" class="headerlink" title="Many-to-One and Many-to-Many Relationships"></a>Many-to-One and Many-to-Many Relationships</h3><p>在上面JSON的例子中，有很多plain-text strings，而有时我们又会觉得应该存储成ID。</p>
-<p>关于存储ID还是存储text string，实际是关于duplication的问题。如果存储ID，那么对于人类有意义的信息（text string），最终只会存储在一个地方。而如果直接用text string存储，则会duplicate在every record that uses it.</p>
-<p>ID对于人类来说没意义，所以可以不变。但它所代指的information则有可能发生变化。如果information发生变化，且information是duplicated的，则所有redundant copies都要update。而消除这些duplication，is the key idea behind <em>normalization</em> in databases.</p>
-<p>要描述Many-to-One关系，在relational databases中，it’s normal to refer to rows in other tables by ID, because joins are easy. 而在document databases中，对join的支持就很弱了。</p>
-<h3 id="Comparison"><a href="#Comparison" class="headerlink" title="Comparison"></a>Comparison</h3><p>The document data model are schema flexibility, better performance due to locality, and that for some applications it is closer to the data structures used by the application.<br>The relational technique of shredding—splitting a document-like structure into multiple tables can lead to cumbersome schemas and unnecessarily complicated application code.</p>
-<ul>
-<li>The relation model provides better support for joins, and many-to-one and many-to-many relationships.</li>
-<li>document databases对joins的poor support，Joins can be emulated in application code by making requests to the database.</li>
-<li>relational databases采用schema-on-write，类似静态类型语言，编译时进行类型检查.</li>
-<li>document databases采用schema-on-read，类似动态类型语言，运行时才检查.</li>
-<li>document databases的schema-on-read，对修改fields处理很简单，而relational databases则需要ALTER TABLE.</li>
-<li>document databases常常受益于storage locality，一次查找完相应的数据. relational databases则需要从多个table中获取.</li>
-</ul>
-<p>不过现在有relational databases越来越像document databases，document databases越来越像relational databases的趋势，relational databases的locality, support for XML and JSON, document databases的relaitonal-like joins等等.</p>
-<hr>
-<h2 id="Query-Languages-for-Data"><a href="#Query-Languages-for-Data" class="headerlink" title="Query Languages for Data"></a>Query Languages for Data</h2><h3 id="imperative-language-vs-declarative-query-language"><a href="#imperative-language-vs-declarative-query-language" class="headerlink" title="imperative language vs declarative query language"></a>imperative language vs declarative query language</h3><p>It is typically more concise and easier to work with declarative query language. It also hides implementation details of the database engine, which makes it possible for the database system to introduce performance improvements without requiring any changes to queries.</p>
-<p>用imperative language写的语句太底层，很难有优化的空间。底层的representation要改，写的语句也要跟着改。</p>
-<h3 id="查询鲨鱼列表"><a href="#查询鲨鱼列表" class="headerlink" title="查询鲨鱼列表"></a>查询鲨鱼列表</h3><p>imperative language:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">function getSharks() &#123;</div><div class="line">    var sharks = [];</div><div class="line">    for (var i = 0; i &lt; animals.length; i++) &#123;</div><div class="line">        if (animals[i].family === &quot;Sharks&quot;) &#123;</div><div class="line">            sharks.push(animals[i]);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return sharks;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>relational algebra:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sharks = σ_&#123;family = &quot;sharks&quot;&#125;(animals)</div></pre></td></tr></table></figure></p>
-<p>SQL:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SELECT * FROM animals WHERE family =&apos;Sharks&apos;;</div></pre></td></tr></table></figure></p>
-<h3 id="MapReduce型"><a href="#MapReduce型" class="headerlink" title="MapReduce型"></a>MapReduce型</h3><p>生成一个报告，说明每月看到多少鲨鱼。</p>
-<p>PostgreSQL:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">SELECT</div><div class="line">    date_trunc(&apos;month&apos;, observation_timestamp) AS observation_month,</div><div class="line">    sum(num_animals)                           AS total_animals</div><div class="line">FROM observations</div><div class="line">WHERE family = &apos;Sharks&apos;</div><div class="line">GROUP BY observation_month;</div></pre></td></tr></table></figure></p>
-<p>MongoDB的MapReduce:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">db.observations.mapReduce(function map() &#123;</div><div class="line">        var year = this.observationTimestamp.getFullYear();</div><div class="line">        var month = this.observationTimestamp.getMonth() + 1;</div><div class="line">        emit(year + &quot;-&quot; + month, this.numAnimals);</div><div class="line">    &#125;,</div><div class="line">    function reduce(key, values) &#123;</div><div class="line">        return Array.sum(values);</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        query: &#123;</div><div class="line">          family: &quot;Sharks&quot;</div><div class="line">        &#125;,</div><div class="line">        out: &quot;monthlySharkReport&quot;</div><div class="line">    &#125;);</div></pre></td></tr></table></figure></p>
-<p>MongoDB 2.2的aggregation pipleline:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">db.observations.aggregate([</div><div class="line">  &#123; $match: &#123; family: &quot;Sharks&quot; &#125; &#125;,</div><div class="line">  &#123; $group: &#123;</div><div class="line">    _id: &#123;</div><div class="line">      year:  &#123; $year:  &quot;$observationTimestamp&quot; &#125;,</div><div class="line">      month: &#123; $month: &quot;$observationTimestamp&quot; &#125;</div><div class="line">    &#125;,</div><div class="line">    totalAnimals: &#123; $sum: &quot;$numAnimals&quot; &#125; &#125;&#125;</div><div class="line">]);</div></pre></td></tr></table></figure></p>
-<hr>
-<h2 id="Graph-Like-Data-Models"><a href="#Graph-Like-Data-Models" class="headerlink" title="Graph-Like Data Models"></a>Graph-Like Data Models</h2><p>The relational model can handle simple cases of many-to-many relationships, but as the connections within your data become more complex, it becomes more natural to start modeling your data as a graph.</p>
-<p><img src="/images/181120/fig2-5.png" width="600/"></p>
-<h3 id="Property-Graphs"><a href="#Property-Graphs" class="headerlink" title="Property Graphs"></a>Property Graphs</h3><p>Each vertex consists of:</p>
-<ul>
-<li>A unique identifier</li>
-<li>A set of outgoing edges</li>
-<li>A set of incoming edges</li>
-<li>A collection of properties (key-value pairs)</li>
-</ul>
-<p>Each edge consists of:</p>
-<ul>
-<li>A unique identifier</li>
-<li>The vertex at which the edge starts (the tail vertex)</li>
-<li>The vertex at which the edge ends (the head vertex)</li>
-<li>A label to describe the kind of relationship between the two vertices</li>
-<li>A collection of properties (key-value pairs)</li>
-</ul>
-<p>Create Graph Example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE vertices (</div><div class="line">  vertex_id  INTEGER PRIMARY KEY,</div><div class="line">  properties JSON</div><div class="line">);</div><div class="line"></div><div class="line">CREATE TABLE edges (</div><div class="line">  edge_id     INTEGER PRIMARY KEY,</div><div class="line">  tail_vertex INTEGER REFERENCES vertices (vertex_id),</div><div class="line">  head_vertex INTEGER REFERENCES vertices (vertex_id),</div><div class="line">  label       TEXT,</div><div class="line">  properties  JSON</div><div class="line">);</div><div class="line"></div><div class="line">CREATE INDEX edges_tails ON edges (tail_vertex);</div><div class="line">CREATE INDEX edges_heads ON edges (head_vertex);</div></pre></td></tr></table></figure></p>
-<h3 id="The-Cypher-Query-Language"><a href="#The-Cypher-Query-Language" class="headerlink" title="The Cypher Query Language"></a>The Cypher Query Language</h3><p>Create Graph Example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">CREATE</div><div class="line">    (NAmerica:Location &#123;name:&apos;North America&apos;, type:&apos;continent&apos;&#125;),</div><div class="line">    (USA:Location      &#123;name:&apos;United States&apos;, type:&apos;country&apos;  &#125;),</div><div class="line">    (Idaho:Location    &#123;name:&apos;Idaho&apos;,         type:&apos;state&apos;    &#125;),</div><div class="line">    (Lucy:Person       &#123;name:&apos;Lucy&apos; &#125;),</div><div class="line">    (Idaho) -[:WITHIN]-&gt;  (USA)  -[:WITHIN]-&gt; (NAmerica),</div><div class="line">    (Lucy)  -[:BORN_IN]-&gt; (Idaho)</div></pre></td></tr></table></figure></p>
-<p>查找所有从美国移民到欧洲的人的Cypher Query:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">MATCH</div><div class="line">    (person) -[:BORN_IN]-&gt;  () -[:WITHIN*0..]-&gt; (us:Location &#123;name:&apos;United States&apos;&#125;),</div><div class="line">    (person) -[:LIVES_IN]-&gt; () -[:WITHIN*0..]-&gt; (eu:Location &#123;name:&apos;Europe&apos;&#125;)</div><div class="line">RETURN person.name</div></pre></td></tr></table></figure></p>
-<p>There are several possible ways of executing the query. 可以正着查，也可以从Location开始往回查。</p>
-<h3 id="Triple-Stores"><a href="#Triple-Stores" class="headerlink" title="Triple-Stores"></a>Triple-Stores</h3><p>In a triple-store, all information is stored in the form of very simple three-part statements: (subject, predicate, object).</p>
-<p>Create Graph Example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">@prefix : &lt;urn:example:&gt;.</div><div class="line">_:lucy     a       :Person.</div><div class="line">_:lucy     :name   &quot;Lucy&quot;.</div><div class="line">_:lucy     :bornIn _:idaho.</div><div class="line">_:idaho    a       :Location.</div><div class="line">_:idaho    :name   &quot;Idaho&quot;.</div><div class="line">_:idaho    :type   &quot;state&quot;.</div><div class="line">_:idaho    :within _:usa.</div><div class="line">_:usa      a       :Location</div><div class="line">_:usa      :name   &quot;United States&quot;</div><div class="line">_:usa      :type   &quot;country&quot;.</div><div class="line">_:usa      :within _:namerica.</div><div class="line">_:namerica a       :Location</div><div class="line">_:namerica :name   &quot;North America&quot;</div><div class="line">_:namerica :type   :&quot;continent&quot;</div></pre></td></tr></table></figure></p>
-<p>or </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@prefix : &lt;urn:example:&gt;.</div><div class="line">_:lucy      a :Person;   :name &quot;Lucy&quot;;          :bornIn _:idaho.</div><div class="line">_:idaho     a :Location; :name &quot;Idaho&quot;;         :type &quot;state&quot;;   :within _:usa</div><div class="line">_:usa       a :Loaction; :name &quot;United States&quot;; :type &quot;country&quot;; :within _:namerica.</div><div class="line">_:namerica  a :Location; :name &quot;North America&quot;; :type &quot;continent&quot;.</div></pre></td></tr></table></figure>
-<h3 id="The-SPARQL-query-language"><a href="#The-SPARQL-query-language" class="headerlink" title="The SPARQL query language"></a>The SPARQL query language</h3><p>查找所有从美国移民到欧洲的人的SPARQL Query:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">PREFIX : &lt;urn:example:&gt;</div><div class="line">SELECT ?personName WHERE &#123;</div><div class="line">  ?person :name ?personName.</div><div class="line">  ?person :bornIn  / :within* / :name &quot;United States&quot;.</div><div class="line">  ?person :livesIn / :within* / :name &quot;Europe&quot;.</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="The-Foundation-Datalog"><a href="#The-Foundation-Datalog" class="headerlink" title="The Foundation: Datalog"></a>The Foundation: Datalog</h3><p>Datalog is a much older language than SPARQL or Cypher.</p>
-<p>Create Graph Example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">name(namerica, &apos;North America&apos;).</div><div class="line">type(namerica, continent).</div><div class="line"></div><div class="line">name(usa, &apos;United States&apos;).</div><div class="line">type(usa, country).</div><div class="line">within(usa, namerica).</div><div class="line"></div><div class="line">name(idaho, &apos;Idaho&apos;).</div><div class="line">type(idaho, state).</div><div class="line">within(idaho, usa).</div><div class="line"></div><div class="line">name(lucy, &apos;Lucy&apos;).</div><div class="line">born_in(lucy, idaho).</div></pre></td></tr></table></figure></p>
-<p>The Query:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">within_recursive(Location, Name) :- name(Location, Name). /* Rule 1 */</div><div class="line"></div><div class="line">within_recursive(Location, Name) :- within(Location, Via), /* Rule 2 */</div><div class="line">                                    within_recursive(Via, Name).</div><div class="line"></div><div class="line">migrated(Name, BornIn, LivingIn) :- name(Person, Name), /* Rule 3 */</div><div class="line">                                    born_in(Person, BornLoc),</div><div class="line">                                    within_recursive(BornLoc, BornIn),</div><div class="line">                                    lives_in(Person, LivingLoc),</div><div class="line">                                    within_recursive(LivingLoc, LivingIn).</div><div class="line"></div><div class="line">?- migrated(Who, &apos;United States&apos;, &apos;Europe&apos;). /* Who = &apos;Lucy&apos;. */</div></pre></td></tr></table></figure></p>
-<p>采用类似函数引用透明的方式进行代换匹配，One possible way of applying the rules is thus:</p>
-<ol>
-<li>name(namerica, ‘North America’) – Rule 1 –&gt; within_recursive(namerica, ‘North America’)</li>
-<li>within(usa, namerica) &amp; within_recursive(namerica, ‘North America’) – Rule 2 –&gt; within_recursive(usa, ‘North America’)</li>
-<li>within(idaho, usa) &amp; within_recursive(usa, ‘North America’) – Rule 2 –&gt; within_recursive(idaho, ‘North America’) </li>
-<li>…</li>
-</ol>
-<p><img src="/images/181120/fig2-6.png" width="800/"></p>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Data Models and Query Languages&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="读书笔记" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-    
-      <category term="DDIA" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/DDIA/"/>
-    
-    
-      <category term="大数据" scheme="https://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
-      <category term="DDIA" scheme="https://gaufoo.com/tags/DDIA/"/>
-    
-      <category term="读书笔记" scheme="https://gaufoo.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>《DDIA》读与记（一）</title>
-    <link href="https://gaufoo.com/ddia-i/"/>
-    <id>https://gaufoo.com/ddia-i/</id>
-    <published>2018-11-19T09:26:00.000Z</published>
-    <updated>2018-11-23T09:57:49.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>开始读DDIA。</p>
-<a id="more"></a>
-<hr>
-<h1 id="序"><a href="#序" class="headerlink" title="序"></a>序</h1><p>再不更新博客，主页都要长草了。但暂时没想好要写些什么，毕竟在我的技能五芒星里，写文章这一块是缺掉的。</p>
-<p>为什么突然想开始每天写些东西，算是一种对无趣生活的对抗吧。想看看自己能一直写多久，也许明天就写不下去了，倒也无所谓了。</p>
-<p>一开始不能太难，要有个适应期，所以打算先写点读书笔记。于是就有了《DDIA》读书笔记系列。</p>
-<hr>
-<h1 id="为什么是DDIA"><a href="#为什么是DDIA" class="headerlink" title="为什么是DDIA"></a>为什么是DDIA</h1><p>DDIA，全称Designing Data-Intensive Application，一本讲数据型应用的高层次概括和指导的书。为什么选择看这本书？我曾学过Spark，也学过Akka，但在学的过程中，看不清楚自己想要解决什么问题，为了学而学，学不进去，学不透彻。所以找来这本数据型应用圣经，从上帝视角来看看整个概况，以清晰视野，明确方向。</p>
-<hr>
-<h1 id="约定"><a href="#约定" class="headerlink" title="约定"></a>约定</h1><p>英文为主，中英混合。</p>
-<hr>
-<h1 id="第一章：可靠性，可扩展性，可维护性"><a href="#第一章：可靠性，可扩展性，可维护性" class="headerlink" title="第一章：可靠性，可扩展性，可维护性"></a>第一章：可靠性，可扩展性，可维护性</h1><p>A data-intensive application is typically built from standard building blocks that provide commonly needed functionality. Many applications need to:</p>
-<ul>
-<li>Store data so that they, or another application, can find it again later (<em>databases</em>)</li>
-<li>Remember the result of an expensive operation, to speed up reads (<em>caches</em>)</li>
-<li>Allow users to search data by keyword or filter it in various ways (<em>search indexes</em>)</li>
-<li>Send a message to another process, to be handled asynchronously (<em>stream processing</em>)</li>
-<li>Periodically crunch a large amount of accumulated data (<em>batch processing</em>)</li>
-</ul>
-<p><br><br>Three concerns that are important in most software systems:</p>
-<p><strong>Reliability</strong><br>The system should continue to work corrently (performing the correct function at the desired level of performance) even in the face of adversity (hardware or software faults, and even human error).</p>
-<p><strong>Scalability</strong><br>As the system grows (in data volume, traffic volume, or complexity), there should be resonable ways of dealing with that growth.</p>
-<p><strong>Maintainability</strong><br>Over time, many different people will work on the system (engineering and operations, both maintaining current behavior and adapting the system to new use cases), and they should all be able to work on it productively.</p>
-<hr>
-<h2 id="Reliability"><a href="#Reliability" class="headerlink" title="Reliability"></a>Reliability</h2><ul>
-<li>The application performs the function that the user expected.</li>
-<li>It can tolerate the user making mistakes or using the software in unexpected ways.</li>
-<li>Its performance is good enough for the required use case, under the expected load and data volume.</li>
-<li>The system prevents any unauthorized access and abuse.</li>
-</ul>
-<blockquote>
-<p>“continuing to work corrently, even when things go wrong.”</p>
-</blockquote>
-<p>不是所有fault都能容忍的，it only makes sense to talk about tolerating certain types of faults. 比如地球突然蒸发所造成的影响，基本上是恢复不了的。</p>
-<p>Note that a fault is not the same as failure. A fault is usually defined as one component of the system deviating from its spec, whereas a failure is when the the system as a whole stops providing the required service to the user.<br>It usually best to design fault-tolerance mechanisms that prevent faults from causing failures.</p>
-<h3 id="Hardware-Faults"><a href="#Hardware-Faults" class="headerlink" title="Hardware Faults"></a>Hardware Faults</h3><p>对于硬件错误，我们常常想到用redundancy来解决问题。Disks may be set up in a RAID configuration, servers may have dual power supplies and hot-swappable CPUs, and datacenters may have batteries and diesel generators for backup power.<br>尽管这些方法不能完全避免硬件问题所造成的failures，但足够简单易懂，and can often keep a machine running uninterrupted for years.</p>
-<h3 id="Software-Errors"><a href="#Software-Errors" class="headerlink" title="Software Errors"></a>Software Errors</h3><p>系统里面的系统级错误是另外一种类型的fault。Such faults are harder to anticipate, and because they are correlated across nodes, they tend to cause many more system failures than uncorrelated hardware faults.</p>
-<p>对于软件错误，没有什么万能灵药。但是可以关注这些事情：</p>
-<ul>
-<li>Carefully thinking about assumptions and interactions in the system</li>
-<li>Process isolation</li>
-<li>Allowing processes to crash and restart</li>
-<li>Measuring, monitoring, and analyzing system behavior in production</li>
-</ul>
-<h3 id="Human-Errors"><a href="#Human-Errors" class="headerlink" title="Human Errors"></a>Human Errors</h3><p>是人就会犯错，one study of large internet services found that configuration errors by operators were the leading cause of outages.</p>
-<p>To make our systems reliable, in spite of unreliable humans:</p>
-<ul>
-<li>Design systems in a way that minimizes opportunities for error. 好的abstractions, APIs, admin interfaces等等。</li>
-<li>Decouple the places where people make the most mistakes from the places where they can cause failure. 提供fully featured non-production sandbox environments where 人类可以在里面胡作非为。</li>
-<li>Test thoroughly at all levels, from unit tests to whole-system integration tests and manual tests.</li>
-<li>Allow quick and easy recovery from human errors, to minimize the impact in the case of a failure.</li>
-<li>Set up detailed and clear monitoring, such as performance metrics and error rates.</li>
-<li>做好培训</li>
-</ul>
-<hr>
-<h2 id="Scalability"><a href="#Scalability" class="headerlink" title="Scalability"></a>Scalability</h2><p><em>Scalability</em> is the term we use to describe a system’s ability to cope with increased load.</p>
-<p>讨论scalability，我们实际上说的是，”If the system grows in a particular way, what are our options for coping with the growth?” 以及 “How can we add computing resources to handle the additional load?”</p>
-<h3 id="Describing-Load"><a href="#Describing-Load" class="headerlink" title="Describing Load"></a>Describing Load</h3><p>我们需要描述load，实际上我们描述的这些数字叫做<em>load parameters</em>。不同的<em>load parameters</em>取决于the architecture of your system: it may be requests per second to a web server, the ratio of reads to writes in a database, the number of simultaneously active users in a chat room等等</p>
-<p>拿Twitter做例子，他们所描述的是：</p>
-<ul>
-<li>Post tweet: A user can publish a new message to their followers (4.6k requests/sec on average, over 12k requests/sec at peak).</li>
-<li>Home timeline: A user can view tweets posts by the people they follow (300k requests/sec).</li>
-</ul>
-<h3 id="Describing-Performance"><a href="#Describing-Performance" class="headerlink" title="Describing Performance"></a>Describing Performance</h3><p>当你已经描述了load on your system, you can investigate what happens when the load increases.</p>
-<ul>
-<li>When you increase a load parameter and keep the system resources (CPU, memory, network bandwidth, etc.) unchanged, how is the performance of your system affected?</li>
-<li>When you increase a load parameter, how much do you need to increase the resources if you want to keep performance unchanged?</li>
-</ul>
-<p>In a batch processing system such as Hadoop, we usually care about throughput. In online systems, what’s usually more important is the service’s response time.</p>
-<p>不是每次请求的响应时间都是一样的。We therefore need to think of response time not as single number, but as a distribution of values that you can measure.</p>
-<p>Usually it is better to use <em>percentiles</em> which 描述了有多少比例的responses不超过该响应时间。The median is also known as the 50th percentile, and sometimes abbreviated as p50.</p>
-<p>In order to figure out how bad your outliers are, you can look at higher percentiles: the 95th, 99th, 99.9th percentiles are common (abbribated p95, p99, and p999). They are the response time thresholds at which 95%, 99%, or 99.9% of requests are faster than that particular threshold. High percentiles of response times, also known as tail latencies, are important because they directly affect users’ experience of the service. </p>
-<p>Percentiles are often used in service level objectives (SLOs) and service level agreements (SLAs), contracts that define the expected performance and availability of a service. 比如Amazon就用p999来描述他们的服务。These metrics set expectations for clients of the service and allow customers to demand a refund if the SLA is not met.</p>
-<h3 id="Approaches-for-Coping-with-Load"><a href="#Approaches-for-Coping-with-Load" class="headerlink" title="Approaches for Coping with Load"></a>Approaches for Coping with Load</h3><p>To maintain good performance even when our load parameters increase by some amount, people often talk of a dichotomy between <em>scaling up</em> (vertical scaling, moving to a more powerful machine) and <em>scaling out</em> (horizontal scaling, distributing the load across multiple smaller machines).</p>
-<p>While distributing stateless services across multiple machines is fairly straightforward, taking stateful data systems from a single node to a distributed setup can introduce a lot of additional complexity. For this reason, common wisdom until recently was to keep your database on a single node (scala up) until scaling cost or high-availability requirements forced you to make it distributed.</p>
-<hr>
-<h2 id="Maintainability"><a href="#Maintainability" class="headerlink" title="Maintainability"></a>Maintainability</h2><p>software system三个设计原则：</p>
-<h3 id="Operability-Make-Lift-Easy-for-Operations"><a href="#Operability-Make-Lift-Easy-for-Operations" class="headerlink" title="Operability: Make Lift Easy for Operations"></a>Operability: Make Lift Easy for Operations</h3><p>Make it easy for operations teams to keep the system running smoothly.</p>
-<h3 id="Simplicity-Managing-Complexity"><a href="#Simplicity-Managing-Complexity" class="headerlink" title="Simplicity: Managing Complexity"></a>Simplicity: Managing Complexity</h3><p>Make it easy for new engineers to understand the system the system, by removing as much complexity as possible from the system. 利用抽象，消除额外复杂度。</p>
-<h3 id="Evolvability-Making-Change-Easy"><a href="#Evolvability-Making-Change-Easy" class="headerlink" title="Evolvability: Making Change Easy"></a>Evolvability: Making Change Easy</h3><p>Make it easy for engineers to make changes to the system in the future, adapting it for unanticipated use cases as requirements change. Also known as extensibility, modifiability, or plasticity. Agile working patterns provide a framework for adapting to change. 比如test-driven development (TDD) and refactoring.</p>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;开始读DDIA。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="读书笔记" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-    
-      <category term="DDIA" scheme="https://gaufoo.com/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/DDIA/"/>
-    
-    
-      <category term="大数据" scheme="https://gaufoo.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
-      <category term="DDIA" scheme="https://gaufoo.com/tags/DDIA/"/>
-    
-      <category term="读书笔记" scheme="https://gaufoo.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
     <title>AWK常见用法</title>
     <link href="https://gaufoo.com/awk/"/>
     <id>https://gaufoo.com/awk/</id>
@@ -2145,6 +1574,597 @@
     <summary type="html">
     
       &lt;p&gt;简单笔记&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="编译原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+    
+      <category term="原理" scheme="https://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>手工构造词法分析器</title>
+    <link href="https://gaufoo.com/lexinhand/"/>
+    <id>https://gaufoo.com/lexinhand/</id>
+    <published>2017-10-26T09:36:30.000Z</published>
+    <updated>2017-10-30T00:45:51.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>简单笔记</p>
+<a id="more"></a>
+<hr>
+<h2 id="记号数据结构"><a href="#记号数据结构" class="headerlink" title="记号数据结构"></a>记号数据结构</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Token的数据结构</span></div><div class="line"><span class="comment">// 将字符流转化成Token流</span></div><div class="line"></div><div class="line"><span class="keyword">enum</span> kind &#123;IF, LPAREN, ID, INTLIT, ...&#125;;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">token</span> &#123;</span></div><div class="line">	<span class="keyword">enum</span> kind k;</div><div class="line">	<span class="keyword">char</span> lexeme[]; <span class="comment">// 单词</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>例：</p>
+<blockquote>
+<p>“if (x &gt; 5)”</p>
+</blockquote>
+<p>=&gt;<br>token {k = IF, lexeme = NULL};<br>// IF 和 “if” 一一对应，没必要记录单词<br>token {k = LPAREN, lexeme = NULL};<br>token {k = ID, lexeme = “x”};<br>…</p>
+<hr>
+<h2 id="转移图法"><a href="#转移图法" class="headerlink" title="转移图法"></a>转移图法</h2><h3 id="识别比较符"><a href="#识别比较符" class="headerlink" title="识别比较符"></a>识别比较符</h3><h4 id="转移图"><a href="#转移图" class="headerlink" title="转移图"></a>转移图</h4><p><img src="/images/cffx/20171026163706.png"></p>
+<h4 id="算法伪代码"><a href="#算法伪代码" class="headerlink" title="算法伪代码"></a>算法伪代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">// 上图的转换算法</div><div class="line"></div><div class="line">token nextToken()</div><div class="line">&#123;</div><div class="line">	c = getChar();</div><div class="line">	switch (c)</div><div class="line">	&#123;</div><div class="line">		case &apos;&lt;&apos;:</div><div class="line">			c = getChar();</div><div class="line">			switch(c)</div><div class="line">			&#123;</div><div class="line">				case &apos;=&apos;: return LE;</div><div class="line">				case &apos;&gt;&apos;: return NE;</div><div class="line">				default: rollback(); return LT;</div><div class="line">			&#125;</div><div class="line">		case &apos;=&apos;: return EQ;</div><div class="line">		case &apos;&gt;&apos;:</div><div class="line">			c = getChar();</div><div class="line">			switch(c)</div><div class="line">			&#123;</div><div class="line">				case &apos;=&apos;: return GE;</div><div class="line">				default: rollback(); return GT;</div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="识别标识符"><a href="#识别标识符" class="headerlink" title="识别标识符"></a>识别标识符</h3><h4 id="转移图-1"><a href="#转移图-1" class="headerlink" title="转移图"></a>转移图</h4><p><img src="/images/cffx/20171026165653.png"></p>
+<h4 id="算法伪代码-1"><a href="#算法伪代码-1" class="headerlink" title="算法伪代码"></a>算法伪代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">token nextToken()</div><div class="line">&#123;</div><div class="line">	c = getChar();</div><div class="line">	switch (c)</div><div class="line">	&#123;</div><div class="line">	/*</div><div class="line">	...</div><div class="line">	...</div><div class="line">	...</div><div class="line">	*/</div><div class="line">	case &apos;a&apos;, ..., &apos;z&apos;, &apos;A&apos;, ..., &apos;Z&apos;, &apos;_&apos;:</div><div class="line">		c = getChar();</div><div class="line">		while (c == &apos;a&apos; || ... || c == &apos;z&apos; </div><div class="line">			|| c == &apos;A&apos; || ... || c == &apos;Z&apos;</div><div class="line">			|| c == &apos;0&apos; || ... || c == &apos;9&apos;</div><div class="line">			|| c == &apos;_&apos;)</div><div class="line">			c = getChar();</div><div class="line">		rollback();</div><div class="line">		return ID;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h4 id="识别IF"><a href="#识别IF" class="headerlink" title="识别IF"></a>识别IF</h4><p>在识别标识符的基础上，进一步实现识别特定的关键字。</p>
+<h5 id="转移图-2"><a href="#转移图-2" class="headerlink" title="转移图"></a>转移图</h5><p><img src="/images/cffx/2017102617.png"></p>
+<h5 id="算法伪代码-2"><a href="#算法伪代码-2" class="headerlink" title="算法伪代码"></a>算法伪代码</h5><p>代码太长太麻烦，我不想写。<br>如果对所有关键字都要写这样特定的代码，工作量显然是相当巨大的，于是便有了关键字表算法。</p>
+<h4 id="关键字表算法"><a href="#关键字表算法" class="headerlink" title="关键字表算法"></a>关键字表算法</h4><ul>
+<li>对所有关键字构造哈希表H</li>
+<li>先统一按标识符的转移图来识别标识符</li>
+<li>识别完成后，进一步查表H是否为关键字<br>通过合理的构造哈希表H（完美哈希），可以在O(1)时间完成。</li>
+</ul>
+<hr>
+<h2 id="课后作业"><a href="#课后作业" class="headerlink" title="课后作业"></a>课后作业</h2><blockquote>
+<p>在这部分中，你将使用图转移算法手工实现一个小型的词法分析器。</p>
+<ul>
+<li>分析器的输入：存储在文本文件中的字符序列，字符取自ASCII字符集。文件中可能包括四种记号：关键字if、符合C语言标准的标识符、空格符、回车符\n。</li>
+<li>分析器的输出：打印出所识别的标识符的种类、及行号、列号信息。</li>
+</ul>
+<p>【示例】对于下面的文本文件：<br>ifx if iif       if<br>iff     if<br>你的输出应该是：<br>ID(ifx) (1, 1)<br>IF        (1, 4)<br>ID(iif)  (1, 8)<br>IF       (1, 13)<br>ID(iff) (2, 1)<br>IF       (2, 8)</p>
+</blockquote>
+<p>我的代码（很恶心，但是不想改了）：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iomanip&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iterator&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cctype&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Token</span></span></div><div class="line"><span class="class">&#123;</span></div><div class="line">  <span class="keyword">public</span>:</div><div class="line">    Token(<span class="keyword">const</span> <span class="built_in">string</span> &amp;s, <span class="keyword">int</span> row, <span class="built_in">string</span>::size_type loc) : s(s), row(row), col(loc - s.size() + <span class="number">1</span>) &#123;&#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> <span class="keyword">const</span></span></div><div class="line"><span class="function">    </span>&#123;</div><div class="line">        <span class="built_in">string</span> str;</div><div class="line">        <span class="keyword">if</span> (s != <span class="string">"if"</span>)</div><div class="line">            str = <span class="string">"ID("</span> + s + <span class="string">")"</span>;</div><div class="line">        <span class="keyword">else</span></div><div class="line">            str = <span class="string">"IF"</span>;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; setw(<span class="number">10</span>) &lt;&lt; left &lt;&lt; str &lt;&lt; <span class="string">"\t("</span> &lt;&lt; row &lt;&lt; <span class="string">", "</span> &lt;&lt; col &lt;&lt; <span class="string">')'</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">  <span class="keyword">private</span>:</div><div class="line">    <span class="built_in">string</span> s;</div><div class="line">    <span class="keyword">int</span> row;</div><div class="line">    <span class="built_in">string</span>::size_type col;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="built_in">string</span> line;</div><div class="line">    <span class="keyword">int</span> cnt_line = <span class="number">0</span>;</div><div class="line">    <span class="built_in">vector</span>&lt;Token&gt; tokens;</div><div class="line">    <span class="keyword">while</span> (getline(<span class="built_in">cin</span>, line))</div><div class="line">    &#123;</div><div class="line">        ++cnt_line;</div><div class="line">        <span class="built_in">string</span>::iterator cur = line.begin(), end = line.end();</div><div class="line">        <span class="keyword">while</span> (cur != end)</div><div class="line">        &#123;</div><div class="line">            <span class="built_in">string</span> id;</div><div class="line">            <span class="keyword">if</span> (<span class="built_in">isalpha</span>(*cur) || *cur == <span class="string">'_'</span>)</div><div class="line">            &#123;</div><div class="line">                id += *cur++;</div><div class="line">                <span class="keyword">while</span> (<span class="built_in">isalnum</span>(*cur) || *cur == <span class="string">'_'</span>)</div><div class="line">                    id += *cur++;</div><div class="line">            &#125;</div><div class="line">            tokens.push_back(Token(id, cnt_line, cur - line.begin()));</div><div class="line">            <span class="keyword">while</span> (<span class="built_in">isspace</span>(*cur))</div><div class="line">                ++cur;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="built_in">vector</span>&lt;Token&gt;::iterator i = tokens.begin(); i != tokens.end(); ++i)</div><div class="line">        (*i).print();</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>输出效果：<br><img src="/images/cffx/20171030084516.png"></p>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;简单笔记&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="编译原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+    
+      <category term="原理" scheme="https://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>C++中三种实现可变参数的方法</title>
+    <link href="https://gaufoo.com/cppvararg/"/>
+    <id>https://gaufoo.com/cppvararg/</id>
+    <published>2017-10-24T12:20:56.000Z</published>
+    <updated>2019-01-23T08:01:32.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>我真的只是想写一个log函数而已。</p>
+<a id="more"></a>
+<hr>
+<h2 id="可变参数宏（C实现）"><a href="#可变参数宏（C实现）" class="headerlink" title="可变参数宏（C实现）"></a>可变参数宏（C实现）</h2><p>利用头文件<code>stdarg.h</code>中的宏定义：<code>va_list</code>、<code>va_start(va_list, arg)</code>、<code>va_arg(va_list, type)</code>、<code>va_end(va_list)</code>。可以实现可变参数且参数类型不同的函数。</p>
+<p>过程：</p>
+<ul>
+<li>函数声明中，可变参数用省略号表示。</li>
+<li>创建<code>va_list</code>变量，通过<code>va_start</code>访问参数列表并承接第一个参数。</li>
+<li>使用<code>va_arg</code>继续获取参数的值。</li>
+<li>使用<code>va_end</code>完成清理工作。</li>
+</ul>
+<p>以可变参数版本的sum作为例子：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdarg.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="keyword">int</span> count, ...)</span> <span class="comment">//count 表示可变参数个数</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    va_list ap;          <span class="comment">//声明一个va_list变量</span></div><div class="line">    va_start(ap, count); <span class="comment">//初始化，第二个参数为最后一个确定的形参（不能另开局部变量）</span></div><div class="line"></div><div class="line">    <span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++)</div><div class="line">        sum += va_arg(ap, <span class="keyword">int</span>); <span class="comment">//读取可变参数，第二个参数为可变参数的类型</span></div><div class="line"></div><div class="line">    va_end(ap); <span class="comment">//清理工作</span></div><div class="line">    <span class="keyword">return</span> sum;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, sum(<span class="number">5</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>));</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>局限性：</p>
+<blockquote>
+<ul>
+<li>可变参数宏只能实现<strong>顺序访问</strong>可变参数，无法后退访问。但可以重复使用<code>va_start</code>来初始化<code>va_list</code>变量。</li>
+<li>运行时，函数必须能够根据已有信息（既有约定，或确定实参）确定可变参数的具体个数与类型：函数定义需要知道可变参数的具体类型、个数，这些信息是在运行时确定的，那么显然应该由实参来确定。在上面的例子中count传递了可变参数的个数，而参数类型则是既有约定（整型）； </li>
+<li>该方法是<strong>极不安全</strong>的，宏本身无法提供任何安全性保证，他总是按照既定代码“自作多情”的认为实参就应该是那么多，即使实参并不是那么多。这就要求所有安全性必须由程序员来保证。例如，在以上的示例代码中，如果调用时指定count为10，但实际上只给出9个可变形参，那么函数还是会读取10个参数，显然第十次读取是多余的，多余的操作一般不会有什么好结果，当然如果实参过多，多余的实参也不会被读取而是被忽略。</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="initializer-list标准库类型（C-11）"><a href="#initializer-list标准库类型（C-11）" class="headerlink" title="initializer_list标准库类型（C++11）"></a>initializer_list标准库类型（C++11）</h2><p>过程：</p>
+<ul>
+<li>函数声明中使用<code>initializer_list</code>模板代表可变参数列表</li>
+<li>使用迭代器访问<code>initializer_list</code>中的参数</li>
+<li>传入参数时需要使用<code>{}</code>把多个参数括起来</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;initializer_list&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">initializer_list</span>&lt;<span class="keyword">int</span>&gt; il)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> p : il)   <span class="comment">// 使用范围for</span></div><div class="line">        sum += p;</div><div class="line">    <span class="comment">// for (auto p = il.begin(); p != il.end(); p++) //使用迭代器访问参数</span></div><div class="line">    <span class="comment">//     sum += *p;</span></div><div class="line">    <span class="keyword">return</span> sum;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; sum(&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>局限性：</p>
+<ul>
+<li>可变参数类型必须<strong>一致</strong></li>
+</ul>
+<hr>
+<h2 id="可变参数模板（C-11）"><a href="#可变参数模板（C-11）" class="headerlink" title="可变参数模板（C++11）"></a>可变参数模板（C++11）</h2><p>更方便安全有效地实现可变参数且参数类型不同的函数。</p>
+<p>过程：</p>
+<ul>
+<li>编写含有模板参数包和函数参数包的模板函数</li>
+<li>函数定义<strong>递归</strong>调用自己</li>
+<li>利用函数重载（参数包含有零个参数）来处理<strong>边界情况</strong>，编写处理边界情况的模板</li>
+</ul>
+<p>C++ primer 第五版中的例子：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 用来终止递归并打印最后一个元素的函数</span></div><div class="line"><span class="comment">// 此函数必须在可变参数版本的print定义之前声明（否则将出现neither visible nor found by argument-dependent lookup错误）</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="built_in">std</span>::<span class="function">ostream &amp;<span class="title">print</span><span class="params">(<span class="built_in">std</span>::ostream &amp;os, <span class="keyword">const</span> T &amp;t)</span></span>&#123;</div><div class="line">    <span class="keyword">return</span> os &lt;&lt; t;                <span class="comment">// 包中最后一个元素</span></div><div class="line">&#125;</div><div class="line"><span class="comment">//包中除最后一个元素之外的其他元素都会调用这个版本的pirnt</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</div><div class="line"><span class="built_in">std</span>::<span class="function">ostream &amp;<span class="title">print</span><span class="params">(<span class="built_in">std</span>::ostream &amp;os, <span class="keyword">const</span> T &amp;t, cosnt Args &amp;... rest)</span></span>&#123;</div><div class="line">    os &lt;&lt; t &lt;&lt; <span class="string">","</span>;               <span class="comment">// 打印第一个实参，包中元素减一</span></div><div class="line">    <span class="keyword">return</span> print(os, rest...);    <span class="comment">// 递归调用，打印剩余实参</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>局限性：</p>
+<ul>
+<li>由于只能递归实现，导致需要定义重载函数来处理边界情况，代码不够清晰自然。</li>
+<li>模板会为每一个不同的实例生成代码，函数的实例过多可能会使代码体积庞大。</li>
+<li>依靠递归使得功能具有局限性，并且效率也会受到影响。</li>
+</ul>
+<hr>
+<h2 id="log函数实现"><a href="#log函数实现" class="headerlink" title="log函数实现"></a>log函数实现</h2><p>头文件：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* log.h */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> LOG_H_</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> LOG_H_</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="built_in">std</span>::<span class="function">ostream &amp;<span class="title">log</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="built_in">std</span>::<span class="built_in">cout</span>; &#125;</div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</div><div class="line"><span class="built_in">std</span>::<span class="function">ostream &amp;<span class="title">log</span><span class="params">(T <span class="keyword">const</span> &amp;p, Args <span class="keyword">const</span> &amp;... rest)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; p;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">log</span>(rest...);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure></p>
+<p>测试代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* test.cpp */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"log.h"</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">int</span> n = <span class="number">2</span>;</div><div class="line">    <span class="built_in">log</span>(n, <span class="string">" hello "</span>, <span class="number">10086</span>) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>; <span class="comment">// std::cout &lt;&lt; "2 hello 10086" &lt;&lt; std::endl;</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我真的只是想写一个log函数而已。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="编程" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="Cpp" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/Cpp/"/>
+    
+    
+      <category term="C" scheme="https://gaufoo.com/tags/C/"/>
+    
+      <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="Cpp" scheme="https://gaufoo.com/tags/Cpp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>C++11类型说明符：constexpr</title>
+    <link href="https://gaufoo.com/cppconstexpr/"/>
+    <id>https://gaufoo.com/cppconstexpr/</id>
+    <published>2017-10-24T08:00:59.000Z</published>
+    <updated>2019-01-23T08:01:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>关键字<code>constexpr</code>用于修饰常量表达式（const express），具体说明如下</p>
+<a id="more"></a>
+<hr>
+<h2 id="字面值常量（literal）"><a href="#字面值常量（literal）" class="headerlink" title="字面值常量（literal）"></a>字面值常量（literal）</h2><ul>
+<li>由形式和值来决定数据类型</li>
+<li>可手动指定类型<br>如：<ul>
+<li>常规<br>20 <em>—— 十进制数</em><br>0x8 <em>—— 十六进制数</em><br>“hello” <em>—— char[6]</em></li>
+<li>指定类型<br>3F <em>—— float</em><br>L’a’ <em>—— whar_t</em><br>u8”hi!” <em>—— utf-8</em><br>3.14159 <em>—— long double</em></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="常量表达式（const-express）"><a href="#常量表达式（const-express）" class="headerlink" title="常量表达式（const express）"></a>常量表达式（const express）</h2><blockquote>
+<p>The constexpr specifier declares that it is possible to evaluate the value of the function or variable at compile time. Such variables and functions can then be used where only compile time constant expressions are allowed (provided that appropriate function arguments are given). A <code>constexpr</code> specifier used in an <code>object</code> declaration implies <code>const</code>. A <code>constexpr</code> specifier used in a <code>function</code> or static member variable (since C++17) declaration implies <code>inline</code>.</p>
+</blockquote>
+<p>其中<code>literal</code>就是<code>const express</code>的一种。从文档可知，<code>const express</code>主要性质是可以在编译期间得到值。同时，<code>constexpr</code>修饰的对象自动获得<strong>常量</strong>属性，<code>constexpr</code>修饰的函数自动获得<strong>内联</strong>属性。</p>
+<hr>
+<h3 id="constexpr变量"><a href="#constexpr变量" class="headerlink" title="constexpr变量"></a>constexpr变量</h3><p>满足以下条件：</p>
+<ul>
+<li>其值必须为<code>literal</code>类型。</li>
+<li>必须能立即初始化，意味着所有的初始化方法，包括所有隐式转换、调用构造函数等，都必须为<code>const express</code>。</li>
+</ul>
+<p>特别需要说明的是指针变量，<code>constexpr</code>类型的指针变量有以下的几种存在方式：</p>
+<ul>
+<li><p>指向nullptr</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> *p = <span class="literal">nullptr</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p>指向全局变量、static变量，因其地址不会改变</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> i = <span class="number">0</span>;	<span class="comment">// i 定义在函数外部，是一个全局变量</span></div><div class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> *p = &amp;i;	<span class="comment">// 正确</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>另外：<br>虽然<code>constexpr</code>和<code>const</code>在某些方面有点相似，但<code>constexpr int *q = nullptr;</code>的含义却与<code>const int *q = nullptr;</code>的有些出入，前者<code>q</code>不能修改，后者<code>*q</code>不能修改。若需要指向常量的常量指针，可以这样定义：<code>constexpr const int *q = nullptr;</code>，这样<code>q</code>和<code>*q</code>就都是不可修改的常量了。</p>
+</li>
+</ul>
+<hr>
+<h3 id="constexpr函数"><a href="#constexpr函数" class="headerlink" title="constexpr函数"></a>constexpr函数</h3><p><code>constexpr</code>函数会被隐式地<code>inline</code>。<br>满足以下条件：</p>
+<ul>
+<li>形参和返回值都得为<code>literal</code>类型</li>
+<li>只能有一条<code>return</code>语句</li>
+</ul>
+<p>例：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">constexpr</span> <span class="keyword">int</span> <span class="title">new_sz</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> <span class="number">42</span>;&#125;</div><div class="line"><span class="function">cosntexpr size_t <span class="title">scale</span><span class="params">(<span class="keyword">size_t</span> cnt)</span> </span>&#123;<span class="keyword">return</span> new_sz() * cnt;&#125;</div><div class="line"><span class="keyword">int</span> arr[scale(<span class="number">2</span>)];	<span class="comment">// 正确，scale(2)是const express</span></div><div class="line"><span class="keyword">int</span> n = <span class="number">2</span>;</div><div class="line"><span class="keyword">int</span> arr2[scale(n)];	<span class="comment">// 错误，scale(n)不是const express</span></div></pre></td></tr></table></figure></p>
+<hr>
+<h3 id="constexpr类"><a href="#constexpr类" class="headerlink" title="constexpr类"></a>constexpr类</h3><p>满足以下条件：</p>
+<ul>
+<li>该类是聚合类，所谓聚合类：<ul>
+<li>所有成员都是public</li>
+<li>无显式定义的构造函数</li>
+<li>成员无初始值</li>
+<li>无基类，无virtual函数</li>
+</ul>
+</li>
+<li>若不是聚合类，需要满足<ul>
+<li>数据成员必须都为<code>literal</code>类型（函数成员无须是）</li>
+<li>至少含有一个<code>constexpr</code>构造函数</li>
+<li>只能使用默认的析构函数</li>
+</ul>
+</li>
+</ul>
+<p>例：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Debug</span></span></div><div class="line"><span class="class">&#123;</span></div><div class="line">  <span class="keyword">public</span>:</div><div class="line">    constexpr Debug(bool b = true) : hw(b), io(b), other(b) &#123;&#125;</div><div class="line">    constexpr Debug(bool h, bool i, bool o) : hw(h), io(i), other(o) &#123;&#125;</div><div class="line">    <span class="function"><span class="keyword">constexpr</span> <span class="keyword">bool</span> <span class="title">any</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> hw || io || other; &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">set_io</span><span class="params">(<span class="keyword">bool</span> b)</span> </span>&#123; io = b; &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">set_hw</span><span class="params">(<span class="keyword">bool</span> b)</span> </span>&#123; hw = b; &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">set_other</span><span class="params">(<span class="keyword">bool</span> b)</span> </span>&#123; other = b; &#125;</div><div class="line"></div><div class="line">  <span class="keyword">private</span>:</div><div class="line">    <span class="keyword">bool</span> hw;</div><div class="line">    <span class="keyword">bool</span> io;</div><div class="line">    <span class="keyword">bool</span> other;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">constexpr</span> Debug <span class="title">io_sub</span><span class="params">(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>)</span></span>;</div><div class="line">    <span class="keyword">if</span> (io_sub.any())</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cerr</span> &lt;&lt; <span class="string">"print appropriate error messages"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;关键字&lt;code&gt;constexpr&lt;/code&gt;用于修饰常量表达式（const express），具体说明如下&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="编程" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="Cpp" scheme="https://gaufoo.com/categories/%E7%BC%96%E7%A8%8B/Cpp/"/>
+    
+    
+      <category term="编程" scheme="https://gaufoo.com/tags/%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="Cpp" scheme="https://gaufoo.com/tags/Cpp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>编译原理学习笔记（二）</title>
+    <link href="https://gaufoo.com/compilenote-ii/"/>
+    <id>https://gaufoo.com/compilenote-ii/</id>
+    <published>2017-09-16T09:46:00.000Z</published>
+    <updated>2017-10-27T01:53:29.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>记录</p>
+<a id="more"></a>
+<hr>
+<h2 id="正则表达式-Regular-Expression，RE"><a href="#正则表达式-Regular-Expression，RE" class="headerlink" title="正则表达式 ( Regular Expression，RE )"></a>正则表达式 ( Regular Expression，RE )</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ul>
+<li>是一种用来描述正则语言的更紧凑的表示方法。</li>
+<li>正则表达式可以由较小的正则表达式按照特定规则<strong>递归</strong>地构建。</li>
+<li>每个正则表达式 <strong>r</strong> 定义(表示)一个语言，记为 <strong>L(r)</strong> 。</li>
+</ul>
+<hr>
+<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><ul>
+<li>ε是一个RE，L(ε) = {ε}</li>
+<li>如果 a∈∑，则a是一个RE，L(a) = {a}</li>
+<li>假设 <strong>r</strong> 和 <strong>s</strong> 都是RE，表示的语言分别是 <strong>L(r)</strong> 和 <strong>L(s)</strong> ，则<ul>
+<li>r|s 是一个RE，L( r|s ) = L(r)∪L(s)</li>
+<li>rs 是一个RE，L( rs ) = L(r) L(s)</li>
+<li>r* 是一个RE，L( r* )= (L(r))*</li>
+<li>(r) 是一个RE，L( (r) ) = L(r)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p>C语言无符号整数的RE</p>
+<ul>
+<li>十进制整数的RE - (1|…|9)(0|…|9)*|0</li>
+<li>八进制整数的RE - 0(0|1|2|3|4|5|6|7)(0|1|2|3|4|5|6|7)*</li>
+<li>十六进制整数的RE - 0x(0|1|…|9|a|…| f |A|…|F)(0|…|9|a|…| f |A|…|F )*</li>
+</ul>
+<hr>
+<h3 id="代数定律"><a href="#代数定律" class="headerlink" title="代数定律"></a>代数定律</h3><table>
+<thead>
+<tr>
+<th>定律</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>r｜s = s｜r</td>
+<td>｜是可以交换的</td>
+</tr>
+<tr>
+<td>r｜( s｜t )=( r｜s )｜t</td>
+<td>｜是可结合的</td>
+</tr>
+<tr>
+<td>r(s t)=( r s)t</td>
+<td>连接是可结合的</td>
+</tr>
+<tr>
+<td>r ( s｜t )= r s｜r t ; &nbsp;&nbsp;&nbsp; ( s｜t ) r = sr｜t r</td>
+<td>连接对｜是可分配的</td>
+</tr>
+<tr>
+<td>εr = rε = r</td>
+<td>ε 是连接的单位元</td>
+</tr>
+<tr>
+<td>r* = ( r｜ε )*</td>
+<td>闭包中一定包含 ε</td>
+</tr>
+<tr>
+<td>r* * = r*</td>
+<td>* 具有幂等性</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="单词的识别"><a href="#单词的识别" class="headerlink" title="单词的识别"></a>单词的识别</h2><h3 id="有穷自动机-Finite-Automata，FA"><a href="#有穷自动机-Finite-Automata，FA" class="headerlink" title="有穷自动机 ( Finite Automata，FA )"></a>有穷自动机 ( Finite Automata，FA )</h3><ul>
+<li>具有一系列<strong>离散的输入输出信息</strong>和<strong>有穷数目的内部状态</strong>。</li>
+<li>系统只需要根据<strong>当前所处的状态</strong>和<strong>当前面临的输入信息</strong>就可以决定系统的<strong>后继行为</strong>。</li>
+<li>每当系统处理了当前的输入后，系统的内部状态也将<strong>发生改变</strong>。</li>
+</ul>
+<h4 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h4><p><img src="/images/20170916182343.jpg" width="500"></p>
+<ul>
+<li>输入带(input tape)：用来存放输入符号串。</li>
+<li>读头(head )：从左向右逐个读取输入符号，不能修改（只读）、不能往返移动。</li>
+<li>有穷控制器( finite control )：具有有穷个状态数，根据<strong>当前的状态</strong>和<strong>当前输入符号</strong>控制转入<strong>下一状态</strong>。</li>
+</ul>
+<h4 id="表示：转换图-Transition-Graph"><a href="#表示：转换图-Transition-Graph" class="headerlink" title="表示：转换图 ( Transition Graph )"></a>表示：转换图 ( Transition Graph )</h4><p><img src="/images/20170916183203.jpg" width="500"></p>
+<ul>
+<li>结点：FA的状态<ul>
+<li>初始状态（开始状态）：<strong>只有一个</strong>，由start箭头指向。</li>
+<li>终止状态（接收状态）：可以有多个，用<strong>双圈</strong>表示。</li>
+</ul>
+</li>
+<li>带标记的有向边：如果对于输入 <strong>a</strong> ，存在一个从状态 <strong>p</strong> 到状态 <strong>q</strong> 的转换，就在 <strong>p</strong> 、 <strong>q</strong> 之间画一条有向边，并标记上 <strong>a</strong> 。</li>
+</ul>
+<h4 id="接收的语言"><a href="#接收的语言" class="headerlink" title="接收的语言"></a>接收的语言</h4><ul>
+<li>给定输入串 <strong>x</strong> ，如果存在一个对应于串 <strong>x</strong> 的从初始状态到某个终止状态的转换序列，则称串 <strong>x</strong> 被该FA接收。</li>
+<li>由一个有穷自动机M接收的所有串构成的集合称为是该<strong>FA定义（或接收）的语言</strong>，记为 <strong>L( M )</strong>。</li>
+</ul>
+<p><img src="/images/20170916183203.jpg" width="500"></p>
+<blockquote>
+<p>L(M) = 所有以abb结尾的字母表{a, b}上的串的集合</p>
+</blockquote>
+<h4 id="最长子串匹配原则"><a href="#最长子串匹配原则" class="headerlink" title="最长子串匹配原则"></a>最长子串匹配原则</h4><p>当输入串的多个前缀与一个或多个模式匹配时，总是选择最长的前缀进行匹配。</p>
+<hr>
+<h3 id="有穷自动机的分类"><a href="#有穷自动机的分类" class="headerlink" title="有穷自动机的分类"></a>有穷自动机的分类</h3><ul>
+<li>确定的FA (Deterministic finite automata, DFA)</li>
+<li>非确定的FA (Nondeterministic finite automata, NFA)</li>
+</ul>
+<h4 id="DFA"><a href="#DFA" class="headerlink" title="DFA"></a>DFA</h4><p>对任意的字符，最多有一个状态可以转移。</p>
+<p><strong>M = ( S，Σ ，δ，s0，F )</strong></p>
+<ul>
+<li>S：有穷状态集。</li>
+<li>Σ：输入字母表，即输入符号集合。假设 <strong>ε</strong> 不是 Σ 中的元素。</li>
+<li>δ：将S×Σ映射到S的<strong>转换函数</strong>。∀s∈S, a∈Σ, <strong>δ(s,a)</strong> 表示从状态s出发，沿着标记为a的边所能到达的状态。</li>
+<li>s0：开始状态 (或初始状态)，s0∈ S。</li>
+<li>F：接收状态（或终止状态）集合，F⊆ S。</li>
+</ul>
+<p><img src="/images/DFA.png" width="500"></p>
+<blockquote>
+<p>r = (a|b)*abb</p>
+</blockquote>
+<hr>
+<h4 id="NFA"><a href="#NFA" class="headerlink" title="NFA"></a>NFA</h4><p>对任意的字符，有多于一个状态可以转移。</p>
+<p><strong>M = ( S，Σ ，δ，s0，F )</strong></p>
+<ul>
+<li>S：有穷状态集。</li>
+<li>Σ：输入字母表，即输入字母表。假设 <strong>ε</strong> 不是 Σ 中的元素。</li>
+<li>δ：将S×Σ映射到2^S的<strong>转换函数</strong>。s∈S, a∈Σ, <strong>δ(s,a)</strong>表示从状态s出发，沿着标记为a的边所能到达的状态集合。</li>
+<li>s0：开始状态 (或初始状态)，s0∈ S。</li>
+<li>F：接收状态（或终止状态）集合，F⊆ S。</li>
+</ul>
+<p><img src="/images/NFA.png" width="500"></p>
+<blockquote>
+<p>r = (a|b)*abb</p>
+</blockquote>
+<hr>
+<h4 id="等价性"><a href="#等价性" class="headerlink" title="等价性"></a>等价性</h4><blockquote>
+<p>对任何非确定的有穷自动机N ，存在定义同一语言的确定的有穷自动机D<br>对任何确定的有穷自动机D ，存在定义同一语言的非确定的有穷自动机N</p>
+</blockquote>
+<hr>
+<h4 id="主要区别"><a href="#主要区别" class="headerlink" title="主要区别"></a>主要区别</h4><ul>
+<li>对于DFA，一个特定的符号输入，有且只能得到一个状态，而NFA就有可能得到一个状态集。因此NFA引擎必须记录所有的可能路径。</li>
+<li>DFA比较快，但不提供Backtrack（回溯）功能，NFA比较慢，但提供了Backtrack功能。</li>
+</ul>
+<hr>
+<h4 id="DFA的算法实现"><a href="#DFA的算法实现" class="headerlink" title="DFA的算法实现"></a>DFA的算法实现</h4><p>由于DFA对于特定输入，状态是确定的，因此实现起来很方便。</p>
+<ul>
+<li>输入：以文件结束符<strong>eof</strong>结尾的字符串<strong>x</strong>。DFA <strong>D</strong>的开始状态<strong>s0</strong>，接收状态集<strong>F</strong>，转换函数<strong>move</strong>。</li>
+<li>输出：如果<strong>D</strong>接收<strong>x</strong>，则回答“yes”，否则回答“no”。</li>
+<li>方法：将下述算法应用于输入串<strong>x</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">s = s0;</div><div class="line">c = next_char();</div><div class="line">while (c != eof) &#123;</div><div class="line">	s = move(s, c);</div><div class="line">	c = next_char();</div><div class="line">&#125;</div><div class="line">if (s is in F)</div><div class="line">	return &quot;yes&quot;;</div><div class="line">else</div><div class="line">	return &quot;no&quot;;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h3 id="RE转换成NFA"><a href="#RE转换成NFA" class="headerlink" title="RE转换成NFA"></a>RE转换成NFA</h3><h4 id="ε"><a href="#ε" class="headerlink" title="ε"></a>ε</h4><p><img src="/images/20171024144829.png" width="400"></p>
+<h4 id="字母表Σ中符号a"><a href="#字母表Σ中符号a" class="headerlink" title="字母表Σ中符号a"></a>字母表Σ中符号a</h4><p><img src="/images/20171024144915.png" width="400"></p>
+<h4 id="r-r1r2"><a href="#r-r1r2" class="headerlink" title="r = r1r2"></a>r = r1r2</h4><p><img src="/images/20171024145410.png" width="500"></p>
+<h4 id="r-r1-r2"><a href="#r-r1-r2" class="headerlink" title="r = r1|r2"></a>r = r1|r2</h4><p><img src="/images/20171024145504.png" width="400"></p>
+<h4 id="r-r1"><a href="#r-r1" class="headerlink" title="r = (r1)*"></a>r = (r1)*</h4><p><img src="/images/20171024145520.png" width="200"></p>
+<hr>
+<blockquote>
+<p>r=(a|b)*abb 对应的NFA</p>
+</blockquote>
+<p><img src="/images/20171024150046.png" width="500"></p>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;记录&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="编译原理" scheme="https://gaufoo.com/categories/%E5%8E%9F%E7%90%86/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+    
+      <category term="原理" scheme="https://gaufoo.com/tags/%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="编译原理" scheme="https://gaufoo.com/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>编译原理学习笔记（一）</title>
+    <link href="https://gaufoo.com/compilenote-i/"/>
+    <id>https://gaufoo.com/compilenote-i/</id>
+    <published>2017-09-09T17:52:49.000Z</published>
+    <updated>2017-09-16T10:05:05.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>记录</p>
+<a id="more"></a>
+<hr>
+<h2 id="文法的形式化定义"><a href="#文法的形式化定义" class="headerlink" title="文法的形式化定义"></a>文法的形式化定义</h2><p><strong>G = (V<sub>T</sub>, V<sub>N</sub>, P , S )</strong></p>
+<h3 id="各成分含义"><a href="#各成分含义" class="headerlink" title="各成分含义"></a>各成分含义</h3><ul>
+<li>V<sub>T</sub>：终结符集合<ul>
+<li>终结符（terminal symbol）是文法所定义的语言的<strong>基本符号</strong>，有时也称为token</li>
+<li>例：V<sub>T</sub> = { apple, boy, eat, little }</li>
+</ul>
+</li>
+<li><p>V<sub>N</sub>：非终结符集合</p>
+<ul>
+<li>非终结符 ( nonterminal ) 是用来表示<strong>语法成分</strong>的符号，有时也称为“语法变量”</li>
+<li><p>例: V<sub>N</sub> = { &lt;句子&gt;, &lt;名词短语&gt;, &lt;动词短语&gt;, &lt;名词&gt;, … }</p>
+<blockquote>
+<p>V<sub>T</sub> ∩ V<sub>N</sub> = Φ<br>V<sub>T</sub> ∪ V<sub>N</sub> = 文法符号集</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>P：产生式集合</p>
+<ul>
+<li>产生式 ( production ) 描述了将终结符和非终结符组合成串的方法</li>
+<li>产生式的一般形式： <strong>α→β</strong> ，读作：α定义为β<ul>
+<li>α∈(V<sub>T</sub> ∪ V<sub>N</sub> )<sup>+</sup>，且α中至少包含V<sub>N</sub>中的一个元素：称为产生式的头 ( head ) 或左部 ( left side )</li>
+<li>β∈(V<sub>T</sub> ∪ V<sub>N</sub> )<sup>*</sup>：称为产生式的体(body)或右部(right side)</li>
+</ul>
+</li>
+<li>例：{&lt;句子&gt;→&lt;名词短语&gt;&lt;动词短语&gt;,&lt;名词短语&gt;→&lt;形容词&gt;&lt;名词短语&gt;,……}</li>
+</ul>
+</li>
+<li>S：开始符号<ul>
+<li>S∈V<sub>N</sub> 。开始符号 ( start symbol ) 表示的是该文法中<strong>最大</strong>的语法成分</li>
+<li>例：S = &lt;句子&gt;</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li><p>例子：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">G = (&#123;id, +, *, (, )&#125;, &#123;E&#125;, P, E)</div><div class="line">P = &#123;	E → E + E,</div><div class="line">	E → E * E,</div><div class="line">	E → ( E ),</div><div class="line">	E → id&#125;</div></pre></td></tr></table></figure>
+<p>  约定：不引起歧义的前提下，可以只写产生式</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">G : 	E → E + E</div><div class="line">	E → E * E</div><div class="line">	E → ( E )</div><div class="line">	E → id</div></pre></td></tr></table></figure>
+<p>  简写：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">G : E → E + E | E * E | ( E ) | id</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h3 id="符号约定"><a href="#符号约定" class="headerlink" title="符号约定"></a>符号约定</h3><ul>
+<li>终结符<ul>
+<li>字母表中排在前面的小写字母，如 a、b、c</li>
+<li>运算符，如 +、*等</li>
+<li>标点符号，如括号、逗号等</li>
+<li>数字 0、1、… 、9</li>
+<li>粗体字符串，如<strong>id</strong>、<strong>if</strong>等</li>
+</ul>
+</li>
+<li>非终结符<ul>
+<li>字母表中排在前面的大写字母，如A、B、C</li>
+<li>字母S。通常表示开始符号</li>
+<li>小写、斜体的名字，如 <em>expr</em>、<em>stmt</em>等</li>
+<li>代表程序构造的大写字母。如E(表达式)、T(项)和F(因子)</li>
+</ul>
+</li>
+<li>文法符号（即终结符或非终结符）<ul>
+<li>字母表中排在后面的大写字母（如X、Y、Z）</li>
+</ul>
+</li>
+<li>终结符号串<ul>
+<li>字母表中排在后面的小写字母（主要是u、v、… 、z）</li>
+</ul>
+</li>
+<li>文法符号串<ul>
+<li>小写希腊字母，如α、β、γ</li>
+</ul>
+</li>
+<li>除非特别说明，第一个产生式的左部就是开始符号</li>
+</ul>
+<hr>
+<h2 id="语言的定义"><a href="#语言的定义" class="headerlink" title="语言的定义"></a>语言的定义</h2><h3 id="推导和归约"><a href="#推导和归约" class="headerlink" title="推导和归约"></a>推导和归约</h3><p>用产生式的右部替换产生式的左部，称为推导 (Derivations) </p>
+<blockquote>
+<p>如果α0=&gt;α1，α1=&gt;α2，α2=&gt;α3，…，α n-1=&gt;αn，则可以记作α0=&gt;α1=&gt;α2=&gt;α3=&gt; …=&gt; α n-1=&gt;αn，称符号串 α0经过n步推导出αn，可简记为α0=&gt;<sup>n</sup>αn</p>
+</blockquote>
+<p>用产生式的左部替换产生式的右部，称为归约 (Reductions)<br>例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;句子&gt; =&gt; &lt;名词短语&gt;&lt;动词短语&gt;</div><div class="line">       =&gt; &lt;形容词&gt;&lt;名词短语&gt;&lt;动词短语&gt;</div><div class="line">       =&gt; little &lt;名词短语&gt;&lt;动词短语&gt;</div><div class="line">       =&gt; little &lt;名词&gt;&lt;动词短语&gt;</div><div class="line">       =&gt; little boy &lt;动词短语&gt;</div><div class="line">       =&gt; little boy &lt;动词&gt;&lt;名词短语&gt;</div><div class="line">       =&gt; little boy eats &lt;名词短语&gt;</div><div class="line">       =&gt; little boy eats &lt;名词&gt;</div><div class="line">       =&gt; little boy eats apple</div></pre></td></tr></table></figure></p>
+<p>由上往下是推导，由下往上是归约</p>
+<hr>
+<h3 id="句型和句子"><a href="#句型和句子" class="headerlink" title="句型和句子"></a>句型和句子</h3><ul>
+<li>如果 S=&gt;*α, α∈(V<sub>T</sub>∪V<sub>N</sub>)*，则称α是G的一个句型(sentential form)</li>
+<li>如果 S=&gt;*w，w∈V<sub>T</sub>*，则称w是G的一个句子(sentence)</li>
+</ul>
+<blockquote>
+<p>句子是不包含<strong>非终结符</strong>的句型</p>
+</blockquote>
+<ul>
+<li>由文法G的开始符号S推导出的所有<strong>句子</strong>构成的集合称为文法G生成的<strong>语言</strong>，记为L(G)。</li>
+</ul>
+<hr>
+<h2 id="Chomsky-文法分类体系"><a href="#Chomsky-文法分类体系" class="headerlink" title="Chomsky 文法分类体系"></a>Chomsky 文法分类体系</h2><h3 id="0型文法-Type-0-Grammar"><a href="#0型文法-Type-0-Grammar" class="headerlink" title="0型文法 (Type-0 Grammar)"></a>0型文法 (Type-0 Grammar)</h3><ul>
+<li>无限制文法(Unrestricted Grammar) / 短语结构文法(Phrase Structure Grammar, PSG )<ul>
+<li>∀α → β∈P， α中至少包含1个非终结符</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>PSG中可包含ε-产生式</p>
+</blockquote>
+<hr>
+<h3 id="1型文法-Type-1-Grammar"><a href="#1型文法-Type-1-Grammar" class="headerlink" title="1型文法 (Type-1 Grammar)"></a>1型文法 (Type-1 Grammar)</h3><ul>
+<li>上下文有关文法(Context-Sensitive Grammar , CSG )<ul>
+<li>∀α → β∈P，｜α｜≤｜β｜</li>
+<li>产生式的一般形式： α1Aα2 → α1βα2 ( β≠ε )</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>CSG中不包含ε-产生式</p>
+</blockquote>
+<hr>
+<h3 id="2型文法-Type-2-Grammar"><a href="#2型文法-Type-2-Grammar" class="headerlink" title="2型文法 (Type-2 Grammar)"></a>2型文法 (Type-2 Grammar)</h3><ul>
+<li>上下文无关文法 (Context-Free Grammar, CFG )<ul>
+<li>∀α → β∈P，α ∈ V<sub>N</sub></li>
+<li>产生式的一般形式：A→β</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="3型文法-Type-3-Grammar"><a href="#3型文法-Type-3-Grammar" class="headerlink" title="3型文法 (Type-3 Grammar)"></a>3型文法 (Type-3 Grammar)</h3><ul>
+<li>正则文法 (Regular Grammar, RG )<ul>
+<li>右线性(Right Linear)文法： A→wB 或 A→w</li>
+<li>左线性(Left Linear) 文法： A→Bw 或 A→w</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="四种文法之间的关系"><a href="#四种文法之间的关系" class="headerlink" title="四种文法之间的关系"></a>四种文法之间的关系</h3><p>逐级限制：</p>
+<ul>
+<li>0型文法：α中至少包含1个非终结符</li>
+<li>1型文法（CSG） ：｜α｜≤｜β｜</li>
+<li>2型文法（CFG） ：α ∈ V<sub>N</sub></li>
+<li>3型文法（RG）：A→wB 或 A→w (A→Bw 或A→w)</li>
+</ul>
+<hr>
+<h2 id="CFG的分析树"><a href="#CFG的分析树" class="headerlink" title="CFG的分析树"></a>CFG的分析树</h2><h3 id="分析树举例"><a href="#分析树举例" class="headerlink" title="分析树举例"></a>分析树举例</h3><p><img src="/images/229534388000563683.jpg" width="500"></p>
+<ul>
+<li>分析树是推导的图形化表示<br>  推导过程：E =&gt; -E =&gt; - ( E ) =&gt; - ( E+E ) =&gt; - ( id+E ) =&gt; - ( id+id )</li>
+<li>结构<ul>
+<li><strong>根节点</strong>的标号为<strong>文法开始符号</strong></li>
+<li><strong>内部结点</strong>表示对一个产生式A→β的应用，该结点的标号是此产生式左部<strong>A</strong>。该结点的子结点的标号从左到右构成了产生式的右部<strong>β</strong></li>
+<li><strong>叶结点</strong>的标号既可以是非终结符，也可以是终结符。从左到右排列叶节点得到的符号串称为是这棵树的产出(yield)或边缘(frontier)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="二义性文法"><a href="#二义性文法" class="headerlink" title="二义性文法"></a>二义性文法</h3><p>如果一个文法可以为某个句子生成多棵分析树，则称这个文法是二义性的</p>
+<p>例：<br>文法：S → <strong>if</strong> E <strong>then</strong> S | <strong>if</strong> E <strong>then</strong> S <strong>else</strong> S | <strong>other</strong><br>句型：<strong>if</strong> E1 <strong>then</strong> <strong>if</strong> E2 <strong>then</strong> S1 <strong>else</strong> S2<br>    可生成的分析树有：<br><img src="/images/728669562437023693.jpg" width="500"></p>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;记录&lt;/p&gt;
     
     </summary>
     
